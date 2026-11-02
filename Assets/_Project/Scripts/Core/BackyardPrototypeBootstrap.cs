@@ -51,11 +51,13 @@ namespace MiaMax.Gameplay
             }
 
             // Central tree.
-            Cylinder("Main_Tree_Trunk", new Vector3(-7f, 2f, 2f), new Vector3(0.65f, 2f, 0.65f), wood);
+            GameObject treeTrunk = Cylinder("Main_Tree_Trunk", new Vector3(-7f, 2f, 2f), new Vector3(0.65f, 2f, 0.65f), wood);
+            AddInteractable(treeTrunk, "Big backyard tree", "Look around");
             Sphere("Main_Tree_Canopy", new Vector3(-7f, 5f, 2f), new Vector3(4.2f, 4.1f, 4.2f), leaf);
 
             // Swing set on the left side.
-            Cube("Swing_Top_Beam", new Vector3(-11f, 3.5f, -4f), new Vector3(5f, 0.18f, 0.18f), wood);
+            GameObject swing = Cube("Swing_Top_Beam", new Vector3(-11f, 3.5f, -4f), new Vector3(5f, 0.18f, 0.18f), wood);
+            AddInteractable(swing, "Garden swing", "Try the swing");
             for (int x = -13; x <= -9; x += 4)
             {
                 Cube("Swing_Leg", new Vector3(x, 1.7f, -4f), new Vector3(0.16f, 3.4f, 0.16f), wood);
@@ -64,7 +66,8 @@ namespace MiaMax.Gameplay
             }
 
             // Sandbox and simple flower beds.
-            Cube("Sandbox_Base", new Vector3(10f, 0.22f, -7f), new Vector3(4.5f, 0.45f, 3.4f), wood);
+            GameObject sandbox = Cube("Sandbox_Base", new Vector3(10f, 0.22f, -7f), new Vector3(4.5f, 0.45f, 3.4f), wood);
+            AddInteractable(sandbox, "Sandbox", "Play in the sand");
             Cube("Sandbox_Sand", new Vector3(10f, 0.47f, -7f), new Vector3(4.1f, 0.08f, 3f), Mat(new Color(0.78f, 0.66f, 0.43f)));
             for (int i = 0; i < 5; i++)
                 Sphere("Garden_Shrub", new Vector3(-13f + i * 1.4f, 0.55f, 11.8f), Vector3.one * 1.1f, leaf);
@@ -72,6 +75,10 @@ namespace MiaMax.Gameplay
             // Clearly labelled primitive character stand-ins.
             GameObject mia = CreateMia(blue, beige);
             GameObject max = CreateMax(orange, white);
+            mia.AddComponent<PlayerInteraction>();
+
+            GameObject joystick = new GameObject("Prototype Mobile Joystick");
+            joystick.AddComponent<PrototypeMobileJoystick>();
             GameObject cameraObject = new GameObject("Prototype Follow Camera");
             Camera camera = cameraObject.AddComponent<Camera>();
             cameraObject.AddComponent<AudioListener>();
@@ -89,6 +96,12 @@ namespace MiaMax.Gameplay
             // A small red toy truck recalls the reference board's sandbox detail.
             Cube("Toy_Truck_Placeholder", new Vector3(7f, 0.35f, -4f), new Vector3(1.1f, 0.45f, 0.7f), Mat(new Color(0.85f, 0.12f, 0.08f)));
             Debug.Log("Mia & Max Backyard blockout created. All primitives are temporary placeholders.");
+        }
+
+        private static void AddInteractable(GameObject target, string title, string action)
+        {
+            BackyardInteractable interactable = target.AddComponent<BackyardInteractable>();
+            interactable.Configure(title, action);
         }
 
         private static GameObject CreateMia(Material clothes, Material skin)
