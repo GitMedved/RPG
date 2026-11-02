@@ -29,6 +29,12 @@ namespace MiaMax.Infrastructure.Save
             DontDestroyOnLoad(gameObject);
             saveService = new LocalSaveService();
             Current = new GameSession(saveService.LoadOrCreate());
+            if (Current.Data.Inventory.Count == 0)
+            {
+                Current.AddItem("seed_carrot", 3);
+                Current.AddItem("seed_tomato", 3);
+                Current.AddItem("seed_strawberry", 3);
+            }
             Current.StateChanged += SaveNow;
         }
 
