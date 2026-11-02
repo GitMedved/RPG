@@ -37,3 +37,13 @@ No character models, rigs, animation clips, environments, audio, scenes or gamep
 ## Development workflow
 
 Work on feature branches, keep milestones small, run EditMode/PlayMode tests and validate Android/iOS builds separately. Never claim a platform build is ready without a successful build and device smoke test.
+
+
+## M1 backyard prototype
+
+The branch now includes a minimal Unity scaffold and runtime greybox prototype. Open with Unity 6000.3.x (baseline recorded as 6000.3.0f1), let the Editor import scripts, then use **Mia & Max → Setup Backyard Prototype Scene** if the scene is not created automatically. Open `Assets/_Project/Scenes/Backyard.unity` and press Play.
+
+- Editor controls: WASD / arrow keys.
+- Character and environment meshes are temporary primitive placeholders.
+- No URP configuration, original reference image binaries, final art, animations or platform builds are included yet.
+- Unity compile and device builds must be verified in the Editor; they have not been run in this environment.
