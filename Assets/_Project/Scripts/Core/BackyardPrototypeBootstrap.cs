@@ -35,7 +35,19 @@ namespace MiaMax.Gameplay
             Cube("Lawn_Blockout", new Vector3(0f, -0.25f, 0f), new Vector3(34f, 0.5f, 28f), grass);
             Cube("House_Main_Blockout", new Vector3(0f, 2.5f, 10f), new Vector3(12f, 5f, 5f), beige);
             Cube("House_Roof_Blockout", new Vector3(0f, 5.35f, 10f), new Vector3(13f, 0.55f, 5.8f), roof);
-            Cube("Patio_Blockout", new Vector3(0f, 0.02f, 6.2f), new Vector3(9f, 0.12f, 2.7f), white);\n            BackyardDetailPrototype.Build();
+            Cube("Patio_Blockout", new Vector3(0f, 0.02f, 6.2f), new Vector3(9f, 0.12f, 2.7f), white);
+
+            // Three starter garden plots, placed in the open lawn beside the sandbox.
+            for (int i = 0; i < 3; i++)
+            {
+                Vector3 plotPosition = new Vector3(5f + i * 2.1f, 0.12f, 1.5f);
+                GameObject plot = Cube("Farm_Plot_" + (i + 1) + "_Placeholder", plotPosition,
+                    new Vector3(1.7f, 0.22f, 1.45f), wood);
+                BackyardInteractable plotInteractable = plot.AddComponent<BackyardInteractable>();
+                plotInteractable.Configure("Garden plot", "Plant a seed");
+                plot.AddComponent<FarmPlotPrototype>().Configure("plot_" + (i + 1), plotInteractable);
+            }
+            BackyardDetailPrototype.Build();
 
             // White perimeter fence, leaving a gate opening at the far side.
             for (int x = -16; x <= 16; x += 2)
@@ -91,7 +103,10 @@ namespace MiaMax.Gameplay
 
             Light sun = new GameObject("Prototype Sun").AddComponent<Light>();
             sun.type = LightType.Directional;
-            sun.intensity = 1.2f;\n            sun.shadows = LightShadows.Soft;\n            RenderSettings.ambientMode = AmbientMode.Flat;\n            RenderSettings.ambientLight = new Color(0.68f, 0.72f, 0.78f);
+            sun.intensity = 1.2f;
+            sun.shadows = LightShadows.Soft;
+            RenderSettings.ambientMode = AmbientMode.Flat;
+            RenderSettings.ambientLight = new Color(0.68f, 0.72f, 0.78f);
             sun.transform.rotation = Quaternion.Euler(50f, -30f, 0f);
 
             // A small red toy truck recalls the reference board's sandbox detail.
