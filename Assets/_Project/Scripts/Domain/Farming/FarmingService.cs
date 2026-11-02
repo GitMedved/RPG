@@ -50,7 +50,7 @@ namespace MiaMax.Domain.Farming
             if (plot == null || !plot.IsPlanted) return 0;
             long elapsed = Math.Max(0, DateTimeOffset.UtcNow.ToUnixTimeSeconds() - plot.PlantedAtUnix);
             int minutes = GrowMinutes(plot.CropId);
-            return Math.Min(3, (int)(elapsed / (minutes * 60 / 3f)));
+            return Math.Min(3, 1 + (int)(elapsed / (minutes * 60 / 3f)));
         }
         public static bool IsValidCrop(string id) => id == Carrot || id == Tomato || id == Strawberry;
         public static string SeedFor(string crop) => "seed_" + crop.Substring(5);
