@@ -47,3 +47,10 @@ The branch now includes a minimal Unity scaffold and runtime greybox prototype. 
 - Character and environment meshes are temporary primitive placeholders.
 - No URP configuration, original reference image binaries, final art, animations or platform builds are included yet.
 - Unity compile and device builds must be verified in the Editor; they have not been run in this environment.
+
+## M1.2 — mobile interaction foundation
+
+- URP 17.3.0 package dependency is pinned; create and assign the URP Pipeline Asset/Renderer Data in Unity Editor using [URP_SETUP.md](Assets/_Project/URP_SETUP.md).
+- A temporary touch joystick is connected to Mia's movement controller.
+- Nearby interactions are available at the tree, swing and sandbox (press E in Editor; touch action is a prototype).
+- These systems remain greybox quality and have not been compiled or tested in Unity in this environment.
