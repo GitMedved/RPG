@@ -70,3 +70,29 @@
 2. Confirm the Editor utility creates and registers Backyard.unity.
 3. Enter Play Mode and test camera, movement, companion following and collisions.
 4. Fix all compile/runtime errors before adding URP, final asset imports and interaction systems.
+
+
+## 2026-11-02 — M1.2 mobile interaction foundation
+
+### Added
+- Pinned Universal Render Pipeline package 17.3.0 in Packages/manifest.json for the Unity 6.3 baseline. The official Unity Graphics changelog lists URP 17.3.0 as compatible with Unity 6000.3.0b1; exact Editor patch resolution must still be checked locally.
+- Added URP_SETUP.md with Editor asset creation, Graphics/Quality assignment and mobile profiling checklist. Generated URP pipeline/renderer assets are intentionally not hand-authored as YAML.
+- Added a lightweight touch joystick overlay with drag input and keyboard fallback.
+- Connected joystick input to Mia's CharacterController and added explicit gravity handling.
+- Added an interaction interface, interactable component and nearby-object discovery/prompt.
+- Made the tree, swing leg and sandbox available for simple interaction.
+- Updated placeholder material selection to use URP/Lit only when a Scriptable Render Pipeline is active, otherwise Standard.
+
+### Validation status
+- Reviewed the new source and package configuration in GitHub.
+- Unity Editor/Package Manager is not available in this environment. Package resolution, C# compilation, Play Mode and device tests remain unverified.
+- URP is a dependency but the actual URP Pipeline Asset and Renderer Data still need to be created in the Editor and assigned in Graphics/Quality settings.
+- The joystick is a functional greybox overlay, not final branded UI; touch interaction needs device testing.
+- Interaction currently logs a simple action and shows an on-screen prompt. It does not yet launch a minigame or change game state.
+
+### Next actions
+1. Open with Unity 6000.3.x and resolve URP 17.3.0.
+2. Create/assign URP Pipeline Asset and Renderer Data using the Editor steps in URP_SETUP.md.
+3. Confirm scene generation, compilation, touch input and interactable detection.
+4. Replace runtime primitive blockout with art assets based on the approved reference board.
+5. Add simple character animation and Max companion smoothing after rig import.
