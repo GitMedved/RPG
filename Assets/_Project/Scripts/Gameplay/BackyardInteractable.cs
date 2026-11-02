@@ -1,4 +1,4 @@
-using UnityEngine;
+using UnityEngine;\nusing System;
 
 namespace MiaMax.Gameplay
 {
@@ -8,7 +8,7 @@ namespace MiaMax.Gameplay
         [SerializeField] private string displayName = "Backyard object";
         [SerializeField] private string actionLabel = "Explore";
         public string DisplayName => displayName;
-        public string ActionLabel => actionLabel;
+        public string ActionLabel => actionLabel;\n        public event Action Interacted;
 
         public void Configure(string title, string action)
         {
@@ -18,7 +18,7 @@ namespace MiaMax.Gameplay
 
         public void Interact()
         {
-            Debug.Log($"Mia interacts with {displayName}: {actionLabel}");
+            Debug.Log($"Mia interacts with {displayName}: {actionLabel}");\n            Interacted?.Invoke();
         }
     }
 }
