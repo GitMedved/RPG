@@ -35,7 +35,7 @@ namespace MiaMax.Gameplay
             Cube("Lawn_Blockout", new Vector3(0f, -0.25f, 0f), new Vector3(34f, 0.5f, 28f), grass);
             Cube("House_Main_Blockout", new Vector3(0f, 2.5f, 10f), new Vector3(12f, 5f, 5f), beige);
             Cube("House_Roof_Blockout", new Vector3(0f, 5.35f, 10f), new Vector3(13f, 0.55f, 5.8f), roof);
-            Cube("Patio_Blockout", new Vector3(0f, 0.02f, 6.2f), new Vector3(9f, 0.12f, 2.7f), white);
+            Cube("Patio_Blockout", new Vector3(0f, 0.02f, 6.2f), new Vector3(9f, 0.12f, 2.7f), white);\n            BackyardDetailPrototype.Build();
 
             // White perimeter fence, leaving a gate opening at the far side.
             for (int x = -16; x <= 16; x += 2)
@@ -91,7 +91,7 @@ namespace MiaMax.Gameplay
 
             Light sun = new GameObject("Prototype Sun").AddComponent<Light>();
             sun.type = LightType.Directional;
-            sun.intensity = 1.2f;
+            sun.intensity = 1.2f;\n            sun.shadows = LightShadows.Soft;\n            RenderSettings.ambientMode = AmbientMode.Flat;\n            RenderSettings.ambientLight = new Color(0.68f, 0.72f, 0.78f);
             sun.transform.rotation = Quaternion.Euler(50f, -30f, 0f);
 
             // A small red toy truck recalls the reference board's sandbox detail.
@@ -107,30 +107,21 @@ namespace MiaMax.Gameplay
 
         private static GameObject CreateMia(Material clothes, Material skin)
         {
-            GameObject root = new GameObject("Mia_Placeholder");
+            GameObject root = new GameObject("Mia_Stylized_Proxy");
             root.transform.position = new Vector3(0f, 0.1f, 0f);
             CharacterController cc = root.AddComponent<CharacterController>();
             cc.height = 1.8f; cc.radius = 0.38f; cc.center = new Vector3(0f, 0.9f, 0f);
             root.AddComponent<PrototypeThirdPersonController>();
-
-            GameObject body = Sphere("Mia_Body_Placeholder", root.transform.position + Vector3.up * 0.9f, new Vector3(0.65f, 0.95f, 0.38f), clothes, root.transform);
-            GameObject head = Sphere("Mia_Head_Placeholder", root.transform.position + Vector3.up * 1.75f, Vector3.one * 0.62f, skin, root.transform);
-            Object.Destroy(body.GetComponent<Collider>());
-            Object.Destroy(head.GetComponent<Collider>());
+            StylizedCharacterPrototype.BuildMia(root.transform);
             return root;
         }
 
         private static GameObject CreateMax(Material fur, Material cream)
         {
-            GameObject root = new GameObject("Max_Placeholder");
+            GameObject root = new GameObject("Max_Stylized_Proxy");
             root.transform.position = new Vector3(-1.5f, 0.1f, -1.2f);
-            GameObject body = Sphere("Max_Body_Placeholder", root.transform.position + Vector3.up * 0.45f, new Vector3(0.9f, 0.65f, 0.55f), fur, root.transform);
-            GameObject head = Sphere("Max_Head_Placeholder", root.transform.position + Vector3.up * 1.05f, Vector3.one * 0.62f, fur, root.transform);
-            GameObject muzzle = Sphere("Max_Muzzle_Placeholder", root.transform.position + new Vector3(0f, 0.98f, 0.48f), new Vector3(0.45f, 0.28f, 0.22f), cream, root.transform);
-            Object.Destroy(body.GetComponent<Collider>());
-            Object.Destroy(head.GetComponent<Collider>());
-            Object.Destroy(muzzle.GetComponent<Collider>());
-            root.AddComponent<MaxCompanionFollow>().SetTarget(GameObject.Find("Mia_Placeholder").transform);
+            StylizedCharacterPrototype.BuildMax(root.transform);
+            root.AddComponent<MaxCompanionFollow>().SetTarget(GameObject.Find("Mia_Stylized_Proxy").transform);
             return root;
         }
 
