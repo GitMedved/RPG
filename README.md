@@ -6,7 +6,7 @@ Cross-platform 3D family adventure game for Android and iOS, built with Unity an
 
 ## Project status
 
-Pre-production foundation. The repository initially contained only this README; no existing Unity project, assets, scenes or build configuration were available during the first audit.
+Pre-production Unity prototype. The repository began as a README-only project; the current feature branch now contains the Unity scaffold, a generated-at-runtime backyard greybox, mobile input and interaction prototypes, plus temporary stylized character proxies.
 
 ## Approved direction
 
@@ -28,11 +28,11 @@ Pre-production foundation. The repository initially contained only this README; 
 
 ## Unity project scaffold
 
-The Unity Editor version and package manifest have deliberately not been fabricated. Open the project in the agreed Unity 6 LTS Editor and let Unity generate valid `ProjectSettings/` and `Packages/` files before pinning the exact editor/package versions. Do not commit generated `Library/`, `Temp/`, `Logs/` or `Obj/` folders.
+Unity baseline currently recorded as 6000.3.0f1 with URP package 17.3.0. Confirm the exact Editor patch and resolve packages locally before treating this as a validated project. Do not commit generated `Library/`, `Temp/`, `Logs/` or `Obj/` folders.
 
 ## Current limitations
 
-No character models, rigs, animation clips, environments, audio, scenes or gameplay code are present yet. Any greybox assets created later must be clearly labelled as placeholders until approved Mia/Max references are imported.
+Production character models, authored rigs, animation clips, final environment art, audio and committed scene assets are not present yet. Runtime procedural character and environment proxies are temporary greybox art only.
 
 ## Development workflow
 
@@ -54,3 +54,13 @@ The branch now includes a minimal Unity scaffold and runtime greybox prototype. 
 - A temporary touch joystick is connected to Mia's movement controller.
 - Nearby interactions are available at the tree, swing and sandbox (press E in Editor; touch action is a prototype).
 - These systems remain greybox quality and have not been compiled or tested in Unity in this environment.
+
+
+## M2 — Character & World Prototype
+
+The runtime greybox now includes temporary stylized Mia and Max proxies with reference-led visual cues (Mia's blonde braids, white top, blue jeans and green eyes; Max's ginger coat, cream muzzle/belly and green eyes), simple movement-driven limb motion, Max's swaying tail, and a more detailed backyard facade/patio/garden pass.
+
+- New implementation: `StylizedCharacterPrototype.cs`, `BackyardDetailPrototype.cs`.
+- These are procedural placeholder meshes, not final 3D models or production animation rigs.
+- See [M2 Character & World Prototype](M2_CHARACTER_WORLD_PROTOTYPE.md) for scope and validation checklist.
+- Unity compilation, visual review, Play Mode and Android/iOS device testing remain unverified in this environment.
