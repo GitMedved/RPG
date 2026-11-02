@@ -56,11 +56,11 @@ namespace MiaMax.Gameplay
             Sphere("Main_Tree_Canopy", new Vector3(-7f, 5f, 2f), new Vector3(4.2f, 4.1f, 4.2f), leaf);
 
             // Swing set on the left side.
-            GameObject swing = Cube("Swing_Top_Beam", new Vector3(-11f, 3.5f, -4f), new Vector3(5f, 0.18f, 0.18f), wood);
-            AddInteractable(swing, "Garden swing", "Try the swing");
+            Cube("Swing_Top_Beam", new Vector3(-11f, 3.5f, -4f), new Vector3(5f, 0.18f, 0.18f), wood);
             for (int x = -13; x <= -9; x += 4)
             {
-                Cube("Swing_Leg", new Vector3(x, 1.7f, -4f), new Vector3(0.16f, 3.4f, 0.16f), wood);
+                GameObject swingLeg = Cube("Swing_Leg", new Vector3(x, 1.7f, -4f), new Vector3(0.16f, 3.4f, 0.16f), wood);
+                if (x == -13) AddInteractable(swingLeg, "Garden swing", "Try the swing");
                 Cube("Swing_Rope", new Vector3(x, 2.3f, -4f), new Vector3(0.05f, 2.2f, 0.05f), white);
                 Cube("Swing_Seat", new Vector3(x, 1.15f, -4f), new Vector3(0.9f, 0.14f, 0.45f), blue);
             }
@@ -135,7 +135,9 @@ namespace MiaMax.Gameplay
 
         private static Material Mat(Color color)
         {
-            Shader shader = Shader.Find("Universal Render Pipeline/Lit");
+            Shader shader = GraphicsSettings.currentRenderPipeline != null
+                ? Shader.Find("Universal Render Pipeline/Lit")
+                : Shader.Find("Standard");
             if (shader == null) shader = Shader.Find("Standard");
             Material material = new Material(shader) { color = color };
             return material;
