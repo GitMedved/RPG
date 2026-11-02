@@ -1,9 +1,9 @@
 # Asset Requirements and Art Pipeline
 
 ## 1. Source-of-truth rule
-The user's supplied Mia and Max images/videos are authoritative. The current repository contained no character or environment assets at audit time. Do not invent character design details. Until references are added, use neutral greybox shapes only and label them as temporary.
+The supplied references are now available in this conversation: Max.png, Mia.jpg and backyard_collage.png. Their appearance and layout are authoritative. A written specification is in VISUAL_REFERENCE_SPECIFICATION.md. The images have not yet been committed as binary files in this repository, so Codex/Unity cannot load them from the repo until they are copied into Reference/. Do not invent character design details. Until production models are created, use clearly labelled greybox placeholders.
 
-## 2. Required source package
+## 2. Approved reference lock\n- Max: ginger fluffy tabby cat, large green eyes, pink nose, cream muzzle/chest, orange striping and fluffy tail. Preserve his supplied face, palette and proportions.\n- Mia: blonde girl with two long braids, green eyes, white short-sleeve T-shirt, blue jeans and white sneakers. Preserve her supplied face, hairstyle and outfit.\n- Backyard: beige two-storey clapboard house, dark roof, white trim, adjoining patio/deck with outdoor seating and black kettle grill, central lawn, white picket fence, mature tree, left-side A-frame swing set, raised sandbox/play bed, shrubs, flowers and potted plants. Sunny daytime lighting. Preserve relative landmark placement from the wide establishing view.\n- Do not mirror the layout. The wide board is the master composition; side/detail panels are the same location.\n\n## 2. Required source package
 Request/collect:
 - Mia: front, side, back, 3/4 views; neutral and expressive face references; outfit details.
 - Max: front, side, back, 3/4 views; fur colour/pattern and face references.
