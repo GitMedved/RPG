@@ -140,3 +140,20 @@
 2. Add EditMode tests for wallet, inventory, XP and save recovery.
 3. Add item definitions and the first three crop definitions, then connect planting/harvest to this session API.
 4. Verify pause/resume and save restoration on one Android and one iOS device.
+
+
+## 2026-11-02 — M3 farming loop prototype
+
+### Added
+- Added serializable farm plot state to player saves.
+- Added a farming domain service for carrots, tomatoes and strawberries.
+- Added three interactable backyard plots and placeholder crop growth visuals.
+- Added starter seeds to a new player profile.
+- Planting consumes a seed and grants XP; mature harvest adds produce, XP and coins.
+- Crop growth advances using persisted UTC planting timestamps and survives app restarts.
+- Added M3 implementation and validation notes.
+
+### Validation status
+- Changes were committed to `codex/mia-max-foundation`.
+- Source was reviewed through GitHub after writing; no Unity Editor, compiler, Play Mode or device build is available in this workflow.
+- The crop picker, inventory presentation, watering, balancing and final crop art are not implemented.
