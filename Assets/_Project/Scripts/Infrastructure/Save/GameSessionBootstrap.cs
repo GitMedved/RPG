@@ -7,6 +7,7 @@ namespace MiaMax.Infrastructure.Save
     public sealed class GameSessionBootstrap : MonoBehaviour
     {
         public static GameSession Current { get; private set; }
+        private static GameSessionBootstrap instance;
         private LocalSaveService saveService;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -18,15 +19,17 @@ namespace MiaMax.Infrastructure.Save
 
         private void Awake()
         {
-            if (Current != null && Current != null)
+            if (instance != null && instance != this)
             {
                 Destroy(gameObject);
                 return;
             }
 
+            instance = this;
             DontDestroyOnLoad(gameObject);
             saveService = new LocalSaveService();
             Current = new GameSession(saveService.LoadOrCreate());
+            Current.StateChanged += SaveNow;
         }
 
         private void OnApplicationPause(bool paused)
@@ -43,6 +46,16 @@ namespace MiaMax.Infrastructure.Save
         {
             if (saveService != null && Current != null)
                 saveService.Save(Current.Data);
+        }
+
+        private void OnDestroy()
+        {
+            if (Current != null) Current.StateChanged -= SaveNow;
+            if (instance == this)
+            {
+                instance = null;
+                Current = null;
+            }
         }
     }
 }
