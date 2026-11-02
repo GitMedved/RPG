@@ -46,10 +46,8 @@ namespace MiaMax.Gameplay
             for (int i = 0; i < Input.touchCount; i++)
             {
                 Touch touch = Input.GetTouch(i);
-                Vector2 guiPosition = new Vector2(touch.position.x, Screen.height - touch.position.y);
-
                 if (activeFingerId < 0 && touch.phase == TouchPhase.Began &&
-                    JoystickRect.Contains(new Vector2(guiPosition.x, Screen.height - guiPosition.y)))
+                    JoystickRect.Contains(touch.position))
                 {
                     activeFingerId = touch.fingerId;
                     startPosition = touch.position;
