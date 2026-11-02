@@ -119,3 +119,24 @@
 2. Review character silhouettes and camera framing against the supplied references.
 3. Fix compile/runtime issues and record device performance.
 4. Import approved source images and licensed production models; replace proxies only after those assets are validated.
+
+
+## 2026-11-02 — Core data and local persistence foundation
+
+### Added
+- Added serializable player progression and inventory stack data with stable item IDs.
+- Added schema-versioned PlayerSaveData (schema v1).
+- Added GameSession domain operations for validated coin additions/spending, item additions/removals and XP/level progression.
+- Added LocalSaveService using Unity persistent data storage, JSON serialization, primary/backup files, basic load validation and recovery from backup.
+- Added a persistent GameSessionBootstrap that loads once and saves after state changes, app pause and app quit.
+
+### Validation status
+- Reviewed source-level contracts and Unity API usage; no Unity Editor is available here, so compilation, file-system behaviour on Android/iOS, lifecycle callbacks and device tests remain unverified.
+- No automated EditMode tests have been added yet; add the Unity Test Framework only after confirming the Editor/package baseline.
+- This is the foundation for farming/production/orders; those gameplay systems are not implemented in this milestone.
+
+### Next actions
+1. Open the project in the pinned Unity Editor and resolve packages; fix all compiler errors before expanding gameplay.
+2. Add EditMode tests for wallet, inventory, XP and save recovery.
+3. Add item definitions and the first three crop definitions, then connect planting/harvest to this session API.
+4. Verify pause/resume and save restoration on one Android and one iOS device.
