@@ -96,3 +96,26 @@
 3. Confirm scene generation, compilation, touch input and interactable detection.
 4. Replace runtime primitive blockout with art assets based on the approved reference board.
 5. Add simple character animation and Max companion smoothing after rig import.
+
+
+## 2026-11-02 — M2 character & world prototype
+
+### Added
+- Added procedural stylized Mia proxy with blonde hair silhouette, two braids, green eyes, white shirt, blue denim legs and light sneakers.
+- Added procedural Max proxy with ginger coat, cream muzzle/belly, green eyes, pink nose, ears, paws and animated tail.
+- Added lightweight movement-driven limb motion for both characters; Max's paws respond to companion movement.
+- Added backyard detail pass: front door and windows, entrance steps, patio seating, grill silhouette, flower beds and potted plants.
+- Integrated the new proxy builders into the runtime backyard bootstrap.
+- Added M2 implementation and local validation notes.
+
+### Validation status
+- Source was written and committed to `codex/mia-max-foundation`.
+- The remote GitHub workflow does not run Unity Editor. C# compilation, Package Manager resolution, scene execution, touch-device behaviour and Android/iOS builds remain **unverified**.
+- All new character/environment geometry is runtime-generated placeholder art. It is not a final model, rig, authored animation set or finished environment.
+- Supplied reference images are still not committed as binary repository assets.
+
+### Next actions
+1. Open the branch in Unity 6000.3.x, resolve URP and run the scene.
+2. Review character silhouettes and camera framing against the supplied references.
+3. Fix compile/runtime issues and record device performance.
+4. Import approved source images and licensed production models; replace proxies only after those assets are validated.
