@@ -74,6 +74,7 @@ namespace MiaMax.Gameplay
             GameObject max = CreateMax(orange, white);
             GameObject cameraObject = new GameObject("Prototype Follow Camera");
             Camera camera = cameraObject.AddComponent<Camera>();
+            cameraObject.AddComponent<AudioListener>();
             camera.tag = "MainCamera";
             camera.fieldOfView = 55f;
             SmoothFollowCamera follow = cameraObject.AddComponent<SmoothFollowCamera>();
@@ -98,8 +99,10 @@ namespace MiaMax.Gameplay
             cc.height = 1.8f; cc.radius = 0.38f; cc.center = new Vector3(0f, 0.9f, 0f);
             root.AddComponent<PrototypeThirdPersonController>();
 
-            Sphere("Mia_Body_Placeholder", root.transform.position + Vector3.up * 0.9f, new Vector3(0.65f, 0.95f, 0.38f), clothes, root.transform);
-            Sphere("Mia_Head_Placeholder", root.transform.position + Vector3.up * 1.75f, Vector3.one * 0.62f, skin, root.transform);
+            GameObject body = Sphere("Mia_Body_Placeholder", root.transform.position + Vector3.up * 0.9f, new Vector3(0.65f, 0.95f, 0.38f), clothes, root.transform);
+            GameObject head = Sphere("Mia_Head_Placeholder", root.transform.position + Vector3.up * 1.75f, Vector3.one * 0.62f, skin, root.transform);
+            Object.Destroy(body.GetComponent<Collider>());
+            Object.Destroy(head.GetComponent<Collider>());
             return root;
         }
 
@@ -107,9 +110,12 @@ namespace MiaMax.Gameplay
         {
             GameObject root = new GameObject("Max_Placeholder");
             root.transform.position = new Vector3(-1.5f, 0.1f, -1.2f);
-            Sphere("Max_Body_Placeholder", root.transform.position + Vector3.up * 0.45f, new Vector3(0.9f, 0.65f, 0.55f), fur, root.transform);
-            Sphere("Max_Head_Placeholder", root.transform.position + Vector3.up * 1.05f, Vector3.one * 0.62f, fur, root.transform);
-            Sphere("Max_Muzzle_Placeholder", root.transform.position + new Vector3(0f, 0.98f, 0.48f), new Vector3(0.45f, 0.28f, 0.22f), cream, root.transform);
+            GameObject body = Sphere("Max_Body_Placeholder", root.transform.position + Vector3.up * 0.45f, new Vector3(0.9f, 0.65f, 0.55f), fur, root.transform);
+            GameObject head = Sphere("Max_Head_Placeholder", root.transform.position + Vector3.up * 1.05f, Vector3.one * 0.62f, fur, root.transform);
+            GameObject muzzle = Sphere("Max_Muzzle_Placeholder", root.transform.position + new Vector3(0f, 0.98f, 0.48f), new Vector3(0.45f, 0.28f, 0.22f), cream, root.transform);
+            Object.Destroy(body.GetComponent<Collider>());
+            Object.Destroy(head.GetComponent<Collider>());
+            Object.Destroy(muzzle.GetComponent<Collider>());
             root.AddComponent<MaxCompanionFollow>().SetTarget(GameObject.Find("Mia_Placeholder").transform);
             return root;
         }
