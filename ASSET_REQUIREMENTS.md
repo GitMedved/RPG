@@ -25,6 +25,8 @@ MVP backyard kit: ground/terrain, house exterior, fence, garden beds, crop growt
 Use modular pieces, shared materials and reusable prefabs. Prioritize readable interaction silhouettes over micro-detail.
 
 ## 5. UI and iconography
+
+Prototype note: a temporary circular touch joystick and a basic interaction prompt currently use runtime GUI drawing. They are test scaffolding only and must be replaced with approved portrait mobile UI art and scalable Unity UI prefabs before production.
 Portrait layouts: HUD, inventory, quest panel, order board, map, mini-game entry/results, collection book, settings, pause and parent-gated mock shop. Provide scalable vector/source assets where possible, 9-slice panels and icon exports at multiple resolutions. All visible text must be localization-ready English keys.
 
 ## 6. Audio
