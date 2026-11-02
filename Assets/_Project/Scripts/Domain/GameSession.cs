@@ -78,7 +78,7 @@ namespace MiaMax.Domain
             return 100 + Math.Max(0, level - 1) * 50;
         }
 
-        private void Notify()
+        public void NotifyExternalStateChanged()\n        {\n            Notify();\n        }\n\n        private void Notify()
         {
             StateChanged?.Invoke();
         }
