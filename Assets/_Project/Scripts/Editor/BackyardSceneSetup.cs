@@ -26,9 +26,10 @@ namespace MiaMax.Gameplay.Editor
 
             if (!File.Exists(ScenePath))
             {
-                Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+                Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
                 EditorSceneManager.SaveScene(scene, ScenePath);
-                Debug.Log("Created Mia & Max Backyard prototype scene.");
+                EditorSceneManager.CloseScene(scene, true);
+                Debug.Log("Created Mia & Max Backyard prototype scene without replacing the currently open scene.");
             }
 
             EditorBuildSettingsScene[] current = EditorBuildSettings.scenes;
