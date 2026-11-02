@@ -64,3 +64,14 @@ The runtime greybox now includes temporary stylized Mia and Max proxies with ref
 - These are procedural placeholder meshes, not final 3D models or production animation rigs.
 - See [M2 Character & World Prototype](M2_CHARACTER_WORLD_PROTOTYPE.md) for scope and validation checklist.
 - Unity compilation, visual review, Play Mode and Android/iOS device testing remain unverified in this environment.
+
+
+## Core data and local persistence
+
+The first offline player-state foundation is now present:
+- GameSession validates coin, item-stack and XP operations.
+- PlayerSaveData uses stable item IDs and schema version 1.
+- LocalSaveService stores JSON under Unity's persistent data path, keeps a backup and validates loaded values.
+- GameSessionBootstrap loads once, autosaves after state changes and saves on app pause/quit.
+
+This is an infrastructure milestone only: there is not yet a production inventory UI, crop/recipe/order content, migration chain beyond schema v1, or automated test suite. Unity compilation and device lifecycle behaviour still require local Editor/device validation.
