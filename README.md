@@ -23,6 +23,7 @@ Pre-production foundation. The repository initially contained only this README; 
 - [Game Economy](GAME_ECONOMY.md)
 - [MVP Roadmap](MVP_ROADMAP.md)
 - [Asset Requirements](ASSET_REQUIREMENTS.md)
+- [Visual Reference Specification](VISUAL_REFERENCE_SPECIFICATION.md)
 - [Codex Development Log](CODEX_DEVELOPMENT_LOG.md)
 
 ## Unity project scaffold
