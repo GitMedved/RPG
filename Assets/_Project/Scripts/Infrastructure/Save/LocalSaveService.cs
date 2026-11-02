@@ -72,9 +72,14 @@ namespace MiaMax.Infrastructure.Save
             try
             {
                 PlayerSaveData data = JsonUtility.FromJson<PlayerSaveData>(File.ReadAllText(path));
-                return data != null && data.SchemaVersion == PlayerSaveData.CurrentSchemaVersion
-                    ? data
-                    : null;
+                if (data == null) return null;
+                if (data.SchemaVersion != PlayerSaveData.CurrentSchemaVersion)
+                    throw new InvalidDataException("Unsupported save schema version; source file was preserved.");
+                return data;
+            }
+            catch (InvalidDataException)
+            {
+                throw;
             }
             catch (Exception exception)
             {
