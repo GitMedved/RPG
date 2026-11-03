@@ -113,9 +113,13 @@ namespace MiaMax.Gameplay
             if (GUI.Button(new Rect(10f * scale, y + row * 4.65f, width - 20f * scale, row * 0.9f),
                 "Claim collection reward", buttonStyle))
             {
-                journalNotice = collectionService != null && collectionService.TryClaimCompletionReward()
-                    ? "Collection reward claimed: +25 coins, +30 XP!"
-                    : "Find all 5 keepsakes to unlock this reward.";
+                journalNotice = collectionService == null
+                    ? "Collection unavailable."
+                    : collectionService.IsCompletionRewardClaimed
+                        ? "Collection reward was already claimed."
+                        : collectionService.TryClaimCompletionReward()
+                            ? "Collection reward claimed: +25 coins, +30 XP!"
+                            : "Find all 5 keepsakes to unlock this reward.";
             }
 
             var job = productionService != null ? productionService.ActiveJob : null;
@@ -129,11 +133,11 @@ namespace MiaMax.Gameplay
             float recipeY = y + row * 6.55f;
             float recipeGap = 4f * scale;
             float recipeWidth = (width - 20f * scale - recipeGap * 2f) / 3f;
-            if (GUI.Button(new Rect(10f * scale, recipeY, recipeWidth, row), "Soup", buttonStyle))
+            if (GUI.Button(new Rect(10f * scale, recipeY, recipeWidth, row), "Soup x3", buttonStyle))
                 journalNotice = StartRecipe(ProductionService.CarrotSoup);
-            if (GUI.Button(new Rect(10f * scale + recipeWidth + recipeGap, recipeY, recipeWidth, row), "Juice", buttonStyle))
+            if (GUI.Button(new Rect(10f * scale + recipeWidth + recipeGap, recipeY, recipeWidth, row), "Juice x3", buttonStyle))
                 journalNotice = StartRecipe(ProductionService.StrawberryJuice);
-            if (GUI.Button(new Rect(10f * scale + (recipeWidth + recipeGap) * 2f, recipeY, recipeWidth, row), "Toy", buttonStyle))
+            if (GUI.Button(new Rect(10f * scale + (recipeWidth + recipeGap) * 2f, recipeY, recipeWidth, row), "Toy x2", buttonStyle))
                 journalNotice = StartRecipe(ProductionService.WoodenToy);
 
             if (GUI.Button(new Rect(10f * scale, y + row * 7.55f, width - 20f * scale, row * 0.9f),
@@ -161,6 +165,9 @@ namespace MiaMax.Gameplay
         private string StartRecipe(string recipeId)
         {
             if (productionService == null) return "Workshop unavailable.";
+            var activeJob = productionService.ActiveJob;
+            if (activeJob != null && activeJob.IsActive)
+                return "Workshop busy. Collect the current product first.";
             if (productionService.TryStart(recipeId)) return "Started: " + RecipeName(recipeId) + ".";
             return "Not enough ingredients or workshop is busy.";
         }
