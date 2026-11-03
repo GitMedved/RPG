@@ -51,10 +51,16 @@ namespace MiaMax.Gameplay
             float buttonWidth = 126f * scale;
             if (GUI.Button(new Rect(0f, line * 2.35f, buttonWidth, line * 1.2f),
                 inventoryOpen ? "Close Bag" : "Inventory", buttonStyle))
+            {
                 inventoryOpen = !inventoryOpen;
+                if (inventoryOpen) journalOpen = false;
+            }
             if (GUI.Button(new Rect(buttonWidth + 8f * scale, line * 2.35f, buttonWidth, line * 1.2f),
                 journalOpen ? "Close Journal" : "Journal", buttonStyle))
+            {
                 journalOpen = !journalOpen;
+                if (journalOpen) inventoryOpen = false;
+            }
 
             if (inventoryOpen)
                 DrawInventory(session, scale, line, panelWidth);
@@ -132,6 +138,7 @@ namespace MiaMax.Gameplay
             headingStyle.normal.textColor = Color.white;
             bodyStyle = new GUIStyle(GUI.skin.label);
             bodyStyle.fontSize = Mathf.RoundToInt(14f * scale);
+            bodyStyle.wordWrap = true;
             bodyStyle.normal.textColor = Color.white;
             buttonStyle = new GUIStyle(GUI.skin.button);
             buttonStyle.fontSize = Mathf.RoundToInt(15f * scale);
