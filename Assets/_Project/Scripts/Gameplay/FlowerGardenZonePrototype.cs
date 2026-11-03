@@ -13,6 +13,7 @@ namespace MiaMax.Gameplay
         public void Configure(GameObject contentRoot)
         {
             gardenContent = contentRoot;
+            if (gardenContent != null) gardenContent.SetActive(false);
             Refresh();
         }
 
