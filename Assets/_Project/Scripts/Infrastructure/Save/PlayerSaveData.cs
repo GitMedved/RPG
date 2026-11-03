@@ -21,5 +21,7 @@ namespace MiaMax.Infrastructure.Save
         public List<FarmPlotData> FarmPlots = new List<FarmPlotData>();
         public ProductionJobData ProductionJob = new ProductionJobData();
         public List<CompletedOrderData> CompletedOrders = new List<CompletedOrderData>();
+        public List<QuestProgressData> ClaimedQuests = new List<QuestProgressData>();
+        public List<string> UnlockedWorldAreas = new List<string>();
     }
 }
