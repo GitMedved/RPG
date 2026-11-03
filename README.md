@@ -80,3 +80,7 @@ This is an infrastructure milestone only: there is not yet a production inventor
 ## M3 — Farming loop prototype
 
 Three interactive backyard plots are now connected to persistent farm data. New profiles receive starter carrot, tomato and strawberry seeds; planting, timed growth and harvesting update inventory, XP and coins. Crop visuals remain temporary placeholders. See [M3 Farming Loop Prototype](M3_FARMING_LOOP_PROTOTYPE.md). Unity compilation and device testing are still pending.
+
+## M4 — Production and orders prototype
+
+The backyard now includes an interactive workshop and order board. Three persistent recipes (carrot soup, strawberry juice, wooden toy) use real-time production jobs; three one-time orders consume crafted products and reward coins/XP. See [M4 Production & Orders Prototype](M4_PRODUCTION_ORDERS_PROTOTYPE.md). Recipe selection and order presentation are still temporary interaction-only flows. Unity compilation and device testing remain pending.
