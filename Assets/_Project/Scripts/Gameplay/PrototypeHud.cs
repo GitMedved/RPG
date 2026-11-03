@@ -1,5 +1,7 @@
 using System.Text;
 using MiaMax.Domain;
+using MiaMax.Domain.Collections;
+using MiaMax.Domain.Progression;
 using MiaMax.Infrastructure.Save;
 using UnityEngine;
 
@@ -12,6 +14,10 @@ namespace MiaMax.Gameplay
     public sealed class PrototypeHud : MonoBehaviour
     {
         private bool inventoryOpen;
+        private bool journalOpen;
+        private GameSession boundSession;
+        private QuestService questService;
+        private CollectionService collectionService;
         private GUIStyle panelStyle;
         private GUIStyle headingStyle;
         private GUIStyle bodyStyle;
@@ -21,6 +27,8 @@ namespace MiaMax.Gameplay
         {
             GameSession session = GameSessionBootstrap.Current;
             if (session == null || session.Data == null) return;
+
+            BindSession(session);
 
             Rect safe = Screen.safeArea;
             float top = Screen.height - safe.yMax;
@@ -40,15 +48,45 @@ namespace MiaMax.Gameplay
             GUI.Label(new Rect(10f * scale, line, panelWidth - 20f * scale, line),
                 "Coins: " + session.Data.Progress.Coins, bodyStyle);
 
-            float buttonWidth = 150f * scale;
+            float buttonWidth = 126f * scale;
             if (GUI.Button(new Rect(0f, line * 2.35f, buttonWidth, line * 1.2f),
                 inventoryOpen ? "Close Bag" : "Inventory", buttonStyle))
                 inventoryOpen = !inventoryOpen;
+            if (GUI.Button(new Rect(buttonWidth + 8f * scale, line * 2.35f, buttonWidth, line * 1.2f),
+                journalOpen ? "Close Journal" : "Journal", buttonStyle))
+                journalOpen = !journalOpen;
 
             if (inventoryOpen)
                 DrawInventory(session, scale, line, panelWidth);
+            if (journalOpen)
+                DrawJournal(scale, line, panelWidth);
 
             GUI.EndGroup();
+        }
+
+        private void BindSession(GameSession session)
+        {
+            if (boundSession == session) return;
+            boundSession = session;
+            questService = new QuestService(session);
+            collectionService = new CollectionService(session);
+        }
+
+        private void DrawJournal(float scale, float line, float width)
+        {
+            float y = line * 3.8f;
+            float row = 34f * scale;
+            float height = row * 4.2f;
+            Color previousColor = GUI.color;
+            GUI.color = new Color(0.10f, 0.15f, 0.18f, 0.94f);
+            GUI.Box(new Rect(0f, y, width, height), GUIContent.none, panelStyle);
+            GUI.color = previousColor;
+            GUI.Label(new Rect(10f * scale, y + 4f * scale, width - 20f * scale, row),
+                "ADVENTURE JOURNAL", headingStyle);
+            GUI.Label(new Rect(12f * scale, y + row, width - 24f * scale, row * 1.5f),
+                questService != null ? questService.GetSummary() : "Story quests unavailable.", bodyStyle);
+            GUI.Label(new Rect(12f * scale, y + row * 2.6f, width - 24f * scale, row * 1.5f),
+                collectionService != null ? collectionService.GetSummary() : "Collection unavailable.", bodyStyle);
         }
 
         private void DrawInventory(GameSession session, float scale, float line, float width)
