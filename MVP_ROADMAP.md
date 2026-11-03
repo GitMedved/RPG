@@ -95,3 +95,8 @@ The project must not be described as mobile-ready until the Editor compile, clea
 Added persistent garden/workshop levels (0–2), validated on load. Garden upgrades cost 60 then 120 coins and add one crop to each future harvest per level. Workshop upgrades cost 60 then 120 coins and reduce newly started production jobs to 85% / 70% of base duration. Existing active jobs are not retroactively modified. Both upgrades are purchased from the Adventure Journal.
 
 This package is source-committed only. Unity compile was confirmed by the user before this package; the new M12 code has not yet been compiled or tested in Play Mode. See M12_GARDEN_WORKSHOP_UPGRADES.md.
+
+
+## 9. M13 implementation status — 2026-11-03
+
+A small story-gated Flower Garden annex is now generated in the backyard scene. Claiming the final starter quest reveals the fenced annex. Entrance/return portals move the player between the backyard and annex. Three one-time flower resources grant inventory items, XP and coins, and their collection state is saved. This is a prototype blockout and requires Unity compile and Play Mode validation; it is not a separate streamed scene or final art.
