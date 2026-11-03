@@ -209,3 +209,23 @@
 1. Add a readable, safe-area-aware HUD and inventory viewer.
 2. Add automated EditMode coverage for collection and save-state invariants.
 3. Open the project in Unity and validate all scripts before expanding the world.
+
+
+## 2026-11-03 — M9 prototype HUD and inventory viewer
+
+### Added
+- Added a safe-area-aware HUD for player level, XP and coins.
+- Added an expandable backpack list with readable names for current seeds, crops, products and wood.
+- Connected the HUD to the runtime backyard bootstrap.
+- Added M9 implementation and validation notes.
+- Adjusted panel tint for readable contrast.
+
+### Validation status
+- Source-level integration and repository paths were checked remotely.
+- Unity compilation, Play Mode, touch interaction, small-screen layout and Android/iOS builds remain unverified.
+- The HUD is an IMGUI prototype, not final production UI.
+
+### Next actions
+1. Open the branch in Unity and resolve all import/compiler errors.
+2. Verify backyard navigation, object interactions, all three mini-games, collection pickups and save/reload.
+3. Capture device screenshots and performance results before replacing temporary UI/art with production assets.
