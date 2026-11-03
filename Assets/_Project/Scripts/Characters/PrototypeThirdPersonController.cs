@@ -1,4 +1,6 @@
 using UnityEngine;
+using MiaMax.Domain.Progression;
+using MiaMax.Infrastructure.Save;
 
 namespace MiaMax.Gameplay
 {
@@ -13,6 +15,7 @@ namespace MiaMax.Gameplay
 
         private CharacterController controller;
         private float verticalVelocity;
+        private TutorialService tutorial;
 
         private void Awake()
         {
@@ -24,6 +27,10 @@ namespace MiaMax.Gameplay
         private void Update()
         {
             Vector2 input = ReadMovement();
+            if (tutorial == null && GameSessionBootstrap.Current != null)
+                tutorial = new TutorialService(GameSessionBootstrap.Current);
+            if (input.sqrMagnitude > 0.01f && tutorial != null)
+                tutorial.MarkMovementSeen();
             Vector3 forward = cameraTransform != null ? cameraTransform.forward : Vector3.forward;
             Vector3 right = cameraTransform != null ? cameraTransform.right : Vector3.right;
             forward.y = 0f;
