@@ -34,6 +34,7 @@ namespace MiaMax.Infrastructure.Save
                 Current.AddItem("seed_carrot", 3);
                 Current.AddItem("seed_tomato", 3);
                 Current.AddItem("seed_strawberry", 3);
+                Current.AddItem("wood", 2);
             }
             Current.StateChanged += SaveNow;
         }
