@@ -44,7 +44,13 @@ namespace MiaMax.Domain
         public string GetStatusSummary()
         {
             int done = Orders.Count(x => IsCompleted(x.Id));
-            return "Orders completed: " + done + "/" + Orders.Length + ". Need soup, juice and a wooden toy.";
+            var ready = Orders
+                .Where(x => !IsCompleted(x.Id) && CanComplete(x.Id))
+                .Select(x => x.ItemId == "product_carrot_soup" ? "Soup" :
+                    x.ItemId == "product_strawberry_juice" ? "Juice" : "Toy")
+                .ToArray();
+            return "Orders: " + done + "/" + Orders.Length + " delivered. Ready: " +
+                (ready.Length > 0 ? string.Join(", ", ready) : "none") + ".";
         }
         public string FirstAvailableOrder()
         {
