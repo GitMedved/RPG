@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using MiaMax.Infrastructure.Audio;
 
 namespace MiaMax.Gameplay
 {
@@ -21,6 +22,8 @@ namespace MiaMax.Gameplay
         public void Interact()
         {
             Debug.Log($"Mia interacts with {displayName}: {actionLabel}");
+            GameAudioService.Instance?.Play(GameAudioCue.Interact);
+            GetComponentInParent<CharacterAnimationBridge>()?.PlayInteract();
             Interacted?.Invoke();
         }
     }
