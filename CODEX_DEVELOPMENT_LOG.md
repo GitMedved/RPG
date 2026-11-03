@@ -267,3 +267,21 @@
 - Added a consolidated Android/iOS preparation checklist covering Unity modules, package resolution, URP setup, signing, builds, device smoke tests and release gates.
 - No Android or iOS build was produced. No device is certified by this documentation-only milestone.
 - See M11_MOBILE_BUILD_READINESS.md.
+
+
+## 2026-11-03 — M12 garden and workshop upgrades
+
+### Added
+- Added persistent GardenLevel and WorkshopLevel fields to player save data.
+- Added UpgradeService with two upgrade tracks, maximum level 2 and coin costs of 60 / 120.
+- Garden upgrades increase future harvest output by +1 crop per level (base output 2).
+- Workshop upgrades reduce the duration of newly started production jobs by 15% / 30%.
+- Existing active production jobs retain their original duration.
+- Added upgrade status and purchase controls to the Adventure Journal.
+- Added load-time validation to clamp both levels to the supported range.
+
+### Validation status
+- Source changes are committed to the feature branch and reviewed for cross-file integration.
+- User confirmed the previous package compiles in Unity before M12 was added. M12 itself still requires Unity compilation and Play Mode validation.
+- Verify upgrade purchases deduct coins once, survive save/reload, affect future harvests and newly started production jobs, and do not alter an active job.
+- No Android/iOS build or device test was performed.
