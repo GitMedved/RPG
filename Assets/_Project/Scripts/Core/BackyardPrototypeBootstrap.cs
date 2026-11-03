@@ -212,6 +212,12 @@ namespace MiaMax.Gameplay
             root.transform.position = position;
             Sphere("Flower_Head", position + Vector3.up * 0.25f, new Vector3(0.5f, 0.25f, 0.5f), flowerMaterial, root.transform);
             Cylinder("Flower_Stem", position + Vector3.down * 0.12f, new Vector3(0.08f, 0.35f, 0.08f), leafMaterial).transform.SetParent(root.transform, true);
+
+            // The visual primitives are children; the interactable root needs its own collider.
+            SphereCollider resourceCollider = root.AddComponent<SphereCollider>();
+            resourceCollider.center = new Vector3(0f, 0.1f, 0f);
+            resourceCollider.radius = 0.7f;
+
             BackyardInteractable interactable = root.AddComponent<BackyardInteractable>();
             interactable.Configure(title, "Collect flower");
             root.AddComponent<FlowerGardenResourcePrototype>().Configure(id, itemId, title, interactable);
