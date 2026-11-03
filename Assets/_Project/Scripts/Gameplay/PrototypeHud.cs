@@ -31,7 +31,10 @@ namespace MiaMax.Gameplay
 
             EnsureStyles(scale);
             GUI.BeginGroup(new Rect(safe.xMin + margin, top + margin, safe.width - margin * 2f, safe.height - margin * 2f));
+            Color previousColor = GUI.color;
+            GUI.color = new Color(0.10f, 0.15f, 0.18f, 0.88f);
             GUI.Box(new Rect(0f, 0f, panelWidth, line * 2.1f), GUIContent.none, panelStyle);
+            GUI.color = previousColor;
             GUI.Label(new Rect(10f * scale, 3f * scale, panelWidth - 20f * scale, line), 
                 "LEVEL " + session.Data.Progress.Level + "    " + session.Data.Progress.Experience + " XP", headingStyle);
             GUI.Label(new Rect(10f * scale, line, panelWidth - 20f * scale, line),
@@ -54,7 +57,10 @@ namespace MiaMax.Gameplay
             float row = 27f * scale;
             int visible = Mathf.Min(session.Data.Inventory.Count, 12);
             float height = (visible + 1) * row + 16f * scale;
+            Color previousColor = GUI.color;
+            GUI.color = new Color(0.10f, 0.15f, 0.18f, 0.92f);
             GUI.Box(new Rect(0f, y, width, height), GUIContent.none, panelStyle);
+            GUI.color = previousColor;
             GUI.Label(new Rect(10f * scale, y + 4f * scale, width - 20f * scale, row),
                 "BACKPACK  (" + session.Data.Inventory.Count + " stacks)", headingStyle);
 
