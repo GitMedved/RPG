@@ -31,5 +31,7 @@ namespace MiaMax.Infrastructure.Save
         public int TutorialStep;
         public bool TutorialMovementSeen;
         public bool TutorialCompleted;
+        public int GardenLevel;
+        public int WorkshopLevel;
     }
 }
