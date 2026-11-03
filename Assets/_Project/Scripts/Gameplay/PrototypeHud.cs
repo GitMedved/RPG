@@ -87,6 +87,12 @@ namespace MiaMax.Gameplay
             if (playerInteraction == null)
                 playerInteraction = FindFirstObjectByType<PlayerInteraction>();
             bool canInteract = playerInteraction != null && playerInteraction.HasNearbyTarget;
+            if (canInteract)
+            {
+                GUI.color = new Color(0.95f, 0.91f, 0.78f, 1f);
+                GUI.Label(new Rect(safe.width * 0.5f - 150f * scale, dockY - line * 0.9f,
+                    300f * scale, line * 0.8f), playerInteraction.NearbyPrompt, headingStyle);
+            }
             GUI.color = canInteract
                 ? new Color(0.72f, 0.48f, 0.20f, 1f)
                 : new Color(0.22f, 0.25f, 0.27f, 0.82f);
