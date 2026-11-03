@@ -229,3 +229,19 @@
 1. Open the branch in Unity and resolve all import/compiler errors.
 2. Verify backyard navigation, object interactions, all three mini-games, collection pickups and save/reload.
 3. Capture device screenshots and performance results before replacing temporary UI/art with production assets.
+
+
+## 2026-11-03 — M9.2 journal activity controls
+
+### Added
+- Expanded the Adventure Journal into a compact activity hub.
+- Added direct quest reward and collection completion reward claims.
+- Added explicit recipe buttons for soup, juice and wooden toy.
+- Added direct collection of finished production and delivery of the next ready order.
+- Updated order summary to show delivery progress and currently ready products.
+- Reused existing production, order, quest and collection services; no save schema changes.
+
+### Validation status
+- Updated source was fetched again from the feature branch and key integration calls were checked.
+- User-confirmed Unity tests cover the previous HUD/journal and save/reload behavior, not these newly added activity actions.
+- New recipe, collection-reward and delivery buttons require Unity Play Mode verification. Small-screen layout and mobile touch targets also remain unverified.
