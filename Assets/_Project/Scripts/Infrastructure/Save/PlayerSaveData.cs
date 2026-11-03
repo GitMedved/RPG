@@ -28,5 +28,8 @@ namespace MiaMax.Infrastructure.Save
         public List<MiniGameRewardClaimData> MiniGameRewardClaims = new List<MiniGameRewardClaimData>();
         public List<string> DiscoveredCollectibles = new List<string>();
         public bool CollectionCompletionRewardClaimed;
+        public int TutorialStep;
+        public bool TutorialMovementSeen;
+        public bool TutorialCompleted;
     }
 }
