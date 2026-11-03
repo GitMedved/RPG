@@ -18,6 +18,11 @@ namespace MiaMax.Gameplay
         private string status = "Choose a mini-game";
         private int selectedCell = -1;
         private float runnerElapsed;
+        private float runnerObstacleTimer;
+        private int nextObstacleLane;
+        private int nextCoinLane;
+        private bool coinAvailable;
+        private float fishingAim = 0.5f;
         private bool rewardClaimed;
 
         public void Configure(BackyardInteractable target)
@@ -34,6 +39,24 @@ namespace MiaMax.Gameplay
             {
                 runner.Tick(Time.deltaTime, 8f);
                 runnerElapsed += Time.deltaTime;
+                runnerObstacleTimer += Time.deltaTime;
+                if (runnerObstacleTimer >= 2.5f)
+                {
+                    runnerObstacleTimer = 0f;
+                    if (runner.Lane == nextObstacleLane)
+                    {
+                        runner.HitObstacle(nextObstacleLane);
+                        status = "Max hit an obstacle! Run over.";
+                    }
+                    else
+                    {
+                        runner.AvoidObstacle(nextObstacleLane);
+                        status = "Nice dodge!";
+                    }
+                    nextObstacleLane = UnityEngine.Random.Range(0, MaxRunSession.LaneCount);
+                    nextCoinLane = UnityEngine.Random.Range(0, MaxRunSession.LaneCount);
+                    coinAvailable = true;
+                }
                 if (runnerElapsed >= 18f) runner.Finish();
             }
         }
@@ -57,8 +80,15 @@ namespace MiaMax.Gameplay
             selectedCell = -1;
             runnerElapsed = 0f;
             if (game == MiniGameRewardService.Match3) match3 = new Match3Board();
-            if (game == MiniGameRewardService.Fishing) fishing = new FishingTimingSession();
-            if (game == MiniGameRewardService.MaxRun) runner = new MaxRunSession();
+            if (game == MiniGameRewardService.Fishing) { fishing = new FishingTimingSession(); fishingAim = 0.5f; }
+            if (game == MiniGameRewardService.MaxRun)
+            {
+                runner = new MaxRunSession();
+                runnerObstacleTimer = 0f;
+                nextObstacleLane = UnityEngine.Random.Range(0, 2) == 0 ? 0 : 2;
+                nextCoinLane = UnityEngine.Random.Range(0, MaxRunSession.LaneCount);
+                coinAvailable = true;
+            }
             status = "New run started.";
         }
 
@@ -129,10 +159,10 @@ namespace MiaMax.Gameplay
             if (fishing == null) return;
             GUI.Label(new Rect(28, 90, 285, 32), "Target zone: " + fishing.TargetCenter.ToString("0.00"));
             GUI.Label(new Rect(28, 126, 285, 32), "Timing position (0–1)");
-            float position = GUI.HorizontalSlider(new Rect(30, 164, 280, 24), fishing.TargetCenter, 0f, 1f);
+            fishingAim = GUI.HorizontalSlider(new Rect(30, 164, 280, 24), fishingAim, 0f, 1f);
             if (GUI.Button(new Rect(28, 205, 285, 38), "Cast / try to catch"))
             {
-                bool caught = fishing.TryFinish(position);
+                bool caught = fishing.TryFinish(fishingAim);
                 status = caught ? "Catch! Quality " + fishing.Quality : "The fish got away. Try another cast.";
                 if (caught) ClaimReward(fishing.Quality * 100);
             }
@@ -143,12 +173,19 @@ namespace MiaMax.Gameplay
             if (runner == null) return;
             GUI.Label(new Rect(28, 88, 285, 30), "Distance: " + runner.Distance.ToString("0") + " · Score: " + runner.Score);
             GUI.Label(new Rect(28, 120, 285, 30), "Lane: " + (runner.Lane + 1) + " / 3");
+            GUI.Label(new Rect(28, 146, 285, 24), "Obstacle lane: " + (nextObstacleLane + 1));
+            GUI.Label(new Rect(28, 170, 285, 24), "Coin lane: " + (coinAvailable ? (nextCoinLane + 1).ToString() : "collected"));
             if (!runner.IsFinished)
             {
-                if (GUI.Button(new Rect(28, 170, 130, 42), "← Left")) runner.MoveLeft();
-                if (GUI.Button(new Rect(174, 170, 130, 42), "Right →")) runner.MoveRight();
-                if (GUI.Button(new Rect(28, 222, 276, 42), "Collect bonus coin")) runner.CollectCoin(runner.Lane);
-                if (GUI.Button(new Rect(28, 274, 276, 38), "Finish run")) runner.Finish();
+                if (GUI.Button(new Rect(28, 198, 130, 42), "← Left")) runner.MoveLeft();
+                if (GUI.Button(new Rect(174, 198, 130, 42), "Right →")) runner.MoveRight();
+                if (coinAvailable && GUI.Button(new Rect(28, 250, 276, 38), "Collect coin in lane " + (nextCoinLane + 1)))
+                {
+                    if (runner.CollectCoin(nextCoinLane)) status = "Coin collected!";
+                    else status = "Move to the coin's lane first.";
+                    if (runner.Lane == nextCoinLane) coinAvailable = false;
+                }
+                if (GUI.Button(new Rect(28, 298, 276, 38), "Finish run")) runner.Finish();
             }
             else if (!rewardClaimed && GUI.Button(new Rect(28, 222, 276, 42), "Collect reward"))
                 ClaimReward(runner.Score);
