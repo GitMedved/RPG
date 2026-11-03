@@ -46,13 +46,23 @@ namespace MiaMax.Domain.MiniGames
                 ClaimedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
             });
 
-            if (!session.TryAddCoins(coins) || !session.AddExperience(experience))
+            // Apply both reward currencies as one in-memory transaction. Validate first so
+            // a failed XP addition can never leave coins granted without a claim.
+            if (session.Data.Progress.Coins > int.MaxValue - coins ||
+                session.Data.Progress.Experience > int.MaxValue - experience)
             {
                 session.Data.MiniGameRewardClaims.RemoveAll(x => x != null && x.RunId == runId);
                 coins = 0;
                 experience = 0;
                 session.NotifyExternalStateChanged();
                 return false;
+            }
+            session.Data.Progress.Coins += coins;
+            session.Data.Progress.Experience += experience;
+            while (session.Data.Progress.Experience >= GameSession.ExperienceForNextLevel(session.Data.Progress.Level))
+            {
+                session.Data.Progress.Experience -= GameSession.ExperienceForNextLevel(session.Data.Progress.Level);
+                session.Data.Progress.Level++;
             }
 
             // Bound local history while retaining enough IDs for practical replay protection.
