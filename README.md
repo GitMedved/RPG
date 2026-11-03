@@ -54,7 +54,7 @@ The branch now includes a minimal Unity scaffold and runtime greybox prototype. 
 
 - Editor controls: WASD / arrow keys.
 - Character and environment meshes are temporary primitive placeholders.
-- No URP configuration, original reference image binaries, final art, animations or platform builds are included yet.
+- No production 3D models, authored rigs, animation clips, final UI art or platform builds are included yet. Reference images are stored under `Assets/_Project/Art/`.
 - Unity compile and device builds must be verified in the Editor; they have not been run in this environment.
 
 ## M1.2 — mobile interaction foundation
