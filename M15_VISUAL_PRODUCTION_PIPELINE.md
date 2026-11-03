@@ -1,6 +1,6 @@
 # M15 — Visual production pipeline
 
-**Status:** pipeline and acceptance rules implemented; production art assets are still pending import.
+**Status:** pipeline and acceptance rules implemented. The reference image binaries are already stored under `Assets/_Project/Art/Characters/` and `Assets/_Project/Art/Environment/`; production 3D models and authored UI assets are still pending.
 
 ## Locked visual direction
 Use the supplied Mia, Max and backyard references as the only design authority. Translate the board's Pixar-style 3D target into warm, polished, readable real-time mobile 3D. Do not redesign faces, hairstyles, clothing, coat markings, eye colours or backyard landmark layout.
