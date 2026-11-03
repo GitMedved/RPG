@@ -5,6 +5,7 @@ using MiaMax.Domain.Progression;
 using MiaMax.Domain.Farming;
 using MiaMax.Domain.Production;
 using MiaMax.Domain.Orders;
+using MiaMax.Domain.MiniGames;
 
 namespace MiaMax.Infrastructure.Save
 {
@@ -23,5 +24,6 @@ namespace MiaMax.Infrastructure.Save
         public List<CompletedOrderData> CompletedOrders = new List<CompletedOrderData>();
         public List<QuestProgressData> ClaimedQuests = new List<QuestProgressData>();
         public List<string> UnlockedWorldAreas = new List<string>();
+        public List<MiniGameRewardClaimData> MiniGameRewardClaims = new List<MiniGameRewardClaimData>();
     }
 }
