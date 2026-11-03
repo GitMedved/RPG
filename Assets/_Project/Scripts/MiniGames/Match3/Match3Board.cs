@@ -73,6 +73,7 @@ namespace MiaMax.Domain.MiniGames
                 CollapseAndRefill();
                 matches = FindMatches();
             }
+            if (MovesRemaining > 0 && !HasPossibleMove()) Shuffle();
             return true;
         }
 
