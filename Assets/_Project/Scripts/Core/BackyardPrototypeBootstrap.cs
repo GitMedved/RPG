@@ -123,7 +123,9 @@ namespace MiaMax.Gameplay
 
             // Clearly labelled primitive character stand-ins.
             GameObject mia = CreateMia(blue, beige);
+            mia.AddComponent<CharacterAnimationBridge>();
             GameObject max = CreateMax(orange, white);
+            max.AddComponent<CharacterAnimationBridge>();
             mia.AddComponent<PlayerInteraction>();
             BuildFlowerGardenAnnex(mia.transform);
 
