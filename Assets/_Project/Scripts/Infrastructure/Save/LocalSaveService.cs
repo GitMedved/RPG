@@ -99,6 +99,8 @@ namespace MiaMax.Infrastructure.Save
             data.Progress.Coins = Math.Max(0, data.Progress.Coins);
             if (data.Inventory == null) data.Inventory = new System.Collections.Generic.List<MiaMax.Domain.Inventory.ItemStackData>();
             if (data.FarmPlots == null) data.FarmPlots = new System.Collections.Generic.List<MiaMax.Domain.Farming.FarmPlotData>();
+            if (data.ProductionJob == null) data.ProductionJob = new MiaMax.Domain.Production.ProductionJobData();
+            if (data.CompletedOrders == null) data.CompletedOrders = new System.Collections.Generic.List<MiaMax.Domain.Orders.CompletedOrderData>();
 
             for (int i = data.Inventory.Count - 1; i >= 0; i--)
             {
