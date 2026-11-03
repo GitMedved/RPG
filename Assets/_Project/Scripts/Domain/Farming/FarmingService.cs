@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MiaMax.Domain.Progression;
 using MiaMax.Infrastructure.Save;
 namespace MiaMax.Domain.Farming
 {
