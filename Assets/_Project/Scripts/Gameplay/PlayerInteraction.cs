@@ -17,11 +17,20 @@ namespace MiaMax.Gameplay
             bool keyboardPressed = Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Space);
             bool touchPressed = Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began &&
                                 Input.GetTouch(0).position.x > Screen.width * 0.35f;
-            if (keyboardPressed || touchPressed)
-            {
-                nearest.Interact();
-                nextInteractionTime = Time.time + interactionCooldown;
-            }
+            if (keyboardPressed || touchPressed) TryInteract();
+        }
+
+        public bool HasNearbyTarget => nearest != null;
+        public string NearbyPrompt => nearest == null
+            ? string.Empty
+            : nearest.DisplayName + " · " + nearest.ActionLabel;
+
+        public bool TryInteract()
+        {
+            if (nearest == null || Time.time < nextInteractionTime) return false;
+            nearest.Interact();
+            nextInteractionTime = Time.time + interactionCooldown;
+            return true;
         }
 
         private BackyardInteractable FindNearest()
