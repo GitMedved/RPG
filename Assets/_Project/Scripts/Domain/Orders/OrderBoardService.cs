@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MiaMax.Domain.Orders;
+using MiaMax.Domain.Progression;
 namespace MiaMax.Domain
 {
     public sealed class OrderBoardService
@@ -38,6 +39,7 @@ namespace MiaMax.Domain
             session.Data.CompletedOrders.Add(new CompletedOrderData { OrderId = id, CompletedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds() });
             session.TryAddCoins(order.Coins);
             session.AddExperience(order.Experience);
+            new TutorialService(session).TryAdvance(TutorialService.Deliver);
             session.NotifyExternalStateChanged();
             return true;
         }
