@@ -21,6 +21,7 @@ namespace MiaMax.Gameplay
         private ProductionService productionService;
         private OrderBoardService orderService;
         private TutorialService tutorialService;
+        private UpgradeService upgradeService;
         private GUIStyle panelStyle;
         private GUIStyle headingStyle;
         private GUIStyle bodyStyle;
@@ -93,13 +94,14 @@ namespace MiaMax.Gameplay
             productionService = new ProductionService(session);
             orderService = new OrderBoardService(session);
             tutorialService = new TutorialService(session);
+            upgradeService = new UpgradeService(session);
         }
 
         private void DrawJournal(float scale, float line, float width)
         {
             float y = line * 3.8f;
             float row = 31f * scale;
-            float height = row * 11.25f;
+            float height = row * 14.2f;
             Color previousColor = GUI.color;
             GUI.color = new Color(0.10f, 0.15f, 0.18f, 0.96f);
             GUI.Box(new Rect(0f, y, width, height), GUIContent.none, panelStyle);
@@ -169,8 +171,32 @@ namespace MiaMax.Gameplay
                     : "No order is ready. Make a product first.";
             }
 
+            GUI.Label(new Rect(12f * scale, y + row * 10.35f, width - 24f * scale, row),
+                "BACKYARD UPGRADES", headingStyle);
+            string gardenStatus = upgradeService.GardenAtMax
+                ? "Garden Lv." + upgradeService.GardenLevel + " — max"
+                : "Garden Lv." + upgradeService.GardenLevel + " — +" + (upgradeService.GardenLevel + 1) + " harvest item(s), " + upgradeService.GardenUpgradeCost + " coins";
+            string workshopStatus = upgradeService.WorkshopAtMax
+                ? "Workshop Lv." + upgradeService.WorkshopLevel + " — max"
+                : "Workshop Lv." + upgradeService.WorkshopLevel + " — faster crafting, " + upgradeService.WorkshopUpgradeCost + " coins";
+            GUI.Label(new Rect(12f * scale, y + row * 11.15f, width - 24f * scale, row * 0.9f), gardenStatus, bodyStyle);
+            GUI.Label(new Rect(12f * scale, y + row * 12.05f, width - 24f * scale, row * 0.9f), workshopStatus, bodyStyle);
+
+            float upgradeGap = 5f * scale;
+            float upgradeWidth = (width - 20f * scale - upgradeGap) / 2f;
+            if (GUI.Button(new Rect(10f * scale, y + row * 13.0f, upgradeWidth, row * 0.9f),
+                upgradeService.GardenAtMax ? "Garden MAX" : "Upgrade Garden", buttonStyle))
+                journalNotice = upgradeService.TryUpgradeGarden()
+                    ? "Garden upgraded! Future harvests give more crops."
+                    : "Need more coins or garden is max level.";
+            if (GUI.Button(new Rect(10f * scale + upgradeWidth + upgradeGap, y + row * 13.0f, upgradeWidth, row * 0.9f),
+                upgradeService.WorkshopAtMax ? "Workshop MAX" : "Upgrade Workshop", buttonStyle))
+                journalNotice = upgradeService.TryUpgradeWorkshop()
+                    ? "Workshop upgraded! New crafts finish faster."
+                    : "Need more coins or workshop is max level.";
+
             if (!string.IsNullOrEmpty(journalNotice))
-                GUI.Label(new Rect(12f * scale, y + row * 10.4f, width - 24f * scale, row * 0.8f),
+                GUI.Label(new Rect(12f * scale, y + row * 13.9f, width - 24f * scale, row * 0.8f),
                     journalNotice, bodyStyle);
         }
 
