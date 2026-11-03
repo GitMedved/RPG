@@ -245,3 +245,25 @@
 - Updated source was fetched again from the feature branch and key integration calls were checked.
 - User-confirmed Unity tests cover the previous HUD/journal and save/reload behavior, not these newly added activity actions.
 - New recipe, collection-reward and delivery buttons require Unity Play Mode verification. Small-screen layout and mobile touch targets also remain unverified.
+
+## 2026-11-03 — M10 tutorial and arcade feedback
+
+### Added
+- Implemented a persistent six-step first-session tutorial: movement, planting, harvesting, crafting, order delivery and arcade play.
+- Connected tutorial advancement to successful domain/gameplay actions and added a safe-area-aware HUD hint.
+- Added Unity metadata for TutorialService.
+- Match-3 now reshuffles when no valid swap remains after cascades.
+- Fishing now uses a player-controlled aim position rather than defaulting to the target centre.
+- Max Runner now has timed lane obstacles, dodge scoring and lane-targeted coin collection.
+
+### Validation status
+- Source files were committed and re-fetched from the feature branch.
+- This package has **not** been compiled or run in Unity. The previous user-confirmed scene, movement, farming, save/reload and quest tests predate these changes and do not validate this package.
+- Mobile safe-area layout, runner timing, mini-game reward claims and tutorial persistence need a consolidated Play Mode pass.
+- M10 acceptance checklist: M10_TUTORIAL_AND_ARCADE_FEEDBACK.md.
+
+## 2026-11-03 — M11 mobile build readiness documentation
+
+- Added a consolidated Android/iOS preparation checklist covering Unity modules, package resolution, URP setup, signing, builds, device smoke tests and release gates.
+- No Android or iOS build was produced. No device is certified by this documentation-only milestone.
+- See M11_MOBILE_BUILD_READINESS.md.
