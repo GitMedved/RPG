@@ -88,3 +88,12 @@ The backyard now includes an interactive workshop and order board. Three persist
 ## M5 — Story quests & world progression
 
 A first story progression layer is now connected to the backyard prototype. The adventure journal offers three one-time quests tied to player level and the three starter orders. Claiming the final quest unlocks the persistent `flower_garden` area flag for a future location. Quest claims and unlocked areas are saved locally. See [M5 Quests & World Progression](M5_QUESTS_WORLD_PROGRESSION.md). The quest journal is still a prototype interaction, not a finished UI, and Unity compilation/device validation remains pending.
+
+
+## M6 — Mini-game foundations
+
+Pure C# rules prototypes are available for Match-3, fishing timing and Max Runner. Mini-game rewards use unique run IDs, bounded reward bands and persisted replay-claim records. See [M6 Mini-game Foundations](M6_MINIGAME_FOUNDATIONS.md).
+
+## M7 — Arcade integration prototype
+
+The generated backyard now contains an arcade board that opens a temporary interface for all three mini-games. Results flow through the shared reward service into the player profile. See [M7 Arcade Integration Prototype](M7_ARCADE_INTEGRATION_PROTOTYPE.md). This is an interaction prototype, not final mobile UI; Unity compilation and device validation are still pending.
