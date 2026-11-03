@@ -11,7 +11,8 @@ namespace MiaMax.Gameplay
         private Transform[] animatedParts;
         private Vector3[] baseRotations;
         private bool isCat;
-        private Transform tail;\n        private Vector3 previousPosition;
+        private Transform tail;
+        private Vector3 previousPosition;
 
         public static void BuildMia(Transform root)
         {
