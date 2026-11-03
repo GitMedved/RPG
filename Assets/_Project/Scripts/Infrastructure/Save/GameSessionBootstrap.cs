@@ -13,7 +13,7 @@ namespace MiaMax.Infrastructure.Save
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Create()
         {
-            if (FindObjectOfType<GameSessionBootstrap>() != null) return;
+            if (FindFirstObjectByType<GameSessionBootstrap>() != null) return;
             new GameObject("Game Session").AddComponent<GameSessionBootstrap>();
         }
 
