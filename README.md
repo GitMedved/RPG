@@ -25,6 +25,8 @@ Pre-production Unity prototype. The repository began as a README-only project; t
 - [Asset Requirements](ASSET_REQUIREMENTS.md)
 - [Visual Reference Specification](VISUAL_REFERENCE_SPECIFICATION.md)
 - [Codex Development Log](CODEX_DEVELOPMENT_LOG.md)
+- [M10 Tutorial & Arcade Feedback](M10_TUTORIAL_AND_ARCADE_FEEDBACK.md)
+- [M11 Android & iOS Build Readiness](M11_MOBILE_BUILD_READINESS.md)
 
 ## Unity project scaffold
 
@@ -107,3 +109,12 @@ Five one-time keepsakes can now be discovered around the backyard and are persis
 ## M9 — Prototype HUD and inventory viewer
 
 A temporary safe-area-aware HUD now displays level, XP and coins, with an expandable backpack list. This is a functional prototype viewer only: item use, sorting, icons, pagination and final UI styling are not implemented. Unity compile and device layout validation remain pending.
+
+
+## M10 — Tutorial and arcade feedback
+
+The prototype now includes a persistent six-step tutorial tied to successful gameplay actions. Match-3 reshuffles when no legal swaps remain, fishing has a player-controlled aim, and Max Runner has timed lane obstacles and lane-specific coins. These are still prototype systems and require a Unity compile/Play Mode pass. See [M10 Tutorial & Arcade Feedback](M10_TUTORIAL_AND_ARCADE_FEEDBACK.md).
+
+## M11 — Mobile build readiness
+
+Android/iOS module, signing, build and physical-device validation steps are documented in [M11 Mobile Build Readiness](M11_MOBILE_BUILD_READINESS.md). No mobile build has been produced or certified yet.
