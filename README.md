@@ -27,6 +27,7 @@ Pre-production Unity prototype. The repository began as a README-only project; t
 - [Codex Development Log](CODEX_DEVELOPMENT_LOG.md)
 - [M10 Tutorial & Arcade Feedback](M10_TUTORIAL_AND_ARCADE_FEEDBACK.md)
 - [M11 Android & iOS Build Readiness](M11_MOBILE_BUILD_READINESS.md)
+- [M12 Garden & Workshop Upgrades](M12_GARDEN_WORKSHOP_UPGRADES.md)
 
 ## Unity project scaffold
 
@@ -118,3 +119,8 @@ The prototype now includes a persistent six-step tutorial tied to successful gam
 ## M11 — Mobile build readiness
 
 Android/iOS module, signing, build and physical-device validation steps are documented in [M11 Mobile Build Readiness](M11_MOBILE_BUILD_READINESS.md). No mobile build has been produced or certified yet.
+
+
+## M12 — Garden & workshop upgrades
+
+The Adventure Journal now includes two persistent upgrade tracks. Garden upgrades increase the number of crops received per harvest; workshop upgrades reduce the duration of newly started production jobs. Upgrade levels are saved locally, capped at level 2, and purchased with earned coins. Existing production jobs keep the duration recorded when they were started. See [M12 Garden & Workshop Upgrades](M12_GARDEN_WORKSHOP_UPGRADES.md). The feature still requires Unity Play Mode and save/reload validation.
