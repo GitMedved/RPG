@@ -54,6 +54,27 @@ namespace MiaMax.Infrastructure.Audio
             effectsSource.playOnAwake = false;
             voiceSource.playOnAwake = false;
             musicSource.playOnAwake = false;
+            LoadResourceClips();
+        }
+
+        private void LoadResourceClips()
+        {
+            uiTap = LoadIfMissing(uiTap, "MiaMax/Audio/SFX/ui_tap");
+            plant = LoadIfMissing(plant, "MiaMax/Audio/SFX/plant");
+            harvest = LoadIfMissing(harvest, "MiaMax/Audio/SFX/harvest");
+            craftStart = LoadIfMissing(craftStart, "MiaMax/Audio/SFX/craft_start");
+            craftReady = LoadIfMissing(craftReady, "MiaMax/Audio/SFX/craft_ready");
+            reward = LoadIfMissing(reward, "MiaMax/Audio/SFX/reward");
+            collectible = LoadIfMissing(collectible, "MiaMax/Audio/SFX/collectible");
+            interact = LoadIfMissing(interact, "MiaMax/Audio/SFX/interact");
+            miniGameStart = LoadIfMissing(miniGameStart, "MiaMax/Audio/SFX/minigame_start");
+            miniGameWin = LoadIfMissing(miniGameWin, "MiaMax/Audio/SFX/minigame_win");
+            miniGameMiss = LoadIfMissing(miniGameMiss, "MiaMax/Audio/SFX/minigame_miss");
+        }
+
+        private static AudioClip LoadIfMissing(AudioClip current, string resourcePath)
+        {
+            return current != null ? current : Resources.Load<AudioClip>(resourcePath);
         }
 
         private void OnDestroy()
