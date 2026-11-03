@@ -20,6 +20,7 @@ namespace MiaMax.Gameplay
         private CollectionService collectionService;
         private ProductionService productionService;
         private OrderBoardService orderService;
+        private TutorialService tutorialService;
         private GUIStyle panelStyle;
         private GUIStyle headingStyle;
         private GUIStyle bodyStyle;
@@ -70,6 +71,16 @@ namespace MiaMax.Gameplay
             if (journalOpen)
                 DrawJournal(scale, line, panelWidth);
 
+            if (tutorialService != null && !tutorialService.IsCompleted)
+            {
+                float hintHeight = 38f * scale;
+                GUI.color = new Color(0.10f, 0.15f, 0.18f, 0.92f);
+                GUI.Box(new Rect(0f, safe.height - hintHeight, safe.width - margin * 2f, hintHeight), GUIContent.none, panelStyle);
+                GUI.color = previousColor;
+                GUI.Label(new Rect(10f * scale, safe.height - hintHeight + 3f * scale,
+                    safe.width - margin * 2f - 20f * scale, hintHeight - 6f * scale), tutorialService.CurrentHint, bodyStyle);
+            }
+
             GUI.EndGroup();
         }
 
@@ -81,6 +92,7 @@ namespace MiaMax.Gameplay
             collectionService = new CollectionService(session);
             productionService = new ProductionService(session);
             orderService = new OrderBoardService(session);
+            tutorialService = new TutorialService(session);
         }
 
         private void DrawJournal(float scale, float line, float width)
