@@ -133,8 +133,8 @@ namespace MiaMax.Gameplay
             if (GUI.Button(new Rect(28, 205, 285, 38), "Cast / try to catch"))
             {
                 bool caught = fishing.TryFinish(position);
-                status = caught ? "Catch! Quality " + fishing.Quality : "The fish got away.";
-                ClaimReward(caught ? fishing.Quality * 100 : 0);
+                status = caught ? "Catch! Quality " + fishing.Quality : "The fish got away. Try another cast.";
+                if (caught) ClaimReward(fishing.Quality * 100);
             }
         }
 
