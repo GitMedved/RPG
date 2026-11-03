@@ -17,6 +17,7 @@ namespace MiaMax.Infrastructure.Save
         public int SchemaVersion = CurrentSchemaVersion;
         public long CreatedAtUnix;
         public long UpdatedAtUnix;
+        public bool StarterKitGranted;
         public PlayerProgressData Progress = new PlayerProgressData();
         public List<ItemStackData> Inventory = new List<ItemStackData>();
         public List<FarmPlotData> FarmPlots = new List<FarmPlotData>();
