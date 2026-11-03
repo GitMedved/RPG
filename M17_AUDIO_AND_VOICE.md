@@ -34,7 +34,7 @@ Mia:
 Max: short happy meows, curious chirps, purrs, surprised meow and playful effort sounds; no invented spoken dialogue.
 
 ## Recording and delivery
-Record clean, dry mono voice takes at 48 kHz / 24-bit WAV when practical. Deliver separate takes, no baked-in music/reverb, consistent loudness, clear filenames and written usage rights. Export compressed runtime versions after editing. Keep voice and music volume independently adjustable; add mute controls before release.
+Record clean, dry mono voice takes at 48 kHz / 24-bit WAV when practical. Import SFX under `Assets/Resources/MiaMax/Audio/SFX/` using the lowercase cue filenames in the runtime adapter (for example `interact.wav`, `harvest.wav`, `minigame_win.wav`); the service loads these resources automatically. Voice lines and music can be assigned through the service API or a future content configuration asset. Deliver separate takes, no baked-in music/reverb, consistent loudness, clear filenames and written usage rights. Export compressed runtime versions after editing. Keep voice and music volume independently adjustable; add mute controls before release.
 
 ## Safety and privacy
 No recording of a child's voice or personal data is required for this milestone. Do not upload private voice samples to third-party services without the user's explicit approval and confirmation of rights. No analytics or online voice processing is introduced.
