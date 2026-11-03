@@ -97,3 +97,8 @@ Pure C# rules prototypes are available for Match-3, fishing timing and Max Runne
 ## M7 — Arcade integration prototype
 
 The generated backyard now contains an arcade board that opens a temporary interface for all three mini-games. Results flow through the shared reward service into the player profile. See [M7 Arcade Integration Prototype](M7_ARCADE_INTEGRATION_PROTOTYPE.md). This is an interaction prototype, not final mobile UI; Unity compilation and device validation are still pending.
+
+
+## M8 — Backyard keepsake collection
+
+Five one-time keepsakes can now be discovered around the backyard and are persisted in the local save. The collection book tracks progress and awards 25 coins + 30 XP once all five are found. See [M8 Backyard Keepsake Collection](M8_BACKYARD_COLLECTION.md). The objects and interaction feedback remain prototype placeholders; Unity compilation, save/reload and device testing are still pending.
