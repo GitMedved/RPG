@@ -47,6 +47,18 @@ namespace MiaMax.Gameplay
                 plotInteractable.Configure("Garden plot", "Plant a seed");
                 plot.AddComponent<FarmPlotPrototype>().Configure("plot_" + (i + 1), plotInteractable);
             }
+            GameObject workshop = Cube("Workshop_Station_Placeholder", new Vector3(2.8f, 0.55f, 4.6f),
+                new Vector3(1.8f, 1.1f, 1.1f), wood);
+            BackyardInteractable workshopInteractable = workshop.AddComponent<BackyardInteractable>();
+            workshopInteractable.Configure("Workshop", "Start a recipe");
+            workshop.AddComponent<ProductionStationPrototype>().Configure(workshopInteractable);
+
+            GameObject orderBoard = Cube("Order_Board_Placeholder", new Vector3(-3.2f, 1.05f, 4.6f),
+                new Vector3(1.1f, 2.1f, 0.25f), wood);
+            BackyardInteractable boardInteractable = orderBoard.AddComponent<BackyardInteractable>();
+            boardInteractable.Configure("Order board", "Check orders");
+            orderBoard.AddComponent<OrderBoardPrototype>().Configure(boardInteractable);
+
             BackyardDetailPrototype.Build();
 
             // White perimeter fence, leaving a gate opening at the far side.
