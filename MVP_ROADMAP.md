@@ -105,3 +105,15 @@ A small story-gated Flower Garden annex is now generated in the backyard scene. 
 ## 10. M14 implementation status — 2026-11-03
 
 Added a compact mobile HUD action dock. The status card remains upper-left, Adventure Journal remains upper-right, and Backpack plus contextual Interact controls sit in a bottom dock. The nearby object prompt is unified with the HUD and the existing keyboard E/Space path remains. This is still an IMGUI prototype; final Canvas UI, authored icons, animation, audio and device layout validation remain future work. M14 requires Unity compile and Play Mode validation. See M14_MOBILE_HUD_ACTION_DOCK.md.
+ 
+
+## 8. M15–M18 implementation update — 2026-11-03
+
+| Milestone | Implemented in branch | Still required before acceptance |
+|---|---|---|
+| M15 Visual production | Reference-locked art pipeline, asset intake paths, model/environment/UI deliverables and import acceptance documented | Add original reference binaries; import approved production 3D models, materials, environment assets and UI sprites |
+| M16 Character animation | `CharacterAnimationBridge` reads movement, drives Speed/Grounded and exposes Interact/Celebrate triggers; player interaction invokes Interact | Import Mia/Max rigs, controllers and authored clips; attach/configure bridge; test animation in Play Mode |
+| M17 Audio & voice | `GameAudioService` supports effects, music and voice independently; interaction requests optional SFX; English voice script/direction documented | Record/import licensed SFX, music and character lines; assign clips; test volume, pause and audio focus |
+| M18 Integration/hardening | Mobile runtime pacing bootstrap and device test matrix documented | Unity compile, Play Mode, Android+iOS builds, physical-device performance and lifecycle regression |
+
+**Important:** these are integration foundations, not proof of completed art/voice production or mobile release readiness. Unity Editor and physical devices are outside this remote repository workflow.
