@@ -23,7 +23,6 @@ namespace MiaMax.Gameplay
         {
             Debug.Log($"Mia interacts with {displayName}: {actionLabel}");
             GameAudioService.Instance?.Play(GameAudioCue.Interact);
-            GetComponentInParent<CharacterAnimationBridge>()?.PlayInteract();
             Interacted?.Invoke();
         }
     }
