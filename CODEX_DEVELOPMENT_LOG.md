@@ -303,3 +303,20 @@
 - M13 is committed to the feature branch but has not yet been compiled or tested in Play Mode.
 - Verify locked/unlocked visibility, portal travel, resource rewards, inventory and persistence.
 - The annex is a same-scene blockout, not a streamed scene or final art.
+
+
+## 2026-11-03 — M14 mobile HUD and action dock
+
+### Added
+- Kept the level/XP/coins status card in the upper-left and Adventure Journal shortcut in the upper-right.
+- Added a compact bottom action dock with Backpack and contextual Interact controls.
+- Added nearby-object prompt text above the dock; the Interact button is enabled only when a target is in range.
+- Reused PlayerInteraction for both touch button and keyboard E/Space input.
+- Removed the duplicate standalone interaction prompt so the HUD owns the interaction presentation.
+- Kept Inventory and Journal mutually exclusive.
+- Added M14 acceptance documentation.
+
+### Validation status
+- Source-level checks only; user has not yet compiled or run M14 in Unity.
+- Verify compile, safe-area layout, nearest-target selection, touch interaction, keyboard interaction and panel mutual exclusion in Play Mode.
+- This is still IMGUI prototype UI; final Canvas UI, icon sprites, visual design and device testing are future work.
