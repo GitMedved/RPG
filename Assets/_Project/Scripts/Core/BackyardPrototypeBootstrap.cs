@@ -12,7 +12,7 @@ namespace MiaMax.Gameplay
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void CreatePrototype()
         {
-            if (FindObjectOfType<BackyardPrototypeBootstrap>() != null) return;
+            if (FindFirstObjectByType<BackyardPrototypeBootstrap>() != null) return;
             new GameObject("Backyard Prototype Bootstrap").AddComponent<BackyardPrototypeBootstrap>();
         }
 
