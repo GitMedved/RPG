@@ -84,3 +84,7 @@ Three interactive backyard plots are now connected to persistent farm data. New 
 ## M4 — Production and orders prototype
 
 The backyard now includes an interactive workshop and order board. Three persistent recipes (carrot soup, strawberry juice, wooden toy) use real-time production jobs; three one-time orders consume crafted products and reward coins/XP. See [M4 Production & Orders Prototype](M4_PRODUCTION_ORDERS_PROTOTYPE.md). Recipe selection and order presentation are still temporary interaction-only flows. Unity compilation and device testing remain pending.
+
+## M5 — Story quests & world progression
+
+A first story progression layer is now connected to the backyard prototype. The adventure journal offers three one-time quests tied to player level and the three starter orders. Claiming the final quest unlocks the persistent `flower_garden` area flag for a future location. Quest claims and unlocked areas are saved locally. See [M5 Quests & World Progression](M5_QUESTS_WORLD_PROGRESSION.md). The quest journal is still a prototype interaction, not a finished UI, and Unity compilation/device validation remains pending.
