@@ -65,6 +65,12 @@ namespace MiaMax.Gameplay
             questInteractable.Configure("Adventure journal", "Check story quests");
             questBoard.AddComponent<QuestBoardPrototype>().Configure(questInteractable);
 
+            GameObject arcadeBoard = Cube("Mini_Game_Arcade_Board_Placeholder", new Vector3(0f, 1.1f, 4.6f),
+                new Vector3(1.1f, 2.2f, 0.25f), blue);
+            BackyardInteractable arcadeInteractable = arcadeBoard.AddComponent<BackyardInteractable>();
+            arcadeInteractable.Configure("Mia & Max Arcade", "Play a mini-game");
+            arcadeBoard.AddComponent<ArcadeBoardPrototype>().Configure(arcadeInteractable);
+
             BackyardDetailPrototype.Build();
 
             // White perimeter fence, leaving a gate opening at the far side.
