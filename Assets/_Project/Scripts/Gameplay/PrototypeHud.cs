@@ -75,9 +75,9 @@ namespace MiaMax.Gameplay
             {
                 float hintHeight = 38f * scale;
                 GUI.color = new Color(0.10f, 0.15f, 0.18f, 0.92f);
-                GUI.Box(new Rect(0f, safe.height - hintHeight, safe.width - margin * 2f, hintHeight), GUIContent.none, panelStyle);
+                GUI.Box(new Rect(0f, safe.height - margin - hintHeight, safe.width - margin * 2f, hintHeight), GUIContent.none, panelStyle);
                 GUI.color = previousColor;
-                GUI.Label(new Rect(10f * scale, safe.height - hintHeight + 3f * scale,
+                GUI.Label(new Rect(10f * scale, safe.height - margin - hintHeight + 3f * scale,
                     safe.width - margin * 2f - 20f * scale, hintHeight - 6f * scale), tutorialService.CurrentHint, bodyStyle);
             }
 
