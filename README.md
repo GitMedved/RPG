@@ -28,6 +28,7 @@ Pre-production Unity prototype. The repository began as a README-only project; t
 - [M10 Tutorial & Arcade Feedback](M10_TUTORIAL_AND_ARCADE_FEEDBACK.md)
 - [M11 Android & iOS Build Readiness](M11_MOBILE_BUILD_READINESS.md)
 - [M12 Garden & Workshop Upgrades](M12_GARDEN_WORKSHOP_UPGRADES.md)
+- [M13 Flower Garden Annex](M13_FLOWER_GARDEN_ANNEX.md)
 
 ## Unity project scaffold
 
@@ -124,3 +125,8 @@ Android/iOS module, signing, build and physical-device validation steps are docu
 ## M12 — Garden & workshop upgrades
 
 The Adventure Journal now includes two persistent upgrade tracks. Garden upgrades increase the number of crops received per harvest; workshop upgrades reduce the duration of newly started production jobs. Upgrade levels are saved locally, capped at level 2, and purchased with earned coins. Existing production jobs keep the duration recorded when they were started. See [M12 Garden & Workshop Upgrades](M12_GARDEN_WORKSHOP_UPGRADES.md). The feature still requires Unity Play Mode and save/reload validation.
+
+
+## M13 — Flower Garden Annex
+
+The starter story quest now leads to a tangible gated garden annex in the backyard prototype. Once the final starter quest reward is claimed, the garden becomes visible and accessible through an entrance gate. Three one-time flower resources can be collected for inventory items, XP and coins; discoveries persist in the local save. See [M13 Flower Garden Annex](M13_FLOWER_GARDEN_ANNEX.md). This package requires Unity compilation and Play Mode acceptance testing.
