@@ -22,6 +22,7 @@ namespace MiaMax.Gameplay
         private GUIStyle headingStyle;
         private GUIStyle bodyStyle;
         private GUIStyle buttonStyle;
+        private string journalNotice = string.Empty;
 
         private void OnGUI()
         {
@@ -82,7 +83,7 @@ namespace MiaMax.Gameplay
         {
             float y = line * 3.8f;
             float row = 34f * scale;
-            float height = row * 4.2f;
+            float height = row * 5.35f;
             Color previousColor = GUI.color;
             GUI.color = new Color(0.10f, 0.15f, 0.18f, 0.94f);
             GUI.Box(new Rect(0f, y, width, height), GUIContent.none, panelStyle);
@@ -93,6 +94,19 @@ namespace MiaMax.Gameplay
                 questService != null ? questService.GetSummary() : "Story quests unavailable.", bodyStyle);
             GUI.Label(new Rect(12f * scale, y + row * 2.6f, width - 24f * scale, row * 1.5f),
                 collectionService != null ? collectionService.GetSummary() : "Collection unavailable.", bodyStyle);
+
+            float actionY = y + row * 4.15f;
+            if (GUI.Button(new Rect(10f * scale, actionY, width - 20f * scale, row * 0.9f),
+                "Claim next quest reward", buttonStyle))
+            {
+                string claimedTitle;
+                if (questService != null && questService.TryClaimNext(out claimedTitle))
+                    journalNotice = "Reward claimed: " + claimedTitle + "!";
+                else
+                    journalNotice = "No quest reward is ready yet.";
+            }
+            if (!string.IsNullOrEmpty(journalNotice))
+                GUI.Label(new Rect(12f * scale, actionY + row, width - 24f * scale, row), journalNotice, bodyStyle);
         }
 
         private void DrawInventory(GameSession session, float scale, float line, float width)
