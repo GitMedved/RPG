@@ -1,5 +1,6 @@
 using MiaMax.Domain;
 using MiaMax.Domain.Farming;
+using MiaMax.Domain.Progression;
 using MiaMax.Infrastructure.Save;
 using UnityEngine;
 namespace MiaMax.Gameplay
@@ -51,9 +52,14 @@ namespace MiaMax.Gameplay
             {
                 string[] crops = { FarmingService.Carrot, FarmingService.Tomato, FarmingService.Strawberry };
                 foreach (var crop in crops)
-                    if (farming.TryPlant(plotId, crop)) break;
+                    if (farming.TryPlant(plotId, crop))
+                    {
+                        new TutorialService(GameSessionBootstrap.Current).TryAdvance(TutorialService.Plant);
+                        break;
+                    }
             }
-            else farming.TryHarvest(plotId, out _);
+            else if (farming.TryHarvest(plotId, out _))
+                new TutorialService(GameSessionBootstrap.Current).TryAdvance(TutorialService.Harvest);
             Refresh();
         }
         private void Refresh()
