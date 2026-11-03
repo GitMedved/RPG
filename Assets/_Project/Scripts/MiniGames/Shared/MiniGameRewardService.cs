@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MiaMax.Domain;
 using MiaMax.Infrastructure.Save;
+using MiaMax.Domain.Progression;
 
 namespace MiaMax.Domain.MiniGames
 {
@@ -68,6 +69,7 @@ namespace MiaMax.Domain.MiniGames
             // Bound local history while retaining enough IDs for practical replay protection.
             if (session.Data.MiniGameRewardClaims.Count > 500)
                 session.Data.MiniGameRewardClaims.RemoveAt(0);
+            new TutorialService(session).TryAdvance(TutorialService.Arcade);
             session.NotifyExternalStateChanged();
             return true;
         }
