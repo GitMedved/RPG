@@ -70,3 +70,8 @@
 - Android/iOS readiness reported separately; no platform claimed ready without an actual build and device smoke test.
 - Documentation and development log updated.
 - Changes reviewed before merging to main.
+
+
+## 6. Actual branch progress (2026-11-03)
+
+The feature branch has implemented prototypes for the backyard, local save, farming, production/orders, starter quests, three mini-game rule sets and arcade entry point, plus a five-item keepsake collection. This is not equivalent to the roadmap's original milestone numbering. The next unattended work should prioritize readable inventory/HUD and domain tests. A real Unity Editor import/compile and scene/device pass is a hard validation gate; remote source edits cannot replace it.

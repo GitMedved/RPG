@@ -128,6 +128,7 @@ namespace MiaMax.Gameplay
 
             GameObject joystick = new GameObject("Prototype Mobile Joystick");
             joystick.AddComponent<PrototypeMobileJoystick>();
+            new GameObject("Prototype HUD").AddComponent<PrototypeHud>();
             GameObject cameraObject = new GameObject("Prototype Follow Camera");
             Camera camera = cameraObject.AddComponent<Camera>();
             cameraObject.AddComponent<AudioListener>();

@@ -189,3 +189,23 @@
 - The save schema remains v1 with optional additive collections; old saves are initialized with empty quest/unlock collections during validation.
 - Unity Editor compilation, Play Mode, save/load regression, Android/iOS builds and device testing have not been run in this environment.
 - The flower garden is currently an unlock flag only; no second playable location, quest UI, reward popup or quest-marker system is included.
+
+
+## 2026-11-03 — M8 backyard keepsake collection
+
+### Added
+- Added five persistent backyard keepsakes with one-time pickup interactions.
+- Added collection progress tracking and a one-time completion reward (25 coins + 30 XP).
+- Added a collection-book board and save validation for discovered IDs and reward state.
+- Added M8 scope and validation notes.
+- Fixed starter-kit initialization so resources are not regranted whenever an existing player's inventory becomes empty.
+
+### Validation status
+- Source and repository integration reviewed remotely.
+- Unity script import/compilation, scene execution, collection save/reload and touch testing remain unverified.
+- Keepsakes and collection book are primitive interaction prototypes, not final art or gallery UI.
+
+### Next actions
+1. Add a readable, safe-area-aware HUD and inventory viewer.
+2. Add automated EditMode coverage for collection and save-state invariants.
+3. Open the project in Unity and validate all scripts before expanding the world.

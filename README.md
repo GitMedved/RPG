@@ -102,3 +102,8 @@ The generated backyard now contains an arcade board that opens a temporary inter
 ## M8 — Backyard keepsake collection
 
 Five one-time keepsakes can now be discovered around the backyard and are persisted in the local save. The collection book tracks progress and awards 25 coins + 30 XP once all five are found. See [M8 Backyard Keepsake Collection](M8_BACKYARD_COLLECTION.md). The objects and interaction feedback remain prototype placeholders; Unity compilation, save/reload and device testing are still pending.
+
+
+## M9 — Prototype HUD and inventory viewer
+
+A temporary safe-area-aware HUD now displays level, XP and coins, with an expandable backpack list. This is a functional prototype viewer only: item use, sorting, icons, pagination and final UI styling are not implemented. Unity compile and device layout validation remain pending.
