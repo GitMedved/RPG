@@ -12,9 +12,12 @@ namespace MiaMax.Gameplay
         private Vector3 destination;
         private bool isExit;
         private QuestService quests;
+        private BackyardInteractable interactable;
 
-        public void Configure(Transform playerTransform, Vector3 targetPosition, bool exitPortal)
+        public void Configure(Transform playerTransform, Vector3 targetPosition, bool exitPortal, BackyardInteractable targetInteractable)
         {
+            interactable = targetInteractable;
+            if (interactable != null) interactable.Interacted += OnInteract;
             player = playerTransform;
             destination = targetPosition;
             isExit = exitPortal;
@@ -26,7 +29,12 @@ namespace MiaMax.Gameplay
                 quests = new QuestService(GameSessionBootstrap.Current);
         }
 
-        public void OnInteract()
+        private void OnDestroy()
+        {
+            if (interactable != null) interactable.Interacted -= OnInteract;
+        }
+
+        private void OnInteract()
         {
             if (player == null || quests == null) return;
             if (!quests.IsAreaUnlocked("flower_garden"))
