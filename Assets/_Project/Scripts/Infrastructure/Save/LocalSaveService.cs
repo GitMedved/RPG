@@ -93,6 +93,8 @@ namespace MiaMax.Infrastructure.Save
             if (data.SchemaVersion != PlayerSaveData.CurrentSchemaVersion)
                 throw new InvalidDataException("Unsupported save schema version.");
 
+            data.GardenLevel = Math.Max(0, Math.Min(2, data.GardenLevel));
+            data.WorkshopLevel = Math.Max(0, Math.Min(2, data.WorkshopLevel));
             if (data.Progress == null) data.Progress = new MiaMax.Domain.Progression.PlayerProgressData();
             data.Progress.Level = Math.Max(1, data.Progress.Level);
             data.Progress.Experience = Math.Max(0, data.Progress.Experience);
