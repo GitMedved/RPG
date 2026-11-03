@@ -26,6 +26,7 @@ namespace MiaMax.Domain.Collections
         public int DiscoveredCount => KeepSakeIds.Count(IsDiscovered);
         public int TotalCount => KeepSakeIds.Length;
         public bool IsComplete => DiscoveredCount == TotalCount;
+        public bool IsCompletionRewardClaimed => session.Data.CollectionCompletionRewardClaimed;
         public bool IsDiscovered(string id) =>
             !string.IsNullOrWhiteSpace(id) && session.Data.DiscoveredCollectibles.Contains(id);
 
