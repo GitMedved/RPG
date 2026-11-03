@@ -1,4 +1,3 @@
-using System.Text;
 using MiaMax.Domain;
 using MiaMax.Domain.Collections;
 using MiaMax.Domain.Progression;
@@ -22,6 +21,7 @@ namespace MiaMax.Gameplay
         private OrderBoardService orderService;
         private TutorialService tutorialService;
         private UpgradeService upgradeService;
+        private PlayerInteraction playerInteraction;
         private GUIStyle panelStyle;
         private GUIStyle headingStyle;
         private GUIStyle bodyStyle;
@@ -53,24 +53,49 @@ namespace MiaMax.Gameplay
             GUI.Label(new Rect(10f * scale, line, panelWidth - 20f * scale, line),
                 "Coins: " + session.Data.Progress.Coins, bodyStyle);
 
-            float buttonWidth = 126f * scale;
-            // Keep the backpack with the player status on the left; place the journal
-            // as a separate quick-access control in the upper-right safe area.
-            if (GUI.Button(new Rect(0f, line * 2.35f, buttonWidth, line * 1.2f),
-                inventoryOpen ? "Close Bag" : "Inventory", buttonStyle))
+            // Compact top-right journal shortcut.
+            float journalButtonWidth = Mathf.Min(190f * scale, safe.width - margin * 2f);
+            float journalButtonX = safe.width - margin * 2f - journalButtonWidth;
+            GUI.color = new Color(0.16f, 0.28f, 0.27f, 0.98f);
+            if (GUI.Button(new Rect(journalButtonX, 0f, journalButtonWidth, line * 1.35f),
+                journalOpen ? "×  CLOSE JOURNAL" : "☰  ADVENTURE JOURNAL", buttonStyle))
+            {
+                journalOpen = !journalOpen;
+                if (journalOpen) inventoryOpen = false;
+            }
+            GUI.color = previousColor;
+
+            // Bottom action dock: bag on the left, contextual interaction on the right.
+            float dockY = safe.height - line * 2.0f - margin;
+            float dockHeight = line * 1.65f;
+            GUI.color = new Color(0.08f, 0.13f, 0.16f, 0.88f);
+            GUI.Box(new Rect(safe.width * 0.5f - 160f * scale, dockY, 320f * scale, dockHeight), GUIContent.none, panelStyle);
+            GUI.color = previousColor;
+
+            float dockButtonWidth = 142f * scale;
+            float dockButtonY = dockY + 4f * scale;
+            GUI.color = inventoryOpen
+                ? new Color(0.32f, 0.49f, 0.36f, 1f)
+                : new Color(0.18f, 0.29f, 0.32f, 1f);
+            if (GUI.Button(new Rect(safe.width * 0.5f - 154f * scale, dockButtonY, dockButtonWidth, line * 1.35f),
+                inventoryOpen ? "×  CLOSE BAG" : "▣  BACKPACK", buttonStyle))
             {
                 inventoryOpen = !inventoryOpen;
                 if (inventoryOpen) journalOpen = false;
             }
 
-            float journalButtonWidth = Mathf.Min(190f * scale, safe.width - margin * 2f);
-            float journalButtonX = safe.width - margin * 2f - journalButtonWidth;
-            if (GUI.Button(new Rect(journalButtonX, 0f, journalButtonWidth, line * 1.35f),
-                journalOpen ? "Close Journal  ×" : "Adventure Journal  ☰", buttonStyle))
-            {
-                journalOpen = !journalOpen;
-                if (journalOpen) inventoryOpen = false;
-            }
+            if (playerInteraction == null)
+                playerInteraction = FindFirstObjectByType<PlayerInteraction>();
+            bool canInteract = playerInteraction != null && playerInteraction.HasNearbyTarget;
+            GUI.color = canInteract
+                ? new Color(0.72f, 0.48f, 0.20f, 1f)
+                : new Color(0.22f, 0.25f, 0.27f, 0.82f);
+            GUI.enabled = canInteract;
+            if (GUI.Button(new Rect(safe.width * 0.5f + 12f * scale, dockButtonY, dockButtonWidth, line * 1.35f),
+                canInteract ? "✦  INTERACT" : "✦  EXPLORE", buttonStyle) && canInteract)
+                playerInteraction.TryInteract();
+            GUI.enabled = true;
+            GUI.color = previousColor;
 
             if (inventoryOpen)
                 DrawInventory(session, scale, line, panelWidth);
@@ -85,10 +110,11 @@ namespace MiaMax.Gameplay
             if (tutorialService != null && !tutorialService.IsCompleted)
             {
                 float hintHeight = 38f * scale;
+                float hintY = dockY - hintHeight - 8f * scale;
                 GUI.color = new Color(0.10f, 0.15f, 0.18f, 0.92f);
-                GUI.Box(new Rect(0f, safe.height - margin * 2f - hintHeight, safe.width - margin * 2f, hintHeight), GUIContent.none, panelStyle);
+                GUI.Box(new Rect(0f, hintY, safe.width - margin * 2f, hintHeight), GUIContent.none, panelStyle);
                 GUI.color = previousColor;
-                GUI.Label(new Rect(10f * scale, safe.height - margin * 2f - hintHeight + 3f * scale,
+                GUI.Label(new Rect(10f * scale, hintY + 3f * scale,
                     safe.width - margin * 2f - 20f * scale, hintHeight - 6f * scale), tutorialService.CurrentHint, bodyStyle);
             }
 
@@ -105,6 +131,7 @@ namespace MiaMax.Gameplay
             orderService = new OrderBoardService(session);
             tutorialService = new TutorialService(session);
             upgradeService = new UpgradeService(session);
+            playerInteraction = FindFirstObjectByType<PlayerInteraction>();
         }
 
         private void DrawJournal(float scale, float line, float width)
@@ -277,7 +304,11 @@ namespace MiaMax.Gameplay
             bodyStyle.wordWrap = true;
             bodyStyle.normal.textColor = Color.white;
             buttonStyle = new GUIStyle(GUI.skin.button);
-            buttonStyle.fontSize = Mathf.RoundToInt(15f * scale);
+            buttonStyle.fontSize = Mathf.RoundToInt(14f * scale);
+            buttonStyle.fontStyle = FontStyle.Bold;
+            buttonStyle.normal.textColor = Color.white;
+            buttonStyle.hover.textColor = Color.white;
+            buttonStyle.active.textColor = Color.white;
         }
 
         private static string FriendlyName(string id)
