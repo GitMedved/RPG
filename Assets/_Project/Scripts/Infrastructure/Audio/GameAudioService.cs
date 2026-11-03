@@ -35,6 +35,14 @@ namespace MiaMax.Infrastructure.Audio
         [SerializeField] private AudioClip miniGameWin;
         [SerializeField] private AudioClip miniGameMiss;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        private static void EnsureExists()
+        {
+            if (Instance != null) return;
+            GameObject audioObject = new GameObject("Game Audio Service");
+            audioObject.AddComponent<GameAudioService>();
+        }
+
         private void Awake()
         {
             if (Instance != null && Instance != this) { Destroy(gameObject); return; }
