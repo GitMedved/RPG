@@ -1,0 +1,87 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using MiaMax.Infrastructure.Save;
+
+namespace MiaMax.Domain.Progression
+{
+    /// <summary>
+    /// Small, deterministic starter quest chain based on existing level and order systems.
+    /// Rewards can only be claimed once and all state is stored in the local player save.
+    /// </summary>
+    public sealed class QuestService
+    {
+        private sealed class Definition
+        {
+            public string Id;
+            public string Title;
+            public int Coins;
+            public int Experience;
+            public Func<PlayerSaveData, bool> IsComplete;
+        }
+
+        private static readonly Definition[] Quests =
+        {
+            new Definition { Id = "quest_first_steps", Title = "A New Adventure", Coins = 10, Experience = 15,
+                IsComplete = save => save.Progress.Level >= 2 },
+            new Definition { Id = "quest_first_order", Title = "Helping the Neighbours", Coins = 15, Experience = 20,
+                IsComplete = save => save.CompletedOrders.Any(x => x != null) },
+            new Definition { Id = "quest_order_master", Title = "A Busy Little Backyard", Coins = 30, Experience = 35,
+                IsComplete = save => save.CompletedOrders.Count(x => x != null) >= 3 }
+        };
+
+        private readonly GameSession session;
+
+        public QuestService(GameSession session)
+        {
+            this.session = session ?? throw new ArgumentNullException(nameof(session));
+            if (session.Data.ClaimedQuests == null) session.Data.ClaimedQuests = new List<QuestProgressData>();
+            if (session.Data.UnlockedWorldAreas == null) session.Data.UnlockedWorldAreas = new List<string>();
+        }
+
+        public int CompletedCount => Quests.Count(x => x.IsComplete(session.Data));
+        public int ClaimedCount => session.Data.ClaimedQuests.Count(x => x != null);
+
+        public string GetSummary()
+        {
+            int claimable = Quests.Count(x => x.IsComplete(session.Data) && !IsClaimed(x.Id));
+            return "Story quests: " + ClaimedCount + "/" + Quests.Length +
+                " rewards claimed. Ready to claim: " + claimable +
+                ". Interact to claim the next reward.";
+        }
+
+        public bool TryClaimNext(out string claimedTitle)
+        {
+            claimedTitle = null;
+            Definition quest = Quests.FirstOrDefault(x => x.IsComplete(session.Data) && !IsClaimed(x.Id));
+            if (quest == null) return false;
+
+            // Record the claim before applying rewards so repeated interactions cannot duplicate them.
+            session.Data.ClaimedQuests.Add(new QuestProgressData
+            {
+                QuestId = quest.Id,
+                ClaimedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+            });
+            session.TryAddCoins(quest.Coins);
+            session.AddExperience(quest.Experience);
+
+            if (quest.Id == "quest_order_master" && !session.Data.UnlockedWorldAreas.Contains("flower_garden"))
+                session.Data.UnlockedWorldAreas.Add("flower_garden");
+
+            session.NotifyExternalStateChanged();
+            claimedTitle = quest.Title;
+            return true;
+        }
+
+        public bool IsAreaUnlocked(string areaId)
+        {
+            return !string.IsNullOrWhiteSpace(areaId) &&
+                session.Data.UnlockedWorldAreas.Contains(areaId);
+        }
+
+        private bool IsClaimed(string id)
+        {
+            return session.Data.ClaimedQuests.Any(x => x != null && x.QuestId == id);
+        }
+    }
+}
