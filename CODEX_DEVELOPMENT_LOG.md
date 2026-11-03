@@ -157,3 +157,19 @@
 - Changes were committed to `codex/mia-max-foundation`.
 - Source was reviewed through GitHub after writing; no Unity Editor, compiler, Play Mode or device build is available in this workflow.
 - The crop picker, inventory presentation, watering, balancing and final crop art are not implemented.
+
+## 2026-11-03 — M4 production and order board prototype
+
+### Added
+- Persistent single-slot production job with elapsed-time completion.
+- Carrot soup, strawberry juice and wooden toy recipes.
+- Workshop interaction for starting and collecting recipes.
+- Three fixed orders with persistent completion IDs and one-time rewards.
+- Backyard workshop and order board props.
+- Save validation for production and order state.
+- Repaired literal escaped newlines in `BackyardInteractable.cs`, which would have prevented C# compilation.
+
+### Validation status
+- Files were reviewed through GitHub after writing.
+- Unity Editor compile, Play Mode, save/load regression and mobile builds have not been run.
+- UI for recipe choice and order cards remains future work.
