@@ -28,6 +28,7 @@ namespace MiaMax.Gameplay
         public bool TryInteract()
         {
             if (nearest == null || Time.time < nextInteractionTime) return false;
+            GetComponent<CharacterAnimationBridge>()?.PlayInteract();
             nearest.Interact();
             nextInteractionTime = Time.time + interactionCooldown;
             return true;
