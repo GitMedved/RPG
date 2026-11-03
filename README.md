@@ -30,6 +30,10 @@ Pre-production Unity prototype. The repository began as a README-only project; t
 - [M12 Garden & Workshop Upgrades](M12_GARDEN_WORKSHOP_UPGRADES.md)
 - [M13 Flower Garden Annex](M13_FLOWER_GARDEN_ANNEX.md)
 - [M14 Mobile HUD & Action Dock](M14_MOBILE_HUD_ACTION_DOCK.md)
+- [M15 Visual Production Pipeline](M15_VISUAL_PRODUCTION_PIPELINE.md)
+- [M16 Character Rigs & Animation](M16_CHARACTER_RIGS_AND_ANIMATION.md)
+- [M17 Audio & Voice](M17_AUDIO_AND_VOICE.md)
+- [M18 Integration & Mobile Hardening](M18_INTEGRATION_AND_MOBILE_HARDENING.md)
 
 ## Unity project scaffold
 
@@ -131,3 +135,13 @@ The Adventure Journal now includes two persistent upgrade tracks. Garden upgrade
 ## M13 — Flower Garden Annex
 
 The starter story quest now leads to a tangible gated garden annex in the backyard prototype. Once the final starter quest reward is claimed, the garden becomes visible and accessible through an entrance gate. Three one-time flower resources can be collected for inventory items, XP and coins; discoveries persist in the local save. See [M13 Flower Garden Annex](M13_FLOWER_GARDEN_ANNEX.md). This package requires Unity compilation and Play Mode acceptance testing.
+
+
+## M15–M18 — Production integration foundations
+
+- M15 locks the supplied reference-led art direction and defines source/runtime asset intake, model, environment and UI acceptance requirements. Original reference binaries and production 3D assets still need to be imported.
+- M16 adds an optional Animator bridge with a documented parameter contract and interaction trigger. Authored rigs and animation clips remain external deliverables.
+- M17 adds an automatically-created, silent-by-default audio service with separate effects/music/voice channels. Licensed sound effects, music and English voice recordings remain to be supplied and assigned.
+- M18 adds conservative mobile runtime pacing defaults and a device-hardening checklist. Android/iOS builds and real-device performance remain unverified.
+
+See the four milestone documents for setup and acceptance gates. M14 was reported by the user as OK; M15–M18 source changes have not yet been compiled in Unity in this environment.
