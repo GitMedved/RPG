@@ -160,11 +160,17 @@ namespace MiaMax.Gameplay
             GUI.Label(new Rect(28, 90, 285, 32), "Target zone: " + fishing.TargetCenter.ToString("0.00"));
             GUI.Label(new Rect(28, 126, 285, 32), "Timing position (0–1)");
             fishingAim = GUI.HorizontalSlider(new Rect(30, 164, 280, 24), fishingAim, 0f, 1f);
-            if (GUI.Button(new Rect(28, 205, 285, 38), "Cast / try to catch"))
+            if (fishing.IsActive && GUI.Button(new Rect(28, 205, 285, 38), "Cast / try to catch"))
             {
                 bool caught = fishing.TryFinish(fishingAim);
                 status = caught ? "Catch! Quality " + fishing.Quality : "The fish got away. Try another cast.";
                 if (caught) ClaimReward(fishing.Quality * 100);
+            }
+            else if (!fishing.IsActive && !fishing.IsCaught && GUI.Button(new Rect(28, 205, 285, 38), "Try another cast"))
+            {
+                fishing = new FishingTimingSession();
+                fishingAim = 0.5f;
+                status = "A new fish is biting. Aim carefully!";
             }
         }
 
