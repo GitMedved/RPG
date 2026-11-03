@@ -36,7 +36,7 @@ namespace MiaMax.Gameplay
 
             Rect safe = Screen.safeArea;
             float top = Screen.height - safe.yMax;
-            float scale = Mathf.Clamp(Screen.width / 900f, 0.72f, 1.25f);
+            float scale = Mathf.Clamp(Mathf.Min(Screen.width / 900f, Screen.height / 600f), 0.72f, 1.25f);
             float margin = 12f * scale;
             float panelWidth = Mathf.Min(270f * scale, safe.width - margin * 2f);
             float line = 30f * scale;
@@ -75,9 +75,9 @@ namespace MiaMax.Gameplay
             {
                 float hintHeight = 38f * scale;
                 GUI.color = new Color(0.10f, 0.15f, 0.18f, 0.92f);
-                GUI.Box(new Rect(0f, safe.height - margin - hintHeight, safe.width - margin * 2f, hintHeight), GUIContent.none, panelStyle);
+                GUI.Box(new Rect(0f, safe.height - margin * 2f - hintHeight, safe.width - margin * 2f, hintHeight), GUIContent.none, panelStyle);
                 GUI.color = previousColor;
-                GUI.Label(new Rect(10f * scale, safe.height - margin - hintHeight + 3f * scale,
+                GUI.Label(new Rect(10f * scale, safe.height - margin * 2f - hintHeight + 3f * scale,
                     safe.width - margin * 2f - 20f * scale, hintHeight - 6f * scale), tutorialService.CurrentHint, bodyStyle);
             }
 
