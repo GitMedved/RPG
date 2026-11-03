@@ -48,17 +48,5 @@ namespace MiaMax.Gameplay
             return best;
         }
 
-        private void OnGUI()
-        {
-            if (nearest == null) return;
-            GUIStyle style = new GUIStyle(GUI.skin.box)
-            {
-                alignment = TextAnchor.MiddleCenter,
-                fontSize = Mathf.Max(14, Screen.height / 48),
-                normal = { textColor = Color.white }
-            };
-            GUI.Box(new Rect(Screen.width * 0.5f - 130f, Screen.height - 100f, 260f, 54f),
-                $"{nearest.DisplayName}  ·  {nearest.ActionLabel}  [E]", style);
-        }
     }
 }
