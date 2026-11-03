@@ -100,3 +100,8 @@ This package is source-committed only. Unity compile was confirmed by the user b
 ## 9. M13 implementation status — 2026-11-03
 
 A small story-gated Flower Garden annex is now generated in the backyard scene. Claiming the final starter quest reveals the fenced annex. Entrance/return portals move the player between the backyard and annex. Three one-time flower resources grant inventory items, XP and coins, and their collection state is saved. This is a prototype blockout and requires Unity compile and Play Mode validation; it is not a separate streamed scene or final art.
+
+
+## 10. M14 implementation status — 2026-11-03
+
+Added a compact mobile HUD action dock. The status card remains upper-left, Adventure Journal remains upper-right, and Backpack plus contextual Interact controls sit in a bottom dock. The nearby object prompt is unified with the HUD and the existing keyboard E/Space path remains. This is still an IMGUI prototype; final Canvas UI, authored icons, animation, audio and device layout validation remain future work. M14 requires Unity compile and Play Mode validation. See M14_MOBILE_HUD_ACTION_DOCK.md.
