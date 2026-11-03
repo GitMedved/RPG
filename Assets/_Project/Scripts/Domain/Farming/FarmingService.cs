@@ -39,7 +39,8 @@ namespace MiaMax.Domain.Farming
             var plot = GetPlot(plotId);
             cropId = plot.CropId;
             if (!plot.IsPlanted || GrowthStage(plot) < 3) return false;
-            if (!session.AddItem(cropId, 2)) return false;
+            int yield = new UpgradeService(session).HarvestYield;
+            if (!session.AddItem(cropId, yield)) return false;
             plot.CropId = null; plot.PlantedAtUnix = 0;
             session.AddExperience(8); session.TryAddCoins(3);
             session.NotifyExternalStateChanged();
