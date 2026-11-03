@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using MiaMax.Domain.Production;
+using MiaMax.Domain.Progression;
 namespace MiaMax.Domain
 {
     public sealed class ProductionService
@@ -39,6 +40,7 @@ namespace MiaMax.Domain
             if (string.IsNullOrEmpty(output) || !session.AddItem(output, 1)) return false;
             session.Data.ProductionJob = new ProductionJobData();
             session.AddExperience(5);
+            new TutorialService(session).TryAdvance(TutorialService.Craft);
             session.NotifyExternalStateChanged();
             return true;
         }
