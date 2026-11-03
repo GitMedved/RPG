@@ -101,6 +101,8 @@ namespace MiaMax.Infrastructure.Save
             if (data.FarmPlots == null) data.FarmPlots = new System.Collections.Generic.List<MiaMax.Domain.Farming.FarmPlotData>();
             if (data.ProductionJob == null) data.ProductionJob = new MiaMax.Domain.Production.ProductionJobData();
             if (data.CompletedOrders == null) data.CompletedOrders = new System.Collections.Generic.List<MiaMax.Domain.Orders.CompletedOrderData>();
+            if (data.ClaimedQuests == null) data.ClaimedQuests = new System.Collections.Generic.List<MiaMax.Domain.Progression.QuestProgressData>();
+            if (data.UnlockedWorldAreas == null) data.UnlockedWorldAreas = new System.Collections.Generic.List<string>();
 
             for (int i = data.Inventory.Count - 1; i >= 0; i--)
             {
@@ -108,6 +110,17 @@ namespace MiaMax.Infrastructure.Save
                 if (stack == null || string.IsNullOrWhiteSpace(stack.ItemId) || stack.Quantity <= 0)
                     data.Inventory.RemoveAt(i);
             }
+
+            for (int i = data.ClaimedQuests.Count - 1; i >= 0; i--)
+            {
+                var quest = data.ClaimedQuests[i];
+                if (quest == null || string.IsNullOrWhiteSpace(quest.QuestId))
+                    data.ClaimedQuests.RemoveAt(i);
+            }
+
+            for (int i = data.UnlockedWorldAreas.Count - 1; i >= 0; i--)
+                if (string.IsNullOrWhiteSpace(data.UnlockedWorldAreas[i]))
+                    data.UnlockedWorldAreas.RemoveAt(i);
 
             long now = UtcNow();
             if (data.CreatedAtUnix <= 0 || data.CreatedAtUnix > now) data.CreatedAtUnix = now;
