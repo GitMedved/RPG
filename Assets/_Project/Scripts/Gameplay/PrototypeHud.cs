@@ -54,14 +54,19 @@ namespace MiaMax.Gameplay
                 "Coins: " + session.Data.Progress.Coins, bodyStyle);
 
             float buttonWidth = 126f * scale;
+            // Keep the backpack with the player status on the left; place the journal
+            // as a separate quick-access control in the upper-right safe area.
             if (GUI.Button(new Rect(0f, line * 2.35f, buttonWidth, line * 1.2f),
                 inventoryOpen ? "Close Bag" : "Inventory", buttonStyle))
             {
                 inventoryOpen = !inventoryOpen;
                 if (inventoryOpen) journalOpen = false;
             }
-            if (GUI.Button(new Rect(buttonWidth + 8f * scale, line * 2.35f, buttonWidth, line * 1.2f),
-                journalOpen ? "Close Journal" : "Journal", buttonStyle))
+
+            float journalButtonWidth = Mathf.Min(190f * scale, safe.width - margin * 2f);
+            float journalButtonX = safe.width - margin * 2f - journalButtonWidth;
+            if (GUI.Button(new Rect(journalButtonX, 0f, journalButtonWidth, line * 1.35f),
+                journalOpen ? "Close Journal  ×" : "Adventure Journal  ☰", buttonStyle))
             {
                 journalOpen = !journalOpen;
                 if (journalOpen) inventoryOpen = false;
@@ -70,7 +75,12 @@ namespace MiaMax.Gameplay
             if (inventoryOpen)
                 DrawInventory(session, scale, line, panelWidth);
             if (journalOpen)
+            {
+                float journalPanelX = safe.width - margin * 2f - panelWidth;
+                GUI.BeginGroup(new Rect(journalPanelX, 0f, panelWidth, safe.height - margin * 2f));
                 DrawJournal(scale, line, panelWidth);
+                GUI.EndGroup();
+            }
 
             if (tutorialService != null && !tutorialService.IsCompleted)
             {
