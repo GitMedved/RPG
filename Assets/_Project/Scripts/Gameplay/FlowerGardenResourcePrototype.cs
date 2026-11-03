@@ -39,8 +39,12 @@ namespace MiaMax.Gameplay
         private void OnInteract()
         {
             if (session == null || collected || session.Data.CollectedGardenResources.Contains(resourceId)) return;
-            if (!session.AddItem(itemId, 1)) return;
             session.Data.CollectedGardenResources.Add(resourceId);
+            if (!session.AddItem(itemId, 1))
+            {
+                session.Data.CollectedGardenResources.Remove(resourceId);
+                return;
+            }
             session.AddExperience(3);
             session.TryAddCoins(2);
             session.NotifyExternalStateChanged();
