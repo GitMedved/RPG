@@ -29,14 +29,23 @@ namespace MiaMax.Infrastructure.Save
             DontDestroyOnLoad(gameObject);
             saveService = new LocalSaveService();
             Current = new GameSession(saveService.LoadOrCreate());
-            if (Current.Data.Inventory.Count == 0)
+            if (!Current.Data.StarterKitGranted)
             {
-                Current.AddItem("seed_carrot", 3);
-                Current.AddItem("seed_tomato", 3);
-                Current.AddItem("seed_strawberry", 3);
-                Current.AddItem("wood", 2);
+                // Grant the starter kit only once. An empty inventory later in the game
+                // is a legitimate player state and must never recreate free resources.
+                if (Current.Data.Inventory.Count == 0)
+                {
+                    Current.AddItem("seed_carrot", 3);
+                    Current.AddItem("seed_tomato", 3);
+                    Current.AddItem("seed_strawberry", 3);
+                    Current.AddItem("wood", 2);
+                }
+
+                Current.Data.StarterKitGranted = true;
             }
+
             Current.StateChanged += SaveNow;
+            SaveNow();
         }
 
         private void OnApplicationPause(bool paused)
