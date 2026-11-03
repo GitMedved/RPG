@@ -26,5 +26,7 @@ namespace MiaMax.Infrastructure.Save
         public List<QuestProgressData> ClaimedQuests = new List<QuestProgressData>();
         public List<string> UnlockedWorldAreas = new List<string>();
         public List<MiniGameRewardClaimData> MiniGameRewardClaims = new List<MiniGameRewardClaimData>();
+        public List<string> DiscoveredCollectibles = new List<string>();
+        public bool CollectionCompletionRewardClaimed;
     }
 }

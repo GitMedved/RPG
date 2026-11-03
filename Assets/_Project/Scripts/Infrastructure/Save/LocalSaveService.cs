@@ -104,6 +104,9 @@ namespace MiaMax.Infrastructure.Save
             if (data.ClaimedQuests == null) data.ClaimedQuests = new System.Collections.Generic.List<MiaMax.Domain.Progression.QuestProgressData>();
             if (data.UnlockedWorldAreas == null) data.UnlockedWorldAreas = new System.Collections.Generic.List<string>();
             if (data.MiniGameRewardClaims == null) data.MiniGameRewardClaims = new System.Collections.Generic.List<MiaMax.Domain.MiniGames.MiniGameRewardClaimData>();
+            if (data.DiscoveredCollectibles == null) data.DiscoveredCollectibles = new System.Collections.Generic.List<string>();
+            data.DiscoveredCollectibles.RemoveAll(string.IsNullOrWhiteSpace);
+            if (data.DiscoveredCollectibles.Count > 100) data.DiscoveredCollectibles.RemoveRange(100, data.DiscoveredCollectibles.Count - 100);
 
             for (int i = data.MiniGameRewardClaims.Count - 1; i >= 0; i--)
             {

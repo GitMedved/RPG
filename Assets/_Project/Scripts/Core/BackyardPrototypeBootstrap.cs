@@ -71,6 +71,18 @@ namespace MiaMax.Gameplay
             arcadeInteractable.Configure("Mia & Max Arcade", "Play a mini-game");
             arcadeBoard.AddComponent<ArcadeBoardPrototype>().Configure(arcadeInteractable);
 
+            GameObject collectionBoard = Cube("Collection_Book_Board_Placeholder", new Vector3(-7.5f, 1.05f, 7.1f),
+                new Vector3(1.0f, 1.9f, 0.22f), wood);
+            BackyardInteractable collectionInteractable = collectionBoard.AddComponent<BackyardInteractable>();
+            collectionInteractable.Configure("Backyard collection", "Check keepsakes");
+            collectionBoard.AddComponent<CollectionBookPrototype>().Configure(collectionInteractable);
+
+            CreateKeepsake("Red Ball", "keepsake_red_ball", new Vector3(9f, 0.35f, -3f), Mat(new Color(0.88f, 0.12f, 0.12f)));
+            CreateKeepsake("Blue Feather", "keepsake_blue_feather", new Vector3(-10f, 0.45f, 5f), Mat(new Color(0.18f, 0.48f, 0.92f)));
+            CreateKeepsake("Old Button", "keepsake_old_button", new Vector3(4f, 0.28f, -8f), Mat(new Color(0.72f, 0.62f, 0.35f)));
+            CreateKeepsake("Yellow Leaf", "keepsake_yellow_leaf", new Vector3(-2f, 0.35f, -9f), Mat(new Color(0.95f, 0.72f, 0.12f)));
+            CreateKeepsake("Tiny Shell", "keepsake_tiny_shell", new Vector3(12f, 0.3f, 3f), Mat(new Color(0.9f, 0.78f, 0.68f)));
+
             BackyardDetailPrototype.Build();
 
             // White perimeter fence, leaving a gate opening at the far side.
@@ -136,6 +148,14 @@ namespace MiaMax.Gameplay
             // A small red toy truck recalls the reference board's sandbox detail.
             Cube("Toy_Truck_Placeholder", new Vector3(7f, 0.35f, -4f), new Vector3(1.1f, 0.45f, 0.7f), Mat(new Color(0.85f, 0.12f, 0.08f)));
             Debug.Log("Mia & Max Backyard blockout created. All primitives are temporary placeholders.");
+        }
+
+        private static void CreateKeepsake(string title, string id, Vector3 position, Material material)
+        {
+            GameObject keepsake = Sphere("Keepsake_" + id, position, Vector3.one * 0.48f, material);
+            BackyardInteractable interactable = keepsake.AddComponent<BackyardInteractable>();
+            interactable.Configure(title, "Pick up keepsake");
+            keepsake.AddComponent<BackyardCollectiblePrototype>().Configure(id, title, interactable);
         }
 
         private static void AddInteractable(GameObject target, string title, string action)
