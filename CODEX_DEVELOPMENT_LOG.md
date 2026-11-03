@@ -173,3 +173,19 @@
 - Files were reviewed through GitHub after writing.
 - Unity Editor compile, Play Mode, save/load regression and mobile builds have not been run.
 - UI for recipe choice and order cards remains future work.
+
+## 2026-11-03 — M5 story quests and world progression
+
+### Added
+- Added a three-step starter story quest chain driven by player level and completed starter orders.
+- Added one-time coin/XP rewards and persistent quest claim timestamps.
+- Added persistent world-area unlock IDs; the final starter quest unlocks `flower_garden`.
+- Added an interactable adventure journal board to the backyard blockout.
+- Extended local save validation to initialize and sanitize quest and world-unlock collections.
+- Added M5 implementation and validation notes.
+
+### Validation status
+- New and modified files were reviewed through GitHub.
+- The save schema remains v1 with optional additive collections; old saves are initialized with empty quest/unlock collections during validation.
+- Unity Editor compilation, Play Mode, save/load regression, Android/iOS builds and device testing have not been run in this environment.
+- The flower garden is currently an unlock flag only; no second playable location, quest UI, reward popup or quest-marker system is included.
