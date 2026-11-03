@@ -320,3 +320,31 @@
 - Source-level checks only; user has not yet compiled or run M14 in Unity.
 - Verify compile, safe-area layout, nearest-target selection, touch interaction, keyboard interaction and panel mutual exclusion in Play Mode.
 - This is still IMGUI prototype UI; final Canvas UI, icon sprites, visual design and device testing are future work.
+
+
+## 2026-11-03 — M15–M18 production foundations
+
+### M15 — Visual production pipeline
+- Added the reference-locked production pipeline, import locations, model/environment/UI deliverables and acceptance gate.
+- Reaffirmed that the supplied Mia, Max and backyard references are the source of truth; no redesign is permitted.
+- Production models and original binary references are not present in the repository yet.
+
+### M16 — Character rig and animation integration
+- Added `CharacterAnimationBridge` with Speed/Grounded parameters and Interact/Celebrate triggers.
+- Connected player interaction to the Interact trigger when a bridge/Animator exists.
+- Added Unity metadata. No rig or animation clip has been fabricated; production character assets remain pending.
+
+### M17 — Audio and English voice integration
+- Added `GameAudioService` with separate effects, music and voice sources, safe silent defaults, one-shot cues and voice playback.
+- Connected world interactions to an optional interaction cue.
+- Added English voice direction and starter line sheet. No voice recordings, music or licensed SFX are included yet.
+
+### M18 — Mobile integration foundations
+- Added `MobileRuntimeBootstrap` for conservative frame pacing, VSync off and screen-awake behaviour.
+- Added Android/iOS device matrix, profiling targets, release blockers and acceptance criteria.
+- No Unity compile, Android/iOS build or physical-device test has been run by the assistant. M14 was reported OK by the user; M15–M18 require a consolidated Editor compile and Play Mode pass.
+
+### Validation / limitations
+- Static source review only; Unity Editor is not available in this environment.
+- Production 3D models, rigs, authored animation clips, audio recordings and UI sprite pack remain external dependencies.
+- Main branch was not modified.
