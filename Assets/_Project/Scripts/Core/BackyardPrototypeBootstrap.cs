@@ -59,6 +59,12 @@ namespace MiaMax.Gameplay
             boardInteractable.Configure("Order board", "Check orders");
             orderBoard.AddComponent<OrderBoardPrototype>().Configure(boardInteractable);
 
+            GameObject questBoard = Cube("Adventure_Journal_Board_Placeholder", new Vector3(-5.2f, 1.05f, 4.6f),
+                new Vector3(0.9f, 1.8f, 0.22f), wood);
+            BackyardInteractable questInteractable = questBoard.AddComponent<BackyardInteractable>();
+            questInteractable.Configure("Adventure journal", "Check story quests");
+            questBoard.AddComponent<QuestBoardPrototype>().Configure(questInteractable);
+
             BackyardDetailPrototype.Build();
 
             // White perimeter fence, leaving a gate opening at the far side.
