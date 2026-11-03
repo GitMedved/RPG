@@ -175,10 +175,10 @@ namespace MiaMax.Gameplay
                 "BACKYARD UPGRADES", headingStyle);
             string gardenStatus = upgradeService.GardenAtMax
                 ? "Garden Lv." + upgradeService.GardenLevel + " — max"
-                : "Garden Lv." + upgradeService.GardenLevel + " — +" + (upgradeService.GardenLevel + 1) + " harvest item(s), " + upgradeService.GardenUpgradeCost + " coins";
+                : "Garden Lv." + upgradeService.GardenLevel + " — harvest x" + upgradeService.HarvestYield + ", " + upgradeService.GardenUpgradeCost + " coins";
             string workshopStatus = upgradeService.WorkshopAtMax
                 ? "Workshop Lv." + upgradeService.WorkshopLevel + " — max"
-                : "Workshop Lv." + upgradeService.WorkshopLevel + " — faster crafting, " + upgradeService.WorkshopUpgradeCost + " coins";
+                : "Workshop Lv." + upgradeService.WorkshopLevel + " — " + (upgradeService.WorkshopLevel * 15) + "% faster, " + upgradeService.WorkshopUpgradeCost + " coins";
             GUI.Label(new Rect(12f * scale, y + row * 11.15f, width - 24f * scale, row * 0.9f), gardenStatus, bodyStyle);
             GUI.Label(new Rect(12f * scale, y + row * 12.05f, width - 24f * scale, row * 0.9f), workshopStatus, bodyStyle);
 
