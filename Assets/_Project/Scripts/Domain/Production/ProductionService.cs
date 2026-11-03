@@ -18,7 +18,7 @@ namespace MiaMax.Domain
             string input; int quantity; int seconds;
             if (!Recipe(recipeId, out input, out quantity, out seconds)) return false;
             if (!session.TryRemoveItem(input, quantity)) return false;
-            session.Data.ProductionJob = new ProductionJobData { RecipeId = recipeId, StartedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), DurationSeconds = seconds };
+            session.Data.ProductionJob = new ProductionJobData { RecipeId = recipeId, StartedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), DurationSeconds = new UpgradeService(session).AdjustProductionDuration(seconds) };
             session.NotifyExternalStateChanged();
             return true;
         }
