@@ -1,0 +1,100 @@
+using UnityEngine;
+
+namespace MiaMax.Infrastructure.Audio
+{
+    public enum GameAudioCue
+    {
+        UiTap, Plant, Harvest, CraftStart, CraftReady, Reward, Collectible,
+        Interact, MiniGameStart, MiniGameWin, MiniGameMiss
+    }
+
+    /// <summary>
+    /// Optional audio facade. Assign licensed clips in the Inspector; missing clips are
+    /// intentionally silent and never interrupt gameplay. Voice lines use a separate source.
+    /// </summary>
+    [DisallowMultipleComponent]
+    public sealed class GameAudioService : MonoBehaviour
+    {
+        public static GameAudioService Instance { get; private set; }
+
+        [Header("Sources")]
+        [SerializeField] private AudioSource effectsSource;
+        [SerializeField] private AudioSource musicSource;
+        [SerializeField] private AudioSource voiceSource;
+
+        [Header("Sound effects")]
+        [SerializeField] private AudioClip uiTap;
+        [SerializeField] private AudioClip plant;
+        [SerializeField] private AudioClip harvest;
+        [SerializeField] private AudioClip craftStart;
+        [SerializeField] private AudioClip craftReady;
+        [SerializeField] private AudioClip reward;
+        [SerializeField] private AudioClip collectible;
+        [SerializeField] private AudioClip interact;
+        [SerializeField] private AudioClip miniGameStart;
+        [SerializeField] private AudioClip miniGameWin;
+        [SerializeField] private AudioClip miniGameMiss;
+
+        private void Awake()
+        {
+            if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+            Instance = this;
+            if (effectsSource == null) effectsSource = gameObject.AddComponent<AudioSource>();
+            if (musicSource == null) musicSource = gameObject.AddComponent<AudioSource>();
+            if (voiceSource == null) voiceSource = gameObject.AddComponent<AudioSource>();
+            musicSource.loop = true;
+            effectsSource.playOnAwake = false;
+            voiceSource.playOnAwake = false;
+            musicSource.playOnAwake = false;
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this) Instance = null;
+        }
+
+        public void Play(GameAudioCue cue, float volume = 1f)
+        {
+            if (effectsSource == null) return;
+            AudioClip clip = GetClip(cue);
+            if (clip != null) effectsSource.PlayOneShot(clip, Mathf.Clamp01(volume));
+        }
+
+        public void PlayVoiceLine(AudioClip clip, float volume = 1f)
+        {
+            if (voiceSource == null || clip == null) return;
+            voiceSource.PlayOneShot(clip, Mathf.Clamp01(volume));
+        }
+
+        public void SetMusic(AudioClip clip, float volume = 0.35f)
+        {
+            if (musicSource == null) return;
+            if (musicSource.clip == clip && musicSource.isPlaying) return;
+            musicSource.Stop();
+            musicSource.clip = clip;
+            musicSource.volume = Mathf.Clamp01(volume);
+            if (clip != null) musicSource.Play();
+        }
+
+        public void StopVoice() { if (voiceSource != null) voiceSource.Stop(); }
+
+        private AudioClip GetClip(GameAudioCue cue)
+        {
+            switch (cue)
+            {
+                case GameAudioCue.UiTap: return uiTap;
+                case GameAudioCue.Plant: return plant;
+                case GameAudioCue.Harvest: return harvest;
+                case GameAudioCue.CraftStart: return craftStart;
+                case GameAudioCue.CraftReady: return craftReady;
+                case GameAudioCue.Reward: return reward;
+                case GameAudioCue.Collectible: return collectible;
+                case GameAudioCue.Interact: return interact;
+                case GameAudioCue.MiniGameStart: return miniGameStart;
+                case GameAudioCue.MiniGameWin: return miniGameWin;
+                case GameAudioCue.MiniGameMiss: return miniGameMiss;
+                default: return null;
+            }
+        }
+    }
+}
