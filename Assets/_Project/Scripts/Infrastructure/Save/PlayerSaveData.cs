@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using MiaMax.Domain.Inventory;
 using MiaMax.Domain.Progression;
 using MiaMax.Domain.Farming;
+using MiaMax.Domain.Production;
+using MiaMax.Domain.Orders;
 
 namespace MiaMax.Infrastructure.Save
 {
@@ -17,5 +19,7 @@ namespace MiaMax.Infrastructure.Save
         public PlayerProgressData Progress = new PlayerProgressData();
         public List<ItemStackData> Inventory = new List<ItemStackData>();
         public List<FarmPlotData> FarmPlots = new List<FarmPlotData>();
+        public ProductionJobData ProductionJob = new ProductionJobData();
+        public List<CompletedOrderData> CompletedOrders = new List<CompletedOrderData>();
     }
 }
