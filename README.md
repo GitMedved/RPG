@@ -29,6 +29,7 @@ Pre-production Unity prototype. The repository began as a README-only project; t
 - [M11 Android & iOS Build Readiness](M11_MOBILE_BUILD_READINESS.md)
 - [M12 Garden & Workshop Upgrades](M12_GARDEN_WORKSHOP_UPGRADES.md)
 - [M13 Flower Garden Annex](M13_FLOWER_GARDEN_ANNEX.md)
+- [M14 Mobile HUD & Action Dock](M14_MOBILE_HUD_ACTION_DOCK.md)
 
 ## Unity project scaffold
 
