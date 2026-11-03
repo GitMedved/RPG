@@ -103,6 +103,17 @@ namespace MiaMax.Infrastructure.Save
             if (data.CompletedOrders == null) data.CompletedOrders = new System.Collections.Generic.List<MiaMax.Domain.Orders.CompletedOrderData>();
             if (data.ClaimedQuests == null) data.ClaimedQuests = new System.Collections.Generic.List<MiaMax.Domain.Progression.QuestProgressData>();
             if (data.UnlockedWorldAreas == null) data.UnlockedWorldAreas = new System.Collections.Generic.List<string>();
+            if (data.MiniGameRewardClaims == null) data.MiniGameRewardClaims = new System.Collections.Generic.List<MiaMax.Domain.MiniGames.MiniGameRewardClaimData>();
+
+            for (int i = data.MiniGameRewardClaims.Count - 1; i >= 0; i--)
+            {
+                var claim = data.MiniGameRewardClaims[i];
+                if (claim == null || string.IsNullOrWhiteSpace(claim.RunId) ||
+                    string.IsNullOrWhiteSpace(claim.GameId) || claim.ClaimedAtUnix <= 0)
+                    data.MiniGameRewardClaims.RemoveAt(i);
+            }
+            if (data.MiniGameRewardClaims.Count > 500)
+                data.MiniGameRewardClaims.RemoveRange(0, data.MiniGameRewardClaims.Count - 500);
 
             for (int i = data.Inventory.Count - 1; i >= 0; i--)
             {
