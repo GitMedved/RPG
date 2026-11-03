@@ -285,3 +285,21 @@
 - User confirmed the previous package compiles in Unity before M12 was added. M12 itself still requires Unity compilation and Play Mode validation.
 - Verify upgrade purchases deduct coins once, survive save/reload, affect future harvests and newly started production jobs, and do not alter an active job.
 - No Android/iOS build or device test was performed.
+
+
+## 2026-11-03 — M13 Flower Garden Annex
+
+### Added
+- Added a story-gated Flower Garden annex to the generated backyard scene.
+- The entrance gate checks the existing `flower_garden` story unlock flag; a return portal brings Mia back to the backyard.
+- Added three one-time flower resource nodes (pink, yellow, purple).
+- Each resource grants one inventory item, 3 XP and 2 coins.
+- Garden resource discoveries persist through PlayerSaveData and are restored when the runtime scene is rebuilt.
+- Added load-time normalization for the new discovery list.
+- Added M13 acceptance documentation.
+
+### Validation status
+- User confirmed M12 compiles in Unity before M13 changes.
+- M13 is committed to the feature branch but has not yet been compiled or tested in Play Mode.
+- Verify locked/unlocked visibility, portal travel, resource rewards, inventory and persistence.
+- The annex is a same-scene blockout, not a streamed scene or final art.
