@@ -80,3 +80,11 @@ The feature branch has implemented prototypes for the backyard, local save, farm
 ## 2026-11-03 — Next implementation package
 
 Planned work: persistent onboarding, a compact safe-area-aware activity HUD, expanded arcade feedback, deterministic editor smoke checks, and Android/iOS build-readiness documentation. All new Unity work must be compiled and tested in the editor before it is considered verified.
+
+## 7. Current implementation status — 2026-11-03
+
+The current feature branch includes a generated-at-runtime backyard prototype, player movement and touch joystick, placeholder Mia/Max meshes, farming, production, orders, starter quests, keepsakes, local save, HUD/journal, three mini-game prototypes and a persistent six-step tutorial. See the M10 and M11 notes for exact scope and remaining validation.
+
+**Not yet complete:** production-quality responsive UI, a full playable expansion location, full runner level generation, final character models/rigs/animations, decoration placement, automated tests, Editor compile validation after the latest package, and actual Android/iOS builds.
+
+The project must not be described as mobile-ready until the Editor compile, clean Android/iOS builds and physical-device smoke tests pass.
