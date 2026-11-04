@@ -63,11 +63,7 @@ namespace MiaMax.Gameplay
             BindSession(session);
 
             Rect safe = Screen.safeArea;
-            if (GetComponent<MobileHudCanvas>() != null)
-            {
-                DrawLegacyPanelsOnly(session, safe);
-                return;
-            }
+            if (GetComponent<MobileHudCanvas>() != null) return;
 
             float top = Screen.height - safe.yMax;
             float scale = Mathf.Clamp(Mathf.Min(Screen.width / 900f, Screen.height / 600f), 0.72f, 1.25f) * session.Data.Settings.UiScale;
@@ -386,6 +382,8 @@ namespace MiaMax.Gameplay
         public void CloseCanvasDetails()
         {
             inventoryOpen = false;
+            journalOpen = false;
+            settingsOpen = false;
             mapOpen = false;
         }
 
@@ -421,26 +419,6 @@ namespace MiaMax.Gameplay
                     " coins, +" + dailyVisitService.ExperienceToday + " XP!";
                 interactionFeedbackUntil = Time.unscaledTime + 3f;
             }
-        }
-
-        private void DrawLegacyPanelsOnly(GameSession session, Rect safe)
-        {
-            float scale = Mathf.Clamp(Mathf.Min(Screen.width / 900f, Screen.height / 600f), 0.72f, 1.25f) *
-                          session.Data.Settings.UiScale;
-            float margin = 12f * scale;
-            float line = 30f * scale;
-            float panelWidth = Mathf.Min(300f * scale, safe.width - margin * 2f);
-            EnsureStyles(scale);
-            GUI.BeginGroup(new Rect(safe.xMin + margin, Screen.height - safe.yMax + margin,
-                safe.width - margin * 2f, safe.height - margin * 2f));
-            if (journalOpen)
-            {
-                GUI.BeginGroup(new Rect(safe.width - margin * 2f - panelWidth, 0f,
-                    panelWidth, safe.height - margin * 2f));
-                DrawJournal(scale, line, panelWidth, safe.height - margin * 2f);
-                GUI.EndGroup();
-            }
-            GUI.EndGroup();
         }
 
         private void BindSession(GameSession session)
