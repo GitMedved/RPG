@@ -348,3 +348,11 @@
 - Static source review only; Unity Editor is not available in this environment.
 - Production 3D models, rigs, authored animation clips, audio recordings and UI sprite pack remain external dependencies.
 - Main branch was not modified.
+
+
+## 2026-11-04 — M19 Backyard visual polish
+- Added `BackyardVisualPolishPrototype.cs` as a separate procedural dressing pass and integrated it after the existing backyard landmark details.
+- Added a stepping-stone path, layered tree canopy, four perimeter flower clusters, fence post caps, house fascia and patio edge detail.
+- Decorative meshes have no colliders to avoid interfering with movement and interaction.
+- Added Unity .meta and M19 acceptance documentation.
+- Static source inspection only; Unity compile, Play Mode visibility/collision review and device profiling are still required.
