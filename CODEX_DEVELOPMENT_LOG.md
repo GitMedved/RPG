@@ -463,3 +463,12 @@
 - Added load-time defaults and clamping for legacy saves; no schema version bump.
 - Documented offline/client-clock limitations and Unity acceptance scenarios.
 - Source-level review only. Unity compile, save/reload, date rollover, missed-day reset and device layout remain pending.
+
+
+## 2026-11-04 — M31 daily arcade reward cap
+
+- Added a shared five-claim daily limit across Match-3, Fishing and Max Runner.
+- Persisted the count in daily task data and reset it with the existing UTC daily reset.
+- Added Arcade menu count and explicit cap-reached feedback; retained per-run duplicate protection and score-banded rewards.
+- Added load-time clamping and legacy-save default behaviour without a schema bump.
+- Source-level review only; Unity compile, Play Mode, save/reload and UTC rollover remain pending.
