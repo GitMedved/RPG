@@ -522,3 +522,14 @@
 - Suppressed the legacy IMGUI Settings renderer while Canvas HUD is active; Journal remains on IMGUI.
 - Added M36 acceptance documentation and updated README/roadmap.
 - Source-level checks: braces balanced in modified C# files; manifest JSON parses. Unity compilation, save/reload, Play Mode, aspect-ratio and touch tests remain unperformed.
+
+
+## 2026-11-04 — M35 Canvas Adventure Journal
+
+- Migrated the Adventure Journal to the Canvas detail panel with scrollable progression summaries.
+- Added Canvas action buttons for quest/collection/daily/achievement rewards, production recipes, product collection, order delivery and both upgrades.
+- Routed actions through existing domain services; no reward values or save schema were changed.
+- Fixed detail-panel close behavior to close all mutually exclusive panels.
+- Removed Canvas-mode IMGUI detail rendering; retained legacy HUD only as a fallback when Canvas is absent.
+- Added M35 acceptance documentation and updated README/roadmap.
+- Source-level checks: balanced braces in modified C# files. Unity compile, Play Mode, save/reload and device tests have not been run.
