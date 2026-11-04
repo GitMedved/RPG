@@ -237,3 +237,8 @@ Fixed two missing tutorial progression hooks: successful planting now advances t
 ## 29. M39 — Garden visual pass — 2026-11-04
 
 Replaced the generic crop sphere with distinct low-poly carrot, tomato and strawberry runtime silhouettes. Visuals follow saved crop IDs and growth stages without changing farming rules, rewards or persistence. Decorative parts have no colliders. The result is still procedural placeholder art; production crop prefabs/textures and final visual review remain future work. Unity compile, Play Mode and mobile performance checks are pending. See `M39_GARDEN_VISUAL_PASS.md`.
+
+
+## 30. M40 — Backyard environment art pass — 2026-11-04
+
+Added a coherent procedural dressing layer to the existing backyard: house door/windows/facade trim, garden plot edging, stepping-stone spur, patio planters and sandbox trim. Decorative colliders are removed and existing gameplay objects remain unchanged. This is still prototype geometry, not final authored environment art. Unity compilation, Play Mode visual/collision checks and mobile performance remain pending. See `M40_BACKYARD_ENVIRONMENT_ART_PASS.md`.
