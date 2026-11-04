@@ -232,3 +232,8 @@ Added an Editor menu command, **Tools → Mia & Max → Run Core Smoke Checks**,
 ## 28. M38 — Tutorial flow repair — 2026-11-04
 
 Fixed two missing tutorial progression hooks: successful planting now advances the guide from movement to harvesting, and successful harvesting advances it to crafting. Failed actions do not advance progress. Tutorial hints show the current step number. Expanded Editor smoke checks with a full six-step in-memory tutorial scenario (movement, planting, harvesting, crafting, delivery, arcade reward). Expected smoke result is 6/6. Unity compile, Editor execution, Play Mode and device checks remain pending. See `M38_TUTORIAL_FLOW_REPAIR.md`.
+
+
+## 29. M39 — Garden visual pass — 2026-11-04
+
+Replaced the generic crop sphere with distinct low-poly carrot, tomato and strawberry runtime silhouettes. Visuals follow saved crop IDs and growth stages without changing farming rules, rewards or persistence. Decorative parts have no colliders. The result is still procedural placeholder art; production crop prefabs/textures and final visual review remain future work. Unity compile, Play Mode and mobile performance checks are pending. See `M39_GARDEN_VISUAL_PASS.md`.
