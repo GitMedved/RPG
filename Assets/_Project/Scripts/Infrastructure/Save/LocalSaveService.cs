@@ -124,6 +124,9 @@ namespace MiaMax.Infrastructure.Save
             if (data.ClaimedQuests == null) data.ClaimedQuests = new System.Collections.Generic.List<MiaMax.Domain.Progression.QuestProgressData>();
             if (data.UnlockedWorldAreas == null) data.UnlockedWorldAreas = new System.Collections.Generic.List<string>();
             if (data.CollectedGardenResources == null) data.CollectedGardenResources = new System.Collections.Generic.List<string>();
+            if (data.CollectedTrailResources == null) data.CollectedTrailResources = new System.Collections.Generic.List<string>();
+            data.CollectedTrailResources.RemoveAll(string.IsNullOrWhiteSpace);
+            if (data.CollectedTrailResources.Count > 100) data.CollectedTrailResources.RemoveRange(100, data.CollectedTrailResources.Count - 100);
             data.CollectedGardenResources.RemoveAll(string.IsNullOrWhiteSpace);
             if (data.CollectedGardenResources.Count > 100) data.CollectedGardenResources.RemoveRange(100, data.CollectedGardenResources.Count - 100);
             if (data.MiniGameRewardClaims == null) data.MiniGameRewardClaims = new System.Collections.Generic.List<MiaMax.Domain.MiniGames.MiniGameRewardClaimData>();
