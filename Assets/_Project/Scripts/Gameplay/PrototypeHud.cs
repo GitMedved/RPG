@@ -213,6 +213,26 @@ namespace MiaMax.Gameplay
             GUI.EndGroup();
         }
 
+        public string StatusText
+        {
+            get
+            {
+                GameSession s = GameSessionBootstrap.Current;
+                if (s == null || s.Data == null) return "Preparing your backyard...";
+                int streak = dailyVisitService != null ? dailyVisitService.CurrentStreak : 0;
+                return "LEVEL " + s.Data.Progress.Level + "   ·   " + s.Data.Progress.Experience +
+                    " XP\n" + s.Data.Progress.Coins + " COINS   ·   " + streak + " DAY STREAK";
+            }
+        }
+        public string DailyGiftLabel => dailyVisitService == null ? "DAILY GIFT" : dailyVisitService.GetButtonLabel();
+        public bool CanClaimDailyGift => dailyVisitService != null && dailyVisitService.CanClaimToday;
+        public string InteractionPrompt => playerInteraction != null && playerInteraction.HasNearbyTarget
+            ? playerInteraction.NearbyPrompt : "Explore the backyard";
+        public bool CanInteract => playerInteraction != null && playerInteraction.HasNearbyTarget;
+        public string TutorialHint => tutorialService != null && !tutorialService.IsCompleted
+            ? tutorialService.CurrentHint : string.Empty;
+        public void TryInteractFromHud() { playerInteraction?.TryInteract(); }
+
         public bool InventoryOpen => inventoryOpen;
         public bool JournalOpen => journalOpen;
         public bool SettingsOpen => settingsOpen;
