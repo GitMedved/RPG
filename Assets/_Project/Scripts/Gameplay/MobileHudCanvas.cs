@@ -67,10 +67,7 @@ namespace MiaMax.Gameplay
             EnsureEventSystem();
 
             safeRoot = MakeRect("Safe Area", canvas.transform);
-            safeRoot.anchorMin = Vector2.zero;
-            safeRoot.anchorMax = Vector2.one;
-            safeRoot.offsetMin = Vector2.zero;
-            safeRoot.offsetMax = Vector2.zero;
+            ApplySafeArea();
 
             Image statusCard = MakePanel("Player Status Card", safeRoot, Forest,
                 new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(16f, -16f),
@@ -129,20 +126,28 @@ namespace MiaMax.Gameplay
             tutorialText.rectTransform.anchorMin = new Vector2(0.08f, 1f);
             tutorialText.rectTransform.anchorMax = new Vector2(0.92f, 1f);
             tutorialText.rectTransform.pivot = new Vector2(0.5f, 1f);
+            tutorialText.rectTransform.anchoredPosition = new Vector2(0f, -270f);
             tutorialText.rectTransform.sizeDelta = new Vector2(0f, 66f);
-            Image tutorialBackground = tutorialText.gameObject.AddComponent<Image>();
-            tutorialBackground.color = new Color(0.96f, 0.91f, 0.78f, 0.94f);
-            tutorialBackground.raycastTarget = false;
-            tutorialText.transform.SetAsLastSibling();
+            tutorialText.color = Cream;
+        }
+
+        private void ApplySafeArea()
+        {
+            Rect safe = Screen.safeArea;
+            safeRoot.anchorMin = new Vector2(safe.xMin / Screen.width, safe.yMin / Screen.height);
+            safeRoot.anchorMax = new Vector2(safe.xMax / Screen.width, safe.yMax / Screen.height);
+            safeRoot.offsetMin = Vector2.zero;
+            safeRoot.offsetMax = Vector2.zero;
         }
 
         private void Refresh()
         {
             if (hud == null) return;
+            ApplySafeArea();
             statusText.text = hud.StatusText;
             giftButtonText.text = hud.DailyGiftLabel;
             giftButton.interactable = hud.CanClaimDailyGift;
-            giftButton.image.color = hud.CanClaimDailyGift ? Honey : new Color(0.43f, 0.46f, 0.39f, 0.9f);
+            giftButton.targetGraphic.color = hud.CanClaimDailyGift ? Honey : new Color(0.43f, 0.46f, 0.39f, 0.9f);
 
             journalButtonText.text = hud.JournalOpen ? "CLOSE JOURNAL" : "ADVENTURE JOURNAL";
             settingsButtonText.text = hud.SettingsOpen ? "CLOSE SETTINGS" : "SETTINGS";
@@ -152,7 +157,7 @@ namespace MiaMax.Gameplay
             bool canInteract = hud.CanInteract;
             interactButton.interactable = canInteract;
             interactButtonText.text = canInteract ? "INTERACT" : "EXPLORE";
-            interactButton.image.color = canInteract ? Honey : new Color(0.43f, 0.46f, 0.39f, 0.9f);
+            interactButton.targetGraphic.color = canInteract ? Honey : new Color(0.43f, 0.46f, 0.39f, 0.9f);
             promptText.text = hud.InteractionPrompt;
 
             string hint = hud.TutorialHint;
