@@ -157,3 +157,8 @@ Added the eighth lifetime achievement, Trailblazer, derived from the three persi
 ## 16. M26 — Exploration and inventory feedback — 2026-11-04
 
 Added a live Woodland Trail unlock/discovery status line in the Adventure Journal and friendly inventory names for flower and woodland resources. Increased scroll content to accommodate the new line. Mobile aspect-ratio text wrapping still needs Unity Editor/device validation. See `M26_EXPLORATION_INVENTORY_FEEDBACK.md`.
+
+
+## 17. M27 — Interaction feedback — 2026-11-04
+
+Added a small HUD toast for world interactions. The interactable publishes its configured name/action through a static event; the HUD subscribes only while enabled and displays the message for 2.6 seconds using unscaled time. No save schema or gameplay reward logic changed. Unity compile, Play Mode and mobile layout acceptance remain required. See `M27_INTERACTION_FEEDBACK.md`.
