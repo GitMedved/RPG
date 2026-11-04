@@ -172,3 +172,8 @@ World interaction feedback now requests vibration through the existing settings 
 ## 19. M29 — Daily exploration goal — 2026-11-04
 
 Expanded the daily task set to four goals: harvest 2, collect a finished craft, deliver an order and discover one new Flower Garden/Woodland Trail resource. Added a persisted exploration counter and connected successful one-time resource pickups. Existing saves default the new field to zero without a schema bump. Reward remains 20 coins + 15 XP. Unity compile, old-save, UTC rollover and mobile journal layout checks remain pending. See `M29_DAILY_EXPLORATION_GOAL.md`.
+
+
+## 20. M30 — Daily visit streak and gifts — 2026-11-04
+
+Added persistent last-visit/last-claim UTC dates, current/best streaks and a repeating seven-day reward track (10–60 coins, 5–30 XP). A next-day visit increments the streak; a missed UTC day resets current streak to one. Added a HUD claim button and confirmation toast, with one reward claim per UTC date and overflow checks. Existing saves initialize the new data without a schema bump. Offline/client-clock limitation applies. Unity compile, save/load, UTC boundary and mobile HUD tests remain pending. See `M30_DAILY_VISIT_STREAK.md`.
