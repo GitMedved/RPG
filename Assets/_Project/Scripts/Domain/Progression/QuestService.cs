@@ -27,7 +27,9 @@ namespace MiaMax.Domain.Progression
             new Definition { Id = "quest_first_order", Title = "Helping the Neighbours", Coins = 15, Experience = 20,
                 IsComplete = save => save.CompletedOrders.Any(x => x != null) },
             new Definition { Id = "quest_order_master", Title = "A Busy Little Backyard", Coins = 30, Experience = 35,
-                IsComplete = save => save.CompletedOrders.Count(x => x != null) >= 3 }
+                IsComplete = save => save.CompletedOrders.Count(x => x != null) >= 3 },
+            new Definition { Id = "quest_flower_friend", Title = "A Path Beyond the Garden", Coins = 40, Experience = 45,
+                IsComplete = save => save.CollectedGardenResources != null && save.CollectedGardenResources.Count >= 3 }
         };
 
         private readonly GameSession session;
@@ -67,6 +69,8 @@ namespace MiaMax.Domain.Progression
 
             if (quest.Id == "quest_order_master" && !session.Data.UnlockedWorldAreas.Contains("flower_garden"))
                 session.Data.UnlockedWorldAreas.Add("flower_garden");
+            if (quest.Id == "quest_flower_friend" && !session.Data.UnlockedWorldAreas.Contains("woodland_trail"))
+                session.Data.UnlockedWorldAreas.Add("woodland_trail");
 
             session.NotifyExternalStateChanged();
             claimedTitle = quest.Title;
