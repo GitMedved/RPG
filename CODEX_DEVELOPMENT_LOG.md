@@ -555,3 +555,13 @@
 - Save recovery check uses a unique OS temp folder and removes it in a finally block; it does not touch the player's real save.
 - Added M37 acceptance documentation and updated README/roadmap.
 - Static source review only. Unity compilation and actual execution of the Editor menu command remain pending; this does not replace Play Mode or device validation.
+
+
+## 2026-11-04 — M38 Tutorial flow repair
+
+- Found and fixed missing tutorial advancement for successful planting and harvesting; both actions now advance only after their gameplay mutation succeeds.
+- Added visible `STEP n/6` progress to each active tutorial hint.
+- Added an end-to-end Editor smoke scenario covering movement, planting, harvest, product collection, order delivery and arcade reward claim.
+- Expanded the core smoke result from five to six grouped checks.
+- Added M38 acceptance notes and updated README/roadmap.
+- Source-level inspection only. Unity compilation and the six-check Editor command must still be run locally; Play Mode and device checks remain separate.
