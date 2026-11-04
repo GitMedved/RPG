@@ -278,6 +278,86 @@ namespace MiaMax.Gameplay
             }
         }
 
+        public string JournalSummary
+        {
+            get
+            {
+                if (boundSession == null || boundSession.Data == null) return "Loading adventure journal...";
+                var job = productionService != null ? productionService.ActiveJob : null;
+                string workshop = job == null || !job.IsActive ? "Ready for a new recipe" :
+                    productionService.RemainingSeconds > 0 ? RecipeName(job.RecipeId) + " · " + productionService.RemainingSeconds + "s left" :
+                    RecipeName(job.RecipeId) + " · READY TO COLLECT";
+                string garden = upgradeService == null ? string.Empty :
+                    "Garden Lv." + upgradeService.GardenLevel + (upgradeService.GardenAtMax ? " · MAX" : " · next " + upgradeService.GardenUpgradeCost + " coins");
+                string workshopLevel = upgradeService == null ? string.Empty :
+                    "Workshop Lv." + upgradeService.WorkshopLevel + (upgradeService.WorkshopAtMax ? " · MAX" : " · next " + upgradeService.WorkshopUpgradeCost + " coins");
+                string trail = questService != null && questService.IsAreaUnlocked("woodland_trail")
+                    ? "Woodland Trail discoveries: " + (boundSession.Data.CollectedTrailResources != null ? boundSession.Data.CollectedTrailResources.Count : 0) + "/3"
+                    : "Woodland Trail: complete the Flower Garden story quest to unlock";
+                return "STORY\n" + (questService != null ? questService.GetSummary() : "Story quests unavailable.") +
+                    "\n\nKEEPSAKES\n" + (collectionService != null ? collectionService.GetSummary() : "Collection unavailable.") +
+                    "\n\nWORKSHOP\n" + workshop +
+                    "\nOrders: " + (orderService != null ? orderService.GetStatusSummary() : "Unavailable") +
+                    "\n\nUPGRADES\n" + garden + "\n" + workshopLevel +
+                    "\n\nDAILY GOALS\n" + (dailyTaskService != null ? dailyTaskService.GetSummary() : "Unavailable") +
+                    "\n\nACHIEVEMENTS\n" + (achievementService != null ? achievementService.GetSummary() : "Unavailable") +
+                    "\n" + (achievementService != null ? achievementService.GetDetails(8) : string.Empty) +
+                    "\n\nEXPLORATION\n" + trail +
+                    (string.IsNullOrEmpty(journalNotice) ? string.Empty : "\n\n" + journalNotice);
+            }
+        }
+
+        public void PerformJournalAction(int action)
+        {
+            if (boundSession == null) return;
+            switch (action)
+            {
+                case 0:
+                    string questTitle;
+                    journalNotice = questService != null && questService.TryClaimNext(out questTitle)
+                        ? "Quest reward claimed: " + questTitle + "!" : "No quest reward is ready yet.";
+                    break;
+                case 1:
+                    journalNotice = collectionService == null ? "Collection unavailable." :
+                        collectionService.IsCompletionRewardClaimed ? "Collection reward was already claimed." :
+                        collectionService.TryClaimCompletionReward() ? "Collection reward claimed: +25 coins, +30 XP!" :
+                        "Find all 5 keepsakes to unlock this reward.";
+                    break;
+                case 2: journalNotice = StartRecipe(ProductionService.CarrotSoup); break;
+                case 3: journalNotice = StartRecipe(ProductionService.StrawberryJuice); break;
+                case 4: journalNotice = StartRecipe(ProductionService.WoodenToy); break;
+                case 5:
+                    journalNotice = productionService != null && productionService.TryCollect()
+                        ? "Product collected and +5 XP earned!" : "No finished product is ready yet.";
+                    break;
+                case 6:
+                    string orderId = orderService != null ? orderService.FirstAvailableOrder() : null;
+                    journalNotice = orderId != null && orderService.TryComplete(orderId)
+                        ? "Order delivered! Coins and XP received." : "No order is ready. Make a product first.";
+                    break;
+                case 7:
+                    journalNotice = upgradeService != null && upgradeService.TryUpgradeGarden()
+                        ? "Garden upgraded! Future harvests give more crops." : "Need more coins or garden is max level.";
+                    break;
+                case 8:
+                    journalNotice = upgradeService != null && upgradeService.TryUpgradeWorkshop()
+                        ? "Workshop upgraded! New crafts finish faster." : "Need more coins or workshop is max level.";
+                    break;
+                case 9:
+                    journalNotice = dailyTaskService != null && dailyTaskService.TryClaimReward()
+                        ? "Daily reward claimed: +20 coins, +15 XP!" : "Complete all daily goals before claiming.";
+                    break;
+                case 10:
+                    string title;
+                    int coins, experience;
+                    journalNotice = achievementService != null &&
+                        achievementService.TryClaimNext(out title, out coins, out experience)
+                        ? title + " claimed! +" + coins + " coins, +" + experience + " XP."
+                        : "No achievement reward is ready yet.";
+                    break;
+            }
+        }
+
         public string StatusText
         {
             get
