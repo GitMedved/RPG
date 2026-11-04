@@ -165,3 +165,8 @@ Added a persistent Settings panel for independent audio levels, UI scale, vibrat
 ## M22 — Daily goals & rewards
 
 Three UTC-based daily goals track successful harvesting, collecting a finished craft and delivering an order. Completing all three grants 20 coins and 15 XP once per day. Progress and claim state persist locally and appear in the Adventure Journal. This is a fixed offline prototype, not a server-backed live-ops system. See [M22 Daily Goals & Rewards](M22_DAILY_GOALS_REWARDS.md).
+
+
+## M23 — Lifetime achievements
+
+Added seven persistent achievements tied to harvesting, crafting, deliveries, keepsakes, flower-garden resources, mini-game rewards and player level. Each achievement grants a one-time coin/XP reward claimable from the Adventure Journal. See `M23_ACHIEVEMENTS_PROGRESS.md`. Unity compile and runtime acceptance remain pending.
