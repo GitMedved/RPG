@@ -29,8 +29,10 @@ namespace MiaMax.EditorTools
                 new Check { Label = "Backyard reference image", SearchFilter = "backyard_collage t:Texture2D", Folder = "Assets/_Project/Art/Environment", RequiredForRelease = true },
                 new Check { Label = "Mia production model (FBX)", SearchFilter = "Mia t:Model", Folder = "Assets/_Project/Art/Characters/Runtime", RequiredForRelease = true },
                 new Check { Label = "Max production model (FBX)", SearchFilter = "Max t:Model", Folder = "Assets/_Project/Art/Characters/Runtime", RequiredForRelease = true },
-                new Check { Label = "Mia Animator Controller", SearchFilter = "Mia t:AnimatorController", Folder = "Assets/_Project/Art/Characters/Runtime", RequiredForRelease = true },
-                new Check { Label = "Max Animator Controller", SearchFilter = "Max t:AnimatorController", Folder = "Assets/_Project/Art/Characters/Runtime", RequiredForRelease = true },
+                new Check { Label = "Mia animation clips", SearchFilter = "t:AnimationClip", Folder = "Assets/_Project/Art/Characters/Runtime/Mia", RequiredForRelease = true },
+                new Check { Label = "Max animation clips", SearchFilter = "t:AnimationClip", Folder = "Assets/_Project/Art/Characters/Runtime/Max", RequiredForRelease = true },
+                new Check { Label = "Mia Animator Controller contract scaffold", SearchFilter = "Mia_AnimatorContract t:AnimatorController", Folder = "Assets/_Project/Art/Characters/Runtime", RequiredForRelease = true },
+                new Check { Label = "Max Animator Controller contract scaffold", SearchFilter = "Max_AnimatorContract t:AnimatorController", Folder = "Assets/_Project/Art/Characters/Runtime", RequiredForRelease = true },
                 new Check { Label = "UI sprite assets", SearchFilter = "t:Sprite", Folder = "Assets/_Project/Art/UI", RequiredForRelease = true },
                 new Check { Label = "Audio effects", SearchFilter = "t:AudioClip", Folder = "Assets/Resources/MiaMax/Audio/SFX", RequiredForRelease = true },
                 new Check { Label = "Voice recordings", SearchFilter = "t:AudioClip", Folder = "Assets/_Project/Audio/Voice", RequiredForRelease = true },
@@ -58,7 +60,8 @@ namespace MiaMax.EditorTools
             report.AppendLine();
             report.AppendLine("Ready: " + ready + " / " + checks.Count);
             report.AppendLine("Pending: " + pending + " / " + checks.Count);
-            report.AppendLine("This audit checks asset presence only; rig quality, licences, import settings and device performance require manual review.");
+            report.AppendLine("Animator Controller contract scaffolds contain parameters only; they are not final animation controllers.");
+            report.AppendLine("This audit checks asset presence only; rig quality, clip content, licences, import settings and device performance require manual review.");
 
             Debug.Log(report.ToString());
             EditorUtility.DisplayDialog("Mia & Max Asset Audit",
