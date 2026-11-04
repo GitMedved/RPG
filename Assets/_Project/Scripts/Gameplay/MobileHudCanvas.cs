@@ -161,7 +161,7 @@ namespace MiaMax.Gameplay
             closeRect.pivot = new Vector2(1f, 1f);
             closeRect.anchoredPosition = new Vector2(-18f, -18f);
             closeRect.sizeDelta = new Vector2(92f, 58f);
-            close.onClick.AddListener(() => { hud?.ToggleInventory(); hud?.ToggleMap(); });
+            close.onClick.AddListener(() => hud?.CloseCanvasDetails());
 
             GameObject viewportObject = new GameObject("Detail Scroll Viewport",
                 typeof(RectTransform), typeof(Image), typeof(Mask));
