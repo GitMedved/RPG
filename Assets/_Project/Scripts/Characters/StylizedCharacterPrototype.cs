@@ -16,6 +16,14 @@ namespace MiaMax.Gameplay
 
         public static void BuildMia(Transform root)
         {
+            GameObject productionPrefab = Resources.Load<GameObject>("MiaMax/Characters/Mia");
+            if (productionPrefab != null)
+            {
+                GameObject instance = Instantiate(productionPrefab, root, false);
+                instance.name = "Mia_Production_Model";
+                return;
+            }
+
             var rig = root.gameObject.AddComponent<StylizedCharacterPrototype>();
             rig.isCat = false;
             rig.BuildGirl();
@@ -23,6 +31,14 @@ namespace MiaMax.Gameplay
 
         public static void BuildMax(Transform root)
         {
+            GameObject productionPrefab = Resources.Load<GameObject>("MiaMax/Characters/Max");
+            if (productionPrefab != null)
+            {
+                GameObject instance = Instantiate(productionPrefab, root, false);
+                instance.name = "Max_Production_Model";
+                return;
+            }
+
             var rig = root.gameObject.AddComponent<StylizedCharacterPrototype>();
             rig.isCat = true;
             rig.BuildCat();
