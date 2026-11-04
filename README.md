@@ -200,3 +200,8 @@ Connected the saved vibration preference to world interaction feedback on suppor
 ## M29 — Daily exploration goal
 
 Expanded daily goals to include one new resource discovery in the Flower Garden or Woodland Trail. Progress is saved with the existing daily task data; old saves default to 0/1. The reward remains 20 coins + 15 XP after all four goals. See `M29_DAILY_EXPLORATION_GOAL.md`.
+
+
+## M30 — Daily visit streak and gifts
+
+Added a persistent UTC visit streak with a repeating seven-day coin/XP gift track, one claim per UTC day and a compact claim control in the HUD. Current and best streaks persist; missed days reset only the current streak. This is offline/client-clock based, with no server validation or notifications. See `M30_DAILY_VISIT_STREAK.md`.
