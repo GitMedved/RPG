@@ -29,6 +29,8 @@ namespace MiaMax.EditorTools
                 new Check { Label = "Backyard reference image", SearchFilter = "backyard_collage t:Texture2D", Folder = "Assets/_Project/Art/Environment", RequiredForRelease = true },
                 new Check { Label = "Mia production model (FBX)", SearchFilter = "Mia t:Model", Folder = "Assets/_Project/Art/Characters/Runtime", RequiredForRelease = true },
                 new Check { Label = "Max production model (FBX)", SearchFilter = "Max t:Model", Folder = "Assets/_Project/Art/Characters/Runtime", RequiredForRelease = true },
+                new Check { Label = "Mia runtime prefab", SearchFilter = "Mia t:Prefab", Folder = "Assets/Resources/MiaMax/Characters", RequiredForRelease = true },
+                new Check { Label = "Max runtime prefab", SearchFilter = "Max t:Prefab", Folder = "Assets/Resources/MiaMax/Characters", RequiredForRelease = true },
                 new Check { Label = "Mia animation clips", SearchFilter = "t:AnimationClip", Folder = "Assets/_Project/Art/Characters/Runtime/Mia", RequiredForRelease = true },
                 new Check { Label = "Max animation clips", SearchFilter = "t:AnimationClip", Folder = "Assets/_Project/Art/Characters/Runtime/Max", RequiredForRelease = true },
                 new Check { Label = "Mia Animator Controller contract scaffold", SearchFilter = "Mia_AnimatorContract t:AnimatorController", Folder = "Assets/_Project/Art/Characters/Runtime", RequiredForRelease = true },
