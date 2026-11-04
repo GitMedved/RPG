@@ -213,6 +213,8 @@ namespace MiaMax.Gameplay
             GUI.EndGroup();
         }
 
+        public string FeedbackText => Time.unscaledTime < interactionFeedbackUntil ? interactionFeedback : string.Empty;
+
         public string InventorySummary
         {
             get
