@@ -202,3 +202,8 @@ Added a runtime uGUI Screen Space Overlay Canvas with CanvasScaler, normalized s
 ## 25. M35 — Canvas Backpack, World Map and feedback — 2026-11-04
 
 Migrated Backpack and World Map presentation to a scrollable uGUI Canvas panel; added Canvas feedback toast and explicit panel close behavior. Journal and Settings remain on IMGUI pending their action-by-action migration. Unity compile, Play Mode, scrolling, aspect-ratio and touch validation remain pending. See `M35_CANVAS_BACKPACK_MAP_FEEDBACK.md`.
+
+
+## 26. M36 — Canvas Settings & Accessibility — 2026-11-04
+
+Migrated Settings to the shared Canvas detail panel. Audio channels, UI scale, vibration and reduced-motion preferences call the existing settings service and retain save persistence. Journal remains on IMGUI pending migration. Unity compile, save/reload, Play Mode, aspect-ratio and touch validation remain pending. See `M36_CANVAS_SETTINGS_ACCESSIBILITY.md`.
