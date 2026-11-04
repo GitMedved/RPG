@@ -70,6 +70,7 @@ namespace MiaMax.Domain.MiniGames
             if (session.Data.MiniGameRewardClaims.Count > 500)
                 session.Data.MiniGameRewardClaims.RemoveAt(0);
             new TutorialService(session).TryAdvance(TutorialService.Arcade);
+            new AchievementService(session).RecordArcadeReward();
             session.NotifyExternalStateChanged();
             return true;
         }
