@@ -85,6 +85,7 @@ namespace MiaMax.Gameplay
 
             BackyardDetailPrototype.Build();
             BackyardVisualPolishPrototype.Build();
+            BackyardEnvironmentArtPass.Build();
 
             // White perimeter fence, leaving a gate opening at the far side.
             for (int x = -16; x <= 16; x += 2)
