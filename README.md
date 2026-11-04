@@ -38,6 +38,7 @@ Pre-production Unity prototype. The repository began as a README-only project; t
 - [M20 Production Asset Audit](M20_PRODUCTION_ASSET_AUDIT.md)
 - [M21 Player Settings & Accessibility](M21_PLAYER_SETTINGS_ACCESSIBILITY.md)
 - [M22 Daily Goals & Rewards](M22_DAILY_GOALS_REWARDS.md)
+- [M34 Canvas Mobile HUD](M34_CANVAS_MOBILE_HUD.md)
 
 ## Unity project scaffold
 
@@ -220,3 +221,8 @@ Added a compact World Map HUD panel showing the Backyard, Flower Garden and Wood
 ## M33 — Responsive Arcade HUD
 
 The Arcade panel now scales from the device safe area and offsets for safe-area insets, while retaining the existing mini-game layout and rules. This is still an IMGUI prototype; touch targets and aspect-ratio behaviour require Unity/device validation. See `M33_RESPONSIVE_ARCADE_HUD.md`.
+
+
+## M34 — Canvas mobile HUD foundation
+
+Started the transition from IMGUI to Unity uGUI. A safe-area-aware Screen Space Overlay Canvas now owns the main status card, daily gift action, Journal/Settings/Map shortcuts and bottom Backpack/Interact dock. Existing game services and panel state are preserved; the detailed Backpack, Journal, Map and Settings contents remain on the legacy IMGUI renderers for this first migration slice. The UI is still assembled from temporary panels and built-in font assets. Unity Editor compile, Play Mode, aspect-ratio and device checks are required. See [M34 Canvas Mobile HUD](M34_CANVAS_MOBILE_HUD.md).
