@@ -393,3 +393,13 @@
 - Source files were fetched after updates and basic brace-balance checks are pending final pass.
 - Unity compile, Play Mode, save migration regression and device tests remain unverified.
 - The feature is offline/client-clock based; no server validation, cloud sync, notifications or rotating live-ops tasks are included.
+
+
+## 2026-11-04 — M23 lifetime achievements
+
+- Added persistent achievement progress records to player save data and load-time validation.
+- Added seven fixed achievements spanning farming, crafting, order delivery, keepsakes, flower collection, arcade rewards and level progression.
+- Connected successful domain actions to lifetime counters; collection/flower/arcade/level progress is derived from existing saved state.
+- Added one-time coin/XP rewards with overflow checks and an Adventure Journal claim action.
+- Added `M23_ACHIEVEMENTS_PROGRESS.md`.
+- Validation: source-level structural checks only. Unity Editor compile, Play Mode, save/load regression and Android/iOS tests have not been run.
