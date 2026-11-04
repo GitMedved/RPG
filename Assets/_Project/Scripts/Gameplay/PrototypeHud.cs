@@ -20,6 +20,7 @@ namespace MiaMax.Gameplay
         private GameSession boundSession;
         private QuestService questService;
         private DailyTaskService dailyTaskService;
+        private DailyVisitService dailyVisitService;
         private AchievementService achievementService;
         private CollectionService collectionService;
         private ProductionService productionService;
@@ -71,12 +72,28 @@ namespace MiaMax.Gameplay
             GUI.BeginGroup(new Rect(safe.xMin + margin, top + margin, safe.width - margin * 2f, safe.height - margin * 2f));
             Color previousColor = GUI.color;
             GUI.color = new Color(0.10f, 0.15f, 0.18f, 0.88f);
-            GUI.Box(new Rect(0f, 0f, panelWidth, line * 2.1f), GUIContent.none, panelStyle);
+            GUI.Box(new Rect(0f, 0f, panelWidth, line * 4.1f), GUIContent.none, panelStyle);
             GUI.color = previousColor;
             GUI.Label(new Rect(10f * scale, 3f * scale, panelWidth - 20f * scale, line), 
                 "LEVEL " + session.Data.Progress.Level + "    " + session.Data.Progress.Experience + " XP", headingStyle);
             GUI.Label(new Rect(10f * scale, line, panelWidth - 20f * scale, line),
                 "Coins: " + session.Data.Progress.Coins, bodyStyle);
+            GUI.Label(new Rect(10f * scale, line * 2f, panelWidth - 20f * scale, line),
+                "Visit streak: " + (dailyVisitService != null ? dailyVisitService.CurrentStreak : 0) + " day(s)", bodyStyle);
+            GUI.enabled = dailyVisitService != null && dailyVisitService.CanClaimToday;
+            GUI.color = new Color(0.72f, 0.48f, 0.20f, 1f);
+            if (GUI.Button(new Rect(8f * scale, line * 3f, panelWidth - 16f * scale, line * 0.9f),
+                dailyVisitService != null ? dailyVisitService.GetButtonLabel() : "DAILY GIFT", buttonStyle))
+            {
+                if (dailyVisitService.TryClaimReward())
+                {
+                    interactionFeedback = "Daily gift claimed: +" + dailyVisitService.CoinsToday +
+                        " coins, +" + dailyVisitService.ExperienceToday + " XP!";
+                    interactionFeedbackUntil = Time.unscaledTime + 3f;
+                }
+            }
+            GUI.enabled = true;
+            GUI.color = previousColor;
 
             // Compact top-right journal shortcut.
             float journalButtonWidth = Mathf.Min(190f * scale, safe.width - margin * 2f);
@@ -180,6 +197,7 @@ namespace MiaMax.Gameplay
             boundSession = session;
             questService = new QuestService(session);
             dailyTaskService = new DailyTaskService(session);
+            dailyVisitService = new DailyVisitService(session);
             achievementService = new AchievementService(session);
             collectionService = new CollectionService(session);
             productionService = new ProductionService(session);
