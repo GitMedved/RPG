@@ -192,3 +192,8 @@ Added a HUD World Map panel with the Backyard home base and story-gated Flower G
 ## 23. M33 — Responsive Arcade HUD — 2026-11-04
 
 Wrapped the arcade IMGUI panel in a safe-area-aware transform, scaling from safe width/height with a 0.72–1.2 clamp and offsetting from top/side insets. Existing game controls and logical layout remain unchanged. Unity Game view, touch mapping, portrait/landscape and device checks remain pending. See `M33_RESPONSIVE_ARCADE_HUD.md`.
+
+
+## 24. M34 — Canvas mobile HUD foundation — 2026-11-04
+
+Added a runtime uGUI Screen Space Overlay Canvas with CanvasScaler, normalized safe-area anchors, status card, daily gift, top navigation and bottom action dock. The Canvas calls the existing PrototypeHud state/actions; detailed Backpack, Journal, Map and Settings contents remain on the legacy IMGUI renderers for this first migration slice. Added the `com.unity.ugui` package dependency. Unity package resolution, compilation, Play Mode, portrait/landscape and touch-device acceptance remain pending. See `M34_CANVAS_MOBILE_HUD.md`.
