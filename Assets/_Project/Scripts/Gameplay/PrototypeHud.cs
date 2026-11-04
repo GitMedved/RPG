@@ -229,6 +229,8 @@ namespace MiaMax.Gameplay
                     "\\n\\nChanges save automatically. Language: English.";
             }
         }
+        public bool VibrationEnabled => settingsService != null && settingsService.Data.VibrationEnabled;
+        public bool ReducedMotionEnabled => settingsService != null && settingsService.Data.ReducedMotion;
         public void AdjustSettingFromCanvas(int setting, float delta) { if (settingsService != null) AdjustSetting(setting, delta); }
         public void ToggleVibrationFromCanvas() { settingsService?.ToggleVibration(); }
         public void ToggleReducedMotionFromCanvas() { settingsService?.ToggleReducedMotion(); }
