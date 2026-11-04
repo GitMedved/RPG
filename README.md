@@ -248,3 +248,8 @@ The Adventure Journal now runs in the responsive uGUI detail panel, with scrolla
 ## M36 — Character FBX Import Pipeline
 
 Added Unity Editor tools to prepare dedicated Mia/Max model folders, create Animator parameter-contract scaffolds, and apply character-specific FBX import profiles (Mia Humanoid, Max Generic/quadruped). The production asset audit now distinguishes controller scaffolds from completed animation and checks imported animation clips. No final character models or animation clips are included. See [M36 Character Asset Pipeline](M36_CHARACTER_ASSET_PIPELINE.md).
+
+
+### M36 runtime character integration
+
+The Editor pipeline can generate runtime prefabs from unambiguous base FBX files and place them under `Resources/MiaMax/Characters`. At runtime the existing character gameplay roots load the production prefab when available and otherwise keep the current greybox proxy. The production asset audit checks the runtime prefabs. This integration does not provide production art or finished animation.
