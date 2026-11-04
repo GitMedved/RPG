@@ -4,12 +4,13 @@ using MiaMax.Infrastructure.Save;
 
 namespace MiaMax.Domain.Progression
 {
-    /// <summary>Three deterministic daily goals, reset by UTC calendar date.</summary>
+    /// <summary>Four deterministic daily goals, reset by UTC calendar date.</summary>
     public sealed class DailyTaskService
     {
         public const int HarvestGoal = 2;
         public const int CraftGoal = 1;
         public const int DeliverGoal = 1;
+        public const int ExploreGoal = 1;
         public const int RewardCoins = 20;
         public const int RewardExperience = 15;
 
@@ -25,7 +26,8 @@ namespace MiaMax.Domain.Progression
 
         public bool IsComplete => Data.HarvestCount >= HarvestGoal &&
                                   Data.CraftCount >= CraftGoal &&
-                                  Data.DeliverCount >= DeliverGoal;
+                                  Data.DeliverCount >= DeliverGoal &&
+                                  Data.ExploreCount >= ExploreGoal;
         public bool IsRewardClaimed => Data.RewardClaimed;
 
         public void RecordHarvest()
@@ -46,6 +48,13 @@ namespace MiaMax.Domain.Progression
         {
             ResetForToday();
             Data.DeliverCount = Math.Min(DeliverGoal, Data.DeliverCount + 1);
+            session.NotifyExternalStateChanged();
+        }
+
+        public void RecordExploration()
+        {
+            ResetForToday();
+            Data.ExploreCount = Math.Min(ExploreGoal, Data.ExploreCount + 1);
             session.NotifyExternalStateChanged();
         }
 
@@ -76,7 +85,8 @@ namespace MiaMax.Domain.Progression
                 IsComplete ? "All goals complete — claim your reward!" : "Complete today's goals";
             return "DAILY GOALS (UTC)\nHarvest " + Data.HarvestCount + "/" + HarvestGoal +
                    "  •  Craft " + Data.CraftCount + "/" + CraftGoal +
-                   "  •  Deliver " + Data.DeliverCount + "/" + DeliverGoal +
+                   "\nDeliver " + Data.DeliverCount + "/" + DeliverGoal +
+                   "  •  Explore " + Data.ExploreCount + "/" + ExploreGoal +
                    "\n" + status + "  |  Reward: +" + RewardCoins + " coins, +" + RewardExperience + " XP";
         }
 
@@ -89,6 +99,7 @@ namespace MiaMax.Domain.Progression
             Data.HarvestCount = 0;
             Data.CraftCount = 0;
             Data.DeliverCount = 0;
+            Data.ExploreCount = 0;
             Data.RewardClaimed = false;
             session.NotifyExternalStateChanged();
         }
