@@ -207,3 +207,8 @@ Migrated Backpack and World Map presentation to a scrollable uGUI Canvas panel; 
 ## 26. M36 — Canvas Settings & Accessibility — 2026-11-04
 
 Migrated Settings to the shared Canvas detail panel. Audio channels, UI scale, vibration and reduced-motion preferences call the existing settings service and retain save persistence. Journal remains on IMGUI pending migration. Unity compile, save/reload, Play Mode, aspect-ratio and touch validation remain pending. See `M36_CANVAS_SETTINGS_ACCESSIBILITY.md`.
+
+
+## 25. M35 — Canvas Adventure Journal — 2026-11-04
+
+Migrated the Adventure Journal and its progression/economy actions to the responsive Canvas detail panel. The Canvas now owns the main HUD, backpack, map, settings and journal. Legacy IMGUI remains as a fallback only when a scene has no MobileHudCanvas. Unity compile, Play Mode, save/reload and device checks remain pending. See `M35_CANVAS_ADVENTURE_JOURNAL.md`.
