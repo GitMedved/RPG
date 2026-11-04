@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using MiaMax.Domain.Progression;
 using UnityEngine;
 
 namespace MiaMax.Infrastructure.Save
