@@ -15,12 +15,12 @@ After Unity imports the new Editor script, use:
   - Creates `Mia_AnimatorContract.controller` and `Max_AnimatorContract.controller` if they do not already exist.
   - Adds the agreed Animator parameters: `Speed` (float), `Grounded` (bool), `Interact` (trigger), `Celebrate` (trigger).
 - `Tools → Mia & Max → Apply Character FBX Import Profiles`
-  - Mia FBX files under the Mia folder use Humanoid animation type and Create From This Model avatar setup.
-  - Max FBX files under the Max folder use Generic animation type for the quadruped rig.
-  - Animation import is enabled; embedded cameras and lights are disabled.
-  - Only FBX assets are modified; other model formats are ignored.
+  - The selected base Mia FBX uses Humanoid animation type and Create From This Model avatar setup.
+  - The selected base Max FBX uses Generic animation type for the quadruped rig.
+  - Animation import is enabled on each base model; embedded cameras and lights are disabled.
+  - Only the selected base FBX is modified. Separate animation-only FBX files are not automatically changed; configure them manually with Copy From Other Avatar and the base model's Avatar after import.
   - Creates runtime prefabs in `Assets/Resources/MiaMax/Characters/Mia.prefab` and `Max.prefab` when a base model FBX is available.
-  - If several FBX files exist, the base model must be named `Mia.fbx` / `Max.fbx`, `Mia_Model.fbx` / `Max_Model.fbx`, or `*_Character.fbx`; otherwise prefab generation is skipped rather than guessing which file is the base model.
+  - If several FBX files exist, the base model must be named `Mia.fbx` / `Max.fbx`, `Mia_Model.fbx` / `Max_Model.fbx`, or `Mia_Character.fbx` / `Max_Character.fbx`; otherwise profile application and prefab generation are skipped rather than guessing which file is the base model.
 
 ## Character-specific requirements
 
@@ -68,3 +68,8 @@ The Editor tools were source-authored but not executed in Unity. No FBX assets, 
 - With a generated prefab, the imported model is instantiated under the existing gameplay root.
 - The gameplay root remains responsible for movement, collision, interaction and companion following; the visual model is a child.
 - Review model scale and pivot in Unity before acceptance. The pipeline does not guess scale corrections or retarget custom skeletons.
+
+
+### Separate animation FBX files
+
+The import-profile tool intentionally changes only the selected base model FBX. For separate animation-only FBX files, configure the Model Importer to use the character's matching rig type and `Copy From Other Avatar`, then assign the Avatar from the base model. Do not use `Create From This Model` on animation-only files unless they contain a complete independent skeleton and Avatar.
