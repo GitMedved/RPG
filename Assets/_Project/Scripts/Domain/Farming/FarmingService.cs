@@ -45,6 +45,7 @@ namespace MiaMax.Domain.Farming
             plot.CropId = null; plot.PlantedAtUnix = 0;
             session.AddExperience(8); session.TryAddCoins(3);
             new DailyTaskService(session).RecordHarvest();
+            new AchievementService(session).RecordHarvest();
             session.NotifyExternalStateChanged();
             return true;
         }
