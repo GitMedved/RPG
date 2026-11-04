@@ -420,3 +420,10 @@
 - Added Trailblazer lifetime achievement for all three saved Woodland Trail resources (30 coins, 25 XP, one-time claim).
 - Expanded the Adventure Journal to show all eight achievement entries and adjusted scroll content height/claim feedback placement.
 - Source-level checks only; Unity compile, Play Mode and mobile layout validation remain pending.
+
+
+## 2026-11-04 — M26 exploration/inventory feedback
+
+- Added friendly names for all Flower Garden and Woodland Trail resource item IDs in the backpack.
+- Added a live Woodland Trail unlock/discovery progress line to the Adventure Journal and extended its scroll area.
+- Source-level checks only; Unity mobile layout validation remains pending.
