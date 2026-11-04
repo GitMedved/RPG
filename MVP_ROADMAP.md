@@ -182,3 +182,8 @@ Added persistent last-visit/last-claim UTC dates, current/best streaks and a rep
 ## 21. M31 — Daily arcade reward cap — 2026-11-04
 
 Added a shared five-successful-reward-claims-per-UTC-day limit across all three mini-games. The persisted count resets with daily tasks; Arcade menu displays usage and reports when the cap is reached. Per-run duplicate protection and score-banded reward values remain unchanged. This is an offline economy guard, not server-side anti-cheat. Unity compile, save/load, date rollover and arcade Play Mode checks remain pending. See `M31_DAILY_ARCADE_REWARD_CAP.md`.
+
+
+## 22. M32 — World Map overview — 2026-11-04
+
+Added a HUD World Map panel with the Backyard home base and story-gated Flower Garden/Woodland Trail, live unlock status and discovery counts. Locked-area text describes the next story requirement. Enforced mutual exclusion across Map, Journal, Settings and Backpack panels. No save schema change. Unity compile, progression state, safe-area and device layout checks remain pending. See `M32_WORLD_MAP_OVERVIEW.md`.
