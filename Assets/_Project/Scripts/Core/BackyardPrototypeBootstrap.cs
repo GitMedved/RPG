@@ -84,6 +84,7 @@ namespace MiaMax.Gameplay
             CreateKeepsake("Tiny Shell", "keepsake_tiny_shell", new Vector3(12f, 0.3f, 3f), Mat(new Color(0.9f, 0.78f, 0.68f)));
 
             BackyardDetailPrototype.Build();
+            BackyardVisualPolishPrototype.Build();
 
             // White perimeter fence, leaving a gate opening at the far side.
             for (int x = -16; x <= 16; x += 2)
