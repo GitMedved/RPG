@@ -109,6 +109,21 @@ namespace MiaMax.Gameplay
 
         private void OnGUI()
         {
+            Matrix4x4 previousMatrix = GUI.matrix;
+            Rect safe = Screen.safeArea;
+            float scale = Mathf.Clamp(Mathf.Min(safe.width / 390f, safe.height / 520f), 0.72f, 1.2f);
+            float top = Screen.height - safe.yMax;
+            GUI.matrix = Matrix4x4.TRS(
+                new Vector3(safe.xMin, top, 0f),
+                Quaternion.identity,
+                Vector3.one * scale);
+
+            DrawArcadePanel();
+            GUI.matrix = previousMatrix;
+        }
+
+        private void DrawArcadePanel()
+        {
             if (activeGame == null)
             {
                 GUI.Box(new Rect(16, 16, 300, 190), "Mia & Max Arcade");
@@ -130,6 +145,7 @@ namespace MiaMax.Gameplay
             else if (activeGame == MiniGameRewardService.MaxRun) DrawRunner();
 
             GUI.Label(new Rect(26, 365, 300, 32), status);
+        
         }
 
         private void DrawMatch3()
