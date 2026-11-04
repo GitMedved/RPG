@@ -35,6 +35,7 @@ Pre-production Unity prototype. The repository began as a README-only project; t
 - [M17 Audio & Voice](M17_AUDIO_AND_VOICE.md)
 - [M18 Integration & Mobile Hardening](M18_INTEGRATION_AND_MOBILE_HARDENING.md)
 - [M19 Backyard Visual Polish](M19_BACKYARD_VISUAL_POLISH.md)
+- [M20 Production Asset Audit](M20_PRODUCTION_ASSET_AUDIT.md)
 
 ## Unity project scaffold
 
@@ -150,3 +151,6 @@ See the four milestone documents for setup and acceptance gates. M14 was reporte
 
 ### M19 — Backyard visual polish
 Added a low-cost procedural dressing pass (stepping stones, layered tree foliage, perimeter flower clusters and small architectural details). This remains temporary greybox art pending production models and must be visually checked in Unity.
+
+### M20 — Production asset audit
+Added a Unity Editor menu command to report reference, model, Animator Controller, UI sprite and audio asset readiness. Missing assets are reported as pending rather than compile failures.
