@@ -195,3 +195,8 @@ Added a short contextual toast when Mia interacts with a world object. The messa
 ## M28 — Accessibility feedback integration
 
 Connected the saved vibration preference to world interaction feedback on supported mobile platforms. The reduced-motion preference now suppresses one-shot Interact/Celebrate Animator triggers while leaving locomotion parameters intact. Reduced-motion coverage is partial; camera, UI and mini-game effects are not yet adapted. See `M28_ACCESSIBILITY_FEEDBACK.md`.
+
+
+## M29 — Daily exploration goal
+
+Expanded daily goals to include one new resource discovery in the Flower Garden or Woodland Trail. Progress is saved with the existing daily task data; old saves default to 0/1. The reward remains 20 coins + 15 XP after all four goals. See `M29_DAILY_EXPLORATION_GOAL.md`.
