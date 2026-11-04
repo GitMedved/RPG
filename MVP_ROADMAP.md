@@ -147,3 +147,8 @@ Added seven lifetime achievements with persisted progress and one-time rewards. 
 ## 14. M24 — Woodland Trail expansion — 2026-11-04
 
 Added a fourth story quest after Flower Garden resource collection. Claiming it unlocks a new same-scene woodland annex through a configurable area portal. The annex contains three one-time persistent resources (acorn, mushroom, wild berries), a return gate and prototype environment dressing. Local save validation handles the new collection list without a schema bump. Unity compile, Play Mode, save/load and mobile acceptance remain pending. See `M24_WOODLAND_TRAIL_EXPANSION.md`.
+
+
+## 15. M25 — Exploration achievement — 2026-11-04
+
+Added the eighth lifetime achievement, Trailblazer, derived from the three persisted Woodland Trail discoveries. One-time reward: 30 coins and 25 XP. Expanded the scrollable Adventure Journal to show the full eight-achievement list and reward claim. Unity compile, Play Mode, save/load and mobile layout validation remain pending. See `M25_EXPLORATION_ACHIEVEMENT.md`.
