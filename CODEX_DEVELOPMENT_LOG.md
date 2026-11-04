@@ -443,3 +443,13 @@
 - CharacterAnimationBridge now suppresses Interact/Celebrate one-shot Animator triggers when Reduced Motion is enabled; locomotion parameter updates remain active.
 - Documented the limited scope and manual acceptance checks. No save schema change.
 - Source-level review only; Unity compile, Animator and physical-device haptic validation remain pending.
+
+
+## 2026-11-04 — M29 daily exploration goal
+
+- Expanded daily tasks from three to four goals by adding one new resource discovery.
+- Added persisted ExploreCount to DailyTaskSaveData; old saves default to zero without a schema bump.
+- Connected successful Flower Garden and Woodland Trail pickups to daily exploration progress.
+- Expanded the Adventure Journal daily-goal area and shifted lower content to preserve spacing.
+- Daily reward remains 20 coins + 15 XP, claimable once after all four goals.
+- Source-level checks only; Unity compile, Play Mode, save compatibility, UTC reset and mobile layout remain pending.
