@@ -106,19 +106,23 @@ namespace MiaMax.Domain.Progression
 
         private void RefreshDerivedProgress()
         {
-            RecordDerived("keepsakes_5", session.Data.DiscoveredCollectibles != null ? session.Data.DiscoveredCollectibles.Count : 0);
-            RecordDerived("flowers_3", session.Data.CollectedGardenResources != null ? session.Data.CollectedGardenResources.Count : 0);
-            RecordDerived("arcade_3", session.Data.MiniGameRewardClaims != null ? session.Data.MiniGameRewardClaims.Count : 0);
-            RecordDerived("level_5", session.Data.Progress != null ? session.Data.Progress.Level : 1);
+            bool changed = false;
+            changed |= RecordDerived("keepsakes_5", session.Data.DiscoveredCollectibles != null ? session.Data.DiscoveredCollectibles.Count : 0);
+            changed |= RecordDerived("flowers_3", session.Data.CollectedGardenResources != null ? session.Data.CollectedGardenResources.Count : 0);
+            changed |= RecordDerived("arcade_3", session.Data.MiniGameRewardClaims != null ? session.Data.MiniGameRewardClaims.Count : 0);
+            changed |= RecordDerived("level_5", session.Data.Progress != null ? session.Data.Progress.Level : 1);
+            if (changed) session.NotifyExternalStateChanged();
         }
 
-        private void RecordDerived(string id, int value)
+        private bool RecordDerived(string id, int value)
         {
             Definition definition = Definitions.FirstOrDefault(x => x.Id == id);
-            if (definition == null) return;
+            if (definition == null) return false;
             AchievementProgressData state = GetOrCreate(id);
             int next = Math.Min(definition.Goal, Math.Max(0, value));
-            if (state.Progress < next) state.Progress = next;
+            if (state.Progress >= next) return false;
+            state.Progress = next;
+            return true;
         }
 
         private int GetProgress(string id)
