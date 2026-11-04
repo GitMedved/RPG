@@ -16,6 +16,7 @@ namespace MiaMax.Gameplay
         private bool inventoryOpen;
         private bool journalOpen;
         private bool settingsOpen;
+        private bool mapOpen;
         private Vector2 journalScroll;
         private GameSession boundSession;
         private QuestService questService;
@@ -103,14 +104,22 @@ namespace MiaMax.Gameplay
                 journalOpen ? "×  CLOSE JOURNAL" : "☰  ADVENTURE JOURNAL", buttonStyle))
             {
                 journalOpen = !journalOpen;
-                if (journalOpen) inventoryOpen = false;
+                if (journalOpen) { inventoryOpen = false; settingsOpen = false; mapOpen = false; }
             }
             GUI.color = previousColor;
             GUI.color = new Color(0.22f, 0.30f, 0.34f, 0.98f);
             if (GUI.Button(new Rect(journalButtonX, line * 1.5f, journalButtonWidth, line), settingsOpen ? "CLOSE SETTINGS" : "SETTINGS"))
             {
                 settingsOpen = !settingsOpen;
-                if (settingsOpen) { inventoryOpen = false; journalOpen = false; }
+                if (settingsOpen) { inventoryOpen = false; journalOpen = false; mapOpen = false; }
+            }
+            GUI.color = previousColor;
+            GUI.color = new Color(0.20f, 0.34f, 0.30f, 0.98f);
+            if (GUI.Button(new Rect(journalButtonX, line * 2.7f, journalButtonWidth, line),
+                mapOpen ? "CLOSE WORLD MAP" : "WORLD MAP"))
+            {
+                mapOpen = !mapOpen;
+                if (mapOpen) { inventoryOpen = false; journalOpen = false; settingsOpen = false; }
             }
             GUI.color = previousColor;
 
@@ -130,7 +139,7 @@ namespace MiaMax.Gameplay
                 inventoryOpen ? "×  CLOSE BAG" : "▣  BACKPACK", buttonStyle))
             {
                 inventoryOpen = !inventoryOpen;
-                if (inventoryOpen) journalOpen = false;
+                if (inventoryOpen) { journalOpen = false; settingsOpen = false; mapOpen = false; }
             }
 
             if (playerInteraction == null)
@@ -155,6 +164,13 @@ namespace MiaMax.Gameplay
             if (inventoryOpen)
                 DrawInventory(session, scale, line, panelWidth);
             if (settingsOpen) DrawSettings(scale, line, panelWidth, safe.height);
+            if (mapOpen)
+            {
+                float mapPanelX = safe.width - margin * 2f - panelWidth;
+                GUI.BeginGroup(new Rect(mapPanelX, 0f, panelWidth, safe.height - margin * 2f));
+                DrawWorldMap(scale, line, panelWidth, safe.height - margin * 2f);
+                GUI.EndGroup();
+            }
             if (journalOpen)
             {
                 float journalPanelX = safe.width - margin * 2f - panelWidth;
@@ -348,6 +364,45 @@ namespace MiaMax.Gameplay
                 GUI.Label(new Rect(12f * scale, y + row * 24.3f, width - 24f * scale, row * 0.8f),
                     journalNotice, bodyStyle);
             GUI.EndScrollView();
+        }
+
+        private void DrawWorldMap(float scale, float line, float width, float availableHeight)
+        {
+            float row = 38f * scale;
+            float y = line * 2.7f;
+            float height = row * 8.6f;
+            Color previousColor = GUI.color;
+            GUI.color = new Color(0.10f, 0.15f, 0.18f, 0.96f);
+            GUI.Box(new Rect(0f, y, width, Mathf.Min(height, availableHeight - y - 10f * scale)), GUIContent.none, panelStyle);
+            GUI.color = previousColor;
+
+            GUI.Label(new Rect(10f * scale, y + 4f * scale, width - 20f * scale, row),
+                "WORLD MAP", headingStyle);
+            GUI.Label(new Rect(12f * scale, y + row, width - 24f * scale, row * 1.25f),
+                "BACKYARD  ·  HOME BASE\nFarming, workshop, arcade and keepsakes", bodyStyle);
+            GUI.Label(new Rect(12f * scale, y + row * 2.35f, width - 24f * scale, row * 0.7f),
+                "↓  Follow the garden path", bodyStyle);
+
+            bool gardenUnlocked = questService != null && questService.IsAreaUnlocked("flower_garden");
+            int gardenFound = boundSession.Data.CollectedGardenResources != null
+                ? boundSession.Data.CollectedGardenResources.Count : 0;
+            GUI.Label(new Rect(12f * scale, y + row * 3.0f, width - 24f * scale, row * 1.35f),
+                "FLOWER GARDEN  ·  " + (gardenUnlocked ? "UNLOCKED" : "LOCKED") +
+                "\nDiscoveries: " + gardenFound + "/3" +
+                (gardenUnlocked ? "\nCollect all flowers to open the woodland path." :
+                    "\nClaim the 'A Busy Little Backyard' story reward to unlock."), bodyStyle);
+
+            bool trailUnlocked = questService != null && questService.IsAreaUnlocked("woodland_trail");
+            int trailFound = boundSession.Data.CollectedTrailResources != null
+                ? boundSession.Data.CollectedTrailResources.Count : 0;
+            GUI.Label(new Rect(12f * scale, y + row * 4.75f, width - 24f * scale, row * 1.55f),
+                "↓  WOODLAND TRAIL  ·  " + (trailUnlocked ? "UNLOCKED" : "LOCKED") +
+                "\nDiscoveries: " + trailFound + "/3" +
+                (trailUnlocked ? "\nFind the acorn, mushroom and wild berries." :
+                    "\nCollect all 3 garden flowers and claim the next story reward."), bodyStyle);
+
+            GUI.Label(new Rect(12f * scale, y + row * 6.65f, width - 24f * scale, row),
+                "New areas appear here as your story progresses.", bodyStyle);
         }
 
         private void DrawSettings(float scale, float line, float width, float availableHeight)
