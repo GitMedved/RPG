@@ -53,6 +53,7 @@ namespace MiaMax.Gameplay
 
             session.AddExperience(5);
             session.TryAddCoins(3);
+            new MiaMax.Domain.Progression.DailyTaskService(session).RecordExploration();
             session.NotifyExternalStateChanged();
             collected = true;
             Debug.Log("Trail discovery: " + displayTitle + ". +1 " + itemId + ", +5 XP, +3 coins.");
