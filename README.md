@@ -37,6 +37,7 @@ Pre-production Unity prototype. The repository began as a README-only project; t
 - [M19 Backyard Visual Polish](M19_BACKYARD_VISUAL_POLISH.md)
 - [M20 Production Asset Audit](M20_PRODUCTION_ASSET_AUDIT.md)
 - [M21 Player Settings & Accessibility](M21_PLAYER_SETTINGS_ACCESSIBILITY.md)
+- [M22 Daily Goals & Rewards](M22_DAILY_GOALS_REWARDS.md)
 
 ## Unity project scaffold
 
@@ -159,3 +160,8 @@ Added a Unity Editor menu command to report reference, model, Animator Controlle
 ## M21 — Player settings & accessibility
 
 Added a persistent Settings panel for independent audio levels, UI scale, vibration preference and reduced-motion preference. Settings are saved locally and restored on startup. This is still prototype UI; haptics/reduced-motion hooks and real audio clips need integration and device verification. See [M21 Player Settings & Accessibility](M21_PLAYER_SETTINGS_ACCESSIBILITY.md).
+
+
+## M22 — Daily goals & rewards
+
+Three UTC-based daily goals track successful harvesting, collecting a finished craft and delivering an order. Completing all three grants 20 coins and 15 XP once per day. Progress and claim state persist locally and appear in the Adventure Journal. This is a fixed offline prototype, not a server-backed live-ops system. See [M22 Daily Goals & Rewards](M22_DAILY_GOALS_REWARDS.md).
