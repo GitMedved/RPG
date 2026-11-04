@@ -1,4 +1,5 @@
 using UnityEngine;
+using MiaMax.Infrastructure.Save;
 
 namespace MiaMax.Gameplay
 {
@@ -47,12 +48,21 @@ namespace MiaMax.Gameplay
 
         public void PlayInteract()
         {
+            if (IsReducedMotionEnabled()) return;
             if (animator != null && animator.isActiveAndEnabled) animator.SetTrigger(InteractId);
         }
 
         public void PlayCelebrate()
         {
+            if (IsReducedMotionEnabled()) return;
             if (animator != null && animator.isActiveAndEnabled) animator.SetTrigger(CelebrateId);
+        }
+
+        private static bool IsReducedMotionEnabled()
+        {
+            GameSession session = GameSessionBootstrap.Current;
+            return session != null && session.Data != null && session.Data.Settings != null &&
+                   session.Data.Settings.ReducedMotion;
         }
     }
 }
