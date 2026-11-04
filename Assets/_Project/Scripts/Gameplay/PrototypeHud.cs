@@ -33,6 +33,24 @@ namespace MiaMax.Gameplay
         private GUIStyle bodyStyle;
         private GUIStyle buttonStyle;
         private string journalNotice = string.Empty;
+        private string interactionFeedback = string.Empty;
+        private float interactionFeedbackUntil;
+
+        private void OnEnable()
+        {
+            BackyardInteractable.InteractionFeedback += HandleInteractionFeedback;
+        }
+
+        private void OnDisable()
+        {
+            BackyardInteractable.InteractionFeedback -= HandleInteractionFeedback;
+        }
+
+        private void HandleInteractionFeedback(string message)
+        {
+            interactionFeedback = message;
+            interactionFeedbackUntil = Time.unscaledTime + 2.6f;
+        }
 
         private void OnGUI()
         {
@@ -125,6 +143,20 @@ namespace MiaMax.Gameplay
                 GUI.BeginGroup(new Rect(journalPanelX, 0f, panelWidth, safe.height - margin * 2f));
                 DrawJournal(scale, line, panelWidth, safe.height - margin * 2f);
                 GUI.EndGroup();
+            }
+
+            if (!string.IsNullOrEmpty(interactionFeedback) && Time.unscaledTime < interactionFeedbackUntil)
+            {
+                float toastWidth = Mathf.Min(420f * scale, safe.width - margin * 2f);
+                float toastHeight = line * 1.25f;
+                float toastX = (safe.width - toastWidth) * 0.5f;
+                float toastY = line * 2.8f;
+                GUI.color = new Color(0.12f, 0.20f, 0.18f, 0.94f);
+                GUI.Box(new Rect(toastX, toastY, toastWidth, toastHeight), GUIContent.none, panelStyle);
+                GUI.color = new Color(1f, 0.96f, 0.82f, 1f);
+                GUI.Label(new Rect(toastX + 10f * scale, toastY + 2f * scale,
+                    toastWidth - 20f * scale, toastHeight - 4f * scale), interactionFeedback, bodyStyle);
+                GUI.color = previousColor;
             }
 
             if (tutorialService != null && !tutorialService.IsCompleted)
