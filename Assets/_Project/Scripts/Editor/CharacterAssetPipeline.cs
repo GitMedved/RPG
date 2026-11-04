@@ -45,6 +45,8 @@ namespace MiaMax.EditorTools
         {
             int miaCount = ApplyProfile(MiaFolder, ModelImporterAnimationType.Human);
             int maxCount = ApplyProfile(MaxFolder, ModelImporterAnimationType.Generic);
+            bool miaPrefab = BuildRuntimePrefab("Mia", MiaFolder, ControllerFolder + "/Mia_AnimatorContract.controller");
+            bool maxPrefab = BuildRuntimePrefab("Max", MaxFolder, ControllerFolder + "/Max_AnimatorContract.controller");
             AssetDatabase.SaveAssets();
 
             Debug.Log("Mia & Max FBX import profiles applied. Mia Humanoid models: " + miaCount +
@@ -104,6 +106,52 @@ namespace MiaMax.EditorTools
                 processed++;
             }
             return processed;
+        }
+
+        private static bool BuildRuntimePrefab(string characterName, string modelFolder, string controllerPath)
+        {
+            string[] guids = AssetDatabase.FindAssets("t:Model", new[] { modelFolder });
+            var modelPaths = new List<string>();
+            foreach (string guid in guids)
+            {
+                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                if (assetPath.ToLowerInvariant().EndsWith(".fbx")) modelPaths.Add(assetPath);
+            }
+            modelPaths.Sort();
+            if (modelPaths.Count == 0) return false;
+
+            GameObject modelAsset = AssetDatabase.LoadAssetAtPath<GameObject>(modelPaths[0]);
+            if (modelAsset == null) return false;
+
+            string resourcesFolder = "Assets/Resources/MiaMax/Characters";
+            EnsureFolder("Assets/Resources");
+            EnsureFolder("Assets/Resources/MiaMax");
+            EnsureFolder(resourcesFolder);
+
+            GameObject wrapper = new GameObject(characterName + "_Runtime");
+            GameObject modelInstance = Object.Instantiate(modelAsset);
+            modelInstance.name = characterName + "_Model";
+            modelInstance.transform.SetParent(wrapper.transform, false);
+
+            Animator animator = modelInstance.GetComponentInChildren<Animator>();
+            if (animator == null) animator = modelInstance.AddComponent<Animator>();
+
+            AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(controllerPath);
+            if (controller != null) animator.runtimeAnimatorController = controller;
+
+            Avatar importedAvatar = null;
+            Object[] subAssets = AssetDatabase.LoadAllAssetsAtPath(modelPaths[0]);
+            foreach (Object subAsset in subAssets)
+            {
+                Avatar candidate = subAsset as Avatar;
+                if (candidate != null) { importedAvatar = candidate; break; }
+            }
+            if (animator.avatar == null && importedAvatar != null) animator.avatar = importedAvatar;
+
+            string prefabPath = resourcesFolder + "/" + characterName + ".prefab";
+            PrefabUtility.SaveAsPrefabAsset(wrapper, prefabPath);
+            Object.DestroyImmediate(wrapper);
+            return AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath) != null;
         }
 
         private static void CreateControllerContract(string assetPath)
