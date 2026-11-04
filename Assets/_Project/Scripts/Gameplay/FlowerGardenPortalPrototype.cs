@@ -13,9 +13,14 @@ namespace MiaMax.Gameplay
         private bool isExit;
         private QuestService quests;
         private BackyardInteractable interactable;
+        private string requiredAreaId = "flower_garden";
+        private string areaDisplayName = "Flower Garden";
 
-        public void Configure(Transform playerTransform, Vector3 targetPosition, bool exitPortal, BackyardInteractable targetInteractable)
+        public void Configure(Transform playerTransform, Vector3 targetPosition, bool exitPortal, BackyardInteractable targetInteractable,
+            string unlockAreaId = "flower_garden", string displayName = "Flower Garden")
         {
+            requiredAreaId = unlockAreaId;
+            areaDisplayName = displayName;
             interactable = targetInteractable;
             if (interactable != null) interactable.Interacted += OnInteract;
             player = playerTransform;
@@ -37,9 +42,9 @@ namespace MiaMax.Gameplay
         private void OnInteract()
         {
             if (player == null || quests == null) return;
-            if (!quests.IsAreaUnlocked("flower_garden"))
+            if (!quests.IsAreaUnlocked(requiredAreaId))
             {
-                Debug.Log("The Flower Garden unlocks after completing the story quest 'A Busy Little Backyard'.");
+                Debug.Log(areaDisplayName + " is locked. Complete the preceding story quest to unlock it.");
                 return;
             }
 
@@ -47,7 +52,7 @@ namespace MiaMax.Gameplay
             if (controller != null) controller.enabled = false;
             player.position = destination;
             if (controller != null) controller.enabled = true;
-            Debug.Log(isExit ? "Back in the backyard!" : "Welcome to the Flower Garden!");
+            Debug.Log(isExit ? "Back in the backyard!" : "Welcome to " + areaDisplayName + "!");
         }
     }
 }
