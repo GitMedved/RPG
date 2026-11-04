@@ -153,6 +153,7 @@ namespace MiaMax.Gameplay
             RenderSettings.ambientMode = AmbientMode.Flat;
             RenderSettings.ambientLight = new Color(0.68f, 0.72f, 0.78f);
             sun.transform.rotation = Quaternion.Euler(50f, -30f, 0f);
+            BackyardLightingAtmospherePass.Apply(camera, sun);
 
             // A small red toy truck recalls the reference board's sandbox detail.
             Cube("Toy_Truck_Placeholder", new Vector3(7f, 0.35f, -4f), new Vector3(1.1f, 0.45f, 0.7f), Mat(new Color(0.85f, 0.12f, 0.08f)));
