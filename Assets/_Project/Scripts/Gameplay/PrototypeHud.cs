@@ -48,6 +48,7 @@ namespace MiaMax.Gameplay
 
         private void HandleInteractionFeedback(string message)
         {
+            settingsService?.Vibrate();
             interactionFeedback = message;
             interactionFeedbackUntil = Time.unscaledTime + 2.6f;
         }
