@@ -22,6 +22,9 @@ namespace MiaMax.Gameplay
         private Text detailBody;
         private RectTransform detailContent;
         private ScrollRect detailScroll;
+        private GameObject settingsControls;
+        private Text vibrationLabel;
+        private Text reducedMotionLabel;
         private Button giftButton;
         private Text giftButtonText;
         private Button journalButton;
@@ -181,7 +184,7 @@ namespace MiaMax.Gameplay
             RectTransform viewport = (RectTransform)viewportObject.transform;
             viewport.anchorMin = Vector2.zero;
             viewport.anchorMax = Vector2.one;
-            viewport.offsetMin = new Vector2(24f, 24f);
+            viewport.offsetMin = new Vector2(24f, 300f);
             viewport.offsetMax = new Vector2(-24f, -118f);
             Image viewportImage = viewportObject.GetComponent<Image>();
             viewportImage.color = new Color(1f, 1f, 1f, 0.015f);
@@ -211,6 +214,65 @@ namespace MiaMax.Gameplay
             detailScroll.movementType = ScrollRect.MovementType.Clamped;
             detailScroll.scrollSensitivity = 36f;
             detailScroll.inertia = true;
+
+            settingsControls = new GameObject("Settings Canvas Controls", typeof(RectTransform));
+            settingsControls.transform.SetParent(panel.transform, false);
+            RectTransform controlsRect = (RectTransform)settingsControls.transform;
+            controlsRect.anchorMin = new Vector2(0f, 0f);
+            controlsRect.anchorMax = new Vector2(1f, 0f);
+            controlsRect.pivot = new Vector2(0.5f, 0f);
+            controlsRect.anchoredPosition = new Vector2(0f, 20f);
+            controlsRect.sizeDelta = new Vector2(-48f, 260f);
+
+            string[] settingNames = { "MASTER", "EFFECTS", "MUSIC", "VOICE", "UI SCALE" };
+            for (int i = 0; i < settingNames.Length; i++)
+            {
+                int setting = i;
+                float y = 216f - i * 42f;
+                Text label = MakeText("Setting " + settingNames[i], controlsRect, settingNames[i], 22,
+                    TextAnchor.MiddleLeft, Cream, Vector2.zero, Vector2.zero);
+                label.rectTransform.anchorMin = new Vector2(0f, 0f);
+                label.rectTransform.anchorMax = new Vector2(0.52f, 0f);
+                label.rectTransform.pivot = new Vector2(0f, 0f);
+                label.rectTransform.anchoredPosition = new Vector2(8f, y);
+                label.rectTransform.sizeDelta = new Vector2(0f, 38f);
+
+                Button minus = MakeButton("Decrease " + settingNames[i], controlsRect, Leaf, "−",
+                    Vector2.zero, Vector2.one, out _, 24);
+                SetControlRect(minus, new Vector2(0.62f, 0f), new Vector2(0.74f, 0f),
+                    new Vector2(0f, y), new Vector2(0f, 38f));
+                minus.onClick.AddListener(() => hud?.AdjustSettingFromCanvas(setting, -0.05f));
+
+                Button plus = MakeButton("Increase " + settingNames[i], controlsRect, Honey, "+",
+                    Vector2.zero, Vector2.one, out _, 24);
+                SetControlRect(plus, new Vector2(0.80f, 0f), new Vector2(0.92f, 0f),
+                    new Vector2(0f, y), new Vector2(0f, 38f));
+                plus.onClick.AddListener(() => hud?.AdjustSettingFromCanvas(setting, 0.05f));
+            }
+
+            Button vibration = MakeButton("Vibration Toggle", controlsRect, Leaf, "VIBRATION",
+                Vector2.zero, Vector2.one, out vibrationLabel, 20);
+            SetControlRect(vibration, new Vector2(0f, 0f), new Vector2(0.48f, 0f),
+                new Vector2(0f, 8f), new Vector2(0f, 38f));
+            vibration.onClick.AddListener(() => hud?.ToggleVibrationFromCanvas());
+
+            Button reduced = MakeButton("Reduced Motion Toggle", controlsRect, Leaf, "REDUCED MOTION",
+                Vector2.zero, Vector2.one, out reducedMotionLabel, 18);
+            SetControlRect(reduced, new Vector2(0.52f, 0f), new Vector2(1f, 0f),
+                new Vector2(0f, 8f), new Vector2(0f, 38f));
+            reduced.onClick.AddListener(() => hud?.ToggleReducedMotionFromCanvas());
+            settingsControls.SetActive(false);
+        }
+
+        private static void SetControlRect(Button button, Vector2 anchorMin, Vector2 anchorMax,
+            Vector2 position, Vector2 size)
+        {
+            RectTransform rect = (RectTransform)button.transform;
+            rect.anchorMin = anchorMin;
+            rect.anchorMax = anchorMax;
+            rect.pivot = new Vector2(0.5f, 0f);
+            rect.anchoredPosition = position;
+            rect.sizeDelta = size;
         }
 
         private void ApplySafeArea()
@@ -227,15 +289,19 @@ namespace MiaMax.Gameplay
             if (hud == null) return;
             ApplySafeArea();
             statusText.text = hud.StatusText;
-            bool showDetails = hud.InventoryOpen || hud.MapOpen;
+            bool showDetails = hud.InventoryOpen || hud.MapOpen || hud.SettingsOpen;
             detailPanel.SetActive(showDetails);
+            settingsControls.SetActive(hud.SettingsOpen);
             if (showDetails)
             {
-                detailTitle.text = hud.InventoryOpen ? "BACKPACK" : "WORLD MAP";
-                detailBody.text = hud.InventoryOpen ? hud.InventorySummary : hud.WorldMapSummary;
+                detailTitle.text = hud.InventoryOpen ? "BACKPACK" : hud.MapOpen ? "WORLD MAP" : "SETTINGS";
+                detailBody.text = hud.InventoryOpen ? hud.InventorySummary :
+                    hud.MapOpen ? hud.WorldMapSummary : hud.SettingsSummary;
                 float preferred = detailBody.preferredHeight + 24f;
                 detailContent.sizeDelta = new Vector2(0f, Mathf.Max(560f, preferred));
                 detailScroll.verticalNormalizedPosition = Mathf.Clamp01(detailScroll.verticalNormalizedPosition);
+                vibrationLabel.text = hud.VibrationEnabled ? "VIBRATION: ON" : "VIBRATION: OFF";
+                reducedMotionLabel.text = hud.ReducedMotionEnabled ? "REDUCED MOTION: ON" : "REDUCED MOTION: OFF";
             }
             giftButtonText.text = hud.DailyGiftLabel;
             giftButton.interactable = hud.CanClaimDailyGift;
