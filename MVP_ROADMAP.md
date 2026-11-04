@@ -142,3 +142,8 @@ Added three persistent daily goals: harvest two crops, collect one crafted produ
 ## 13. M23 — Lifetime achievements — 2026-11-04
 
 Added seven lifetime achievements with persisted progress and one-time rewards. Successful gameplay actions update harvest/craft/delivery counters; collection, flower, arcade and level milestones are derived from existing saved state. Adventure Journal displays achievement progress and allows claiming the next available reward. This is offline local progression, not server-authoritative. Unity compile, Play Mode and save/load regression remain pending. See `M23_ACHIEVEMENTS_PROGRESS.md`.
+
+
+## 14. M24 — Woodland Trail expansion — 2026-11-04
+
+Added a fourth story quest after Flower Garden resource collection. Claiming it unlocks a new same-scene woodland annex through a configurable area portal. The annex contains three one-time persistent resources (acorn, mushroom, wild berries), a return gate and prototype environment dressing. Local save validation handles the new collection list without a schema bump. Unity compile, Play Mode, save/load and mobile acceptance remain pending. See `M24_WOODLAND_TRAIL_EXPANSION.md`.
