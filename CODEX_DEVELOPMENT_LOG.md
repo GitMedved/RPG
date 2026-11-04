@@ -435,3 +435,11 @@
 - Added a short top-center HUD toast, visible independently of the Journal/Backpack, with a 2.6-second unscaled-time lifetime.
 - Preserved existing interaction callbacks and optional audio cue; no save schema or gameplay economy changes.
 - Source-level review only. Unity compile, Play Mode, pause behaviour and mobile layout checks remain pending.
+
+
+## 2026-11-04 — M28 accessibility feedback integration
+
+- Wired the saved vibration preference to the interaction-feedback event; vibration remains guarded by both the user toggle and mobile platform check.
+- CharacterAnimationBridge now suppresses Interact/Celebrate one-shot Animator triggers when Reduced Motion is enabled; locomotion parameter updates remain active.
+- Documented the limited scope and manual acceptance checks. No save schema change.
+- Source-level review only; Unity compile, Animator and physical-device haptic validation remain pending.
