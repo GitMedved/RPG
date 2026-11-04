@@ -278,7 +278,8 @@ namespace MiaMax.Gameplay
         private void DrawSettingRow(string label, float value, int setting, float y, float scale, float row, float width)
         {
             float buttonWidth = 34f * scale;
-            GUI.Label(new Rect(12f * scale, y, width * 0.55f, row), label + "  " + Mathf.RoundToInt(value * 100f) + "%", bodyStyle);
+            string valueLabel = setting == 4 ? Mathf.RoundToInt(85f + value * 30f) + "%" : Mathf.RoundToInt(value * 100f) + "%";
+            GUI.Label(new Rect(12f * scale, y, width * 0.55f, row), label + "  " + valueLabel, bodyStyle);
             if (GUI.Button(new Rect(width - 86f * scale, y + 2f * scale, buttonWidth, row - 4f * scale), "−", buttonStyle)) AdjustSetting(setting, -0.05f);
             if (GUI.Button(new Rect(width - 46f * scale, y + 2f * scale, buttonWidth, row - 4f * scale), "+", buttonStyle)) AdjustSetting(setting, 0.05f);
         }
