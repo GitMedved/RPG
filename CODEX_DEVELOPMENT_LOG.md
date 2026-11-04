@@ -472,3 +472,12 @@
 - Added Arcade menu count and explicit cap-reached feedback; retained per-run duplicate protection and score-banded rewards.
 - Added load-time clamping and legacy-save default behaviour without a schema bump.
 - Source-level review only; Unity compile, Play Mode, save/reload and UTC rollover remain pending.
+
+
+## 2026-11-04 — M32 World Map overview
+
+- Added a compact top-right World Map shortcut and text-first area progression panel.
+- Displayed Backyard, Flower Garden and Woodland Trail with live unlock status and saved discovery counts.
+- Added guidance for the story requirement to unlock each gated area.
+- Made Map, Journal, Settings and Backpack mutually exclusive to prevent panel overlap.
+- No save schema change; source-level review only. Unity compile, Play Mode, safe-area and mobile layout checks remain pending.
