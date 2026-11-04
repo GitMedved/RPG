@@ -36,6 +36,7 @@ Pre-production Unity prototype. The repository began as a README-only project; t
 - [M18 Integration & Mobile Hardening](M18_INTEGRATION_AND_MOBILE_HARDENING.md)
 - [M19 Backyard Visual Polish](M19_BACKYARD_VISUAL_POLISH.md)
 - [M40 Backyard Environment Art Pass](M40_BACKYARD_ENVIRONMENT_ART_PASS.md)
+- [M41 Backyard Lighting & Atmosphere](M41_BACKYARD_LIGHTING_ATMOSPHERE.md)
 - [M20 Production Asset Audit](M20_PRODUCTION_ASSET_AUDIT.md)
 - [M21 Player Settings & Accessibility](M21_PLAYER_SETTINGS_ACCESSIBILITY.md)
 - [M22 Daily Goals & Rewards](M22_DAILY_GOALS_REWARDS.md)
@@ -271,3 +272,8 @@ Replaced the generic planted-crop sphere with distinct low-poly carrot, tomato a
 ## M40 — Backyard environment art pass
 
 Added a warm, readable house entrance with framed windows and door, trim around the existing garden plots, a short garden path, patio planters and sandbox details. All new elements are grouped under one runtime root and use collider-free decorative primitives; existing interactions and crop logic are unchanged. This remains prototype dressing, not final authored environment art. See [M40 Backyard Environment Art Pass](M40_BACKYARD_ENVIRONMENT_ART_PASS.md).
+
+
+## M41 — Backyard lighting & atmosphere
+
+Added a warm daylight preset using the existing prototype camera and directional sun: soft sky background, three-tone ambient fill and gentler shadows. No additional lights or gameplay changes. This remains a runtime prototype preset, not final lighting/post-processing. See [M41 Backyard Lighting & Atmosphere](M41_BACKYARD_LIGHTING_ATMOSPHERE.md).
