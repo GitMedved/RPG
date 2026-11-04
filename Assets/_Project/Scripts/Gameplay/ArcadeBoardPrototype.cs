@@ -101,7 +101,10 @@ namespace MiaMax.Gameplay
                 rewardClaimed = true;
                 status = "Reward: +" + coins + " coins, +" + xp + " XP";
             }
-            else status = "Reward unavailable. Please start a new run.";
+            else status = rewards.CanClaimRewardToday
+                ? "Reward unavailable. Please start a new run."
+                : "Daily arcade reward limit reached (" + rewards.DailyRewardsClaimedToday +
+                  "/" + rewards.DailyRewardLimit + "). Come back tomorrow.";
         }
 
         private void OnGUI()
@@ -109,6 +112,9 @@ namespace MiaMax.Gameplay
             if (activeGame == null)
             {
                 GUI.Box(new Rect(16, 16, 300, 190), "Mia & Max Arcade");
+                GUI.Label(new Rect(30, 34, 270, 18), "Daily rewards: " +
+                    (rewards != null ? rewards.DailyRewardsClaimedToday : 0) + "/" +
+                    (rewards != null ? rewards.DailyRewardLimit : 5));
                 if (GUI.Button(new Rect(30, 50, 270, 38), "Play Match-3")) StartGame(MiniGameRewardService.Match3);
                 if (GUI.Button(new Rect(30, 94, 270, 38), "Go Fishing")) StartGame(MiniGameRewardService.Fishing);
                 if (GUI.Button(new Rect(30, 138, 270, 38), "Max Runner")) StartGame(MiniGameRewardService.MaxRun);
