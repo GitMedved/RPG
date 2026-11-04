@@ -20,7 +20,6 @@ namespace MiaMax.Gameplay
             Material door = Mat(new Color(0.43f, 0.25f, 0.15f));
             Material doorLight = Mat(new Color(0.58f, 0.36f, 0.21f));
             Material brass = Mat(new Color(0.88f, 0.67f, 0.28f));
-            Material soil = Mat(new Color(0.30f, 0.19f, 0.12f));
             Material timber = Mat(new Color(0.64f, 0.43f, 0.25f));
             Material terracotta = Mat(new Color(0.76f, 0.34f, 0.22f));
             Material planterGreen = Mat(new Color(0.24f, 0.43f, 0.19f));
