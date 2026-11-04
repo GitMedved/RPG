@@ -26,7 +26,8 @@ namespace MiaMax.Domain.Progression
             new Definition { Id = "keepsakes_5", Title = "Memory Keeper", Description = "Find all 5 backyard keepsakes", Goal = 5, Coins = 35, Experience = 25 },
             new Definition { Id = "flowers_3", Title = "Flower Friend", Description = "Collect all 3 garden flowers", Goal = 3, Coins = 20, Experience = 20 },
             new Definition { Id = "arcade_3", Title = "Arcade Explorer", Description = "Claim 3 mini-game rewards", Goal = 3, Coins = 25, Experience = 20 },
-            new Definition { Id = "level_5", Title = "Rising Star", Description = "Reach player level 5", Goal = 5, Coins = 40, Experience = 30 }
+            new Definition { Id = "level_5", Title = "Rising Star", Description = "Reach player level 5", Goal = 5, Coins = 40, Experience = 30 },
+            new Definition { Id = "woodland_3", Title = "Trailblazer", Description = "Find all 3 woodland resources", Goal = 3, Coins = 30, Experience = 25 }
         };
 
         private readonly GameSession session;
@@ -111,6 +112,7 @@ namespace MiaMax.Domain.Progression
             changed |= RecordDerived("flowers_3", session.Data.CollectedGardenResources != null ? session.Data.CollectedGardenResources.Count : 0);
             changed |= RecordDerived("arcade_3", session.Data.MiniGameRewardClaims != null ? session.Data.MiniGameRewardClaims.Count : 0);
             changed |= RecordDerived("level_5", session.Data.Progress != null ? session.Data.Progress.Level : 1);
+            changed |= RecordDerived("woodland_3", session.Data.CollectedTrailResources != null ? session.Data.CollectedTrailResources.Count : 0);
             if (changed) session.NotifyExternalStateChanged();
         }
 
