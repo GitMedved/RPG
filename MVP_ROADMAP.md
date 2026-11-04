@@ -197,3 +197,8 @@ Wrapped the arcade IMGUI panel in a safe-area-aware transform, scaling from safe
 ## 24. M34 — Canvas mobile HUD foundation — 2026-11-04
 
 Added a runtime uGUI Screen Space Overlay Canvas with CanvasScaler, normalized safe-area anchors, status card, daily gift, top navigation and bottom action dock. The Canvas calls the existing PrototypeHud state/actions; detailed Backpack, Journal, Map and Settings contents remain on the legacy IMGUI renderers for this first migration slice. Added the `com.unity.ugui` package dependency. Unity package resolution, compilation, Play Mode, portrait/landscape and touch-device acceptance remain pending. See `M34_CANVAS_MOBILE_HUD.md`.
+
+
+## 25. M35 — Canvas Backpack, World Map and feedback — 2026-11-04
+
+Migrated Backpack and World Map presentation to a scrollable uGUI Canvas panel; added Canvas feedback toast and explicit panel close behavior. Journal and Settings remain on IMGUI pending their action-by-action migration. Unity compile, Play Mode, scrolling, aspect-ratio and touch validation remain pending. See `M35_CANVAS_BACKPACK_MAP_FEEDBACK.md`.
