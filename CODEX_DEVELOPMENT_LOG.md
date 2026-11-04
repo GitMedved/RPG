@@ -356,3 +356,10 @@
 - Decorative meshes have no colliders to avoid interfering with movement and interaction.
 - Added Unity .meta and M19 acceptance documentation.
 - Static source inspection only; Unity compile, Play Mode visibility/collision review and device profiling are still required.
+
+
+## 2026-11-04 — M20 Production asset readiness audit
+- Added Editor-only `ProductionAssetAudit` menu utility to report presence of reference images, FBX models, Animator Controllers, UI sprites, SFX, voice and music.
+- Missing assets are reported as pending; the tool does not prevent the prototype from running.
+- Added Unity metadata and M20 documentation.
+- The audit has not been executed in Unity by the assistant; user-side execution is pending.
