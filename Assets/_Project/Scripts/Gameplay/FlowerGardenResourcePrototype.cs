@@ -47,6 +47,7 @@ namespace MiaMax.Gameplay
             }
             session.AddExperience(3);
             session.TryAddCoins(2);
+            new MiaMax.Domain.Progression.DailyTaskService(session).RecordExploration();
             session.NotifyExternalStateChanged();
             new MiaMax.Domain.Progression.AchievementService(session).GetSummary();
             collected = true;
