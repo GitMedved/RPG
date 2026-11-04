@@ -511,3 +511,14 @@
 - Journal and Settings remain on the legacy IMGUI renderer; their actions are preserved while migration continues.
 - Added M35 acceptance documentation and updated README/roadmap.
 - Source-level checks: braces balanced in modified C# files; package manifest remains valid JSON. Unity compile, Play Mode, touch, aspect-ratio and device tests have not been run.
+
+
+## 2026-11-04 — M36 Canvas Settings & Accessibility
+
+- Migrated Settings to the shared Canvas detail panel.
+- Added Canvas controls for master/effects/music/voice volume and UI scale.
+- Added vibration and reduced-motion toggles with live state labels.
+- Controls call the existing GameSettingsService and reuse existing saved preferences.
+- Suppressed the legacy IMGUI Settings renderer while Canvas HUD is active; Journal remains on IMGUI.
+- Added M36 acceptance documentation and updated README/roadmap.
+- Source-level checks: braces balanced in modified C# files; manifest JSON parses. Unity compilation, save/reload, Play Mode, aspect-ratio and touch tests remain unperformed.
