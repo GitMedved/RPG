@@ -44,8 +44,8 @@ namespace MiaMax.EditorTools
         [MenuItem("Tools/Mia & Max/Apply Character FBX Import Profiles")]
         public static void ApplyImportProfiles()
         {
-            int miaCount = ApplyProfile(MiaFolder, ModelImporterAnimationType.Human);
-            int maxCount = ApplyProfile(MaxFolder, ModelImporterAnimationType.Generic);
+            int miaCount = ApplyProfile(MiaFolder, "Mia", ModelImporterAnimationType.Human);
+            int maxCount = ApplyProfile(MaxFolder, "Max", ModelImporterAnimationType.Generic);
             bool miaPrefab = BuildRuntimePrefab("Mia", MiaFolder, ControllerFolder + "/Mia_AnimatorContract.controller");
             bool maxPrefab = BuildRuntimePrefab("Max", MaxFolder, ControllerFolder + "/Max_AnimatorContract.controller");
             AssetDatabase.SaveAssets();
@@ -60,58 +60,52 @@ namespace MiaMax.EditorTools
                 "OK");
         }
 
-        private static int ApplyProfile(string folder, ModelImporterAnimationType animationType)
+        private static int ApplyProfile(string folder, string characterName, ModelImporterAnimationType animationType)
         {
-            string[] guids = AssetDatabase.FindAssets("t:Model", new[] { folder });
-            int processed = 0;
-            foreach (string guid in guids)
+            string modelPath = FindBaseModelPath(folder, characterName);
+            if (string.IsNullOrEmpty(modelPath))
             {
-                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
-                if (!assetPath.ToLowerInvariant().EndsWith(".fbx")) continue;
-
-                ModelImporter importer = AssetImporter.GetAtPath(assetPath) as ModelImporter;
-                if (importer == null) continue;
-
-                bool changed = false;
-                if (importer.animationType != animationType)
-                {
-                    importer.animationType = animationType;
-                    changed = true;
-                }
-
-                if (importer.avatarSetup != ModelImporterAvatarSetup.CreateFromThisModel)
-                {
-                    importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
-                    changed = true;
-                }
-
-                if (!importer.importAnimation)
-                {
-                    importer.importAnimation = true;
-                    changed = true;
-                }
-
-                if (importer.importCameras)
-                {
-                    importer.importCameras = false;
-                    changed = true;
-                }
-
-                if (importer.importLights)
-                {
-                    importer.importLights = false;
-                    changed = true;
-                }
-
-                if (changed) importer.SaveAndReimport();
-                processed++;
+                Debug.LogWarning(characterName + " base FBX was not found or was ambiguous in " + folder +
+                    ". Add one base file named " + characterName + ".fbx or " + characterName + "_Model.fbx.");
+                return 0;
             }
-            return processed;
+
+            ModelImporter importer = AssetImporter.GetAtPath(modelPath) as ModelImporter;
+            if (importer == null) return 0;
+
+            bool changed = false;
+            if (importer.animationType != animationType)
+            {
+                importer.animationType = animationType;
+                changed = true;
+            }
+            if (importer.avatarSetup != ModelImporterAvatarSetup.CreateFromThisModel)
+            {
+                importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+                changed = true;
+            }
+            if (!importer.importAnimation)
+            {
+                importer.importAnimation = true;
+                changed = true;
+            }
+            if (importer.importCameras)
+            {
+                importer.importCameras = false;
+                changed = true;
+            }
+            if (importer.importLights)
+            {
+                importer.importLights = false;
+                changed = true;
+            }
+            if (changed) importer.SaveAndReimport();
+            return 1;
         }
 
-        private static bool BuildRuntimePrefab(string characterName, string modelFolder, string controllerPath)
+        private static string FindBaseModelPath(string folder, string characterName)
         {
-            string[] guids = AssetDatabase.FindAssets("t:Model", new[] { modelFolder });
+            string[] guids = AssetDatabase.FindAssets("t:Model", new[] { folder });
             var modelPaths = new List<string>();
             foreach (string guid in guids)
             {
@@ -119,27 +113,25 @@ namespace MiaMax.EditorTools
                 if (assetPath.ToLowerInvariant().EndsWith(".fbx")) modelPaths.Add(assetPath);
             }
             modelPaths.Sort();
-            if (modelPaths.Count == 0) return false;
+            if (modelPaths.Count == 0) return null;
 
             string characterKey = characterName.ToLowerInvariant();
-            string selectedModelPath = null;
             foreach (string candidatePath in modelPaths)
             {
                 string fileName = Path.GetFileNameWithoutExtension(candidatePath).ToLowerInvariant();
                 if (fileName == characterKey || fileName == characterKey + "_model" ||
                     fileName == characterKey + "_character")
-                {
-                    selectedModelPath = candidatePath;
-                    break;
-                }
+                    return candidatePath;
             }
-            if (selectedModelPath == null && modelPaths.Count == 1)
-                selectedModelPath = modelPaths[0];
-            if (selectedModelPath == null)
+            return modelPaths.Count == 1 ? modelPaths[0] : null;
+        }
+
+        private static bool BuildRuntimePrefab(string characterName, string modelFolder, string controllerPath)
+        {
+            string selectedModelPath = FindBaseModelPath(modelFolder, characterName);
+            if (string.IsNullOrEmpty(selectedModelPath))
             {
-                Debug.LogWarning(characterName + " prefab was not generated: multiple FBX files exist. " +
-                    "Name the base model " + characterName + ".fbx (or " + characterName + "_Model.fbx) " +
-                    "to distinguish it from animation FBX files.");
+                Debug.LogWarning(characterName + " runtime prefab was not generated because a unique base FBX was not found.");
                 return false;
             }
 
