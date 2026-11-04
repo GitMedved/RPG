@@ -105,6 +105,13 @@ namespace MiaMax.Infrastructure.Audio
             if (clip != null) musicSource.Play();
         }
 
+        public void SetMix(float effects, float music, float voice)
+        {
+            if (effectsSource != null) effectsSource.volume = Mathf.Clamp01(effects);
+            if (musicSource != null) musicSource.volume = Mathf.Clamp01(music);
+            if (voiceSource != null) voiceSource.volume = Mathf.Clamp01(voice);
+        }
+
         public void StopVoice() { if (voiceSource != null) voiceSource.Stop(); }
 
         private AudioClip GetClip(GameAudioCue cue)
