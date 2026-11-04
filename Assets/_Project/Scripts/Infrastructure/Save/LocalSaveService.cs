@@ -97,6 +97,14 @@ namespace MiaMax.Infrastructure.Save
             data.WorkshopLevel = Math.Max(0, Math.Min(2, data.WorkshopLevel));
             if (data.Settings == null) data.Settings = new PlayerSettingsData();
             if (data.DailyTasks == null) data.DailyTasks = new DailyTaskSaveData();
+            if (data.Achievements == null) data.Achievements = new System.Collections.Generic.List<AchievementProgressData>();
+            for (int i = data.Achievements.Count - 1; i >= 0; i--)
+            {
+                var achievement = data.Achievements[i];
+                if (achievement == null || string.IsNullOrWhiteSpace(achievement.AchievementId)) data.Achievements.RemoveAt(i);
+                else achievement.Progress = Math.Max(0, Math.Min(1000, achievement.Progress));
+            }
+            if (data.Achievements.Count > 100) data.Achievements.RemoveRange(100, data.Achievements.Count - 100);
             data.DailyTasks.HarvestCount = Math.Max(0, Math.Min(1000, data.DailyTasks.HarvestCount));
             data.DailyTasks.CraftCount = Math.Max(0, Math.Min(1000, data.DailyTasks.CraftCount));
             data.DailyTasks.DeliverCount = Math.Max(0, Math.Min(1000, data.DailyTasks.DeliverCount));
