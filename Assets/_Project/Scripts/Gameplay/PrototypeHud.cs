@@ -160,7 +160,7 @@ namespace MiaMax.Gameplay
         private void DrawJournal(float scale, float line, float width, float availableHeight)
         {
             float row = 31f * scale;
-            float height = row * 24.5f;
+            float height = row * 25.5f;
             float viewportY = line * 3.8f;
             float viewportHeight = Mathf.Max(row * 5f, availableHeight - viewportY);
             journalScroll = GUI.BeginScrollView(
@@ -287,8 +287,14 @@ namespace MiaMax.Gameplay
                     ? title + " claimed! +" + coins + " coins, +" + experience + " XP."
                     : "No achievement reward is ready yet.";
             }
+            string trailStatus = questService != null && questService.IsAreaUnlocked("woodland_trail")
+                ? "Woodland Trail discoveries: " +
+                    (boundSession.Data.CollectedTrailResources != null ? boundSession.Data.CollectedTrailResources.Count : 0) + "/3"
+                : "Woodland Trail: complete the Flower Garden story quest to unlock.";
+            GUI.Label(new Rect(12f * scale, y + row * 22.8f, width - 24f * scale, row * 0.8f),
+                trailStatus, bodyStyle);
             if (!string.IsNullOrEmpty(journalNotice))
-                GUI.Label(new Rect(12f * scale, y + row * 22.8f, width - 24f * scale, row * 0.8f),
+                GUI.Label(new Rect(12f * scale, y + row * 23.7f, width - 24f * scale, row * 0.8f),
                     journalNotice, bodyStyle);
             GUI.EndScrollView();
         }
@@ -421,6 +427,12 @@ namespace MiaMax.Gameplay
                 case "product_strawberry_juice": return "Strawberry juice";
                 case "product_wooden_toy": return "Wooden toy";
                 case "wood": return "Wood";
+                case "flower_pink": return "Pink flower";
+                case "flower_yellow": return "Yellow flower";
+                case "flower_purple": return "Purple flower";
+                case "acorn": return "Forest acorn";
+                case "wild_mushroom": return "Wild mushroom";
+                case "wild_berries": return "Wild berries";
                 default: return id.Replace("_", " ");
             }
         }
