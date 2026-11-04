@@ -481,3 +481,11 @@
 - Added guidance for the story requirement to unlock each gated area.
 - Made Map, Journal, Settings and Backpack mutually exclusive to prevent panel overlap.
 - No save schema change; source-level review only. Unity compile, Play Mode, safe-area and mobile layout checks remain pending.
+
+
+## 2026-11-04 — M33 responsive Arcade HUD
+
+- Added safe-area offset and resolution-derived scaling to the arcade IMGUI panel.
+- Kept Match-3, Fishing and Max Runner logical control coordinates and reward/gameplay logic unchanged.
+- Documented portrait, landscape, tablet and touch acceptance scenarios.
+- Source-level review only; Unity Game view and physical-device interaction tests remain pending.
