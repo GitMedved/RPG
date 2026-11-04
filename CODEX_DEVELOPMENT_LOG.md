@@ -587,3 +587,14 @@
 - Grouped all new geometry under `M40_Backyard_Environment_Dressing`; all decorative primitive colliders are removed.
 - Existing gameplay colliders, farming, economy, persistence and story progression were not changed.
 - Added M40 acceptance documentation. Static source review only; Unity compile, Play Mode, collision/layout and device performance checks remain pending.
+
+
+## 2026-11-04 — M41 Backyard lighting & atmosphere
+
+- Added `BackyardLightingAtmospherePass` and integrated it after the prototype camera and directional sun are created.
+- Applied a consistent soft-blue camera background independent of the project's default skybox.
+- Tuned the existing sun to warm daylight with soft, reduced-strength shadows.
+- Switched ambient illumination to a three-tone sky/equator/ground setup and slightly reduced reflection intensity.
+- Explicitly kept fog disabled so the Flower Garden and Woodland Trail annexes remain visible.
+- Did not create extra real-time lights or change gameplay, camera follow, colliders or save data.
+- Added M41 acceptance documentation. Source inspection only; Unity compile, visual evaluation and device performance checks remain pending.
