@@ -213,6 +213,47 @@ namespace MiaMax.Gameplay
             GUI.EndGroup();
         }
 
+        public string InventorySummary
+        {
+            get
+            {
+                GameSession s = GameSessionBootstrap.Current;
+                if (s == null || s.Data == null) return "Loading backpack...";
+                if (s.Data.Inventory == null || s.Data.Inventory.Count == 0)
+                    return "Your backpack is empty.\\n\\nExplore the backyard to find seeds, crops, flowers and keepsakes.";
+                System.Text.StringBuilder b = new System.Text.StringBuilder();
+                b.AppendLine("BACKPACK  ·  " + s.Data.Inventory.Count + " STACKS");
+                b.AppendLine();
+                for (int i = 0; i < s.Data.Inventory.Count; i++)
+                {
+                    var stack = s.Data.Inventory[i];
+                    if (stack == null) continue;
+                    b.AppendLine(FriendlyName(stack.ItemId) + "     x" + stack.Quantity);
+                }
+                return b.ToString();
+            }
+        }
+        public string WorldMapSummary
+        {
+            get
+            {
+                GameSession s = GameSessionBootstrap.Current;
+                if (s == null || s.Data == null) return "Loading world map...";
+                bool garden = questService != null && questService.IsAreaUnlocked("flower_garden");
+                bool trail = questService != null && questService.IsAreaUnlocked("woodland_trail");
+                int flowers = s.Data.CollectedGardenResources != null ? s.Data.CollectedGardenResources.Count : 0;
+                int trailItems = s.Data.CollectedTrailResources != null ? s.Data.CollectedTrailResources.Count : 0;
+                return "BACKYARD  ·  HOME BASE\\nFarming, workshop, arcade and keepsakes\\n\\n" +
+                    "↓  FLOWER GARDEN  ·  " + (garden ? "UNLOCKED" : "LOCKED") +
+                    "\\nDiscoveries: " + flowers + "/3" +
+                    (garden ? "\\nFind all flowers to open the woodland path." : "\\nClaim the Busy Little Backyard story reward to unlock.") +
+                    "\\n\\n↓  WOODLAND TRAIL  ·  " + (trail ? "UNLOCKED" : "LOCKED") +
+                    "\\nDiscoveries: " + trailItems + "/3" +
+                    (trail ? "\\nFind the acorn, mushroom and wild berries." : "\\nCollect all 3 garden flowers and claim the next story reward.") +
+                    "\\n\\nNew areas appear here as your story progresses.";
+            }
+        }
+
         public string StatusText
         {
             get
@@ -282,15 +323,7 @@ namespace MiaMax.Gameplay
             EnsureStyles(scale);
             GUI.BeginGroup(new Rect(safe.xMin + margin, Screen.height - safe.yMax + margin,
                 safe.width - margin * 2f, safe.height - margin * 2f));
-            if (inventoryOpen) DrawInventory(session, scale, line, panelWidth);
             if (settingsOpen) DrawSettings(scale, line, panelWidth, safe.height);
-            if (mapOpen)
-            {
-                GUI.BeginGroup(new Rect(safe.width - margin * 2f - panelWidth, 0f,
-                    panelWidth, safe.height - margin * 2f));
-                DrawWorldMap(scale, line, panelWidth, safe.height - margin * 2f);
-                GUI.EndGroup();
-            }
             if (journalOpen)
             {
                 GUI.BeginGroup(new Rect(safe.width - margin * 2f - panelWidth, 0f,
