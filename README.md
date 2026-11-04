@@ -40,6 +40,7 @@ Pre-production Unity prototype. The repository began as a README-only project; t
 - [M22 Daily Goals & Rewards](M22_DAILY_GOALS_REWARDS.md)
 - [M34 Canvas Mobile HUD](M34_CANVAS_MOBILE_HUD.md)
 - [M35 Canvas Backpack & World Map](M35_CANVAS_BACKPACK_MAP_FEEDBACK.md)
+- [M36 Canvas Settings & Accessibility](M36_CANVAS_SETTINGS_ACCESSIBILITY.md)
 
 ## Unity project scaffold
 
@@ -232,3 +233,8 @@ Started the transition from IMGUI to Unity uGUI. A safe-area-aware Screen Space 
 ## M35 — Canvas detail panels
 
 Backpack and World Map now use a scrollable Canvas detail panel, and gameplay feedback is shown through a Canvas toast. Inventory quantities and area progression are read from the existing session/save state. Journal and Settings remain on the legacy IMGUI renderer until their actions are migrated in a separate pass. See [M35 Canvas Backpack & World Map](M35_CANVAS_BACKPACK_MAP_FEEDBACK.md).
+
+
+## M36 — Canvas Settings
+
+Settings now use the shared Canvas detail panel, including controls for audio levels, UI scale, vibration and reduced motion. Changes continue to flow through the existing settings service and save data. Journal remains the final major IMGUI panel awaiting migration. See [M36 Canvas Settings & Accessibility](M36_CANVAS_SETTINGS_ACCESSIBILITY.md).
