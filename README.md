@@ -215,3 +215,8 @@ Added a shared limit of five successful mini-game reward claims per UTC day acro
 ## M32 — World Map overview
 
 Added a compact World Map HUD panel showing the Backyard, Flower Garden and Woodland Trail, their unlock states and resource discovery counts. Locked areas explain the story requirement. Journal, Settings, Backpack and Map panels now close one another to prevent overlap. This is a text-first progression overview, not a minimap or fast-travel system. See `M32_WORLD_MAP_OVERVIEW.md`.
+
+
+## M33 — Responsive Arcade HUD
+
+The Arcade panel now scales from the device safe area and offsets for safe-area insets, while retaining the existing mini-game layout and rules. This is still an IMGUI prototype; touch targets and aspect-ratio behaviour require Unity/device validation. See `M33_RESPONSIVE_ARCADE_HUD.md`.
