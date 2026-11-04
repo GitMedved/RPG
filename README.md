@@ -35,6 +35,7 @@ Pre-production Unity prototype. The repository began as a README-only project; t
 - [M17 Audio & Voice](M17_AUDIO_AND_VOICE.md)
 - [M18 Integration & Mobile Hardening](M18_INTEGRATION_AND_MOBILE_HARDENING.md)
 - [M19 Backyard Visual Polish](M19_BACKYARD_VISUAL_POLISH.md)
+- [M40 Backyard Environment Art Pass](M40_BACKYARD_ENVIRONMENT_ART_PASS.md)
 - [M20 Production Asset Audit](M20_PRODUCTION_ASSET_AUDIT.md)
 - [M21 Player Settings & Accessibility](M21_PLAYER_SETTINGS_ACCESSIBILITY.md)
 - [M22 Daily Goals & Rewards](M22_DAILY_GOALS_REWARDS.md)
