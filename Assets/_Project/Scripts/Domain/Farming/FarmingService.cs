@@ -32,6 +32,7 @@ namespace MiaMax.Domain.Farming
             plot.CropId = cropId;
             plot.PlantedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             session.AddExperience(2);
+            new TutorialService(session).TryAdvance(TutorialService.Plant);
             session.NotifyExternalStateChanged();
             return true;
         }
@@ -46,6 +47,7 @@ namespace MiaMax.Domain.Farming
             session.AddExperience(8); session.TryAddCoins(3);
             new DailyTaskService(session).RecordHarvest();
             new AchievementService(session).RecordHarvest();
+            new TutorialService(session).TryAdvance(TutorialService.Harvest);
             session.NotifyExternalStateChanged();
             return true;
         }
