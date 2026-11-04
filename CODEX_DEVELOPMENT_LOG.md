@@ -453,3 +453,13 @@
 - Expanded the Adventure Journal daily-goal area and shifted lower content to preserve spacing.
 - Daily reward remains 20 coins + 15 XP, claimable once after all four goals.
 - Source-level checks only; Unity compile, Play Mode, save compatibility, UTC reset and mobile layout remain pending.
+
+
+## 2026-11-04 — M30 daily visit streak and gifts
+
+- Added DailyVisitSaveData and DailyVisitService with UTC consecutive-day streak handling and best-streak tracking.
+- Added a repeating seven-day coin/XP gift schedule; a reward can be claimed once per UTC day and the claim date persists.
+- Added top-left HUD streak status, daily gift claim button and confirmation toast.
+- Added load-time defaults and clamping for legacy saves; no schema version bump.
+- Documented offline/client-clock limitations and Unity acceptance scenarios.
+- Source-level review only. Unity compile, save/reload, date rollover, missed-day reset and device layout remain pending.
