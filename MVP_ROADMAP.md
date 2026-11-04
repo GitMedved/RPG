@@ -132,3 +132,8 @@ Added an Editor-only menu utility at `Tools/Mia & Max/Production Asset Audit`. I
 ## 11. M21 — Player settings & accessibility — 2026-11-04
 
 Added persistent audio mix levels (master/effects/music/voice), UI scale (85–115%), vibration preference and reduced-motion preference. The prototype HUD now exposes a Settings panel; volume channels apply to the audio service and saved master volume applies to AudioListener. Vibration and reduced-motion are preferences only until gameplay events/animation systems consume them. Unity compile, Play Mode and device acceptance remain pending. See M21_PLAYER_SETTINGS_ACCESSIBILITY.md.
+
+
+## 12. M22 — Daily goals & rewards — 2026-11-04
+
+Added three persistent daily goals: harvest two crops, collect one crafted product and deliver one order. Successful domain actions update counters; completion grants 20 coins and 15 XP once per UTC day. Adventure Journal displays progress and claim action. Device clock rollback is ignored to prevent repeated resets. This remains offline/client-clock based and is not tamper-proof. Unity compile, save regression and Play Mode acceptance remain pending. See M22_DAILY_GOALS_REWARDS.md.
