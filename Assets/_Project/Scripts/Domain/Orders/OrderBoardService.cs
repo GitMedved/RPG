@@ -40,6 +40,7 @@ namespace MiaMax.Domain
             session.TryAddCoins(order.Coins);
             session.AddExperience(order.Experience);
             new TutorialService(session).TryAdvance(TutorialService.Deliver);
+            new DailyTaskService(session).RecordDelivery();
             session.NotifyExternalStateChanged();
             return true;
         }
