@@ -175,3 +175,8 @@ Added seven persistent achievements tied to harvesting, crafting, deliveries, ke
 ## M24 — Woodland Trail expansion
 
 A fourth story quest now unlocks a new same-scene Woodland Trail annex after the three Flower Garden resources are collected. Explore and collect an acorn, mushroom and wild berries for persistent inventory items and small XP/coin rewards. See `M24_WOODLAND_TRAIL_EXPANSION.md`. The annex is still built from prototype geometry; final art and Unity runtime validation remain pending.
+
+
+## M25 — Exploration achievement
+
+Added the `Trailblazer` lifetime achievement for finding all three Woodland Trail resources (30 coins + 25 XP, one-time claim). The Adventure Journal now lists all eight achievements in its scrollable panel. See `M25_EXPLORATION_ACHIEVEMENT.md`.
