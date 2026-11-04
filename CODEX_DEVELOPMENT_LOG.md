@@ -427,3 +427,11 @@
 - Added friendly names for all Flower Garden and Woodland Trail resource item IDs in the backpack.
 - Added a live Woodland Trail unlock/discovery progress line to the Adventure Journal and extended its scroll area.
 - Source-level checks only; Unity mobile layout validation remains pending.
+
+
+## 2026-11-04 — M27 interaction feedback
+
+- Added a static interaction-feedback event to world interactables.
+- Added a short top-center HUD toast, visible independently of the Journal/Backpack, with a 2.6-second unscaled-time lifetime.
+- Preserved existing interaction callbacks and optional audio cue; no save schema or gameplay economy changes.
+- Source-level review only. Unity compile, Play Mode, pause behaviour and mobile layout checks remain pending.
