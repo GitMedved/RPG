@@ -255,6 +255,45 @@ namespace MiaMax.Gameplay
                     journalNotice, bodyStyle);
         }
 
+        private void DrawSettings(float scale, float line, float width, float availableHeight)
+        {
+            float y = line * 2.7f;
+            float row = 34f * scale;
+            float height = row * 9.2f;
+            Color previousColor = GUI.color;
+            GUI.color = new Color(0.10f, 0.15f, 0.18f, 0.96f);
+            GUI.Box(new Rect(0f, y, width, Mathf.Min(height, availableHeight - y - 12f * scale)), GUIContent.none, panelStyle);
+            GUI.color = previousColor;
+            GUI.Label(new Rect(10f * scale, y + 3f * scale, width - 20f * scale, row), "SETTINGS", headingStyle);
+            DrawSettingRow("Master", settingsService.Data.MasterVolume, 0, y + row, scale, row, width);
+            DrawSettingRow("Effects", settingsService.Data.EffectsVolume, 1, y + row * 2f, scale, row, width);
+            DrawSettingRow("Music", settingsService.Data.MusicVolume, 2, y + row * 3f, scale, row, width);
+            DrawSettingRow("Voice", settingsService.Data.VoiceVolume, 3, y + row * 4f, scale, row, width);
+            DrawSettingRow("UI size", (settingsService.Data.UiScale - 0.85f) / 0.30f, 4, y + row * 5f, scale, row, width);
+            if (GUI.Button(new Rect(10f * scale, y + row * 6.1f, width - 20f * scale, row * 0.9f), "Vibration: " + (settingsService.Data.VibrationEnabled ? "ON" : "OFF"), buttonStyle)) settingsService.ToggleVibration();
+            if (GUI.Button(new Rect(10f * scale, y + row * 7.1f, width - 20f * scale, row * 0.9f), "Reduced motion: " + (settingsService.Data.ReducedMotion ? "ON" : "OFF"), buttonStyle)) settingsService.ToggleReducedMotion();
+            GUI.Label(new Rect(12f * scale, y + row * 8.15f, width - 24f * scale, row), "Settings save automatically. English is the current language.", bodyStyle);
+        }
+
+        private void DrawSettingRow(string label, float value, int setting, float y, float scale, float row, float width)
+        {
+            float buttonWidth = 34f * scale;
+            GUI.Label(new Rect(12f * scale, y, width * 0.55f, row), label + "  " + Mathf.RoundToInt(value * 100f) + "%", bodyStyle);
+            if (GUI.Button(new Rect(width - 86f * scale, y + 2f * scale, buttonWidth, row - 4f * scale), "−", buttonStyle)) AdjustSetting(setting, -0.05f);
+            if (GUI.Button(new Rect(width - 46f * scale, y + 2f * scale, buttonWidth, row - 4f * scale), "+", buttonStyle)) AdjustSetting(setting, 0.05f);
+        }
+
+        private void AdjustSetting(int setting, float delta)
+        {
+            switch (setting)
+            {
+                case 0: settingsService.SetMaster(settingsService.Data.MasterVolume + delta); break;
+                case 1: settingsService.SetEffects(settingsService.Data.EffectsVolume + delta); break;
+                case 2: settingsService.SetMusic(settingsService.Data.MusicVolume + delta); break;
+                case 3: settingsService.SetVoice(settingsService.Data.VoiceVolume + delta); break;
+                case 4: settingsService.SetUiScale(settingsService.Data.UiScale + delta * 0.3f); break;
+            }
+        }
         private string StartRecipe(string recipeId)
         {
             if (productionService == null) return "Workshop unavailable.";
