@@ -533,3 +533,12 @@
 - Removed Canvas-mode IMGUI detail rendering; retained legacy HUD only as a fallback when Canvas is absent.
 - Added M35 acceptance documentation and updated README/roadmap.
 - Source-level checks: balanced braces in modified C# files. Unity compile, Play Mode, save/reload and device tests have not been run.
+
+
+## 2026-11-04 — M36 Character FBX import pipeline
+
+- Added Editor menu tools to prepare Mia/Max asset folders and Animator contract scaffolds.
+- Added character-specific FBX import profiles: Mia Humanoid; Max Generic/quadruped; embedded cameras/lights disabled.
+- Updated Production Asset Audit to identify contract scaffolds honestly and check for Mia/Max AnimationClip assets.
+- Updated M16/M20 documentation and added M36 workflow/acceptance instructions.
+- No production models, rigs or animation clips were fabricated or imported. Editor tools have not been run in Unity; compilation/import tests remain pending.
