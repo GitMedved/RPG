@@ -213,6 +213,26 @@ namespace MiaMax.Gameplay
             GUI.EndGroup();
         }
 
+        public string SettingsSummary
+        {
+            get
+            {
+                if (settingsService == null) return "Loading settings...";
+                var d = settingsService.Data;
+                return "Audio levels\\nMaster: " + Mathf.RoundToInt(d.MasterVolume * 100f) + "%" +
+                    "\\nEffects: " + Mathf.RoundToInt(d.EffectsVolume * 100f) + "%" +
+                    "\\nMusic: " + Mathf.RoundToInt(d.MusicVolume * 100f) + "%" +
+                    "\\nVoice: " + Mathf.RoundToInt(d.VoiceVolume * 100f) + "%" +
+                    "\\n\\nInterface\\nUI scale: " + Mathf.RoundToInt(d.UiScale * 100f) + "%" +
+                    "\\nVibration: " + (d.VibrationEnabled ? "ON" : "OFF") +
+                    "\\nReduced motion: " + (d.ReducedMotion ? "ON" : "OFF") +
+                    "\\n\\nChanges save automatically. Language: English.";
+            }
+        }
+        public void AdjustSettingFromCanvas(int setting, float delta) { if (settingsService != null) AdjustSetting(setting, delta); }
+        public void ToggleVibrationFromCanvas() { settingsService?.ToggleVibration(); }
+        public void ToggleReducedMotionFromCanvas() { settingsService?.ToggleReducedMotion(); }
+
         public string FeedbackText => Time.unscaledTime < interactionFeedbackUntil ? interactionFeedback : string.Empty;
 
         public string InventorySummary
@@ -331,7 +351,6 @@ namespace MiaMax.Gameplay
             EnsureStyles(scale);
             GUI.BeginGroup(new Rect(safe.xMin + margin, Screen.height - safe.yMax + margin,
                 safe.width - margin * 2f, safe.height - margin * 2f));
-            if (settingsOpen) DrawSettings(scale, line, panelWidth, safe.height);
             if (journalOpen)
             {
                 GUI.BeginGroup(new Rect(safe.width - margin * 2f - panelWidth, 0f,
