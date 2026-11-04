@@ -537,6 +537,8 @@
 
 ## 2026-11-04 — M36 Character FBX import pipeline
 
+- Added runtime prefab generation from an explicitly named base FBX and Resources loading from the existing character roots; greybox proxies remain the fallback.
+
 - Added Editor menu tools to prepare Mia/Max asset folders and Animator contract scaffolds.
 - Added character-specific FBX import profiles: Mia Humanoid; Max Generic/quadruped; embedded cameras/lights disabled.
 - Updated Production Asset Audit to identify contract scaffolds honestly and check for Mia/Max AnimationClip assets.
