@@ -137,3 +137,8 @@ Added persistent audio mix levels (master/effects/music/voice), UI scale (85–1
 ## 12. M22 — Daily goals & rewards — 2026-11-04
 
 Added three persistent daily goals: harvest two crops, collect one crafted product and deliver one order. Successful domain actions update counters; completion grants 20 coins and 15 XP once per UTC day. Adventure Journal displays progress and claim action. Device clock rollback is ignored to prevent repeated resets. This remains offline/client-clock based and is not tamper-proof. Unity compile, save regression and Play Mode acceptance remain pending. See M22_DAILY_GOALS_REWARDS.md.
+
+
+## 13. M23 — Lifetime achievements — 2026-11-04
+
+Added seven lifetime achievements with persisted progress and one-time rewards. Successful gameplay actions update harvest/craft/delivery counters; collection, flower, arcade and level milestones are derived from existing saved state. Adventure Journal displays achievement progress and allows claiming the next available reward. This is offline local progression, not server-authoritative. Unity compile, Play Mode and save/load regression remain pending. See `M23_ACHIEVEMENTS_PROGRESS.md`.
