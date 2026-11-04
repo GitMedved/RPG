@@ -162,3 +162,8 @@ Added a live Woodland Trail unlock/discovery status line in the Adventure Journa
 ## 17. M27 — Interaction feedback — 2026-11-04
 
 Added a small HUD toast for world interactions. The interactable publishes its configured name/action through a static event; the HUD subscribes only while enabled and displays the message for 2.6 seconds using unscaled time. No save schema or gameplay reward logic changed. Unity compile, Play Mode and mobile layout acceptance remain required. See `M27_INTERACTION_FEEDBACK.md`.
+
+
+## 18. M28 — Accessibility feedback integration — 2026-11-04
+
+World interaction feedback now requests vibration through the existing settings service, respecting the saved toggle and mobile-platform guard. CharacterAnimationBridge suppresses Interact/Celebrate one-shot triggers when Reduced Motion is enabled. This is partial accessibility coverage, not a project-wide reduced-motion implementation. Unity compile, Animator and device haptic checks remain pending. See `M28_ACCESSIBILITY_FEEDBACK.md`.
