@@ -40,6 +40,7 @@ namespace MiaMax.Gameplay
         {
             if (service == null || collected) return;
             if (!service.Discover(collectibleId)) return;
+            new AchievementService(GameSessionBootstrap.Current).GetSummary();
             collected = true;
             Debug.Log("Keepsake found: " + displayTitle);
             gameObject.SetActive(false);
