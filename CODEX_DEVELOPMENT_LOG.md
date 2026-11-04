@@ -413,3 +413,10 @@
 - Added persisted `CollectedTrailResources` and load-time validation for old saves.
 - Added `AdventureAreaZonePrototype` and `AdventureAreaResourcePrototype`.
 - Validation is source-level only; Unity compile, Play Mode, save/load and device checks are pending.
+
+
+## 2026-11-04 — M25 exploration achievement
+
+- Added Trailblazer lifetime achievement for all three saved Woodland Trail resources (30 coins, 25 XP, one-time claim).
+- Expanded the Adventure Journal to show all eight achievement entries and adjusted scroll content height/claim feedback placement.
+- Source-level checks only; Unity compile, Play Mode and mobile layout validation remain pending.
