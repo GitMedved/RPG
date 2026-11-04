@@ -262,3 +262,7 @@ Added an Editor menu command at **Tools → Mia & Max → Run Core Smoke Checks*
 ## M38 — Tutorial flow repair
 
 Connected successful planting and harvesting to the persistent six-step tutorial and added visible step numbering to the tutorial hint. The Editor smoke command now includes an end-to-end tutorial flow check and reports six grouped checks. Run **Tools → Mia & Max → Run Core Smoke Checks**; expected result is 6/6. Unity compile, Play Mode and device validation remain local acceptance steps. See [M38 Tutorial Flow Repair](M38_TUTORIAL_FLOW_REPAIR.md).
+
+## M39 — Garden visual pass
+
+Replaced the generic planted-crop sphere with distinct low-poly carrot, tomato and strawberry silhouettes. Plant visuals rebuild only when the crop ID changes and scale with saved growth stages; farming rules, rewards and persistence are unchanged. The visuals are procedural placeholders, not final production art. See [M39 Garden Visual Pass](M39_GARDEN_VISUAL_PASS.md).
