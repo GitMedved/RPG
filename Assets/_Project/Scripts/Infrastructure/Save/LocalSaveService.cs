@@ -110,6 +110,7 @@ namespace MiaMax.Infrastructure.Save
             data.DailyTasks.CraftCount = Math.Max(0, Math.Min(1000, data.DailyTasks.CraftCount));
             data.DailyTasks.DeliverCount = Math.Max(0, Math.Min(1000, data.DailyTasks.DeliverCount));
             data.DailyTasks.ExploreCount = Math.Max(0, Math.Min(1000, data.DailyTasks.ExploreCount));
+            data.DailyTasks.ArcadeRewardsClaimed = Math.Max(0, Math.Min(DailyTaskService.DailyArcadeRewardLimit, data.DailyTasks.ArcadeRewardsClaimed));
             data.DailyVisit.CurrentStreak = Math.Max(0, Math.Min(36500, data.DailyVisit.CurrentStreak));
             data.DailyVisit.BestStreak = Math.Max(data.DailyVisit.CurrentStreak, Math.Max(0, Math.Min(36500, data.DailyVisit.BestStreak)));
             data.Settings.MasterVolume = Clamp01(data.Settings.MasterVolume);
