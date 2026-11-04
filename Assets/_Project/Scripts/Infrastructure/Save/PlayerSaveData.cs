@@ -47,5 +47,6 @@ namespace MiaMax.Infrastructure.Save
         public int GardenLevel;
         public int WorkshopLevel;
         public PlayerSettingsData Settings = new PlayerSettingsData();
+        public DailyTaskSaveData DailyTasks = new DailyTaskSaveData();
     }
 }
