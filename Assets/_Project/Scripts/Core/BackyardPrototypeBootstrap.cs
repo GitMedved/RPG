@@ -129,6 +129,7 @@ namespace MiaMax.Gameplay
             max.AddComponent<CharacterAnimationBridge>();
             mia.AddComponent<PlayerInteraction>();
             BuildFlowerGardenAnnex(mia.transform);
+            BuildWoodlandTrail(mia.transform);
 
             GameObject joystick = new GameObject("Prototype Mobile Joystick");
             joystick.AddComponent<PrototypeMobileJoystick>();
@@ -155,6 +156,88 @@ namespace MiaMax.Gameplay
             Debug.Log("Mia & Max Backyard blockout created. All primitives are temporary placeholders.");
         }
 
+
+
+        private static void BuildWoodlandTrail(Transform player)
+        {
+            Material earth = Mat(new Color(0.34f, 0.25f, 0.16f));
+            Material path = Mat(new Color(0.70f, 0.58f, 0.39f));
+            Material bark = Mat(new Color(0.31f, 0.19f, 0.11f));
+            Material canopy = Mat(new Color(0.12f, 0.31f, 0.13f));
+            Material canopyLight = Mat(new Color(0.20f, 0.42f, 0.17f));
+            Material berry = Mat(new Color(0.72f, 0.12f, 0.22f));
+            Material mushroom = Mat(new Color(0.83f, 0.68f, 0.48f));
+            Material acorn = Mat(new Color(0.58f, 0.31f, 0.13f));
+            Material gateWood = Mat(new Color(0.40f, 0.25f, 0.13f));
+
+            GameObject entrance = Cube("Woodland_Trail_Entrance_Gate", new Vector3(-15.0f, 1.0f, -9.0f),
+                new Vector3(0.25f, 2.0f, 2.4f), gateWood);
+            BackyardInteractable entranceInteractable = entrance.AddComponent<BackyardInteractable>();
+            entranceInteractable.Configure("Woodland Trail Gate", "Explore the woodland trail");
+            entrance.AddComponent<FlowerGardenPortalPrototype>().Configure(
+                player, new Vector3(-21.5f, 0.15f, -3.5f), false, entranceInteractable,
+                "woodland_trail", "Woodland Trail");
+
+            GameObject zoneRoot = new GameObject("Woodland_Trail_Annex");
+            AdventureAreaZonePrototype zone = zoneRoot.AddComponent<AdventureAreaZonePrototype>();
+            GameObject content = new GameObject("Unlocked_Woodland_Content");
+            content.transform.SetParent(zoneRoot.transform, false);
+            zone.Configure("woodland_trail", content);
+
+            Cube("Woodland_Trail_Ground", new Vector3(-28.0f, -0.22f, -3.5f),
+                new Vector3(14.0f, 0.44f, 13.0f), earth, content.transform);
+            Cube("Woodland_Trail_Path", new Vector3(-27.8f, 0.015f, -3.5f),
+                new Vector3(2.1f, 0.06f, 10.0f), path, content.transform);
+
+            Vector3[] treePositions =
+            {
+                new Vector3(-33.2f, 0f, -8.2f), new Vector3(-22.4f, 0f, -8.0f),
+                new Vector3(-33.0f, 0f, 1.2f), new Vector3(-23.0f, 0f, 1.5f),
+                new Vector3(-29.0f, 0f, 2.0f)
+            };
+            for (int i = 0; i < treePositions.Length; i++)
+            {
+                Vector3 p = treePositions[i];
+                GameObject trunk = Cylinder("Woodland_Tree_Trunk_" + i, p + Vector3.up * 1.0f,
+                    new Vector3(0.45f, 1.0f, 0.45f), bark);
+                trunk.transform.SetParent(content.transform, true);
+                Sphere("Woodland_Tree_Canopy_" + i, p + Vector3.up * 3.0f,
+                    new Vector3(3.0f, 3.1f, 3.0f), i % 2 == 0 ? canopy : canopyLight, content.transform)
+                    .GetComponent<Collider>().enabled = false;
+            }
+
+            CreateTrailResource(content.transform, "trail_acorn", "acorn", "Forest acorn",
+                new Vector3(-30.0f, 0.35f, -5.0f), acorn);
+            CreateTrailResource(content.transform, "trail_mushroom", "wild_mushroom", "Little mushroom",
+                new Vector3(-25.5f, 0.35f, -1.0f), mushroom);
+            CreateTrailResource(content.transform, "trail_berries", "wild_berries", "Wild berries",
+                new Vector3(-30.0f, 0.35f, 0.0f), berry);
+
+            GameObject exit = Cube("Woodland_Trail_Return_Gate", new Vector3(-21.4f, 0.9f, -3.5f),
+                new Vector3(0.2f, 1.8f, 1.6f), gateWood, content.transform);
+            BackyardInteractable exitInteractable = exit.AddComponent<BackyardInteractable>();
+            exitInteractable.Configure("Backyard Gate", "Return to the backyard");
+            exit.AddComponent<FlowerGardenPortalPrototype>().Configure(
+                player, new Vector3(-13.8f, 0.15f, -9.0f), true, exitInteractable,
+                "woodland_trail", "Woodland Trail");
+        }
+
+        private static void CreateTrailResource(Transform parent, string id, string itemId,
+            string title, Vector3 position, Material material)
+        {
+            GameObject root = new GameObject("Woodland_Resource_" + id);
+            root.transform.SetParent(parent, false);
+            root.transform.position = position;
+            GameObject visual = Sphere("Woodland_Resource_Visual", position, Vector3.one * 0.65f, material, root.transform);
+            visual.GetComponent<Collider>().enabled = false;
+
+            SphereCollider collider = root.AddComponent<SphereCollider>();
+            collider.center = Vector3.zero;
+            collider.radius = 0.75f;
+            BackyardInteractable interactable = root.AddComponent<BackyardInteractable>();
+            interactable.Configure(title, "Collect resource");
+            root.AddComponent<AdventureAreaResourcePrototype>().Configure(id, itemId, title, interactable);
+        }
 
         private static void BuildFlowerGardenAnnex(Transform player)
         {
