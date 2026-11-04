@@ -127,3 +127,8 @@ Added and integrated a low-cost visual dressing pass for the temporary backyard:
 ## 10. M20 — Production asset readiness audit — 2026-11-04
 
 Added an Editor-only menu utility at `Tools/Mia & Max/Production Asset Audit`. It checks the presence of source references, production models, Animator Controllers, UI sprites, SFX, voice and music folders and reports missing items as pending. The utility does not validate artistic quality, licences, rigging or runtime performance. It must be run in the user's Unity Editor after the branch is updated. See M20_PRODUCTION_ASSET_AUDIT.md.
+
+
+## 11. M21 — Player settings & accessibility — 2026-11-04
+
+Added persistent audio mix levels (master/effects/music/voice), UI scale (85–115%), vibration preference and reduced-motion preference. The prototype HUD now exposes a Settings panel; volume channels apply to the audio service and saved master volume applies to AudioListener. Vibration and reduced-motion are preferences only until gameplay events/animation systems consume them. Unity compile, Play Mode and device acceptance remain pending. See M21_PLAYER_SETTINGS_ACCESSIBILITY.md.
