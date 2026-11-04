@@ -40,6 +40,7 @@ namespace MiaMax.Domain
             if (string.IsNullOrEmpty(output) || !session.AddItem(output, 1)) return false;
             session.Data.ProductionJob = new ProductionJobData();
             session.AddExperience(5);
+            new DailyTaskService(session).RecordCraft();
             new TutorialService(session).TryAdvance(TutorialService.Craft);
             session.NotifyExternalStateChanged();
             return true;
