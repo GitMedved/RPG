@@ -122,3 +122,8 @@ Added a compact mobile HUD action dock. The status card remains upper-left, Adve
 ## 9. M19 — Backyard visual polish — 2026-11-04
 
 Added and integrated a low-cost visual dressing pass for the temporary backyard: stepping stones, layered tree canopy, perimeter flower clusters, fence caps and small house/patio details. The geometry is non-interactive and has no colliders. This improves the greybox presentation but does not complete production art. Unity compile, visual review and mobile profiling remain pending. See M19_BACKYARD_VISUAL_POLISH.md.
+
+
+## 10. M20 — Production asset readiness audit — 2026-11-04
+
+Added an Editor-only menu utility at `Tools/Mia & Max/Production Asset Audit`. It checks the presence of source references, production models, Animator Controllers, UI sprites, SFX, voice and music folders and reports missing items as pending. The utility does not validate artistic quality, licences, rigging or runtime performance. It must be run in the user's Unity Editor after the branch is updated. See M20_PRODUCTION_ASSET_AUDIT.md.
