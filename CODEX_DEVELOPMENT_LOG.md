@@ -363,3 +363,18 @@
 - Missing assets are reported as pending; the tool does not prevent the prototype from running.
 - Added Unity metadata and M20 documentation.
 - The audit has not been executed in Unity by the assistant; user-side execution is pending.
+
+
+## 2026-11-04 — M21 Player settings & accessibility
+
+### Added
+- Added additive persistent settings data with safe load-time defaults and clamping.
+- Added `GameSettingsService` for audio mix, UI scale, vibration and reduced-motion preferences.
+- Added independent effects/music/voice mix controls and master volume application.
+- Added a compact HUD Settings panel with explicit +/- controls and automatic saving.
+- Added M21 acceptance documentation.
+
+### Validation status
+- Re-fetched all touched C# sources from the feature branch and checked balanced braces; no Unity compiler was available.
+- Vibration and reduced-motion are stored preferences only; haptics event wiring and reduced-motion animation integration remain future work.
+- Unity compile, Play Mode, old-save regression, audio playback and Android/iOS device tests remain unverified.
