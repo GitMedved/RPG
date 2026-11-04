@@ -170,3 +170,8 @@ Three UTC-based daily goals track successful harvesting, collecting a finished c
 ## M23 — Lifetime achievements
 
 Added seven persistent achievements tied to harvesting, crafting, deliveries, keepsakes, flower-garden resources, mini-game rewards and player level. Each achievement grants a one-time coin/XP reward claimable from the Adventure Journal. See `M23_ACHIEVEMENTS_PROGRESS.md`. Unity compile and runtime acceptance remain pending.
+
+
+## M24 — Woodland Trail expansion
+
+A fourth story quest now unlocks a new same-scene Woodland Trail annex after the three Flower Garden resources are collected. Explore and collect an acorn, mushroom and wild berries for persistent inventory items and small XP/coin rewards. See `M24_WOODLAND_TRAIL_EXPANSION.md`. The annex is still built from prototype geometry; final art and Unity runtime validation remain pending.
