@@ -36,6 +36,7 @@ Pre-production Unity prototype. The repository began as a README-only project; t
 - [M18 Integration & Mobile Hardening](M18_INTEGRATION_AND_MOBILE_HARDENING.md)
 - [M19 Backyard Visual Polish](M19_BACKYARD_VISUAL_POLISH.md)
 - [M20 Production Asset Audit](M20_PRODUCTION_ASSET_AUDIT.md)
+- [M21 Player Settings & Accessibility](M21_PLAYER_SETTINGS_ACCESSIBILITY.md)
 
 ## Unity project scaffold
 
@@ -154,3 +155,7 @@ Added a low-cost procedural dressing pass (stepping stones, layered tree foliage
 
 ### M20 — Production asset audit
 Added a Unity Editor menu command to report reference, model, Animator Controller, UI sprite and audio asset readiness. Missing assets are reported as pending rather than compile failures.
+
+## M21 — Player settings & accessibility
+
+Added a persistent Settings panel for independent audio levels, UI scale, vibration preference and reduced-motion preference. Settings are saved locally and restored on startup. This is still prototype UI; haptics/reduced-motion hooks and real audio clips need integration and device verification. See [M21 Player Settings & Accessibility](M21_PLAYER_SETTINGS_ACCESSIBILITY.md).
