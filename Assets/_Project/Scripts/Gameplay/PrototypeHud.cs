@@ -63,6 +63,12 @@ namespace MiaMax.Gameplay
             BindSession(session);
 
             Rect safe = Screen.safeArea;
+            if (GetComponent<MobileHudCanvas>() != null)
+            {
+                DrawLegacyPanelsOnly(session, safe);
+                return;
+            }
+
             float top = Screen.height - safe.yMax;
             float scale = Mathf.Clamp(Mathf.Min(Screen.width / 900f, Screen.height / 600f), 0.72f, 1.25f) * session.Data.Settings.UiScale;
             float margin = 12f * scale;
@@ -204,6 +210,74 @@ namespace MiaMax.Gameplay
                     safe.width - margin * 2f - 20f * scale, hintHeight - 6f * scale), tutorialService.CurrentHint, bodyStyle);
             }
 
+            GUI.EndGroup();
+        }
+
+        public bool InventoryOpen => inventoryOpen;
+        public bool JournalOpen => journalOpen;
+        public bool SettingsOpen => settingsOpen;
+        public bool MapOpen => mapOpen;
+
+        public void ToggleInventory()
+        {
+            inventoryOpen = !inventoryOpen;
+            if (inventoryOpen) { journalOpen = false; settingsOpen = false; mapOpen = false; }
+        }
+
+        public void ToggleJournal()
+        {
+            journalOpen = !journalOpen;
+            if (journalOpen) { inventoryOpen = false; settingsOpen = false; mapOpen = false; }
+        }
+
+        public void ToggleSettings()
+        {
+            settingsOpen = !settingsOpen;
+            if (settingsOpen) { inventoryOpen = false; journalOpen = false; mapOpen = false; }
+        }
+
+        public void ToggleMap()
+        {
+            mapOpen = !mapOpen;
+            if (mapOpen) { inventoryOpen = false; journalOpen = false; settingsOpen = false; }
+        }
+
+        public void ClaimDailyGift()
+        {
+            if (dailyVisitService != null && dailyVisitService.TryClaimReward())
+            {
+                interactionFeedback = "Daily gift claimed: +" + dailyVisitService.CoinsToday +
+                    " coins, +" + dailyVisitService.ExperienceToday + " XP!";
+                interactionFeedbackUntil = Time.unscaledTime + 3f;
+            }
+        }
+
+        private void DrawLegacyPanelsOnly(GameSession session, Rect safe)
+        {
+            float scale = Mathf.Clamp(Mathf.Min(Screen.width / 900f, Screen.height / 600f), 0.72f, 1.25f) *
+                          session.Data.Settings.UiScale;
+            float margin = 12f * scale;
+            float line = 30f * scale;
+            float panelWidth = Mathf.Min(300f * scale, safe.width - margin * 2f);
+            EnsureStyles(scale);
+            GUI.BeginGroup(new Rect(safe.xMin + margin, Screen.height - safe.yMax + margin,
+                safe.width - margin * 2f, safe.height - margin * 2f));
+            if (inventoryOpen) DrawInventory(session, scale, line, panelWidth);
+            if (settingsOpen) DrawSettings(scale, line, panelWidth, safe.height);
+            if (mapOpen)
+            {
+                GUI.BeginGroup(new Rect(safe.width - margin * 2f - panelWidth, 0f,
+                    panelWidth, safe.height - margin * 2f));
+                DrawWorldMap(scale, line, panelWidth, safe.height - margin * 2f);
+                GUI.EndGroup();
+            }
+            if (journalOpen)
+            {
+                GUI.BeginGroup(new Rect(safe.width - margin * 2f - panelWidth, 0f,
+                    panelWidth, safe.height - margin * 2f));
+                DrawJournal(scale, line, panelWidth, safe.height - margin * 2f);
+                GUI.EndGroup();
+            }
             GUI.EndGroup();
         }
 
