@@ -88,22 +88,12 @@ namespace MiaMax.EditorTools
                     changed = true;
                 }
 
-                if (!importer.importCameras)
-                {
-                    importer.importCameras = true;
-                    changed = true;
-                }
                 if (importer.importCameras)
                 {
                     importer.importCameras = false;
                     changed = true;
                 }
 
-                if (!importer.importLights)
-                {
-                    importer.importLights = true;
-                    changed = true;
-                }
                 if (importer.importLights)
                 {
                     importer.importLights = false;
