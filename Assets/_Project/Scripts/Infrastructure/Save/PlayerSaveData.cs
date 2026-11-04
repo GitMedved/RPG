@@ -10,26 +10,6 @@ using MiaMax.Domain.MiniGames;
 namespace MiaMax.Infrastructure.Save
 {
     [Serializable]
-    public sealed class PlayerSettingsData
-    {
-        public float MasterVolume = 1f;
-        public float EffectsVolume = 1f;
-        public float MusicVolume = 0.65f;
-        public float VoiceVolume = 1f;
-        public float UiScale = 1f;
-        public bool VibrationEnabled = true;
-        public bool ReducedMotion;
-    }
-
-    [Serializable]
-    public sealed class AchievementProgressData
-    {
-        public string AchievementId;
-        public int Progress;
-        public bool RewardClaimed;
-    }
-
-    [Serializable]
     public sealed class DailyTaskSaveData
     {
         public string UtcDateKey;
