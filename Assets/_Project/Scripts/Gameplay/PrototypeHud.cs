@@ -160,7 +160,7 @@ namespace MiaMax.Gameplay
         private void DrawJournal(float scale, float line, float width, float availableHeight)
         {
             float row = 31f * scale;
-            float height = row * 21.0f;
+            float height = row * 24.5f;
             float viewportY = line * 3.8f;
             float viewportHeight = Mathf.Max(row * 5f, availableHeight - viewportY);
             journalScroll = GUI.BeginScrollView(
@@ -275,9 +275,9 @@ namespace MiaMax.Gameplay
 
             GUI.Label(new Rect(12f * scale, y + row * 16.8f, width - 24f * scale, row),
                 achievementService != null ? achievementService.GetSummary() : "Achievements unavailable.", bodyStyle);
-            GUI.Label(new Rect(12f * scale, y + row * 17.65f, width - 24f * scale, row * 1.55f),
-                achievementService != null ? achievementService.GetDetails(3) : string.Empty, bodyStyle);
-            if (GUI.Button(new Rect(10f * scale, y + row * 19.15f, width - 20f * scale, row * 0.9f),
+            GUI.Label(new Rect(12f * scale, y + row * 17.65f, width - 24f * scale, row * 4.0f),
+                achievementService != null ? achievementService.GetDetails(8) : string.Empty, bodyStyle);
+            if (GUI.Button(new Rect(10f * scale, y + row * 21.8f, width - 20f * scale, row * 0.9f),
                 "Claim next achievement reward", buttonStyle))
             {
                 string title;
@@ -288,7 +288,7 @@ namespace MiaMax.Gameplay
                     : "No achievement reward is ready yet.";
             }
             if (!string.IsNullOrEmpty(journalNotice))
-                GUI.Label(new Rect(12f * scale, y + row * 20.1f, width - 24f * scale, row * 0.8f),
+                GUI.Label(new Rect(12f * scale, y + row * 22.8f, width - 24f * scale, row * 0.8f),
                     journalNotice, bodyStyle);
             GUI.EndScrollView();
         }
