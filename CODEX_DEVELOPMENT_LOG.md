@@ -500,3 +500,14 @@
 - Preserved existing IMGUI detail panels for Backpack, Journal, Map and Settings as a temporary migration boundary; Arcade remains separate.
 - Added M34 acceptance documentation and updated README/roadmap.
 - Source-level checks: braces balanced in modified C# files and package manifest remains valid JSON. Unity package resolution, compilation, Play Mode, portrait/landscape and physical-device tests have not been run.
+
+
+## 2026-11-04 — M35 Canvas Backpack, World Map and feedback
+
+- Migrated Backpack and World Map presentation from IMGUI to a scrollable uGUI Canvas detail panel.
+- Inventory summary reads existing item stacks and quantities; World Map summary reads existing area unlock flags and discovery counts.
+- Added an explicit close action to avoid cross-toggling the mutually exclusive detail panels.
+- Added a Canvas toast for transient gameplay feedback.
+- Journal and Settings remain on the legacy IMGUI renderer; their actions are preserved while migration continues.
+- Added M35 acceptance documentation and updated README/roadmap.
+- Source-level checks: braces balanced in modified C# files; package manifest remains valid JSON. Unity compile, Play Mode, touch, aspect-ratio and device tests have not been run.
