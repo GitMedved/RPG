@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -120,7 +121,29 @@ namespace MiaMax.EditorTools
             modelPaths.Sort();
             if (modelPaths.Count == 0) return false;
 
-            GameObject modelAsset = AssetDatabase.LoadAssetAtPath<GameObject>(modelPaths[0]);
+            string characterKey = characterName.ToLowerInvariant();
+            string selectedModelPath = null;
+            foreach (string candidatePath in modelPaths)
+            {
+                string fileName = Path.GetFileNameWithoutExtension(candidatePath).ToLowerInvariant();
+                if (fileName == characterKey || fileName == characterKey + "_model" ||
+                    fileName == characterKey + "_character")
+                {
+                    selectedModelPath = candidatePath;
+                    break;
+                }
+            }
+            if (selectedModelPath == null && modelPaths.Count == 1)
+                selectedModelPath = modelPaths[0];
+            if (selectedModelPath == null)
+            {
+                Debug.LogWarning(characterName + " prefab was not generated: multiple FBX files exist. " +
+                    "Name the base model " + characterName + ".fbx (or " + characterName + "_Model.fbx) " +
+                    "to distinguish it from animation FBX files.");
+                return false;
+            }
+
+            GameObject modelAsset = AssetDatabase.LoadAssetAtPath<GameObject>(selectedModelPath);
             if (modelAsset == null) return false;
 
             string resourcesFolder = "Assets/Resources/MiaMax/Characters";
@@ -140,7 +163,7 @@ namespace MiaMax.EditorTools
             if (controller != null) animator.runtimeAnimatorController = controller;
 
             Avatar importedAvatar = null;
-            Object[] subAssets = AssetDatabase.LoadAllAssetsAtPath(modelPaths[0]);
+            Object[] subAssets = AssetDatabase.LoadAllAssetsAtPath(selectedModelPath);
             foreach (Object subAsset in subAssets)
             {
                 Avatar candidate = subAsset as Avatar;
