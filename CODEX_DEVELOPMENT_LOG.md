@@ -403,3 +403,13 @@
 - Added one-time coin/XP rewards with overflow checks and an Adventure Journal claim action.
 - Added `M23_ACHIEVEMENTS_PROGRESS.md`.
 - Validation: source-level structural checks only. Unity Editor compile, Play Mode, save/load regression and Android/iOS tests have not been run.
+
+
+## 2026-11-04 — M24 Woodland Trail expansion
+
+- Added a fourth story quest that becomes complete after all three Flower Garden resources are collected; claiming it grants 40 coins, 45 XP and unlocks `woodland_trail`.
+- Generalized the existing area portal to support a configured unlock ID and display name while preserving Flower Garden defaults.
+- Added a gated same-scene Woodland Trail annex with path, tree silhouettes, three one-time resources and a return gate.
+- Added persisted `CollectedTrailResources` and load-time validation for old saves.
+- Added `AdventureAreaZonePrototype` and `AdventureAreaResourcePrototype`.
+- Validation is source-level only; Unity compile, Play Mode, save/load and device checks are pending.
