@@ -77,7 +77,8 @@ namespace MiaMax.Domain.Progression
         private void ResetForToday()
         {
             string today = DateTime.UtcNow.ToString("yyyy-MM-dd");
-            if (Data.UtcDateKey == today) return;
+            // ISO dates sort lexicographically; ignore clock rollback to avoid resetting progress repeatedly.
+            if (!string.IsNullOrEmpty(Data.UtcDateKey) && string.CompareOrdinal(today, Data.UtcDateKey) <= 0) return;
             Data.UtcDateKey = today;
             Data.HarvestCount = 0;
             Data.CraftCount = 0;
