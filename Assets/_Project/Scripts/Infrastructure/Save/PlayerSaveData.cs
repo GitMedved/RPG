@@ -22,6 +22,14 @@ namespace MiaMax.Infrastructure.Save
     }
 
     [Serializable]
+    public sealed class AchievementProgressData
+    {
+        public string AchievementId;
+        public int Progress;
+        public bool RewardClaimed;
+    }
+
+    [Serializable]
     public sealed class DailyTaskSaveData
     {
         public string UtcDateKey;
@@ -58,5 +66,6 @@ namespace MiaMax.Infrastructure.Save
         public int WorkshopLevel;
         public PlayerSettingsData Settings = new PlayerSettingsData();
         public DailyTaskSaveData DailyTasks = new DailyTaskSaveData();
+        public List<AchievementProgressData> Achievements = new List<AchievementProgressData>();
     }
 }
