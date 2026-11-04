@@ -95,6 +95,12 @@ namespace MiaMax.Infrastructure.Save
 
             data.GardenLevel = Math.Max(0, Math.Min(2, data.GardenLevel));
             data.WorkshopLevel = Math.Max(0, Math.Min(2, data.WorkshopLevel));
+            if (data.Settings == null) data.Settings = new PlayerSettingsData();
+            data.Settings.MasterVolume = Clamp01(data.Settings.MasterVolume);
+            data.Settings.EffectsVolume = Clamp01(data.Settings.EffectsVolume);
+            data.Settings.MusicVolume = Clamp01(data.Settings.MusicVolume);
+            data.Settings.VoiceVolume = Clamp01(data.Settings.VoiceVolume);
+            data.Settings.UiScale = Math.Max(0.85f, Math.Min(1.15f, data.Settings.UiScale));
             if (data.Progress == null) data.Progress = new MiaMax.Domain.Progression.PlayerProgressData();
             data.Progress.Level = Math.Max(1, data.Progress.Level);
             data.Progress.Experience = Math.Max(0, data.Progress.Experience);
@@ -145,6 +151,12 @@ namespace MiaMax.Infrastructure.Save
             if (data.CreatedAtUnix <= 0 || data.CreatedAtUnix > now) data.CreatedAtUnix = now;
             if (data.UpdatedAtUnix <= 0 || data.UpdatedAtUnix > now) data.UpdatedAtUnix = now;
             return data;
+        }
+
+        private static float Clamp01(float value)
+        {
+            if (float.IsNaN(value) || float.IsInfinity(value)) return 1f;
+            return Math.Max(0f, Math.Min(1f, value));
         }
 
         private static long UtcNow()
