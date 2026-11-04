@@ -39,6 +39,7 @@ Pre-production Unity prototype. The repository began as a README-only project; t
 - [M21 Player Settings & Accessibility](M21_PLAYER_SETTINGS_ACCESSIBILITY.md)
 - [M22 Daily Goals & Rewards](M22_DAILY_GOALS_REWARDS.md)
 - [M34 Canvas Mobile HUD](M34_CANVAS_MOBILE_HUD.md)
+- [M35 Canvas Backpack & World Map](M35_CANVAS_BACKPACK_MAP_FEEDBACK.md)
 
 ## Unity project scaffold
 
@@ -226,3 +227,8 @@ The Arcade panel now scales from the device safe area and offsets for safe-area 
 ## M34 — Canvas mobile HUD foundation
 
 Started the transition from IMGUI to Unity uGUI. A safe-area-aware Screen Space Overlay Canvas now owns the main status card, daily gift action, Journal/Settings/Map shortcuts and bottom Backpack/Interact dock. Existing game services and panel state are preserved; the detailed Backpack, Journal, Map and Settings contents remain on the legacy IMGUI renderers for this first migration slice. The UI is still assembled from temporary panels and built-in font assets. Unity Editor compile, Play Mode, aspect-ratio and device checks are required. See [M34 Canvas Mobile HUD](M34_CANVAS_MOBILE_HUD.md).
+
+
+## M35 — Canvas detail panels
+
+Backpack and World Map now use a scrollable Canvas detail panel, and gameplay feedback is shown through a Canvas toast. Inventory quantities and area progression are read from the existing session/save state. Journal and Settings remain on the legacy IMGUI renderer until their actions are migrated in a separate pass. See [M35 Canvas Backpack & World Map](M35_CANVAS_BACKPACK_MAP_FEEDBACK.md).
