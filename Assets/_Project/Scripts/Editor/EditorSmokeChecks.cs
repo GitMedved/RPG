@@ -161,6 +161,11 @@ namespace MiaMax.EditorTools
                 PlayerSaveData recovered = saveService.LoadOrCreate();
                 Require(recovered.Progress.Coins == 123,
                     "Corrupt primary save should restore the last known-good backup.");
+
+                File.WriteAllText(primary, "{ invalid json");
+                PlayerSaveData recoveredAgain = saveService.LoadOrCreate();
+                Require(recoveredAgain.Progress.Coins == 123,
+                    "A successful recovery must preserve the backup for a later recovery.");
             }
             finally
             {
