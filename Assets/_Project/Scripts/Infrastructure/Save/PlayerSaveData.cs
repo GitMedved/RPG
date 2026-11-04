@@ -22,6 +22,16 @@ namespace MiaMax.Infrastructure.Save
     }
 
     [Serializable]
+    public sealed class DailyTaskSaveData
+    {
+        public string UtcDateKey;
+        public int HarvestCount;
+        public int CraftCount;
+        public int DeliverCount;
+        public bool RewardClaimed;
+    }
+
+    [Serializable]
     public sealed class PlayerSaveData
     {
         public const int CurrentSchemaVersion = 1;
