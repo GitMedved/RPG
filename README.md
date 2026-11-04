@@ -205,3 +205,8 @@ Expanded daily goals to include one new resource discovery in the Flower Garden 
 ## M30 — Daily visit streak and gifts
 
 Added a persistent UTC visit streak with a repeating seven-day coin/XP gift track, one claim per UTC day and a compact claim control in the HUD. Current and best streaks persist; missed days reset only the current streak. This is offline/client-clock based, with no server validation or notifications. See `M30_DAILY_VISIT_STREAK.md`.
+
+
+## M31 — Daily arcade reward cap
+
+Added a shared limit of five successful mini-game reward claims per UTC day across Match-3, Fishing and Max Runner. The count persists with daily task data, resets at the existing daily boundary and is shown in the Arcade menu. Existing per-run replay protection remains in place. See `M31_DAILY_ARCADE_REWARD_CAP.md`.
