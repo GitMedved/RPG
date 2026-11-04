@@ -576,3 +576,14 @@
 - Kept farming timing, harvest rewards, inventory IDs, save schema and tutorial progression unchanged.
 - Added M39 acceptance documentation and updated README/roadmap.
 - Static source review only. Unity compile, Play Mode visual/interaction checks and Android/iOS performance remain unverified.
+
+
+## 2026-11-04 — M40 Backyard environment art pass
+
+- Added `BackyardEnvironmentArtPass` and integrated it into the runtime backyard build after the existing M19 visual polish layer.
+- Added a front door, framed/divided windows, doorstep and warm house trim aligned to the yard-facing facade.
+- Added decorative edging around the three existing farm plots and a short stepping-stone spur from the patio toward the garden.
+- Added two patio planters and sandbox rim/toy details.
+- Grouped all new geometry under `M40_Backyard_Environment_Dressing`; all decorative primitive colliders are removed.
+- Existing gameplay colliders, farming, economy, persistence and story progression were not changed.
+- Added M40 acceptance documentation. Static source review only; Unity compile, Play Mode, collision/layout and device performance checks remain pending.
