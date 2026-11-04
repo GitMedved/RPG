@@ -2,6 +2,10 @@
 using System;
 using System.IO;
 using MiaMax.Domain;
+using MiaMax.Domain.Farming;
+using MiaMax.Domain.MiniGames;
+using MiaMax.Domain.Orders;
+using MiaMax.Domain.Production;
 using MiaMax.Domain.Progression;
 using MiaMax.Infrastructure.Save;
 using UnityEditor;
@@ -26,8 +30,9 @@ namespace MiaMax.EditorTools
                 RunCheck("Production, orders and daily progress", TestProductionAndOrders, ref passed);
                 RunCheck("Daily goal reward idempotency", TestDailyReward, ref passed);
                 RunCheck("Save validation and backup recovery", TestSaveRecovery, ref passed);
+                RunCheck("Six-step tutorial gameplay flow", TestTutorialFlow, ref passed);
 
-                string message = "Core smoke checks passed: " + passed + "/5.\n\n" +
+                string message = "Core smoke checks passed: " + passed + "/6.\n\n" +
                     "This verifies deterministic domain/save paths only. Play Mode, scene interaction, " +
                     "UI layout, FBX import and Android/iOS builds still require separate validation.";
                 Debug.Log("[Mia & Max] " + message);
@@ -132,6 +137,52 @@ namespace MiaMax.EditorTools
                 "Daily reward should grant the configured coin amount.");
             Require(session.Data.Progress.Experience == beforeExperience + DailyTaskService.RewardExperience,
                 "Daily reward should grant the configured XP amount.");
+        }
+
+        private static void TestTutorialFlow()
+        {
+            GameSession session = NewSession();
+            TutorialService tutorial = new TutorialService(session);
+            Require(tutorial.CurrentStep == TutorialService.Move, "New profile should begin with movement.");
+
+            tutorial.MarkMovementSeen();
+            Require(tutorial.CurrentStep == TutorialService.Plant, "Movement should advance to planting.");
+
+            Require(session.AddItem("seed_carrot", 1), "Could not seed tutorial planting.");
+            FarmingService farming = new FarmingService(session);
+            Require(farming.TryPlant("tutorial_plot", FarmingService.Carrot),
+                "Successful planting should complete the plant tutorial step.");
+            Require(tutorial.CurrentStep == TutorialService.Harvest,
+                "Planting should advance the tutorial to harvesting.");
+
+            FarmPlotData plot = farming.GetPlot("tutorial_plot");
+            plot.PlantedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - 60;
+            string harvestedCrop;
+            Require(farming.TryHarvest("tutorial_plot", out harvestedCrop),
+                "Mature tutorial crop should be harvestable.");
+            Require(tutorial.CurrentStep == TutorialService.Craft,
+                "Harvesting should advance the tutorial to crafting.");
+
+            Require(session.AddItem("crop_carrot", 3), "Could not seed tutorial recipe.");
+            ProductionService production = new ProductionService(session);
+            Require(production.TryStart(ProductionService.CarrotSoup), "Tutorial soup should start.");
+            production.ActiveJob.StartedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - 10;
+            production.ActiveJob.DurationSeconds = 1;
+            Require(production.TryCollect(), "Tutorial soup should be collectable.");
+            Require(tutorial.CurrentStep == TutorialService.Deliver,
+                "Collecting a crafted product should advance to delivery.");
+
+            OrderBoardService orders = new OrderBoardService(session);
+            Require(orders.TryComplete("order_soup_01"), "Tutorial soup order should complete.");
+            Require(tutorial.CurrentStep == TutorialService.Arcade,
+                "Completing an order should advance to the arcade step.");
+
+            int coins, experience;
+            MiniGameRewardService arcade = new MiniGameRewardService(session);
+            Require(arcade.TryClaim("tutorial_smoke_run", MiniGameRewardService.Match3, 0, out coins, out experience),
+                "Tutorial arcade reward should be claimable.");
+            Require(tutorial.IsCompleted && tutorial.CurrentStep == TutorialService.StepCount,
+                "Claiming a mini-game reward should complete the six-step tutorial.");
         }
 
         private static void TestSaveRecovery()
