@@ -28,3 +28,8 @@ Animator Controller contract:
 
 ## Acceptance
 Idle/walk/run blend is stable at 30/60 FPS; no foot sliding beyond agreed tolerance; character faces movement direction; interaction trigger plays once; no Animator errors when a clip/controller is absent; Max's follow movement does not fight root motion.
+
+
+## M36 import pipeline update
+
+The Editor menu `Tools → Mia & Max → Prepare Character Asset Pipeline` creates dedicated Mia/Max FBX folders and Animator Controller contract scaffolds. The contract controllers contain only the four shared parameters; they are not production animation controllers until real clips, blend trees and transitions are authored. Use `Tools → Mia & Max → Apply Character FBX Import Profiles` to configure Mia as Humanoid and Max as Generic. See `M36_CHARACTER_ASSET_PIPELINE.md`.
