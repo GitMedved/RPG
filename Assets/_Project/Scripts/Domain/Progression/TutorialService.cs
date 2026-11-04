@@ -34,14 +34,15 @@ namespace MiaMax.Domain.Progression
             get
             {
                 if (IsCompleted) return "You're ready for your own backyard adventures!";
+                string step = "STEP " + (CurrentStep + 1) + "/" + StepCount + "  ·  ";
                 switch (CurrentStep)
                 {
-                    case Move: return "Move Mia with WASD, arrow keys or the touch joystick.";
-                    case Plant: return "Visit a garden plot and press E to plant a seed.";
-                    case Harvest: return "Wait for a crop to ripen, then press E to harvest it.";
-                    case Craft: return "Open the Journal, start a recipe and collect it when ready.";
-                    case Deliver: return "Collect a finished product and deliver a ready order.";
-                    case Arcade: return "Visit the arcade and finish a mini-game.";
+                    case Move: return step + "Move Mia with WASD, arrow keys or the touch joystick.";
+                    case Plant: return step + "Visit a garden plot and press E to plant a seed.";
+                    case Harvest: return step + "Wait for a crop to ripen, then press E to harvest it.";
+                    case Craft: return step + "Open the Journal, start a recipe and collect it when ready.";
+                    case Deliver: return step + "Collect a finished product and deliver a ready order.";
+                    case Arcade: return step + "Visit the arcade and finish a mini-game.";
                     default: return "Explore the backyard with Mia and Max.";
                 }
             }
