@@ -210,3 +210,8 @@ Added a persistent UTC visit streak with a repeating seven-day coin/XP gift trac
 ## M31 — Daily arcade reward cap
 
 Added a shared limit of five successful mini-game reward claims per UTC day across Match-3, Fishing and Max Runner. The count persists with daily task data, resets at the existing daily boundary and is shown in the Arcade menu. Existing per-run replay protection remains in place. See `M31_DAILY_ARCADE_REWARD_CAP.md`.
+
+
+## M32 — World Map overview
+
+Added a compact World Map HUD panel showing the Backyard, Flower Garden and Woodland Trail, their unlock states and resource discovery counts. Locked areas explain the story requirement. Journal, Settings, Backpack and Map panels now close one another to prevent overlap. This is a text-first progression overview, not a minimap or fast-travel system. See `M32_WORLD_MAP_OVERVIEW.md`.
