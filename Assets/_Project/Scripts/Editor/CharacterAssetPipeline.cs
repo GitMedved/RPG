@@ -1,0 +1,143 @@
+#if UNITY_EDITOR
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEditor.Animations;
+using UnityEngine;
+
+namespace MiaMax.EditorTools
+{
+    /// <summary>
+    /// Creates predictable character asset folders, applies character-specific FBX rig profiles,
+    /// and creates Animator Controller contract scaffolds. It does not create character art or clips.
+    /// </summary>
+    public static class CharacterAssetPipeline
+    {
+        private const string RuntimeRoot = "Assets/_Project/Art/Characters/Runtime";
+        private const string MiaFolder = RuntimeRoot + "/Mia";
+        private const string MaxFolder = RuntimeRoot + "/Max";
+        private const string ControllerFolder = RuntimeRoot + "/Controllers";
+
+        [MenuItem("Tools/Mia & Max/Prepare Character Asset Pipeline")]
+        public static void PreparePipeline()
+        {
+            EnsureFolder("Assets/_Project/Art/Characters");
+            EnsureFolder(RuntimeRoot);
+            EnsureFolder(MiaFolder);
+            EnsureFolder(MaxFolder);
+            EnsureFolder(ControllerFolder);
+
+            string miaController = ControllerFolder + "/Mia_AnimatorContract.controller";
+            string maxController = ControllerFolder + "/Max_AnimatorContract.controller";
+            CreateControllerContract(miaController);
+            CreateControllerContract(maxController);
+
+            AssetDatabase.Refresh();
+            EditorUtility.DisplayDialog("Mia & Max Character Pipeline",
+                "Character folders and Animator contract assets are ready.\n\n" +
+                "Mia FBX files belong in: " + MiaFolder + "\n" +
+                "Max FBX files belong in: " + MaxFolder + "\n\n" +
+                "Next run: Tools > Mia & Max > Apply Character FBX Import Profiles.",
+                "OK");
+        }
+
+        [MenuItem("Tools/Mia & Max/Apply Character FBX Import Profiles")]
+        public static void ApplyImportProfiles()
+        {
+            int miaCount = ApplyProfile(MiaFolder, ModelImporterAnimationType.Human);
+            int maxCount = ApplyProfile(MaxFolder, ModelImporterAnimationType.Generic);
+            AssetDatabase.SaveAssets();
+
+            Debug.Log("Mia & Max FBX import profiles applied. Mia Humanoid models: " + miaCount +
+                      "; Max Generic/quadruped models: " + maxCount +
+                      ". Review each imported Avatar and deformation in the Model Importer.");
+            EditorUtility.DisplayDialog("Character FBX Profiles",
+                "Mia Humanoid FBX files processed: " + miaCount +
+                "\nMax Generic FBX files processed: " + maxCount +
+                "\n\nNo FBX files are required for the tool to run. Import and manually review production models when available.",
+                "OK");
+        }
+
+        private static int ApplyProfile(string folder, ModelImporterAnimationType animationType)
+        {
+            string[] guids = AssetDatabase.FindAssets("t:Model", new[] { folder });
+            int processed = 0;
+            foreach (string guid in guids)
+            {
+                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                if (!assetPath.ToLowerInvariant().EndsWith(".fbx")) continue;
+
+                ModelImporter importer = AssetImporter.GetAtPath(assetPath) as ModelImporter;
+                if (importer == null) continue;
+
+                bool changed = false;
+                if (importer.animationType != animationType)
+                {
+                    importer.animationType = animationType;
+                    changed = true;
+                }
+
+                if (importer.avatarSetup != ModelImporterAvatarSetup.CreateFromThisModel)
+                {
+                    importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+                    changed = true;
+                }
+
+                if (!importer.importAnimation)
+                {
+                    importer.importAnimation = true;
+                    changed = true;
+                }
+
+                if (!importer.importCameras)
+                {
+                    importer.importCameras = true;
+                    changed = true;
+                }
+                if (importer.importCameras)
+                {
+                    importer.importCameras = false;
+                    changed = true;
+                }
+
+                if (!importer.importLights)
+                {
+                    importer.importLights = true;
+                    changed = true;
+                }
+                if (importer.importLights)
+                {
+                    importer.importLights = false;
+                    changed = true;
+                }
+
+                if (changed) importer.SaveAndReimport();
+                processed++;
+            }
+            return processed;
+        }
+
+        private static void CreateControllerContract(string assetPath)
+        {
+            if (AssetDatabase.LoadAssetAtPath<AnimatorController>(assetPath) != null) return;
+
+            AnimatorController controller = AnimatorController.CreateAnimatorControllerAtPath(assetPath);
+            controller.AddParameter("Speed", AnimatorControllerParameterType.Float);
+            controller.AddParameter("Grounded", AnimatorControllerParameterType.Bool);
+            controller.AddParameter("Interact", AnimatorControllerParameterType.Trigger);
+            controller.AddParameter("Celebrate", AnimatorControllerParameterType.Trigger);
+            EditorUtility.SetDirty(controller);
+        }
+
+        private static void EnsureFolder(string path)
+        {
+            if (AssetDatabase.IsValidFolder(path)) return;
+            int separator = path.LastIndexOf('/');
+            if (separator <= 0) return;
+            string parent = path.Substring(0, separator);
+            string name = path.Substring(separator + 1);
+            EnsureFolder(parent);
+            if (!AssetDatabase.IsValidFolder(path)) AssetDatabase.CreateFolder(parent, name);
+        }
+    }
+}
+#endif
