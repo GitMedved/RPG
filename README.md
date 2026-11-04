@@ -34,6 +34,7 @@ Pre-production Unity prototype. The repository began as a README-only project; t
 - [M16 Character Rigs & Animation](M16_CHARACTER_RIGS_AND_ANIMATION.md)
 - [M17 Audio & Voice](M17_AUDIO_AND_VOICE.md)
 - [M18 Integration & Mobile Hardening](M18_INTEGRATION_AND_MOBILE_HARDENING.md)
+- [M19 Backyard Visual Polish](M19_BACKYARD_VISUAL_POLISH.md)
 
 ## Unity project scaffold
 
@@ -145,3 +146,7 @@ The starter story quest now leads to a tangible gated garden annex in the backya
 - M18 adds conservative mobile runtime pacing defaults and a device-hardening checklist. Android/iOS builds and real-device performance remain unverified.
 
 See the four milestone documents for setup and acceptance gates. M14 was reported by the user as OK; M15–M18 source changes have not yet been compiled in Unity in this environment.
+
+
+### M19 — Backyard visual polish
+Added a low-cost procedural dressing pass (stepping stones, layered tree foliage, perimeter flower clusters and small architectural details). This remains temporary greybox art pending production models and must be visually checked in Unity.
