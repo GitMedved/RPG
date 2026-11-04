@@ -266,3 +266,7 @@ Connected successful planting and harvesting to the persistent six-step tutorial
 ## M39 — Garden visual pass
 
 Replaced the generic planted-crop sphere with distinct low-poly carrot, tomato and strawberry silhouettes. Plant visuals rebuild only when the crop ID changes and scale with saved growth stages; farming rules, rewards and persistence are unchanged. The visuals are procedural placeholders, not final production art. See [M39 Garden Visual Pass](M39_GARDEN_VISUAL_PASS.md).
+
+## M40 — Backyard environment art pass
+
+Added a warm, readable house entrance with framed windows and door, trim around the existing garden plots, a short garden path, patio planters and sandbox details. All new elements are grouped under one runtime root and use collider-free decorative primitives; existing interactions and crop logic are unchanged. This remains prototype dressing, not final authored environment art. See [M40 Backyard Environment Art Pass](M40_BACKYARD_ENVIRONMENT_ART_PASS.md).
