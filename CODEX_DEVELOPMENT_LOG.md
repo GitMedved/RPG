@@ -489,3 +489,14 @@
 - Kept Match-3, Fishing and Max Runner logical control coordinates and reward/gameplay logic unchanged.
 - Documented portrait, landscape, tablet and touch acceptance scenarios.
 - Source-level review only; Unity Game view and physical-device interaction tests remain pending.
+
+
+## 2026-11-04 — M34 Canvas mobile HUD foundation
+
+- Added Unity uGUI package dependency and a runtime Screen Space Overlay Canvas.
+- Added responsive CanvasScaler settings and normalized safe-area anchors.
+- Moved the primary status card, daily gift, top navigation shortcuts and bottom Backpack/Interact dock to Canvas controls.
+- Connected Canvas buttons to the existing PrototypeHud state and game services; the legacy top bar/action dock is bypassed when Canvas is present.
+- Preserved existing IMGUI detail panels for Backpack, Journal, Map and Settings as a temporary migration boundary; Arcade remains separate.
+- Added M34 acceptance documentation and updated README/roadmap.
+- Source-level checks: braces balanced in modified C# files and package manifest remains valid JSON. Unity package resolution, compilation, Play Mode, portrait/landscape and physical-device tests have not been run.
