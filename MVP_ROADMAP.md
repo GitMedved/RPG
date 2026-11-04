@@ -242,3 +242,8 @@ Replaced the generic crop sphere with distinct low-poly carrot, tomato and straw
 ## 30. M40 — Backyard environment art pass — 2026-11-04
 
 Added a coherent procedural dressing layer to the existing backyard: house door/windows/facade trim, garden plot edging, stepping-stone spur, patio planters and sandbox trim. Decorative colliders are removed and existing gameplay objects remain unchanged. This is still prototype geometry, not final authored environment art. Unity compilation, Play Mode visual/collision checks and mobile performance remain pending. See `M40_BACKYARD_ENVIRONMENT_ART_PASS.md`.
+
+
+## 31. M41 — Backyard lighting & atmosphere — 2026-11-04
+
+Added a warm daylight setup for the runtime prototype using the existing camera and directional sun: soft solid-color sky, three-tone ambient lighting, warm sunlight and softer shadows. No additional lights or gameplay changes. Final skybox, post-processing, baked lighting and mobile performance validation remain pending. See `M41_BACKYARD_LIGHTING_ATMOSPHERE.md`.
