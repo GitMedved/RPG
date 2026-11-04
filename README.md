@@ -243,3 +243,8 @@ Settings now use the shared Canvas detail panel, including controls for audio le
 ## M35 — Canvas Adventure Journal
 
 The Adventure Journal now runs in the responsive uGUI detail panel, with scrollable story, collection, workshop, order, upgrade, daily goal, achievement and exploration summaries. Canvas actions are wired to the existing quest, collection, production, order, upgrade, daily task and achievement services. Canvas-mode IMGUI detail panels are no longer rendered; the legacy HUD remains only as a fallback for scenes without MobileHudCanvas. See [M35 Canvas Adventure Journal](M35_CANVAS_ADVENTURE_JOURNAL.md).
+
+
+## M36 — Character FBX Import Pipeline
+
+Added Unity Editor tools to prepare dedicated Mia/Max model folders, create Animator parameter-contract scaffolds, and apply character-specific FBX import profiles (Mia Humanoid, Max Generic/quadruped). The production asset audit now distinguishes controller scaffolds from completed animation and checks imported animation clips. No final character models or animation clips are included. See [M36 Character Asset Pipeline](M36_CHARACTER_ASSET_PIPELINE.md).
