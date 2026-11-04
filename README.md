@@ -180,3 +180,8 @@ A fourth story quest now unlocks a new same-scene Woodland Trail annex after the
 ## M25 — Exploration achievement
 
 Added the `Trailblazer` lifetime achievement for finding all three Woodland Trail resources (30 coins + 25 XP, one-time claim). The Adventure Journal now lists all eight achievements in its scrollable panel. See `M25_EXPLORATION_ACHIEVEMENT.md`.
+
+
+## M26 — Exploration and inventory feedback
+
+The Adventure Journal now shows Woodland Trail unlock/discovery progress, and the backpack uses friendly names for flower and woodland resources. See `M26_EXPLORATION_INVENTORY_FEEDBACK.md`.
