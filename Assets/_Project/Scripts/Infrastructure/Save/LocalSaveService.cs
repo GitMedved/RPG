@@ -108,6 +108,7 @@ namespace MiaMax.Infrastructure.Save
             data.DailyTasks.HarvestCount = Math.Max(0, Math.Min(1000, data.DailyTasks.HarvestCount));
             data.DailyTasks.CraftCount = Math.Max(0, Math.Min(1000, data.DailyTasks.CraftCount));
             data.DailyTasks.DeliverCount = Math.Max(0, Math.Min(1000, data.DailyTasks.DeliverCount));
+            data.DailyTasks.ExploreCount = Math.Max(0, Math.Min(1000, data.DailyTasks.ExploreCount));
             data.Settings.MasterVolume = Clamp01(data.Settings.MasterVolume);
             data.Settings.EffectsVolume = Clamp01(data.Settings.EffectsVolume);
             data.Settings.MusicVolume = Clamp01(data.Settings.MusicVolume);
