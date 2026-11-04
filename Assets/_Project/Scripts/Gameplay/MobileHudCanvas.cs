@@ -16,6 +16,11 @@ namespace MiaMax.Gameplay
         private Text statusText;
         private Text promptText;
         private Text tutorialText;
+        private GameObject detailPanel;
+        private Text detailTitle;
+        private Text detailBody;
+        private RectTransform detailContent;
+        private ScrollRect detailScroll;
         private Button giftButton;
         private Text giftButtonText;
         private Button journalButton;
@@ -133,6 +138,67 @@ namespace MiaMax.Gameplay
             tutorialText.rectTransform.pivot = new Vector2(0.5f, 1f);
             tutorialText.rectTransform.anchoredPosition = new Vector2(0f, -270f);
             tutorialText.rectTransform.sizeDelta = new Vector2(0f, 66f);
+
+            BuildDetailPanel(safeRoot);
+        }
+
+        private void BuildDetailPanel(Transform parent)
+        {
+            Image panel = MakePanel("Canvas Detail Panel", parent, new Color(0.12f, 0.19f, 0.17f, 0.98f),
+                new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero,
+                new Vector2(620f, 1040f), new Vector2(0.5f, 0.5f));
+            detailPanel = panel.gameObject;
+            detailTitle = MakeText("Detail Panel Title", panel.transform, "BACKPACK", 34,
+                TextAnchor.MiddleLeft, Cream, new Vector2(28f, -92f), new Vector2(-100f, -18f));
+            detailTitle.rectTransform.anchorMin = new Vector2(0f, 1f);
+            detailTitle.rectTransform.anchorMax = new Vector2(1f, 1f);
+            detailTitle.rectTransform.pivot = new Vector2(0.5f, 1f);
+            Button close = MakeButton("Detail Panel Close", panel.transform, Honey, "CLOSE",
+                Vector2.zero, Vector2.one, out _, 20);
+            RectTransform closeRect = (RectTransform)close.transform;
+            closeRect.anchorMin = new Vector2(1f, 1f);
+            closeRect.anchorMax = new Vector2(1f, 1f);
+            closeRect.pivot = new Vector2(1f, 1f);
+            closeRect.anchoredPosition = new Vector2(-18f, -18f);
+            closeRect.sizeDelta = new Vector2(92f, 58f);
+            close.onClick.AddListener(() => { hud?.ToggleInventory(); hud?.ToggleMap(); });
+
+            GameObject viewportObject = new GameObject("Detail Scroll Viewport",
+                typeof(RectTransform), typeof(Image), typeof(Mask));
+            viewportObject.transform.SetParent(panel.transform, false);
+            RectTransform viewport = (RectTransform)viewportObject.transform;
+            viewport.anchorMin = Vector2.zero;
+            viewport.anchorMax = Vector2.one;
+            viewport.offsetMin = new Vector2(24f, 24f);
+            viewport.offsetMax = new Vector2(-24f, -118f);
+            Image viewportImage = viewportObject.GetComponent<Image>();
+            viewportImage.color = new Color(1f, 1f, 1f, 0.015f);
+            viewportImage.raycastTarget = true;
+            viewportObject.GetComponent<Mask>().showMaskGraphic = false;
+
+            GameObject contentObject = new GameObject("Detail Scroll Content",
+                typeof(RectTransform));
+            contentObject.transform.SetParent(viewport, false);
+            detailContent = (RectTransform)contentObject.transform;
+            detailContent.anchorMin = new Vector2(0f, 1f);
+            detailContent.anchorMax = new Vector2(1f, 1f);
+            detailContent.pivot = new Vector2(0.5f, 1f);
+            detailContent.anchoredPosition = Vector2.zero;
+            detailContent.sizeDelta = new Vector2(0f, 600f);
+
+            detailBody = MakeText("Detail Panel Body", detailContent, string.Empty, 29,
+                TextAnchor.UpperLeft, Cream, new Vector2(8f, 8f), new Vector2(-8f, -8f));
+            detailBody.horizontalOverflow = HorizontalWrapMode.Wrap;
+            detailBody.verticalOverflow = VerticalWrapMode.Overflow;
+
+            detailScroll = viewportObject.AddComponent<ScrollRect>();
+            detailScroll.viewport = viewport;
+            detailScroll.content = detailContent;
+            detailScroll.horizontal = false;
+            detailScroll.vertical = true;
+            detailScroll.movementType = ScrollRect.MovementType.Clamped;
+            detailScroll.scrollSensitivity = 36f;
+            detailScroll.inertia = true;
         }
 
         private void ApplySafeArea()
@@ -149,6 +215,16 @@ namespace MiaMax.Gameplay
             if (hud == null) return;
             ApplySafeArea();
             statusText.text = hud.StatusText;
+            bool showDetails = hud.InventoryOpen || hud.MapOpen;
+            detailPanel.SetActive(showDetails);
+            if (showDetails)
+            {
+                detailTitle.text = hud.InventoryOpen ? "BACKPACK" : "WORLD MAP";
+                detailBody.text = hud.InventoryOpen ? hud.InventorySummary : hud.WorldMapSummary;
+                float preferred = detailBody.preferredHeight + 24f;
+                detailContent.sizeDelta = new Vector2(0f, Mathf.Max(560f, preferred));
+                detailScroll.verticalNormalizedPosition = Mathf.Clamp01(detailScroll.verticalNormalizedPosition);
+            }
             giftButtonText.text = hud.DailyGiftLabel;
             giftButton.interactable = hud.CanClaimDailyGift;
             giftButton.targetGraphic.color = hud.CanClaimDailyGift ? Honey : new Color(0.43f, 0.46f, 0.39f, 0.9f);
