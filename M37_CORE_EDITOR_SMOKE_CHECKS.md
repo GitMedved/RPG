@@ -14,9 +14,9 @@ The command runs five grouped checks:
 2. **Garden/workshop upgrades** — checks upgrade costs/levels, max-level guard and the configured production-time modifier.
 3. **Production, orders and daily progress** — starts and collects a completed soup job, prevents duplicate collection/delivery and checks daily craft/delivery counters.
 4. **Daily goal reward idempotency** — completes all four goals, verifies the reward values and rejects a second claim.
-5. **Save validation and backup recovery** — checks value clamping, writes two save generations, corrupts the primary file and verifies restoration from the last known-good backup.
+5. **Save validation and backup recovery** — checks value clamping, writes two save generations, corrupts the primary file, verifies restoration from the last known-good backup, then repeats the corruption/recovery cycle to ensure the backup remains intact.
 
-The save test uses a uniquely named temporary folder under the operating system temp directory and deletes it in a finally block.
+The save test uses a uniquely named temporary folder under the operating system temp directory and deletes it in a finally block. The restore path now removes the invalid primary before writing the recovered data, so the normal save rotation cannot replace the known-good backup with the corrupt file.
 
 ## Result reporting
 
