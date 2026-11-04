@@ -11,6 +11,7 @@ namespace MiaMax.Domain.Progression
         public const int CraftGoal = 1;
         public const int DeliverGoal = 1;
         public const int ExploreGoal = 1;
+        public const int DailyArcadeRewardLimit = 5;
         public const int RewardCoins = 20;
         public const int RewardExperience = 15;
 
@@ -29,6 +30,8 @@ namespace MiaMax.Domain.Progression
                                   Data.DeliverCount >= DeliverGoal &&
                                   Data.ExploreCount >= ExploreGoal;
         public bool IsRewardClaimed => Data.RewardClaimed;
+        public int ArcadeRewardsClaimedToday { get { ResetForToday(); return Data.ArcadeRewardsClaimed; } }
+        public bool CanRecordArcadeReward { get { ResetForToday(); return Data.ArcadeRewardsClaimed < DailyArcadeRewardLimit; } }
 
         public void RecordHarvest()
         {
@@ -56,6 +59,15 @@ namespace MiaMax.Domain.Progression
             ResetForToday();
             Data.ExploreCount = Math.Min(ExploreGoal, Data.ExploreCount + 1);
             session.NotifyExternalStateChanged();
+        }
+
+        public bool RecordArcadeReward()
+        {
+            ResetForToday();
+            if (Data.ArcadeRewardsClaimed >= DailyArcadeRewardLimit) return false;
+            Data.ArcadeRewardsClaimed++;
+            session.NotifyExternalStateChanged();
+            return true;
         }
 
         public bool TryClaimReward()
@@ -100,6 +112,7 @@ namespace MiaMax.Domain.Progression
             Data.CraftCount = 0;
             Data.DeliverCount = 0;
             Data.ExploreCount = 0;
+            Data.ArcadeRewardsClaimed = 0;
             Data.RewardClaimed = false;
             session.NotifyExternalStateChanged();
         }
