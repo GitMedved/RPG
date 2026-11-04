@@ -81,7 +81,7 @@ namespace MiaMax.Gameplay
                 new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(16f, -202f),
                 new Vector2(352f, 74f), new Vector2(0f, 1f));
             giftButton = MakeButton("Daily Gift", giftPanel.transform, Honey, "DAILY GIFT",
-                new Vector2(8f, 8f), new Vector2(-8f, -8f), out giftButtonText, 23);
+                Vector2.zero, Vector2.one, out giftButtonText, 23);
             giftButton.onClick.AddListener(() => hud?.ClaimDailyGift());
 
             journalButton = MakeTopButton("Journal Button", "ADVENTURE JOURNAL", safeRoot,
@@ -116,19 +116,23 @@ namespace MiaMax.Gameplay
             interactButton.onClick.AddListener(() => hud?.TryInteractFromHud());
 
             promptText = MakeText("Nearby Prompt", safeRoot, "Explore the backyard", 24,
-                TextAnchor.MiddleCenter, Cream, new Vector2(0f, 170f), new Vector2(0f, 58f));
+                TextAnchor.MiddleCenter, Cream, Vector2.zero, Vector2.zero);
             promptText.rectTransform.anchorMin = new Vector2(0.08f, 0f);
             promptText.rectTransform.anchorMax = new Vector2(0.92f, 0f);
             promptText.rectTransform.pivot = new Vector2(0.5f, 0f);
+            promptText.rectTransform.anchoredPosition = new Vector2(0f, 170f);
+            promptText.rectTransform.sizeDelta = new Vector2(0f, 58f);
 
+            MakePanel("Tutorial Hint Background", safeRoot, new Color(0.96f, 0.91f, 0.78f, 0.94f),
+                new Vector2(0.08f, 1f), new Vector2(0.92f, 1f), new Vector2(0f, -270f),
+                new Vector2(0f, 66f), new Vector2(0.5f, 1f));
             tutorialText = MakeText("Tutorial Hint", safeRoot, string.Empty, 22,
-                TextAnchor.MiddleCenter, Ink, new Vector2(0f, 1f), new Vector2(0f, -270f));
+                TextAnchor.MiddleCenter, Ink, Vector2.zero, Vector2.zero);
             tutorialText.rectTransform.anchorMin = new Vector2(0.08f, 1f);
             tutorialText.rectTransform.anchorMax = new Vector2(0.92f, 1f);
             tutorialText.rectTransform.pivot = new Vector2(0.5f, 1f);
             tutorialText.rectTransform.anchoredPosition = new Vector2(0f, -270f);
             tutorialText.rectTransform.sizeDelta = new Vector2(0f, 66f);
-            tutorialText.color = Cream;
         }
 
         private void ApplySafeArea()
