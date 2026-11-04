@@ -217,3 +217,8 @@ Migrated the Adventure Journal and its progression/economy actions to the respon
 ## 26. M36 — Character FBX Import Pipeline — 2026-11-04
 
 Added Editor tools for character asset folders, Animator parameter-contract scaffolds and character-specific FBX import profiles. Mia is configured for Humanoid only with a valid human rig; Max remains Generic/quadruped. The audit distinguishes scaffolds from finished animation and checks imported clips. Production models, clips and Unity validation remain pending. See `M36_CHARACTER_ASSET_PIPELINE.md`.
+
+
+### M36 runtime character integration
+
+Added a prefab generation step for approved base FBX files and runtime Resources loading with proxy fallback. Mia/Max movement, interaction and companion logic remain on their existing gameplay roots. Model scale, Avatar mapping, clips and animation quality still require Unity review.
