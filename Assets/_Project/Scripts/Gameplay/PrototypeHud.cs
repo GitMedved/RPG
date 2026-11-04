@@ -193,7 +193,7 @@ namespace MiaMax.Gameplay
         private void DrawJournal(float scale, float line, float width, float availableHeight)
         {
             float row = 31f * scale;
-            float height = row * 25.5f;
+            float height = row * 26.5f;
             float viewportY = line * 3.8f;
             float viewportHeight = Mathf.Max(row * 5f, availableHeight - viewportY);
             journalScroll = GUI.BeginScrollView(
@@ -296,9 +296,9 @@ namespace MiaMax.Gameplay
                     ? "Workshop upgraded! New crafts finish faster."
                     : "Need more coins or workshop is max level.";
 
-            GUI.Label(new Rect(12f * scale, y + row * 14.0f, width - 24f * scale, row * 1.65f),
+            GUI.Label(new Rect(12f * scale, y + row * 14.0f, width - 24f * scale, row * 2.15f),
                 dailyTaskService != null ? dailyTaskService.GetSummary() : "Daily goals unavailable.", bodyStyle);
-            if (GUI.Button(new Rect(10f * scale, y + row * 15.85f, width - 20f * scale, row * 0.9f),
+            if (GUI.Button(new Rect(10f * scale, y + row * 16.35f, width - 20f * scale, row * 0.9f),
                 dailyTaskService != null && dailyTaskService.IsRewardClaimed ? "Daily reward claimed" : "Claim daily reward", buttonStyle))
             {
                 journalNotice = dailyTaskService != null && dailyTaskService.TryClaimReward()
@@ -306,11 +306,11 @@ namespace MiaMax.Gameplay
                     : "Complete all daily goals before claiming.";
             }
 
-            GUI.Label(new Rect(12f * scale, y + row * 16.8f, width - 24f * scale, row),
+            GUI.Label(new Rect(12f * scale, y + row * 17.3f, width - 24f * scale, row),
                 achievementService != null ? achievementService.GetSummary() : "Achievements unavailable.", bodyStyle);
-            GUI.Label(new Rect(12f * scale, y + row * 17.65f, width - 24f * scale, row * 4.0f),
+            GUI.Label(new Rect(12f * scale, y + row * 18.15f, width - 24f * scale, row * 4.0f),
                 achievementService != null ? achievementService.GetDetails(8) : string.Empty, bodyStyle);
-            if (GUI.Button(new Rect(10f * scale, y + row * 21.8f, width - 20f * scale, row * 0.9f),
+            if (GUI.Button(new Rect(10f * scale, y + row * 22.3f, width - 20f * scale, row * 0.9f),
                 "Claim next achievement reward", buttonStyle))
             {
                 string title;
@@ -324,10 +324,10 @@ namespace MiaMax.Gameplay
                 ? "Woodland Trail discoveries: " +
                     (boundSession.Data.CollectedTrailResources != null ? boundSession.Data.CollectedTrailResources.Count : 0) + "/3"
                 : "Woodland Trail: complete the Flower Garden story quest to unlock.";
-            GUI.Label(new Rect(12f * scale, y + row * 22.8f, width - 24f * scale, row * 0.8f),
+            GUI.Label(new Rect(12f * scale, y + row * 23.3f, width - 24f * scale, row * 0.8f),
                 trailStatus, bodyStyle);
             if (!string.IsNullOrEmpty(journalNotice))
-                GUI.Label(new Rect(12f * scale, y + row * 23.7f, width - 24f * scale, row * 0.8f),
+                GUI.Label(new Rect(12f * scale, y + row * 24.3f, width - 24f * scale, row * 0.8f),
                     journalNotice, bodyStyle);
             GUI.EndScrollView();
         }
