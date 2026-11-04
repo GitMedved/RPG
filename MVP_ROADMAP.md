@@ -212,3 +212,8 @@ Migrated Settings to the shared Canvas detail panel. Audio channels, UI scale, v
 ## 25. M35 — Canvas Adventure Journal — 2026-11-04
 
 Migrated the Adventure Journal and its progression/economy actions to the responsive Canvas detail panel. The Canvas now owns the main HUD, backpack, map, settings and journal. Legacy IMGUI remains as a fallback only when a scene has no MobileHudCanvas. Unity compile, Play Mode, save/reload and device checks remain pending. See `M35_CANVAS_ADVENTURE_JOURNAL.md`.
+
+
+## 26. M36 — Character FBX Import Pipeline — 2026-11-04
+
+Added Editor tools for character asset folders, Animator parameter-contract scaffolds and character-specific FBX import profiles. Mia is configured for Humanoid only with a valid human rig; Max remains Generic/quadruped. The audit distinguishes scaffolds from finished animation and checks imported clips. Production models, clips and Unity validation remain pending. See `M36_CHARACTER_ASSET_PIPELINE.md`.
