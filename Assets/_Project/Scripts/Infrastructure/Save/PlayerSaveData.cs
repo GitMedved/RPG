@@ -21,6 +21,15 @@ namespace MiaMax.Infrastructure.Save
     }
 
     [Serializable]
+    public sealed class DailyVisitSaveData
+    {
+        public string LastVisitUtcDate;
+        public string RewardClaimedUtcDate;
+        public int CurrentStreak;
+        public int BestStreak;
+    }
+
+    [Serializable]
     public sealed class PlayerSaveData
     {
         public const int CurrentSchemaVersion = 1;
@@ -48,6 +57,7 @@ namespace MiaMax.Infrastructure.Save
         public int WorkshopLevel;
         public PlayerSettingsData Settings = new PlayerSettingsData();
         public DailyTaskSaveData DailyTasks = new DailyTaskSaveData();
+        public DailyVisitSaveData DailyVisit = new DailyVisitSaveData();
         public List<AchievementProgressData> Achievements = new List<AchievementProgressData>();
     }
 }
