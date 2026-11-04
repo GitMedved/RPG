@@ -16,6 +16,7 @@ namespace MiaMax.Gameplay
         private bool inventoryOpen;
         private bool journalOpen;
         private bool settingsOpen;
+        private Vector2 journalScroll;
         private GameSession boundSession;
         private QuestService questService;
         private DailyTaskService dailyTaskService;
@@ -122,7 +123,7 @@ namespace MiaMax.Gameplay
             {
                 float journalPanelX = safe.width - margin * 2f - panelWidth;
                 GUI.BeginGroup(new Rect(journalPanelX, 0f, panelWidth, safe.height - margin * 2f));
-                DrawJournal(scale, line, panelWidth);
+                DrawJournal(scale, line, panelWidth, safe.height - margin * 2f);
                 GUI.EndGroup();
             }
 
@@ -156,11 +157,19 @@ namespace MiaMax.Gameplay
             playerInteraction = FindFirstObjectByType<PlayerInteraction>();
         }
 
-        private void DrawJournal(float scale, float line, float width)
+        private void DrawJournal(float scale, float line, float width, float availableHeight)
         {
-            float y = line * 3.8f;
             float row = 31f * scale;
             float height = row * 21.0f;
+            float viewportY = line * 3.8f;
+            float viewportHeight = Mathf.Max(row * 5f, availableHeight - viewportY);
+            journalScroll = GUI.BeginScrollView(
+                new Rect(0f, viewportY, width, viewportHeight),
+                journalScroll,
+                new Rect(0f, 0f, width, height),
+                false,
+                true);
+            float y = 0f;
             Color previousColor = GUI.color;
             GUI.color = new Color(0.10f, 0.15f, 0.18f, 0.96f);
             GUI.Box(new Rect(0f, y, width, height), GUIContent.none, panelStyle);
@@ -281,6 +290,7 @@ namespace MiaMax.Gameplay
             if (!string.IsNullOrEmpty(journalNotice))
                 GUI.Label(new Rect(12f * scale, y + row * 20.1f, width - 24f * scale, row * 0.8f),
                     journalNotice, bodyStyle);
+            GUI.EndScrollView();
         }
 
         private void DrawSettings(float scale, float line, float width, float availableHeight)
