@@ -48,6 +48,7 @@ namespace MiaMax.Gameplay
             session.AddExperience(3);
             session.TryAddCoins(2);
             session.NotifyExternalStateChanged();
+            new MiaMax.Domain.Progression.AchievementService(session).GetSummary();
             collected = true;
             Debug.Log("Collected " + displayTitle + "! +1 " + itemId + ", +3 XP, +2 coins.");
             gameObject.SetActive(false);
