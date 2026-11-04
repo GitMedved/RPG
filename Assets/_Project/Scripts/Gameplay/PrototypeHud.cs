@@ -19,6 +19,7 @@ namespace MiaMax.Gameplay
         private GameSession boundSession;
         private QuestService questService;
         private DailyTaskService dailyTaskService;
+        private AchievementService achievementService;
         private CollectionService collectionService;
         private ProductionService productionService;
         private OrderBoardService orderService;
@@ -145,6 +146,7 @@ namespace MiaMax.Gameplay
             boundSession = session;
             questService = new QuestService(session);
             dailyTaskService = new DailyTaskService(session);
+            achievementService = new AchievementService(session);
             collectionService = new CollectionService(session);
             productionService = new ProductionService(session);
             orderService = new OrderBoardService(session);
@@ -158,7 +160,7 @@ namespace MiaMax.Gameplay
         {
             float y = line * 3.8f;
             float row = 31f * scale;
-            float height = row * 17.3f;
+            float height = row * 21.0f;
             Color previousColor = GUI.color;
             GUI.color = new Color(0.10f, 0.15f, 0.18f, 0.96f);
             GUI.Box(new Rect(0f, y, width, height), GUIContent.none, panelStyle);
@@ -262,8 +264,22 @@ namespace MiaMax.Gameplay
                     : "Complete all daily goals before claiming.";
             }
 
+            GUI.Label(new Rect(12f * scale, y + row * 16.8f, width - 24f * scale, row),
+                achievementService != null ? achievementService.GetSummary() : "Achievements unavailable.", bodyStyle);
+            GUI.Label(new Rect(12f * scale, y + row * 17.65f, width - 24f * scale, row * 1.55f),
+                achievementService != null ? achievementService.GetDetails(3) : string.Empty, bodyStyle);
+            if (GUI.Button(new Rect(10f * scale, y + row * 19.15f, width - 20f * scale, row * 0.9f),
+                "Claim next achievement reward", buttonStyle))
+            {
+                string title;
+                int coins, experience;
+                journalNotice = achievementService != null &&
+                    achievementService.TryClaimNext(out title, out coins, out experience)
+                    ? title + " claimed! +" + coins + " coins, +" + experience + " XP."
+                    : "No achievement reward is ready yet.";
+            }
             if (!string.IsNullOrEmpty(journalNotice))
-                GUI.Label(new Rect(12f * scale, y + row * 16.8f, width - 24f * scale, row * 0.8f),
+                GUI.Label(new Rect(12f * scale, y + row * 20.1f, width - 24f * scale, row * 0.8f),
                     journalNotice, bodyStyle);
         }
 
