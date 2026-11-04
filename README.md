@@ -238,3 +238,8 @@ Backpack and World Map now use a scrollable Canvas detail panel, and gameplay fe
 ## M36 — Canvas Settings
 
 Settings now use the shared Canvas detail panel, including controls for audio levels, UI scale, vibration and reduced motion. Changes continue to flow through the existing settings service and save data. Journal remains the final major IMGUI panel awaiting migration. See [M36 Canvas Settings & Accessibility](M36_CANVAS_SETTINGS_ACCESSIBILITY.md).
+
+
+## M35 — Canvas Adventure Journal
+
+The Adventure Journal now runs in the responsive uGUI detail panel, with scrollable story, collection, workshop, order, upgrade, daily goal, achievement and exploration summaries. Canvas actions are wired to the existing quest, collection, production, order, upgrade, daily task and achievement services. Canvas-mode IMGUI detail panels are no longer rendered; the legacy HUD remains only as a fallback for scenes without MobileHudCanvas. See [M35 Canvas Adventure Journal](M35_CANVAS_ADVENTURE_JOURNAL.md).
