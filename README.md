@@ -253,3 +253,8 @@ Added Unity Editor tools to prepare dedicated Mia/Max model folders, create Anim
 ### M36 runtime character integration
 
 The Editor pipeline can generate runtime prefabs from unambiguous base FBX files and place them under `Resources/MiaMax/Characters`. At runtime the existing character gameplay roots load the production prefab when available and otherwise keep the current greybox proxy. The production asset audit checks the runtime prefabs. This integration does not provide production art or finished animation.
+
+
+## M37 — Core Editor smoke checks
+
+Added an Editor menu command at **Tools → Mia & Max → Run Core Smoke Checks**. It runs five grouped checks for session economy/inventory, garden/workshop upgrades, production and order idempotency, daily reward idempotency, and local-save validation/backup recovery. The save check uses an isolated temporary folder and cleans it up. This is a lightweight deterministic smoke check, not a replacement for Play Mode, Unity Test Framework coverage or Android/iOS device testing. See [M37 Core Editor Smoke Checks](M37_CORE_EDITOR_SMOKE_CHECKS.md).
