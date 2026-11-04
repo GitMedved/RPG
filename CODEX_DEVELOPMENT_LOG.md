@@ -565,3 +565,14 @@
 - Expanded the core smoke result from five to six grouped checks.
 - Added M38 acceptance notes and updated README/roadmap.
 - Source-level inspection only. Unity compilation and the six-check Editor command must still be run locally; Play Mode and device checks remain separate.
+
+
+## 2026-11-04 — M39 Garden visual pass
+
+- Replaced the single generic crop sphere with distinct procedural carrot, tomato and strawberry silhouettes.
+- Added crop-specific roots/fruit, leaves, stems and blossom details using low-poly primitives and simple materials.
+- Crop geometry rebuilds only when the saved crop ID changes; growth stage updates the visual scale.
+- Empty plots hide their crop model; all decorative child colliders are removed.
+- Kept farming timing, harvest rewards, inventory IDs, save schema and tutorial progression unchanged.
+- Added M39 acceptance documentation and updated README/roadmap.
+- Static source review only. Unity compile, Play Mode visual/interaction checks and Android/iOS performance remain unverified.
