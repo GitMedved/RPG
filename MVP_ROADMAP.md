@@ -167,3 +167,8 @@ Added a small HUD toast for world interactions. The interactable publishes its c
 ## 18. M28 — Accessibility feedback integration — 2026-11-04
 
 World interaction feedback now requests vibration through the existing settings service, respecting the saved toggle and mobile-platform guard. CharacterAnimationBridge suppresses Interact/Celebrate one-shot triggers when Reduced Motion is enabled. This is partial accessibility coverage, not a project-wide reduced-motion implementation. Unity compile, Animator and device haptic checks remain pending. See `M28_ACCESSIBILITY_FEEDBACK.md`.
+
+
+## 19. M29 — Daily exploration goal — 2026-11-04
+
+Expanded the daily task set to four goals: harvest 2, collect a finished craft, deliver an order and discover one new Flower Garden/Woodland Trail resource. Added a persisted exploration counter and connected successful one-time resource pickups. Existing saves default the new field to zero without a schema bump. Reward remains 20 coins + 15 XP. Unity compile, old-save, UTC rollover and mobile journal layout checks remain pending. See `M29_DAILY_EXPLORATION_GOAL.md`.
