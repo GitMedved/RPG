@@ -378,3 +378,18 @@
 - Re-fetched all touched C# sources from the feature branch and checked balanced braces; no Unity compiler was available.
 - Vibration and reduced-motion are stored preferences only; haptics event wiring and reduced-motion animation integration remain future work.
 - Unity compile, Play Mode, old-save regression, audio playback and Android/iOS device tests remain unverified.
+
+
+## 2026-11-04 — M22 Daily goals & rewards
+
+### Added
+- Added persisted daily task date, harvest/craft/delivery counters and reward-claimed state.
+- Added UTC daily reset with clock-rollback protection.
+- Connected successful harvest, finished craft collection and order delivery to daily progress.
+- Added a one-time daily reward of 20 coins + 15 XP and displayed progress/claim in the Adventure Journal.
+- Added M22 implementation and Unity acceptance documentation.
+
+### Validation status
+- Source files were fetched after updates and basic brace-balance checks are pending final pass.
+- Unity compile, Play Mode, save migration regression and device tests remain unverified.
+- The feature is offline/client-clock based; no server validation, cloud sync, notifications or rotating live-ops tasks are included.
