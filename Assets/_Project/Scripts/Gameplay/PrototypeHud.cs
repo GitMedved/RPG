@@ -279,6 +279,12 @@ namespace MiaMax.Gameplay
         public bool SettingsOpen => settingsOpen;
         public bool MapOpen => mapOpen;
 
+        public void CloseCanvasDetails()
+        {
+            inventoryOpen = false;
+            mapOpen = false;
+        }
+
         public void ToggleInventory()
         {
             inventoryOpen = !inventoryOpen;
