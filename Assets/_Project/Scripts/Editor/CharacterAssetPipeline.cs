@@ -35,8 +35,8 @@ namespace MiaMax.EditorTools
             AssetDatabase.Refresh();
             EditorUtility.DisplayDialog("Mia & Max Character Pipeline",
                 "Character folders and Animator contract assets are ready.\n\n" +
-                "Mia FBX files belong in: " + MiaFolder + "\n" +
-                "Max FBX files belong in: " + MaxFolder + "\n\n" +
+                "Mia base model and clips belong in: " + MiaFolder + "\n" +
+                "Max base model and clips belong in: " + MaxFolder + "\n\n" +
                 "Next run: Tools > Mia & Max > Apply Character FBX Import Profiles.",
                 "OK");
         }
@@ -54,8 +54,8 @@ namespace MiaMax.EditorTools
                       "; Max Generic/quadruped models: " + maxCount +
                       ". Review each imported Avatar and deformation in the Model Importer.");
             EditorUtility.DisplayDialog("Character FBX Profiles",
-                "Mia Humanoid FBX files processed: " + miaCount +
-                "\nMax Generic FBX files processed: " + maxCount +
+                "Mia base model processed: " + miaCount +
+                "\nMax base model processed: " + maxCount +
                 "\n\nNo FBX files are required for the tool to run. Import and manually review production models when available.",
                 "OK");
         }
