@@ -98,7 +98,7 @@ namespace MiaMax.Gameplay
                 new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 18f),
                 new Vector2(680f, 142f), new Vector2(0.5f, 0f));
             backpackButton = MakeButton("Backpack Button", dock.transform, Leaf, "BACKPACK",
-                new Vector2(12f, 12f), new Vector2(0.5f, -12f), out backpackButtonText, 25);
+                Vector2.zero, Vector2.one, out backpackButtonText, 25);
             RectTransform backpackRect = (RectTransform)backpackButton.transform;
             backpackRect.anchorMin = new Vector2(0f, 0f);
             backpackRect.anchorMax = new Vector2(0.5f, 1f);
@@ -107,7 +107,7 @@ namespace MiaMax.Gameplay
             backpackButton.onClick.AddListener(() => hud?.ToggleInventory());
 
             interactButton = MakeButton("Interact Button", dock.transform, Honey, "EXPLORE",
-                new Vector2(0.5f, 0f), new Vector2(-10f, 1f), out interactButtonText, 25);
+                Vector2.zero, Vector2.one, out interactButtonText, 25);
             RectTransform interactRect = (RectTransform)interactButton.transform;
             interactRect.anchorMin = new Vector2(0.5f, 0f);
             interactRect.anchorMax = new Vector2(1f, 1f);
