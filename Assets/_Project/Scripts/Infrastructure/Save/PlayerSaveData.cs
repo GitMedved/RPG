@@ -16,6 +16,7 @@ namespace MiaMax.Infrastructure.Save
         public int HarvestCount;
         public int CraftCount;
         public int DeliverCount;
+        public int ExploreCount;
         public bool RewardClaimed;
     }
 
