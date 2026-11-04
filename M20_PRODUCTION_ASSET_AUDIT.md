@@ -26,3 +26,6 @@ The project already contains original reference images in `Assets/_Project/Art/`
 ## M36 audit clarification
 
 The Animator Controller entries now specifically search for the generated `Mia_AnimatorContract` and `Max_AnimatorContract` scaffolds. These contain the agreed parameter contract only and are not evidence of completed animation. The audit also checks for imported Mia and Max AnimationClip assets in their respective Runtime folders. See `M36_CHARACTER_ASSET_PIPELINE.md`.
+
+
+The audit also checks for the generated Mia/Max Resources runtime prefabs. A prefab is an integration artifact, not proof of correct model scale, rigging, materials or animation quality; those still require manual review.
