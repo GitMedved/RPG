@@ -15,11 +15,16 @@ namespace MiaMax.Domain.MiniGames
         public const string MaxRun = "max_run";
 
         private readonly GameSession session;
+        private readonly DailyTaskService dailyTasks;
+        public int DailyRewardLimit => DailyTaskService.DailyArcadeRewardLimit;
+        public int DailyRewardsClaimedToday => dailyTasks.ArcadeRewardsClaimedToday;
+        public bool CanClaimRewardToday => dailyTasks.CanRecordArcadeReward;
         private static readonly string[] AllowedGames = { Match3, Fishing, MaxRun };
 
         public MiniGameRewardService(GameSession session)
         {
             this.session = session ?? throw new ArgumentNullException(nameof(session));
+            dailyTasks = new DailyTaskService(session);
             if (session.Data.MiniGameRewardClaims == null)
                 session.Data.MiniGameRewardClaims = new List<MiniGameRewardClaimData>();
         }
@@ -34,6 +39,7 @@ namespace MiaMax.Domain.MiniGames
 
             if (session.Data.MiniGameRewardClaims.Any(x => x != null && x.RunId == runId))
                 return false;
+            if (!dailyTasks.CanRecordArcadeReward) return false;
 
             // A fixed, score-banded reward prevents unbounded currency farming.
             int band = score >= 1000 ? 3 : score >= 500 ? 2 : score >= 150 ? 1 : 0;
@@ -69,6 +75,7 @@ namespace MiaMax.Domain.MiniGames
             // Bound local history while retaining enough IDs for practical replay protection.
             if (session.Data.MiniGameRewardClaims.Count > 500)
                 session.Data.MiniGameRewardClaims.RemoveAt(0);
+            dailyTasks.RecordArcadeReward();
             new TutorialService(session).TryAdvance(TutorialService.Arcade);
             new AchievementService(session).RecordArcadeReward();
             session.NotifyExternalStateChanged();
