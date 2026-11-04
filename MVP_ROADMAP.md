@@ -117,3 +117,8 @@ Added a compact mobile HUD action dock. The status card remains upper-left, Adve
 | M18 Integration/hardening | Mobile runtime pacing bootstrap and device test matrix documented | Unity compile, Play Mode, Android+iOS builds, physical-device performance and lifecycle regression |
 
 **Important:** these are integration foundations, not proof of completed art/voice production or mobile release readiness. Unity Editor and physical devices are outside this remote repository workflow.
+
+
+## 9. M19 — Backyard visual polish — 2026-11-04
+
+Added and integrated a low-cost visual dressing pass for the temporary backyard: stepping stones, layered tree canopy, perimeter flower clusters, fence caps and small house/patio details. The geometry is non-interactive and has no colliders. This improves the greybox presentation but does not complete production art. Unity compile, visual review and mobile profiling remain pending. See M19_BACKYARD_VISUAL_POLISH.md.
