@@ -187,3 +187,8 @@ Added a shared five-successful-reward-claims-per-UTC-day limit across all three 
 ## 22. M32 — World Map overview — 2026-11-04
 
 Added a HUD World Map panel with the Backyard home base and story-gated Flower Garden/Woodland Trail, live unlock status and discovery counts. Locked-area text describes the next story requirement. Enforced mutual exclusion across Map, Journal, Settings and Backpack panels. No save schema change. Unity compile, progression state, safe-area and device layout checks remain pending. See `M32_WORLD_MAP_OVERVIEW.md`.
+
+
+## 23. M33 — Responsive Arcade HUD — 2026-11-04
+
+Wrapped the arcade IMGUI panel in a safe-area-aware transform, scaling from safe width/height with a 0.72–1.2 clamp and offsetting from top/side insets. Existing game controls and logical layout remain unchanged. Unity Game view, touch mapping, portrait/landscape and device checks remain pending. See `M33_RESPONSIVE_ARCADE_HUD.md`.
