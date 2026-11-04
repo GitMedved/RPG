@@ -23,6 +23,7 @@ namespace MiaMax.Gameplay
         private RectTransform detailContent;
         private ScrollRect detailScroll;
         private GameObject settingsControls;
+        private GameObject journalControls;
         private Text vibrationLabel;
         private Text reducedMotionLabel;
         private Button giftButton;
@@ -262,6 +263,39 @@ namespace MiaMax.Gameplay
                 new Vector2(0f, 8f), new Vector2(0f, 38f));
             reduced.onClick.AddListener(() => hud?.ToggleReducedMotionFromCanvas());
             settingsControls.SetActive(false);
+
+            journalControls = new GameObject("Adventure Journal Canvas Actions", typeof(RectTransform));
+            journalControls.transform.SetParent(panel.transform, false);
+            RectTransform journalRect = (RectTransform)journalControls.transform;
+            journalRect.anchorMin = new Vector2(0f, 0f);
+            journalRect.anchorMax = new Vector2(1f, 0f);
+            journalRect.pivot = new Vector2(0.5f, 0f);
+            journalRect.anchoredPosition = new Vector2(0f, 20f);
+            journalRect.sizeDelta = new Vector2(-48f, 260f);
+            string[] journalActions =
+            {
+                "CLAIM QUEST", "CLAIM KEEPSAKES",
+                "MAKE SOUP", "MAKE JUICE",
+                "MAKE WOODEN TOY", "COLLECT PRODUCT",
+                "DELIVER ORDER", "UPGRADE GARDEN",
+                "UPGRADE WORKSHOP", "CLAIM DAILY",
+                "CLAIM ACHIEVEMENT"
+            };
+            for (int i = 0; i < journalActions.Length; i++)
+            {
+                int action = i;
+                int row = i / 2;
+                int column = i % 2;
+                Button actionButton = MakeButton("Journal Action " + action, journalRect,
+                    action % 3 == 0 ? Honey : Leaf, journalActions[i],
+                    Vector2.zero, Vector2.one, out _, 17);
+                SetControlRect(actionButton,
+                    new Vector2(column * 0.5f, 0f), new Vector2((column + 1) * 0.5f, 0f),
+                    new Vector2(column == 0 ? 0f : 4f, 216f - row * 42f),
+                    new Vector2(column == 0 ? -6f : -0f, 38f));
+                actionButton.onClick.AddListener(() => hud?.PerformJournalAction(action));
+            }
+            journalControls.SetActive(false);
         }
 
         private static void SetControlRect(Button button, Vector2 anchorMin, Vector2 anchorMax,
@@ -289,14 +323,16 @@ namespace MiaMax.Gameplay
             if (hud == null) return;
             ApplySafeArea();
             statusText.text = hud.StatusText;
-            bool showDetails = hud.InventoryOpen || hud.MapOpen || hud.SettingsOpen;
+            bool showDetails = hud.InventoryOpen || hud.MapOpen || hud.SettingsOpen || hud.JournalOpen;
             detailPanel.SetActive(showDetails);
             settingsControls.SetActive(hud.SettingsOpen);
+            journalControls.SetActive(hud.JournalOpen);
             if (showDetails)
             {
-                detailTitle.text = hud.InventoryOpen ? "BACKPACK" : hud.MapOpen ? "WORLD MAP" : "SETTINGS";
+                detailTitle.text = hud.InventoryOpen ? "BACKPACK" : hud.MapOpen ? "WORLD MAP" :
+                    hud.SettingsOpen ? "SETTINGS" : "ADVENTURE JOURNAL";
                 detailBody.text = hud.InventoryOpen ? hud.InventorySummary :
-                    hud.MapOpen ? hud.WorldMapSummary : hud.SettingsSummary;
+                    hud.MapOpen ? hud.WorldMapSummary : hud.SettingsOpen ? hud.SettingsSummary : hud.JournalSummary;
                 float preferred = detailBody.preferredHeight + 24f;
                 detailContent.sizeDelta = new Vector2(0f, Mathf.Max(560f, preferred));
                 detailScroll.verticalNormalizedPosition = Mathf.Clamp01(detailScroll.verticalNormalizedPosition);
