@@ -2,6 +2,7 @@ using MiaMax.Domain;
 using MiaMax.Domain.Collections;
 using MiaMax.Domain.Progression;
 using MiaMax.Infrastructure.Save;
+using MiaMax.Infrastructure.Settings;
 using UnityEngine;
 
 namespace MiaMax.Gameplay
@@ -14,6 +15,7 @@ namespace MiaMax.Gameplay
     {
         private bool inventoryOpen;
         private bool journalOpen;
+        private bool settingsOpen;
         private GameSession boundSession;
         private QuestService questService;
         private CollectionService collectionService;
@@ -21,6 +23,7 @@ namespace MiaMax.Gameplay
         private OrderBoardService orderService;
         private TutorialService tutorialService;
         private UpgradeService upgradeService;
+        private GameSettingsService settingsService;
         private PlayerInteraction playerInteraction;
         private GUIStyle panelStyle;
         private GUIStyle headingStyle;
@@ -37,7 +40,7 @@ namespace MiaMax.Gameplay
 
             Rect safe = Screen.safeArea;
             float top = Screen.height - safe.yMax;
-            float scale = Mathf.Clamp(Mathf.Min(Screen.width / 900f, Screen.height / 600f), 0.72f, 1.25f);
+            float scale = Mathf.Clamp(Mathf.Min(Screen.width / 900f, Screen.height / 600f), 0.72f, 1.25f) * session.Data.Settings.UiScale;
             float margin = 12f * scale;
             float panelWidth = Mathf.Min(270f * scale, safe.width - margin * 2f);
             float line = 30f * scale;
@@ -62,6 +65,13 @@ namespace MiaMax.Gameplay
             {
                 journalOpen = !journalOpen;
                 if (journalOpen) inventoryOpen = false;
+            }
+            GUI.color = previousColor;
+            GUI.color = new Color(0.22f, 0.30f, 0.34f, 0.98f);
+            if (GUI.Button(new Rect(journalButtonX, line * 1.5f, journalButtonWidth, line), settingsOpen ? "CLOSE SETTINGS" : "SETTINGS"))
+            {
+                settingsOpen = !settingsOpen;
+                if (settingsOpen) { inventoryOpen = false; journalOpen = false; }
             }
             GUI.color = previousColor;
 
@@ -105,6 +115,7 @@ namespace MiaMax.Gameplay
 
             if (inventoryOpen)
                 DrawInventory(session, scale, line, panelWidth);
+            if (settingsOpen) DrawSettings(scale, line, panelWidth, safe.height);
             if (journalOpen)
             {
                 float journalPanelX = safe.width - margin * 2f - panelWidth;
@@ -137,6 +148,7 @@ namespace MiaMax.Gameplay
             orderService = new OrderBoardService(session);
             tutorialService = new TutorialService(session);
             upgradeService = new UpgradeService(session);
+            settingsService = new GameSettingsService(session);
             playerInteraction = FindFirstObjectByType<PlayerInteraction>();
         }
 
