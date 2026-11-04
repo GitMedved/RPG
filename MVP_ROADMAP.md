@@ -227,3 +227,8 @@ Added a prefab generation step for approved base FBX files and runtime Resources
 ## 27. M37 — Core Editor smoke checks — 2026-11-04
 
 Added an Editor menu command, **Tools → Mia & Max → Run Core Smoke Checks**, covering five grouped checks: session economy/inventory, upgrades, production/orders and daily counters, daily reward idempotency, and local-save validation/backup recovery. Save tests use a unique temporary directory and clean it up. This improves repeatability for deterministic domain paths but is not Unity Test Framework coverage and does not replace scene/Play Mode/device testing. The command must be run in the local Unity Editor; no remote Unity compile or execution is claimed. See `M37_CORE_EDITOR_SMOKE_CHECKS.md`.
+
+
+## 28. M38 — Tutorial flow repair — 2026-11-04
+
+Fixed two missing tutorial progression hooks: successful planting now advances the guide from movement to harvesting, and successful harvesting advances it to crafting. Failed actions do not advance progress. Tutorial hints show the current step number. Expanded Editor smoke checks with a full six-step in-memory tutorial scenario (movement, planting, harvesting, crafting, delivery, arcade reward). Expected smoke result is 6/6. Unity compile, Editor execution, Play Mode and device checks remain pending. See `M38_TUTORIAL_FLOW_REPAIR.md`.
