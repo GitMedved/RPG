@@ -18,6 +18,7 @@ namespace MiaMax.Gameplay
         private bool settingsOpen;
         private GameSession boundSession;
         private QuestService questService;
+        private DailyTaskService dailyTaskService;
         private CollectionService collectionService;
         private ProductionService productionService;
         private OrderBoardService orderService;
@@ -143,6 +144,7 @@ namespace MiaMax.Gameplay
             if (boundSession == session) return;
             boundSession = session;
             questService = new QuestService(session);
+            dailyTaskService = new DailyTaskService(session);
             collectionService = new CollectionService(session);
             productionService = new ProductionService(session);
             orderService = new OrderBoardService(session);
@@ -156,7 +158,7 @@ namespace MiaMax.Gameplay
         {
             float y = line * 3.8f;
             float row = 31f * scale;
-            float height = row * 14.2f;
+            float height = row * 17.3f;
             Color previousColor = GUI.color;
             GUI.color = new Color(0.10f, 0.15f, 0.18f, 0.96f);
             GUI.Box(new Rect(0f, y, width, height), GUIContent.none, panelStyle);
@@ -250,8 +252,18 @@ namespace MiaMax.Gameplay
                     ? "Workshop upgraded! New crafts finish faster."
                     : "Need more coins or workshop is max level.";
 
+            GUI.Label(new Rect(12f * scale, y + row * 14.0f, width - 24f * scale, row * 1.65f),
+                dailyTaskService != null ? dailyTaskService.GetSummary() : "Daily goals unavailable.", bodyStyle);
+            if (GUI.Button(new Rect(10f * scale, y + row * 15.85f, width - 20f * scale, row * 0.9f),
+                dailyTaskService != null && dailyTaskService.IsRewardClaimed ? "Daily reward claimed" : "Claim daily reward", buttonStyle))
+            {
+                journalNotice = dailyTaskService != null && dailyTaskService.TryClaimReward()
+                    ? "Daily reward claimed: +20 coins, +15 XP!"
+                    : "Complete all daily goals before claiming.";
+            }
+
             if (!string.IsNullOrEmpty(journalNotice))
-                GUI.Label(new Rect(12f * scale, y + row * 13.9f, width - 24f * scale, row * 0.8f),
+                GUI.Label(new Rect(12f * scale, y + row * 16.8f, width - 24f * scale, row * 0.8f),
                     journalNotice, bodyStyle);
         }
 
