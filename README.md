@@ -185,3 +185,8 @@ Added the `Trailblazer` lifetime achievement for finding all three Woodland Trai
 ## M26 — Exploration and inventory feedback
 
 The Adventure Journal now shows Woodland Trail unlock/discovery progress, and the backpack uses friendly names for flower and woodland resources. See `M26_EXPLORATION_INVENTORY_FEEDBACK.md`.
+
+
+## M27 — Interaction feedback
+
+Added a short contextual toast when Mia interacts with a world object. The message is visible independently of the Adventure Journal and Backpack, uses unscaled time, and leaves gameplay/save state unchanged. This remains prototype IMGUI feedback; Unity runtime and device checks are required. See `M27_INTERACTION_FEEDBACK.md`.
