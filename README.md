@@ -190,3 +190,8 @@ The Adventure Journal now shows Woodland Trail unlock/discovery progress, and th
 ## M27 — Interaction feedback
 
 Added a short contextual toast when Mia interacts with a world object. The message is visible independently of the Adventure Journal and Backpack, uses unscaled time, and leaves gameplay/save state unchanged. This remains prototype IMGUI feedback; Unity runtime and device checks are required. See `M27_INTERACTION_FEEDBACK.md`.
+
+
+## M28 — Accessibility feedback integration
+
+Connected the saved vibration preference to world interaction feedback on supported mobile platforms. The reduced-motion preference now suppresses one-shot Interact/Celebrate Animator triggers while leaving locomotion parameters intact. Reduced-motion coverage is partial; camera, UI and mini-game effects are not yet adapted. See `M28_ACCESSIBILITY_FEEDBACK.md`.
