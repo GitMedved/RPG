@@ -140,6 +140,9 @@ namespace MiaMax.Gameplay
             tutorialText.rectTransform.anchoredPosition = new Vector2(0f, -270f);
             tutorialText.rectTransform.sizeDelta = new Vector2(0f, 66f);
 
+            MakePanel("Gameplay Feedback Background", safeRoot, new Color(0.12f, 0.19f, 0.17f, 0.96f),
+                new Vector2(0.12f, 1f), new Vector2(0.88f, 1f), new Vector2(0f, -350f),
+                new Vector2(0f, 76f), new Vector2(0.5f, 1f));
             feedbackText = MakeText("Gameplay Feedback", safeRoot, string.Empty, 25,
                 TextAnchor.MiddleCenter, Cream, Vector2.zero, Vector2.zero);
             feedbackText.rectTransform.anchorMin = new Vector2(0.12f, 1f);
@@ -147,9 +150,6 @@ namespace MiaMax.Gameplay
             feedbackText.rectTransform.pivot = new Vector2(0.5f, 1f);
             feedbackText.rectTransform.anchoredPosition = new Vector2(0f, -350f);
             feedbackText.rectTransform.sizeDelta = new Vector2(0f, 76f);
-            Image feedbackBackground = feedbackText.gameObject.AddComponent<Image>();
-            feedbackBackground.color = new Color(0.12f, 0.19f, 0.17f, 0.96f);
-            feedbackBackground.raycastTarget = false;
 
             BuildDetailPanel(safeRoot);
         }
