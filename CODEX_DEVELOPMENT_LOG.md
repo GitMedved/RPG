@@ -544,3 +544,12 @@
 - Updated Production Asset Audit to identify contract scaffolds honestly and check for Mia/Max AnimationClip assets.
 - Updated M16/M20 documentation and added M36 workflow/acceptance instructions.
 - No production models, rigs or animation clips were fabricated or imported. Editor tools have not been run in Unity; compilation/import tests remain pending.
+
+
+## 2026-11-04 — M37 Core Editor smoke checks
+
+- Added Editor menu command: Tools → Mia & Max → Run Core Smoke Checks.
+- Added five deterministic grouped checks for wallet/inventory invariants, garden/workshop upgrades, production/order idempotency, daily reward idempotency and save validation/backup recovery.
+- Save recovery check uses a unique OS temp folder and removes it in a finally block; it does not touch the player's real save.
+- Added M37 acceptance documentation and updated README/roadmap.
+- Static source review only. Unity compilation and actual execution of the Editor menu command remain pending; this does not replace Play Mode or device validation.
