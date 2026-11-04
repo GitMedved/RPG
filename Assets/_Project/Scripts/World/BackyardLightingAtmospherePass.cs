@@ -40,7 +40,6 @@ namespace MiaMax.Gameplay
             sun.shadowStrength = 0.78f;
             sun.shadowBias = 0.05f;
             sun.shadowNormalBias = 0.35f;
-            sun.renderMode = LightRenderMode.Auto;
         }
 
         private static void ApplyAmbientLighting()
