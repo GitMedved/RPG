@@ -152,3 +152,8 @@ Added a fourth story quest after Flower Garden resource collection. Claiming it 
 ## 15. M25 — Exploration achievement — 2026-11-04
 
 Added the eighth lifetime achievement, Trailblazer, derived from the three persisted Woodland Trail discoveries. One-time reward: 30 coins and 25 XP. Expanded the scrollable Adventure Journal to show the full eight-achievement list and reward claim. Unity compile, Play Mode, save/load and mobile layout validation remain pending. See `M25_EXPLORATION_ACHIEVEMENT.md`.
+
+
+## 16. M26 — Exploration and inventory feedback — 2026-11-04
+
+Added a live Woodland Trail unlock/discovery status line in the Adventure Journal and friendly inventory names for flower and woodland resources. Increased scroll content to accommodate the new line. Mobile aspect-ratio text wrapping still needs Unity Editor/device validation. See `M26_EXPLORATION_INVENTORY_FEEDBACK.md`.
