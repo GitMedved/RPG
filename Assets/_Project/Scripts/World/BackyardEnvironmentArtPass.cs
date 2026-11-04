@@ -28,7 +28,7 @@ namespace MiaMax.Gameplay
             Material flowerYellow = Mat(new Color(0.98f, 0.78f, 0.25f));
 
             BuildHouseFacade(root.transform, cream, frame, glass, glassLight, door, doorLight, brass);
-            BuildGardenDetails(root.transform, soil, timber);
+            BuildGardenDetails(root.transform, timber);
             BuildPatioPlanters(root.transform, terracotta, planterGreen, flowerPink, flowerYellow);
             BuildSandboxTrim(root.transform, timber, cream);
         }
@@ -88,7 +88,7 @@ namespace MiaMax.Gameplay
                 new Vector3(2.10f, 0.13f, 0.34f), frame, parent);
         }
 
-        private static void BuildGardenDetails(Transform parent, Material soil, Material timber)
+        private static void BuildGardenDetails(Transform parent, Material timber)
         {
             // Slim edging frames the existing interactive plots without covering their crop visuals.
             for (int i = 0; i < 3; i++)
@@ -104,8 +104,6 @@ namespace MiaMax.Gameplay
                     new Vector3(0.10f, 0.10f, 1.44f), timber, parent);
                 Cube("Garden_Bed_" + (i + 1) + "_Right_Edge", new Vector3(x + 0.86f, y, z),
                     new Vector3(0.10f, 0.10f, 1.44f), timber, parent);
-                Cube("Garden_Bed_" + (i + 1) + "_Soil_Accent", new Vector3(x, 0.242f, z),
-                    new Vector3(1.48f, 0.025f, 1.22f), soil, parent);
             }
 
             // A short branch of stepping stones visually connects the patio to the growing area.
