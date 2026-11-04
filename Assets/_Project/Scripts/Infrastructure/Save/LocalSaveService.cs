@@ -37,6 +37,8 @@ namespace MiaMax.Infrastructure.Save
             if (data != null)
             {
                 data = Validate(data);
+                // Do not let Save rotate a corrupt primary file over the known-good backup.
+                if (File.Exists(primary)) File.Delete(primary);
                 Save(data);
                 Debug.LogWarning("Primary save was unavailable; restored the backup.");
                 return data;
