@@ -258,3 +258,7 @@ The Editor pipeline can generate runtime prefabs from unambiguous base FBX files
 ## M37 — Core Editor smoke checks
 
 Added an Editor menu command at **Tools → Mia & Max → Run Core Smoke Checks**. It runs five grouped checks for session economy/inventory, garden/workshop upgrades, production and order idempotency, daily reward idempotency, and local-save validation/backup recovery. The save check uses an isolated temporary folder and cleans it up. This is a lightweight deterministic smoke check, not a replacement for Play Mode, Unity Test Framework coverage or Android/iOS device testing. See [M37 Core Editor Smoke Checks](M37_CORE_EDITOR_SMOKE_CHECKS.md).
+
+## M38 — Tutorial flow repair
+
+Connected successful planting and harvesting to the persistent six-step tutorial and added visible step numbering to the tutorial hint. The Editor smoke command now includes an end-to-end tutorial flow check and reports six grouped checks. Run **Tools → Mia & Max → Run Core Smoke Checks**; expected result is 6/6. Unity compile, Play Mode and device validation remain local acceptance steps. See [M38 Tutorial Flow Repair](M38_TUTORIAL_FLOW_REPAIR.md).
