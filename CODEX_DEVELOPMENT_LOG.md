@@ -550,6 +550,8 @@
 
 - Added Editor menu command: Tools → Mia & Max → Run Core Smoke Checks.
 - Added five deterministic grouped checks for wallet/inventory invariants, garden/workshop upgrades, production/order idempotency, daily reward idempotency and save validation/backup recovery.
+- Fixed backup restoration so a corrupt primary file is removed before the recovered data is written; the known-good backup is no longer rotated out by the corrupt primary.
+- Extended the save smoke check to corrupt/recover twice and verify the backup remains reusable.
 - Save recovery check uses a unique OS temp folder and removes it in a finally block; it does not touch the player's real save.
 - Added M37 acceptance documentation and updated README/roadmap.
 - Static source review only. Unity compilation and actual execution of the Editor menu command remain pending; this does not replace Play Mode or device validation.
