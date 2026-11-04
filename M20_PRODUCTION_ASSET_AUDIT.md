@@ -21,3 +21,8 @@ The audit checks presence only. It cannot validate artistic similarity, rig defo
 
 ## Notes
 The project already contains original reference images in `Assets/_Project/Art/`. Production models, animator controllers, final UI sprites and audio recordings remain pending until imported.
+
+
+## M36 audit clarification
+
+The Animator Controller entries now specifically search for the generated `Mia_AnimatorContract` and `Max_AnimatorContract` scaffolds. These contain the agreed parameter contract only and are not evidence of completed animation. The audit also checks for imported Mia and Max AnimationClip assets in their respective Runtime folders. See `M36_CHARACTER_ASSET_PIPELINE.md`.
