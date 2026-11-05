@@ -38,6 +38,12 @@ namespace MiaMax.Gameplay
                 GameSessionBootstrap.Current.Data.Settings != null &&
                 GameSessionBootstrap.Current.Data.Settings.ReducedMotion;
 
+            float effectsVolume = GameSessionBootstrap.Current != null &&
+                GameSessionBootstrap.Current.Data.Settings != null
+                ? GameSessionBootstrap.Current.Data.Settings.EffectsVolume : 1f;
+            if (windSource != null) windSource.volume = 0.16f * effectsVolume;
+            if (birdsSource != null) birdsSource.volume = 0.10f * effectsVolume;
+
             float time = Time.time;
             for (int i = 0; i < foliage.Count; i++)
             {
