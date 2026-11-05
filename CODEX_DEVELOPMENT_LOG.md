@@ -648,3 +648,11 @@
 - Added optional looping wind and birds AudioSources. Clips load from `Resources/MiaMax/Audio/Ambience/backyard_wind` and `backyard_birds`; no recordings are bundled. Effects volume preference controls their level.
 - No changes to save schema, rewards, collisions, player movement or interactions.
 - Source-level checks only; Unity compile, Play Mode, audio import/playback and mobile profiling remain pending.
+
+## 2026-11-05 — M47 production character runtime hardening
+
+- Updated `CharacterAnimationBridge`: caches the four expected Animator parameter contracts, sends values/triggers only when matching parameter names and types exist, and supports a controller assigned after instantiation.
+- Disables Animator root motion in generated runtime prefabs; gameplay CharacterController and Max companion-follow remain the owners of world movement.
+- Added `Tools → Mia & Max → Validate Character Runtime Prefabs`. It reports missing prefab/Animator, invalid Avatar, missing controller, root-motion state and incomplete parameter contract for Mia and Max.
+- No new character art, FBX, animation clips or final Animator state machines were fabricated. Existing procedural proxies remain fallback visuals until approved production assets are imported.
+- Static source review only. Unity compilation, Editor menu execution, prefab import, animation playback and Android/iOS profiling remain unverified.
