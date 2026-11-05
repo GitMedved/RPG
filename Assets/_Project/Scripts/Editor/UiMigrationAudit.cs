@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
@@ -25,7 +26,7 @@ namespace MiaMax.EditorTools
             for (int i = 0; i < files.Length; i++)
             {
                 string source = File.ReadAllText(files[i]);
-                if (source.Contains("void OnGUI(") || source.Contains("void OnGUI ()"))
+                if (Regex.IsMatch(source, @"void\\s+OnGUI\\s*\\("))
                     imguiFiles.Add(files[i].Replace('\\', '/'));
             }
 
