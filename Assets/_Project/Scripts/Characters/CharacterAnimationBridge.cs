@@ -4,16 +4,14 @@ using MiaMax.Infrastructure.Save;
 namespace MiaMax.Gameplay
 {
     /// <summary>
-    /// Animator adapter for production character prefabs. Safe to add before an Animator
-    /// Controller is assigned: it simply remains visually inert until a valid rig is imported.
-    /// Animator parameters: Speed (float), Grounded (bool), Interact (trigger), Celebrate (trigger).
+    /// Safe adapter between character movement roots and imported production Animators.
+    /// The gameplay controller owns movement; imported clips must not move the root.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class CharacterAnimationBridge : MonoBehaviour
     {
         [SerializeField] private Animator animator;
         [SerializeField] private CharacterController characterController;
-        [SerializeField] private Transform movementReference;
         [SerializeField] private float speedDampTime = 0.12f;
         [SerializeField] private float runSpeed = 3.4f;
 
@@ -22,15 +20,40 @@ namespace MiaMax.Gameplay
         private static readonly int InteractId = Animator.StringToHash("Interact");
         private static readonly int CelebrateId = Animator.StringToHash("Celebrate");
 
+        private bool hasSpeed;
+        private bool hasGrounded;
+        private bool hasInteract;
+        private bool hasCelebrate;
         private Vector3 previousPosition;
         private float smoothedSpeed;
 
         private void Awake()
         {
-            if (animator == null) animator = GetComponentInChildren<Animator>();
             if (characterController == null) characterController = GetComponent<CharacterController>();
-            if (movementReference == null) movementReference = transform;
+            BindAnimator();
             previousPosition = transform.position;
+        }
+
+        private void BindAnimator()
+        {
+            if (animator == null) animator = GetComponentInChildren<Animator>(true);
+            if (animator == null) return;
+
+            // Root motion would fight the CharacterController and Max's companion-follow logic.
+            animator.applyRootMotion = false;
+            hasSpeed = HasParameter(animator, SpeedId, AnimatorControllerParameterType.Float);
+            hasGrounded = HasParameter(animator, GroundedId, AnimatorControllerParameterType.Bool);
+            hasInteract = HasParameter(animator, InteractId, AnimatorControllerParameterType.Trigger);
+            hasCelebrate = HasParameter(animator, CelebrateId, AnimatorControllerParameterType.Trigger);
+        }
+
+        private static bool HasParameter(Animator target, int id, AnimatorControllerParameterType type)
+        {
+            if (target == null || target.runtimeAnimatorController == null) return false;
+            AnimatorControllerParameter[] parameters = target.parameters;
+            for (int i = 0; i < parameters.Length; i++)
+                if (parameters[i].nameHash == id && parameters[i].type == type) return true;
+            return false;
         }
 
         private void Update()
@@ -38,24 +61,35 @@ namespace MiaMax.Gameplay
             Vector3 delta = transform.position - previousPosition;
             previousPosition = transform.position;
             float measured = delta.magnitude / Mathf.Max(Time.deltaTime, 0.0001f);
-            smoothedSpeed = Mathf.Lerp(smoothedSpeed, Mathf.Clamp01(measured / runSpeed), 1f - Mathf.Exp(-Time.deltaTime / Mathf.Max(0.01f, speedDampTime)));
-            if (animator == null || !animator.isActiveAndEnabled) return;
+            float damping = Mathf.Max(0.01f, speedDampTime);
+            smoothedSpeed = Mathf.Lerp(smoothedSpeed, Mathf.Clamp01(measured / Mathf.Max(0.1f, runSpeed)),
+                1f - Mathf.Exp(-Time.deltaTime / damping));
 
-            animator.SetFloat(SpeedId, smoothedSpeed, speedDampTime, Time.deltaTime);
-            if (characterController != null)
+            if (animator == null || !animator.isActiveAndEnabled) return;
+            if (animator.runtimeAnimatorController == null)
+            {
+                // Supports a controller assigned after the character prefab was instantiated.
+                BindAnimator();
+                if (animator == null || animator.runtimeAnimatorController == null) return;
+            }
+
+            if (hasSpeed) animator.SetFloat(SpeedId, smoothedSpeed, damping, Time.deltaTime);
+            if (hasGrounded && characterController != null)
                 animator.SetBool(GroundedId, characterController.isGrounded);
         }
 
         public void PlayInteract()
         {
             if (IsReducedMotionEnabled()) return;
-            if (animator != null && animator.isActiveAndEnabled) animator.SetTrigger(InteractId);
+            if (animator != null && animator.isActiveAndEnabled && hasInteract)
+                animator.SetTrigger(InteractId);
         }
 
         public void PlayCelebrate()
         {
             if (IsReducedMotionEnabled()) return;
-            if (animator != null && animator.isActiveAndEnabled) animator.SetTrigger(CelebrateId);
+            if (animator != null && animator.isActiveAndEnabled && hasCelebrate)
+                animator.SetTrigger(CelebrateId);
         }
 
         private static bool IsReducedMotionEnabled()
