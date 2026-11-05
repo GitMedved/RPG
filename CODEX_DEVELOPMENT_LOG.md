@@ -704,3 +704,12 @@
 - Added a manifest and a read-only audit command. No external packages or runtime dependencies were added.
 - The source generator is committed; binary PNG and material assets are created inside Unity when the user runs the menu command. Character-specific UV atlases are intentionally deferred until final Mia/Max meshes and UVs exist.
 - Source review only. Unity compilation, generation, material/shader review, scene assignment and Android/iOS profiling remain pending.
+
+
+## 2026-11-05 — M53 release readiness and pre-release plan
+
+- Added `ReleaseReadinessAudit`, a read-only Editor report for build scenes, platform identifiers, app identity/version, URP asset presence, production models/prefabs/animation, generated textures/materials, UI sprites and audio coverage.
+- The audit explicitly keeps executed smoke checks, real-device testing and child-safety/legal/store review open until evidence is supplied; it cannot certify builds.
+- Added `PRE_RELEASE_PLAN.md` with P0–P7 gates, exit criteria, first-release must-haves and post-launch deferrals.
+- No player settings, signing credentials, platform identifiers or build configurations were changed.
+- Static source review only. Unity compilation, menu execution, Android/iOS builds and device QA remain pending.
