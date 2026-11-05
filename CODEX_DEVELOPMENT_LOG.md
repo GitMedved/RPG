@@ -618,3 +618,13 @@
 - Added a gentler idle tail sway for Max.
 - Kept imported production prefabs, gameplay movement, collisions, Animator contract, save data and rewards unchanged.
 - Static source review only; Unity compilation, Play Mode animation review and mobile performance remain unverified.
+
+
+## 2026-11-05 — M44 Adventure annex visual pass
+
+- Added `AdventureAnnexVisualPass` for Flower Garden and Woodland Trail.
+- Flower Garden: framed planting beds, additional flower clusters, bird bath, stepping stones and shrub border.
+- Woodland Trail: layered canopy clusters, mossy boulders, fern-like edge foliage, fallen log, berry cluster and mushrooms.
+- Integrated passes inside the existing annex content roots so their existing story unlock visibility remains authoritative.
+- Decorative primitive colliders are removed; existing resource/portal roots, colliders, rewards and save data remain unchanged.
+- Static source review only; Unity compile, Play Mode and mobile performance remain unverified.
