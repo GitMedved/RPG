@@ -81,6 +81,9 @@ namespace MiaMax.EditorTools
             }
 
             bool avatarValid = animator.avatar != null && animator.avatar.isValid;
+            bool rigTypeValid = avatarValid && (characterName == "Mia"
+                ? animator.avatar.isHuman
+                : !animator.avatar.isHuman);
             bool controllerAssigned = animator.runtimeAnimatorController != null;
             bool rootMotionOff = !animator.applyRootMotion;
             bool contract = HasParameter(animator, "Speed", AnimatorControllerParameterType.Float) &&
@@ -88,7 +91,7 @@ namespace MiaMax.EditorTools
                 HasParameter(animator, "Interact", AnimatorControllerParameterType.Trigger) &&
                 HasParameter(animator, "Celebrate", AnimatorControllerParameterType.Trigger);
 
-            if (avatarValid && controllerAssigned && rootMotionOff && contract)
+            if (avatarValid && rigTypeValid && controllerAssigned && rootMotionOff && contract)
             {
                 ready++;
                 report.AppendLine("[READY] " + characterName + " prefab, Avatar, Animator contract and root-motion setting.");
@@ -98,6 +101,7 @@ namespace MiaMax.EditorTools
                 pending++;
                 report.AppendLine("[PENDING] " + characterName +
                     " — Avatar valid: " + avatarValid +
+                    "; Expected rig type: " + rigTypeValid +
                     "; Controller assigned: " + controllerAssigned +
                     "; Root Motion disabled: " + rootMotionOff +
                     "; Parameters complete: " + contract);
@@ -107,7 +111,8 @@ namespace MiaMax.EditorTools
                 report.AppendLine("         Controller: " + animator.runtimeAnimatorController.name);
             if (animator.avatar != null)
                 report.AppendLine("         Avatar: " + animator.avatar.name +
-                    " (Humanoid: " + animator.avatar.isHuman + ")");
+                    " (Humanoid: " + animator.avatar.isHuman + "; expected " +
+                    (characterName == "Mia" ? "Humanoid" : "Generic") + ")");
         }
 
         private static bool HasParameter(Animator animator, string parameterName,
