@@ -8,8 +8,8 @@ using UnityEngine;
 namespace MiaMax.Gameplay
 {
     /// <summary>
-    /// Temporary safe-area-aware HUD and inventory viewer.
-    /// Uses IMGUI to keep the prototype free of external UI dependencies.
+    /// Legacy IMGUI HUD fallback. The normal runtime path is MobileHudCanvas;
+    /// this renderer remains available only for scenes without the Canvas HUD.
     /// </summary>
     public sealed class PrototypeHud : MonoBehaviour
     {
