@@ -306,3 +306,8 @@ Made the prototype touch joystick safe-area-aware and responsive to screen width
 ## 43. M55 — Canvas joystick and UI migration audit — 2026-11-05
 
 Migrated the prototype joystick visual from IMGUI to a dedicated Screen Space Overlay Canvas. Touch handling, safe-area hit region, dead zone and movement vector remain unchanged; the Canvas does not intercept HUD button input and adapts to screen/safe-area/Canvas-scale changes. Added an Editor audit for remaining OnGUI entry points. PrototypeHud still contains an intentional IMGUI fallback if MobileHudCanvas is missing, so the prototype UI is not yet completely free of IMGUI. Unity compilation, audit execution, portrait/landscape, touch and device checks remain pending. See M55_CANVAS_JOYSTICK_AND_UI_AUDIT.md.
+
+
+## 44. M56 — Responsive Canvas detail panels — 2026-11-05
+
+Made the shared Canvas detail sheet fit the active safe-area viewport by clamping its width and height, retaining the current design dimensions when the display allows and shrinking on landscape/shorter layouts. Extended the UI migration audit to check this responsive path. Panel interaction, scrolling, portrait/landscape layout and phone/tablet behavior still require local Unity validation. See M56_RESPONSIVE_CANVAS_DETAIL_PANELS.md.
