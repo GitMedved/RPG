@@ -270,3 +270,10 @@ Added low-amplitude foliage sway and capped ambient pollen/firefly-like particle
 ## 36. M46 — Main backyard ambient life — 2026-11-05
 
 Added cached, low-amplitude wind motion for decorative foliage in the main yard. The motion respects Reduced Motion. Optional wind and bird loops load from Resources and respect the effects-volume setting; actual sound files remain pending. No gameplay colliders, save data or interaction behavior changed. See `M46_BACKYARD_AMBIENCE.md`.
+
+## M47 — Production character runtime hardening — 2026-11-05
+
+- Hardened Animator parameter binding and guarded missing parameters.
+- Disabled root motion on generated runtime character prefabs to prevent conflicts with gameplay controllers.
+- Added an Editor validator for Mia/Max runtime prefabs, imported Avatar validity, assigned controller, root-motion setting and parameter contract.
+- Production FBX models, authored clips, blend trees, state transitions, final rig review and device animation profiling remain pending.
