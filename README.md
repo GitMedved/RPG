@@ -296,3 +296,7 @@ Added themed procedural dressing to both story-gated annexes: raised flower beds
 ## M45 — Annex atmosphere and ambient motion
 
 Added one lightweight atmosphere controller to each story-gated annex. Flower stems, leaves and blooms sway subtly in the Flower Garden; canopy clusters and fern fronds move gently in the Woodland Trail. Each annex also gets a low-rate, capped local particle effect (pollen or firefly-like motes). Effects run only while the corresponding gated content is active, use no extra lights or colliders, and preserve existing interactions and progression. See [M45 Annex Atmosphere](M45_ANNEX_ATMOSPHERE.md).
+
+## M46 — Main backyard ambient life
+
+Added subtle wind-driven motion to the central tree canopy, lawn-edge shrubs, decorative flower beds and patio planters. The animation caches decorative transforms once and respects the saved Reduced Motion preference. Optional looping wind and bird ambience can load from `Resources/MiaMax/Audio/Ambience/backyard_wind` and `backyard_birds`; no audio clips are included yet, so the scene remains silent until licensed/created clips are added. See [M46 Backyard Ambience](M46_BACKYARD_AMBIENCE.md).
