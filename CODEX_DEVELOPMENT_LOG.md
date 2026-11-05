@@ -628,3 +628,13 @@
 - Integrated passes inside the existing annex content roots so their existing story unlock visibility remains authoritative.
 - Decorative primitive colliders are removed; existing resource/portal roots, colliders, rewards and save data remain unchanged.
 - Static source review only; Unity compile, Play Mode and mobile performance remain unverified.
+
+## 2026-11-05 — M45 annex atmosphere
+
+- Added `AdventureAnnexAtmospherePrototype`, one controller per annex.
+- Flower Garden: subtle stem/leaf/bloom sway and low-rate drifting pollen particles.
+- Woodland Trail: gentle canopy/fern sway and a capped, low-rate firefly-like mote effect.
+- Particle counts are capped (20 garden / 16 woodland); no collision modules, extra lights or new gameplay colliders.
+- Effects are attached to the existing gated content roots and pause/clear when those roots are disabled.
+- Existing portals, resource pickups, rewards, progression and save data are unchanged.
+- Static source review only; Unity compile, Play Mode and mobile performance remain unverified.
