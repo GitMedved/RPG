@@ -282,3 +282,8 @@ Added a warm daylight preset using the existing prototype camera and directional
 ## M42 — Backyard station visual pass
 
 Replaced the visible cube faces of the workshop, order board, Adventure Journal board, arcade and collection station with distinct collider-free procedural 3D dressing while preserving their original root colliders and gameplay components. These are still prototype visuals rather than final authored assets. See [M42 Backyard Station Visual Pass](M42_BACKYARD_STATION_VISUAL_PASS.md).
+
+
+## M43 — Character proxy animation polish
+
+Added subtle procedural idle breathing, head motion, blinking, speed-responsive limb movement and Max tail sway to the existing greybox character fallbacks. Imported production prefabs remain untouched. These are not final rigs or authored animation clips. See [M43 Character Proxy Animation Polish](M43_CHARACTER_PROXY_ANIMATION_POLISH.md).
