@@ -1,5 +1,6 @@
 using MiaMax.Domain;
 using MiaMax.Infrastructure.Save;
+using MiaMax.Infrastructure.Audio;
 using UnityEngine;
 namespace MiaMax.Gameplay
 {
@@ -23,11 +24,16 @@ namespace MiaMax.Gameplay
             var job = service.ActiveJob;
             if (job != null && job.IsActive)
             {
-                if (service.RemainingSeconds == 0) service.TryCollect();
+                if (service.RemainingSeconds == 0 && service.TryCollect())
+                    GameVoiceDirector.PlayMia("mia_success_01");
             }
-            else if (!service.TryStart(ProductionService.CarrotSoup))
-                if (!service.TryStart(ProductionService.StrawberryJuice))
-                    service.TryStart(ProductionService.WoodenToy);
+            else
+            {
+                bool started = service.TryStart(ProductionService.CarrotSoup);
+                if (!started) started = service.TryStart(ProductionService.StrawberryJuice);
+                if (!started) started = service.TryStart(ProductionService.WoodenToy);
+                if (started) GameVoiceDirector.PlayMia("mia_interact_01");
+            }
             UpdateLabel();
         }
         private void UpdateLabel()
