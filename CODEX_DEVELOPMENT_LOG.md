@@ -698,7 +698,7 @@
 
 ## 2026-11-05 — M52 complete procedural texture library
 
-- Added an Editor-only generator for 24 reusable stylized surfaces covering lawn, soil, wood, bark, house plaster, roof, patio, sand, foliage, fabric, ceramic, painted metal, paving, pond, flowers, vegetables, gravel, fence paint and reusable fur/leather starters.
+- Added an Editor-only generator for 40 reusable stylized surfaces covering lawn, soil, wood, bark, house plaster, roof, patio, sand, foliage, fabric, ceramic, painted metal, paving, pond, flowers, vegetables, gravel, fence paint and reusable fur/leather starters.
 - Each surface produces 512×512 Base Color, tangent-space Normal and grayscale Height PNG maps, plus a matching URP Lit material (Standard fallback).
 - Texture noise is deterministic and periodic; imports use repeat wrapping, mipmaps and compression for a mobile-conscious baseline.
 - Added a manifest and a read-only audit command. No external packages or runtime dependencies were added.
