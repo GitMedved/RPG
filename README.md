@@ -277,3 +277,8 @@ Added a warm, readable house entrance with framed windows and door, trim around 
 ## M41 — Backyard lighting & atmosphere
 
 Added a warm daylight preset using the existing prototype camera and directional sun: soft sky background, three-tone ambient fill and gentler shadows. No additional lights or gameplay changes. This remains a runtime prototype preset, not final lighting/post-processing. See [M41 Backyard Lighting & Atmosphere](M41_BACKYARD_LIGHTING_ATMOSPHERE.md).
+
+
+## M42 — Backyard station visual pass
+
+Replaced the visible cube faces of the workshop, order board, Adventure Journal board, arcade and collection station with distinct collider-free procedural 3D dressing while preserving their original root colliders and gameplay components. These are still prototype visuals rather than final authored assets. See [M42 Backyard Station Visual Pass](M42_BACKYARD_STATION_VISUAL_PASS.md).
