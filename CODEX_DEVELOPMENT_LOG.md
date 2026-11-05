@@ -666,3 +666,12 @@
 - Missing clips are reported; no animation assets were fabricated. Empty Idle is explicitly a placeholder when no idle clip is imported.
 - The builder recreates its generated Base Layer on each run; custom states/transitions in that layer must be backed up before rerunning.
 - Static source review only. Unity compilation, clip preview, Play Mode and Android/iOS profiling remain pending.
+
+
+## 2026-11-05 — M49 Mia & Max voice direction and Unity playback
+
+- Locked American English and natural cartoon acting. Mia: bright, sweet, playful. Max: funny cat identity with short scripted phrases plus meows, chirps and purrs.
+- Added an original 16-cue audition set with stable file IDs and performance direction.
+- Extended `GameAudioService` with resource-based voice playback from `Resources/MiaMax/Audio/Voice/`; playback replaces the previous line and uses the dedicated voice AudioSource / Voice volume mix.
+- Added recording, export, licence/provenance, import and Unity/device acceptance guidance.
+- No WAV files or canonical TTS provider/voice IDs are included. Dialogue triggers are not yet wired to gameplay. Unity compile, audio playback and device tests remain pending.
