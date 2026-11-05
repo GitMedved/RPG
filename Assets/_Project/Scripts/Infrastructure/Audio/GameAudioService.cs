@@ -92,7 +92,33 @@ namespace MiaMax.Infrastructure.Audio
         public void PlayVoiceLine(AudioClip clip, float volume = 1f)
         {
             if (voiceSource == null || clip == null) return;
-            voiceSource.PlayOneShot(clip, Mathf.Clamp01(volume));
+            voiceSource.Stop();
+            voiceSource.clip = clip;
+            voiceSource.volume = Mathf.Clamp01(volume);
+            voiceSource.loop = false;
+            voiceSource.Play();
+        }
+
+        /// <summary>
+        /// Loads and plays a named voice take from Resources/MiaMax/Audio/Voice.
+        /// Use stable IDs from M49_VOICE_TEST_SCRIPT.md (for example mia_greeting_01).
+        /// </summary>
+        public bool PlayVoiceLine(string lineId, float volume = 1f)
+        {
+            if (voiceSource == null || string.IsNullOrEmpty(lineId)) return false;
+            string safeId = lineId.Trim();
+            if (safeId.Contains("/") || safeId.Contains("\\") || safeId.Contains("..")) return false;
+
+            AudioClip clip = Resources.Load<AudioClip>("MiaMax/Audio/Voice/" + safeId);
+            if (clip == null)
+            {
+                Debug.LogWarning("[MiaMax Audio] Voice line not found: " + safeId +
+                    ". Expected Resources/MiaMax/Audio/Voice/" + safeId + ".wav");
+                return false;
+            }
+
+            PlayVoiceLine(clip, volume);
+            return true;
         }
 
         public void SetMusic(AudioClip clip, float volume = 0.35f)
