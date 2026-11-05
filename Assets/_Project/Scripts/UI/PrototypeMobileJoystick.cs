@@ -93,7 +93,7 @@ namespace MiaMax.Gameplay
                 currentPosition = touch.position;
 
                 Vector2 delta = currentPosition - startPosition;
-                Value = delta.magnitude < deadZone ? Vector2.zero : Vector2.ClampMagnitude(delta / radius, 1f);
+                Value = delta.magnitude < deadZone ? Vector2.zero : Vector2.ClampMagnitude(delta / EffectiveRadius, 1f);
 
                 if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
                 {
