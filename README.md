@@ -312,3 +312,8 @@ Added **Tools → Mia & Max → Build Character Animator State Machines**. The E
 ## M49 — Mia & Max voice direction and Unity playback
 
 Locked the voice bible: American English, natural cartoon acting, Mia bright/sweet/playful, Max a funny cat with short scripted phrases plus expressive meows and purrs. Added an original 16-cue audition script and recording/export checklist. `GameAudioService.PlayVoiceLine(lineId)` now loads individual clips from `Resources/MiaMax/Audio/Voice/`, replaces the current line cleanly and uses the existing Voice volume mix. No audio files or final TTS voice are included yet; gameplay dialogue triggers and Unity/device validation remain pending. See [M49 Voice Test and Unity Pipeline](M49_MIA_MAX_VOICE_TEST_AND_UNITY_PIPELINE.md).
+
+
+## M50 — Contextual character voice triggers
+
+Connected the M49 voice IDs to confirmed gameplay outcomes: Mia reacts to planting, harvesting and workshop actions; Max gives a curious meow when a keepsake is discovered. Triggers are centralized, rate-limited and silent when the corresponding WAV is not imported. No placeholder audio is generated. See [M50 Contextual Voice Triggers](M50_CONTEXTUAL_VOICE_TRIGGERS.md).
