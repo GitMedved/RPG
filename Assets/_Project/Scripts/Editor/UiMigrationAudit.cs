@@ -35,8 +35,10 @@ namespace MiaMax.EditorTools
             bool joystickCanvas = File.Exists(joystickPath) &&
                 File.ReadAllText(joystickPath).Contains("ScreenSpaceOverlay") &&
                 !File.ReadAllText(joystickPath).Contains("void OnGUI(");
-            bool hudCanvas = File.Exists(hudPath) &&
-                File.ReadAllText(hudPath).Contains("ScreenSpaceOverlay");
+            string hudSource = File.Exists(hudPath) ? File.ReadAllText(hudPath) : string.Empty;
+            bool hudCanvas = hudSource.Contains("ScreenSpaceOverlay");
+            bool responsiveDetailPanel = hudSource.Contains("ApplyResponsiveLayout") &&
+                hudSource.Contains("safeRoot.rect.width") && hudSource.Contains("safeRoot.rect.height");
             bool legacyFallback = imguiFiles.Contains(ScriptsRoot + "/Gameplay/PrototypeHud.cs");
 
             Debug.Log("[Mia & Max] UI migration audit\n" +
@@ -47,7 +49,7 @@ namespace MiaMax.EditorTools
                 string.Join("\n", imguiFiles.ToArray()) + "\n\n" +
                 "The audit does not validate visual layout, touch response or device behavior.");
 
-            if (!joystickCanvas || !hudCanvas)
+            if (!joystickCanvas || !hudCanvas || !responsiveDetailPanel)
                 Debug.LogError("[Mia & Max] UI migration audit found a missing Canvas implementation.");
             else if (imguiFiles.Count > 1)
                 Debug.LogWarning("[Mia & Max] Additional IMGUI entry points remain. Review the file list above.");
