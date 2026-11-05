@@ -2,6 +2,7 @@ using MiaMax.Domain;
 using MiaMax.Domain.Farming;
 using MiaMax.Domain.Progression;
 using MiaMax.Infrastructure.Save;
+using MiaMax.Infrastructure.Audio;
 using UnityEngine;
 
 namespace MiaMax.Gameplay
@@ -79,12 +80,14 @@ namespace MiaMax.Gameplay
                 {
                     if (!farming.TryPlant(plotId, crop)) continue;
                     new TutorialService(GameSessionBootstrap.Current).TryAdvance(TutorialService.Plant);
+                    GameVoiceDirector.PlayMia("mia_plant_01");
                     break;
                 }
             }
             else if (farming.TryHarvest(plotId, out _))
             {
                 new TutorialService(GameSessionBootstrap.Current).TryAdvance(TutorialService.Harvest);
+                GameVoiceDirector.PlayMia("mia_harvest_01");
             }
 
             Refresh();
