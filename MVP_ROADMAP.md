@@ -252,3 +252,8 @@ Added a warm daylight setup for the runtime prototype using the existing camera 
 ## 32. M42 — Backyard station visual pass — 2026-11-05
 
 Added recognizable procedural dressing for the workshop, order board, Adventure Journal board, arcade cabinet and collection book. Original interactive roots/colliders and gameplay components are retained; added decorative colliders are removed. Unity compile, Play Mode interaction/collision, aspect-ratio and device performance checks remain pending. See `M42_BACKYARD_STATION_VISUAL_PASS.md`.
+
+
+## 33. M43 — Character proxy animation polish — 2026-11-05
+
+Added lightweight idle breathing, head motion, periodic blinking, speed-responsive gait and Max tail sway to procedural character proxies only. Production prefab loading, Animator contracts and gameplay movement remain unchanged. Unity compilation, Play Mode animation review and mobile performance checks remain pending. See `M43_CHARACTER_PROXY_ANIMATION_POLISH.md`.
