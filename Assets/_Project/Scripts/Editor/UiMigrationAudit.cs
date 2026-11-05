@@ -26,7 +26,7 @@ namespace MiaMax.EditorTools
             for (int i = 0; i < files.Length; i++)
             {
                 string source = File.ReadAllText(files[i]);
-                if (Regex.IsMatch(source, @"void\\s+OnGUI\\s*\\("))
+                if (Regex.IsMatch(source, "void\\s+OnGUI\\s*\\("))
                     imguiFiles.Add(files[i].Replace('\\', '/'));
             }
 
