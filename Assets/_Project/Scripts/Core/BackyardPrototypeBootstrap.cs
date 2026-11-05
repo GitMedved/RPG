@@ -23,12 +23,12 @@ namespace MiaMax.Gameplay
 
         private static void BuildBackyard()
         {
-            Material grass = Mat(new Color(0.22f, 0.48f, 0.19f));
-            Material beige = Mat(new Color(0.78f, 0.68f, 0.49f));
-            Material roof = Mat(new Color(0.22f, 0.20f, 0.18f));
-            Material white = Mat(new Color(0.91f, 0.89f, 0.82f));
-            Material wood = Mat(new Color(0.48f, 0.29f, 0.14f));
-            Material leaf = Mat(new Color(0.16f, 0.39f, 0.12f));
+            Material grass = SurfaceOrColor("Grass_Lawn", new Color(0.22f, 0.48f, 0.19f));
+            Material beige = SurfaceOrColor("Plaster_Cream", new Color(0.78f, 0.68f, 0.49f));
+            Material roof = SurfaceOrColor("Roof_Shingle", new Color(0.22f, 0.20f, 0.18f));
+            Material white = SurfaceOrColor("Fence_WhitePaint", new Color(0.91f, 0.89f, 0.82f));
+            Material wood = SurfaceOrColor("Wood_Warm", new Color(0.48f, 0.29f, 0.14f));
+            Material leaf = SurfaceOrColor("Leaf_Green", new Color(0.16f, 0.39f, 0.12f));
             Material orange = Mat(new Color(0.94f, 0.36f, 0.07f));
             Material blue = Mat(new Color(0.15f, 0.38f, 0.72f));
 
@@ -170,15 +170,15 @@ namespace MiaMax.Gameplay
 
         private static void BuildWoodlandTrail(Transform player)
         {
-            Material earth = Mat(new Color(0.34f, 0.25f, 0.16f));
-            Material path = Mat(new Color(0.70f, 0.58f, 0.39f));
-            Material bark = Mat(new Color(0.31f, 0.19f, 0.11f));
-            Material canopy = Mat(new Color(0.12f, 0.31f, 0.13f));
-            Material canopyLight = Mat(new Color(0.20f, 0.42f, 0.17f));
+            Material earth = SurfaceOrColor("Soil_Garden", new Color(0.34f, 0.25f, 0.16f));
+            Material path = SurfaceOrColor("Path_Gravel", new Color(0.70f, 0.58f, 0.39f));
+            Material bark = SurfaceOrColor("Bark_Tree", new Color(0.31f, 0.19f, 0.11f));
+            Material canopy = SurfaceOrColor("Leaf_Green", new Color(0.12f, 0.31f, 0.13f));
+            Material canopyLight = SurfaceOrColor("Leaf_Green", new Color(0.20f, 0.42f, 0.17f));
             Material berry = Mat(new Color(0.72f, 0.12f, 0.22f));
             Material mushroom = Mat(new Color(0.83f, 0.68f, 0.48f));
             Material acorn = Mat(new Color(0.58f, 0.31f, 0.13f));
-            Material gateWood = Mat(new Color(0.40f, 0.25f, 0.13f));
+            Material gateWood = SurfaceOrColor("Wood_Warm", new Color(0.40f, 0.25f, 0.13f));
 
             GameObject entrance = Cube("Woodland_Trail_Entrance_Gate", new Vector3(-15.0f, 1.0f, -9.0f),
                 new Vector3(0.25f, 2.0f, 2.4f), gateWood);
@@ -355,6 +355,16 @@ namespace MiaMax.Gameplay
             StylizedCharacterPrototype.BuildMax(root.transform);
             root.AddComponent<MaxCompanionFollow>().SetTarget(GameObject.Find("Mia_Stylized_Proxy").transform);
             return root;
+        }
+
+        private static Material SurfaceOrColor(string surfaceName, Color fallback)
+        {
+#if UNITY_EDITOR
+            Material generated = UnityEditor.AssetDatabase.LoadAssetAtPath<Material>(
+                "Assets/_Project/Art/Materials/Generated/" + surfaceName + ".mat");
+            if (generated != null) return generated;
+#endif
+            return Mat(fallback);
         }
 
         private static Material Mat(Color color)
