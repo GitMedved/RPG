@@ -608,3 +608,13 @@
 - Preserved original station root transforms, colliders, event subscriptions and gameplay services; hid only root renderers and removed colliders from decorative children.
 - No economy, save schema or progression changes.
 - Static source review only; Unity compilation, Play Mode interactions, collision checks and device performance remain unverified.
+
+
+## 2026-11-05 — M43 Character proxy animation polish
+
+- Added subtle idle breathing and head motion to the procedural Mia/Max proxy models.
+- Added periodic blinking; Max's pupil scale follows the eye blink to preserve alignment.
+- Made proxy limb gait respond more smoothly to measured CharacterController movement.
+- Added a gentler idle tail sway for Max.
+- Kept imported production prefabs, gameplay movement, collisions, Animator contract, save data and rewards unchanged.
+- Static source review only; Unity compilation, Play Mode animation review and mobile performance remain unverified.
