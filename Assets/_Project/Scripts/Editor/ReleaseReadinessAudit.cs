@@ -65,6 +65,12 @@ namespace MiaMax.EditorTools
             Add(results, "Generated albedo maps",
                 AssetCount("t:Texture2D", "Assets/_Project/Art/Textures/Generated/Albedo") >= 40,
                 AssetCount("t:Texture2D", "Assets/_Project/Art/Textures/Generated/Albedo") + " / 40 expected maps.", true);
+            Add(results, "Generated normal maps",
+                AssetCount("t:Texture2D", "Assets/_Project/Art/Textures/Generated/Normal") >= 40,
+                AssetCount("t:Texture2D", "Assets/_Project/Art/Textures/Generated/Normal") + " / 40 expected maps.", true);
+            Add(results, "Generated height maps",
+                AssetCount("t:Texture2D", "Assets/_Project/Art/Textures/Generated/Height") >= 40,
+                AssetCount("t:Texture2D", "Assets/_Project/Art/Textures/Generated/Height") + " / 40 expected maps.", true);
             Add(results, "UI production sprites", AssetCount("t:Sprite", "Assets/_Project/Art/UI") >= 10,
                 AssetCount("t:Sprite", "Assets/_Project/Art/UI") + " sprite(s). Prototype UI is not release art.", true);
             Add(results, "Voice recordings", AssetCount("t:AudioClip", "Assets/Resources/MiaMax/Audio/Voice") >= 16,
