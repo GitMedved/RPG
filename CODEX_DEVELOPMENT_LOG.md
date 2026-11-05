@@ -656,3 +656,13 @@
 - Added `Tools → Mia & Max → Validate Character Runtime Prefabs`. It reports missing prefab/Animator, invalid Avatar, missing controller, root-motion state and incomplete parameter contract for Mia and Max.
 - No new character art, FBX, animation clips or final Animator state machines were fabricated. Existing procedural proxies remain fallback visuals until approved production assets are imported.
 - Static source review only. Unity compilation, Editor menu execution, prefab import, animation playback and Android/iOS profiling remain unverified.
+
+
+## 2026-11-05 — M48 character Animator state machines
+
+- Added an Editor command to build the Mia and Max Animator Base Layer from imported clips named with Idle, Walk, Run, Interact and Celebrate keywords.
+- Added Speed-driven Idle/Walk/Run transitions and trigger-driven Interact/Celebrate states that return to Idle.
+- Preserved the shared parameter contract and in-place movement assumption; root motion remains disabled by the existing runtime pipeline.
+- Missing clips are reported; no animation assets were fabricated. Empty Idle is explicitly a placeholder when no idle clip is imported.
+- The builder recreates its generated Base Layer on each run; custom states/transitions in that layer must be backed up before rerunning.
+- Static source review only. Unity compilation, clip preview, Play Mode and Android/iOS profiling remain pending.
