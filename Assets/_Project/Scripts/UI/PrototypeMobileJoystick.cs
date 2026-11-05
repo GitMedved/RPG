@@ -18,7 +18,20 @@ namespace MiaMax.Gameplay
         private Vector2 currentPosition;
         private Texture2D circleTexture;
 
-        private Rect JoystickRect => new Rect(24f, 24f, radius * 2f, radius * 2f);
+        private float EffectiveRadius => Mathf.Clamp(radius * Mathf.Clamp(Screen.width / 900f, 0.72f, 1.12f), 60f, 104f);
+        private const float SafeAreaMargin = 18f;
+
+        private Rect JoystickRect
+        {
+            get
+            {
+                Rect safe = Screen.safeArea;
+                float r = EffectiveRadius;
+                float marginX = Mathf.Min(SafeAreaMargin, Mathf.Max(0f, (safe.width - r * 2f) * 0.5f));
+                float marginY = Mathf.Min(SafeAreaMargin, Mathf.Max(0f, (safe.height - r * 2f) * 0.5f));
+                return new Rect(safe.xMin + marginX, safe.yMin + marginY, r * 2f, r * 2f);
+            }
+        }
 
         private void Awake()
         {
@@ -27,18 +40,39 @@ namespace MiaMax.Gameplay
             circleTexture = CreateCircleTexture(64);
         }
 
+        private void OnDisable()
+        {
+            activeFingerId = -1;
+            Value = Vector2.zero;
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (!hasFocus) ResetInput();
+        }
+
+        private void OnApplicationPause(bool paused)
+        {
+            if (paused) ResetInput();
+        }
+
         private void OnDestroy()
         {
             if (Instance == this) Instance = null;
             if (circleTexture != null) Destroy(circleTexture);
         }
 
+        private void ResetInput()
+        {
+            activeFingerId = -1;
+            Value = Vector2.zero;
+        }
+
         private void Update()
         {
             if (Input.touchCount == 0)
             {
-                activeFingerId = -1;
-                Value = Vector2.zero;
+                ResetInput();
                 return;
             }
 
@@ -71,22 +105,24 @@ namespace MiaMax.Gameplay
 
             if (!foundFinger && activeFingerId >= 0)
             {
-                activeFingerId = -1;
-                Value = Vector2.zero;
+                ResetInput();
             }
         }
 
         private void OnGUI()
         {
             if (circleTexture == null) return;
-            Vector2 center = new Vector2(24f + radius, Screen.height - 24f - radius);
+            Rect touchRect = JoystickRect;
+            float r = EffectiveRadius;
+            Vector2 center = new Vector2(touchRect.center.x, Screen.height - touchRect.center.y);
+            Color previous = GUI.color;
             GUI.color = new Color(1f, 1f, 1f, 0.22f);
-            GUI.DrawTexture(new Rect(center.x - radius, center.y - radius, radius * 2f, radius * 2f), circleTexture);
+            GUI.DrawTexture(new Rect(center.x - r, center.y - r, r * 2f, r * 2f), circleTexture);
             GUI.color = new Color(1f, 1f, 1f, 0.55f);
-            Vector2 knob = center + Value * radius * 0.72f;
-            float knobRadius = radius * 0.38f;
+            Vector2 knob = center + Value * r * 0.72f;
+            float knobRadius = r * 0.38f;
             GUI.DrawTexture(new Rect(knob.x - knobRadius, knob.y - knobRadius, knobRadius * 2f, knobRadius * 2f), circleTexture);
-            GUI.color = Color.white;
+            GUI.color = previous;
         }
 
         private static Texture2D CreateCircleTexture(int size)
