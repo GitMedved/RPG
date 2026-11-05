@@ -9,7 +9,7 @@ Make the existing character import pipeline safer to use when approved productio
 - Disables root motion so the gameplay CharacterController (Mia) and companion-follow movement (Max) remain authoritative.
 - Checks that each expected parameter exists with the correct type before sending it:
   - `Speed` — Float
-  - `Grounded` — Bool
+  - `Grounded` — Bool (Mia reads CharacterController grounding; Max uses the companion-follow grounded assumption)
   - `Interact` — Trigger
   - `Celebrate` — Trigger
 - Rebinds parameter availability if an Animator Controller is assigned after prefab instantiation.
@@ -23,7 +23,7 @@ Run:
 The report checks Mia and Max runtime prefabs for:
 - Prefab presence at `Assets/Resources/MiaMax/Characters/{Mia|Max}.prefab`
 - Animator component
-- Valid imported Avatar
+- Valid imported Avatar with the expected rig type (Mia Humanoid; Max Generic/quadruped)
 - Assigned Animator Controller
 - Root Motion disabled
 - Complete parameter contract with matching parameter types
