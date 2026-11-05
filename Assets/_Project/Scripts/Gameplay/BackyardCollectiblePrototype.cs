@@ -2,6 +2,7 @@ using MiaMax.Domain;
 using MiaMax.Domain.Collections;
 using MiaMax.Domain.Progression;
 using MiaMax.Infrastructure.Save;
+using MiaMax.Infrastructure.Audio;
 using UnityEngine;
 
 namespace MiaMax.Gameplay
@@ -43,6 +44,7 @@ namespace MiaMax.Gameplay
             if (!service.Discover(collectibleId)) return;
             new AchievementService(GameSessionBootstrap.Current).GetSummary();
             collected = true;
+            GameVoiceDirector.PlayMax("max_meow_curious_01");
             Debug.Log("Keepsake found: " + displayTitle);
             gameObject.SetActive(false);
         }
