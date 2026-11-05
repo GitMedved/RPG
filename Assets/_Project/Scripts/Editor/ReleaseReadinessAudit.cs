@@ -74,9 +74,8 @@ namespace MiaMax.EditorTools
             Add(results, "Music and ambience", AssetCount("t:AudioClip", "Assets/_Project/Audio") >= 3,
                 AssetCount("t:AudioClip", "Assets/_Project/Audio") + " clip(s) found. Check music, backyard and woodland loops.", true);
 
-            Add(results, "Core automated smoke checks",
-                AssetCount("t:Script", "Assets/_Project/Scripts/Editor") > 0,
-                "Run Tools → Mia & Max → Run Core Smoke Checks manually; this audit cannot execute tests.", true);
+            Add(results, "Core automated smoke checks", false,
+                "Run Tools → Mia & Max → Run Core Smoke Checks and record the result; this audit cannot execute tests.", true);
             Add(results, "Privacy / child safety / store review", false,
                 "Manual legal and platform-policy sign-off is required; no approval is inferred from project files.", true);
             Add(results, "Physical device validation", false,
