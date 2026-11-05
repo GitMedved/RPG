@@ -44,6 +44,7 @@ namespace MiaMax.EditorTools
             Debug.Log("[Mia & Max] UI migration audit\n" +
                 "Mobile HUD Canvas: " + (hudCanvas ? "FOUND" : "MISSING") + "\n" +
                 "Joystick Canvas: " + (joystickCanvas ? "FOUND" : "MISSING") + "\n" +
+                "Responsive detail panel: " + (responsiveDetailPanel ? "FOUND" : "MISSING") + "\n" +
                 "PrototypeHud IMGUI fallback: " + (legacyFallback ? "PRESENT (intentional fallback)" : "NOT FOUND") + "\n" +
                 "Remaining OnGUI files: " + imguiFiles.Count + "\n" +
                 string.Join("\n", imguiFiles.ToArray()) + "\n\n" +
