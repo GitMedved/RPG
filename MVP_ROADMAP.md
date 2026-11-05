@@ -282,3 +282,12 @@ Added cached, low-amplitude wind motion for decorative foliage in the main yard.
 ## 37. M48 — Character Animator state machines — 2026-11-05
 
 Added an Editor builder for the Mia/Max Animator contract controllers. It maps available imported clips to Idle/Walk/Run/Interact/Celebrate and wires movement/action transitions; missing clips remain clearly reported. The tool does not generate animation assets, validate animation quality or replace the need for local Animator/Play Mode review. It rebuilds the generated Base Layer. Unity compile, imported clip review, Play Mode and device checks remain pending. See `M48_CHARACTER_ANIMATOR_STATE_MACHINES.md`.
+
+
+## 38. M50 — Contextual character voice triggers — 2026-11-05
+
+Connected successful farming, workshop and keepsake outcomes to stable Mia/Max voice IDs with a centralized 2.5-second same-cue cooldown. Missing recordings remain silent and do not block gameplay. See `M50_CONTEXTUAL_VOICE_TRIGGERS.md`.
+
+## 39. M51 — Voice asset readiness audit — 2026-11-05
+
+Added a read-only Editor command that checks the 16 named M49 audition clips in their exact Resources folder and reports available/missing assets. Corrected the general asset audit folder. The tool does not create placeholders or certify licensing/quality. See `M51_VOICE_ASSET_AUDIT.md`.
