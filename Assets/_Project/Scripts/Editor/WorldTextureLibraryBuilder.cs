@@ -62,7 +62,23 @@ namespace MiaMax.EditorTools
             new Surface("Fence_WhitePaint", C(226,224,208), C(250,247,230), 6f, .045f, .28f, 0f),
             new Surface("Leather_Brown", C(119,75,47), C(160,111,72), 10f, .09f, .32f, 0f),
             new Surface("Fur_Ginger", C(202,112,49), C(244,169,83), 19f, .12f, .20f, 0f),
-            new Surface("Fur_Cream", C(225,211,178), C(248,239,211), 19f, .08f, .22f, 0f)
+            new Surface("Fur_Cream", C(225,211,178), C(248,239,211), 19f, .08f, .22f, 0f),
+            new Surface("Skin_Warm", C(225,174,139), C(248,210,177), 12f, .035f, .24f, 0f),
+            new Surface("Hair_Blonde", C(206,157,69), C(248,215,119), 7f, .13f, .28f, 0f),
+            new Surface("Denim_Blue", C(54,91,143), C(91,133,184), 18f, .12f, .18f, 0f),
+            new Surface("Cotton_White", C(224,222,210), C(250,247,235), 23f, .045f, .20f, 0f),
+            new Surface("Eye_Green", C(57,139,92), C(143,194,112), 5f, .015f, .72f, 0f),
+            new Surface("Plastic_Toy", C(218,82,59), C(250,151,79), 5f, .025f, .48f, 0f),
+            new Surface("Paper_Illustration", C(225,211,174), C(247,235,207), 9f, .055f, .08f, 0f),
+            new Surface("Interior_Wallpaper", C(205,190,162), C(232,218,189), 4f, .025f, .18f, 0f),
+            new Surface("Floor_Wood", C(137,91,53), C(183,133,82), 4f, .13f, .24f, 0f),
+            new Surface("Floor_Tile", C(190,184,165), C(224,217,196), 6f, .07f, .30f, 0f),
+            new Surface("Wicker_Rattan", C(167,124,75), C(213,172,112), 12f, .18f, .22f, 0f),
+            new Surface("Rubber_Soft", C(57,61,62), C(91,96,93), 16f, .055f, .12f, 0f),
+            new Surface("Stone_Mossy", C(108,121,91), C(157,163,119), 7f, .23f, .10f, 0f),
+            new Surface("Mushroom_Cap", C(179,82,61), C(231,158,109), 5f, .08f, .26f, 0f),
+            new Surface("Berry_Skin", C(132,43,72), C(194,77,106), 7f, .045f, .38f, 0f),
+            new Surface("Pond_Reeds", C(95,128,63), C(153,171,88), 9f, .12f, .16f, 0f)
         };
 
         [MenuItem("Tools/Mia & Max/Generate Complete Texture Library")]
