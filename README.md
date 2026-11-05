@@ -300,3 +300,7 @@ Added one lightweight atmosphere controller to each story-gated annex. Flower st
 ## M46 — Main backyard ambient life
 
 Added subtle wind-driven motion to the central tree canopy, lawn-edge shrubs, decorative flower beds and patio planters. The animation caches decorative transforms once and respects the saved Reduced Motion preference. Optional looping wind and bird ambience can load from `Resources/MiaMax/Audio/Ambience/backyard_wind` and `backyard_birds`; no audio clips are included yet, so the scene remains silent until licensed/created clips are added. See [M46 Backyard Ambience](M46_BACKYARD_AMBIENCE.md).
+
+## M47 — Production character runtime hardening
+
+Hardened the runtime Animator bridge for imported Mia/Max prefabs: animation parameters are checked before use, root motion is disabled so gameplay movement remains authoritative, and late-assigned controllers can be rebound. Added `Tools → Mia & Max → Validate Character Runtime Prefabs` to check prefab, Avatar, Animator Controller and the four agreed parameters. This validates integration scaffolding only; it does not create production models, animation clips or state transitions. See [M47 Character Runtime Validation](M47_CHARACTER_RUNTIME_VALIDATION.md).
