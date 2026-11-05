@@ -52,30 +52,35 @@ namespace MiaMax.Gameplay
             BackyardInteractable workshopInteractable = workshop.AddComponent<BackyardInteractable>();
             workshopInteractable.Configure("Workshop", "Start a recipe");
             workshop.AddComponent<ProductionStationPrototype>().Configure(workshopInteractable);
+            BackyardStationVisuals.Build(workshop, BackyardStationVisuals.StationStyle.Workshop);
 
             GameObject orderBoard = Cube("Order_Board_Placeholder", new Vector3(-3.2f, 1.05f, 4.6f),
                 new Vector3(1.1f, 2.1f, 0.25f), wood);
             BackyardInteractable boardInteractable = orderBoard.AddComponent<BackyardInteractable>();
             boardInteractable.Configure("Order board", "Check orders");
             orderBoard.AddComponent<OrderBoardPrototype>().Configure(boardInteractable);
+            BackyardStationVisuals.Build(orderBoard, BackyardStationVisuals.StationStyle.Orders);
 
             GameObject questBoard = Cube("Adventure_Journal_Board_Placeholder", new Vector3(-5.2f, 1.05f, 4.6f),
                 new Vector3(0.9f, 1.8f, 0.22f), wood);
             BackyardInteractable questInteractable = questBoard.AddComponent<BackyardInteractable>();
             questInteractable.Configure("Adventure journal", "Check story quests");
             questBoard.AddComponent<QuestBoardPrototype>().Configure(questInteractable);
+            BackyardStationVisuals.Build(questBoard, BackyardStationVisuals.StationStyle.Journal);
 
             GameObject arcadeBoard = Cube("Mini_Game_Arcade_Board_Placeholder", new Vector3(0f, 1.1f, 4.6f),
                 new Vector3(1.1f, 2.2f, 0.25f), blue);
             BackyardInteractable arcadeInteractable = arcadeBoard.AddComponent<BackyardInteractable>();
             arcadeInteractable.Configure("Mia & Max Arcade", "Play a mini-game");
             arcadeBoard.AddComponent<ArcadeBoardPrototype>().Configure(arcadeInteractable);
+            BackyardStationVisuals.Build(arcadeBoard, BackyardStationVisuals.StationStyle.Arcade);
 
             GameObject collectionBoard = Cube("Collection_Book_Board_Placeholder", new Vector3(-7.5f, 1.05f, 7.1f),
                 new Vector3(1.0f, 1.9f, 0.22f), wood);
             BackyardInteractable collectionInteractable = collectionBoard.AddComponent<BackyardInteractable>();
             collectionInteractable.Configure("Backyard collection", "Check keepsakes");
             collectionBoard.AddComponent<CollectionBookPrototype>().Configure(collectionInteractable);
+            BackyardStationVisuals.Build(collectionBoard, BackyardStationVisuals.StationStyle.Collection);
 
             CreateKeepsake("Red Ball", "keepsake_red_ball", new Vector3(9f, 0.35f, -3f), Mat(new Color(0.88f, 0.12f, 0.12f)));
             CreateKeepsake("Blue Feather", "keepsake_blue_feather", new Vector3(-10f, 0.45f, 5f), Mat(new Color(0.18f, 0.48f, 0.92f)));
