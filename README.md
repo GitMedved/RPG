@@ -287,3 +287,8 @@ Replaced the visible cube faces of the workshop, order board, Adventure Journal 
 ## M43 — Character proxy animation polish
 
 Added subtle procedural idle breathing, head motion, blinking, speed-responsive limb movement and Max tail sway to the existing greybox character fallbacks. Imported production prefabs remain untouched. These are not final rigs or authored animation clips. See [M43 Character Proxy Animation Polish](M43_CHARACTER_PROXY_ANIMATION_POLISH.md).
+
+
+## M44 — Flower Garden & Woodland Trail visual pass
+
+Added themed procedural dressing to both story-gated annexes: raised flower beds, flower clusters, a bird bath and stepping stones in the Flower Garden; layered canopies, mossy rocks, ferns, a fallen log, berries and mushrooms in the Woodland Trail. Existing portals, unlocks, resources and interactions are preserved; decorative colliders are removed. See [M44 Annex Visual Pass](M44_ADVENTURE_ANNEX_VISUAL_PASS.md).
