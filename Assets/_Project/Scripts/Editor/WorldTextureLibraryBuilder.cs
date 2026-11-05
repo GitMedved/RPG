@@ -268,6 +268,11 @@ namespace MiaMax.EditorTools
             Material mat = AssetDatabase.LoadAssetAtPath<Material>(path);
             Shader shader = Shader.Find("Universal Render Pipeline/Lit");
             if (shader == null) shader = Shader.Find("Standard");
+            if (shader == null)
+            {
+                Debug.LogError("Mia & Max texture generator: no supported Lit shader is available. Enable URP/Lit or the Standard shader and retry.");
+                return;
+            }
             if (mat == null) mat = new Material(shader);
             else if (mat.shader != shader) mat.shader = shader;
 
@@ -277,7 +282,11 @@ namespace MiaMax.EditorTools
             if (mat.HasProperty("_MainTex")) mat.SetTexture("_MainTex", albedo);
             if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", Color.white);
             if (mat.HasProperty("_Color")) mat.SetColor("_Color", Color.white);
-            if (mat.HasProperty("_BumpMap")) mat.SetTexture("_BumpMap", normal);
+            if (mat.HasProperty("_BumpMap"))
+            {
+                mat.SetTexture("_BumpMap", normal);
+                if (normal != null) mat.EnableKeyword("_NORMALMAP");
+            }
             if (mat.HasProperty("_BumpScale")) mat.SetFloat("_BumpScale", .65f);
             if (mat.HasProperty("_Smoothness")) mat.SetFloat("_Smoothness", s.Smoothness);
             if (mat.HasProperty("_Metallic")) mat.SetFloat("_Metallic", s.Metallic);
