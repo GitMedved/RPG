@@ -37,7 +37,7 @@ namespace MiaMax.EditorTools
                 new Check { Label = "Max Animator Controller contract scaffold", SearchFilter = "Max_AnimatorContract t:AnimatorController", Folder = "Assets/_Project/Art/Characters/Runtime", RequiredForRelease = true },
                 new Check { Label = "UI sprite assets", SearchFilter = "t:Sprite", Folder = "Assets/_Project/Art/UI", RequiredForRelease = true },
                 new Check { Label = "Audio effects", SearchFilter = "t:AudioClip", Folder = "Assets/Resources/MiaMax/Audio/SFX", RequiredForRelease = true },
-                new Check { Label = "Voice recordings", SearchFilter = "t:AudioClip", Folder = "Assets/_Project/Audio/Voice", RequiredForRelease = true },
+                new Check { Label = "Voice recordings", SearchFilter = "t:AudioClip", Folder = "Assets/Resources/MiaMax/Audio/Voice", RequiredForRelease = true },
                 new Check { Label = "Music", SearchFilter = "t:AudioClip", Folder = "Assets/_Project/Audio/Music", RequiredForRelease = true }
             };
 
