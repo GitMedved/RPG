@@ -277,3 +277,8 @@ Added cached, low-amplitude wind motion for decorative foliage in the main yard.
 - Disabled root motion on generated runtime character prefabs to prevent conflicts with gameplay controllers.
 - Added an Editor validator for Mia/Max runtime prefabs, imported Avatar validity, assigned controller, root-motion setting and parameter contract.
 - Production FBX models, authored clips, blend trees, state transitions, final rig review and device animation profiling remain pending.
+
+
+## 37. M48 — Character Animator state machines — 2026-11-05
+
+Added an Editor builder for the Mia/Max Animator contract controllers. It maps available imported clips to Idle/Walk/Run/Interact/Celebrate and wires movement/action transitions; missing clips remain clearly reported. The tool does not generate animation assets, validate animation quality or replace the need for local Animator/Play Mode review. It rebuilds the generated Base Layer. Unity compile, imported clip review, Play Mode and device checks remain pending. See `M48_CHARACTER_ANIMATOR_STATE_MACHINES.md`.
