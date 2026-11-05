@@ -722,3 +722,13 @@
 - Reset movement on component disable, app focus loss and pause to avoid stuck input after interruptions.
 - Preserved the one-finger ownership rule and existing gameplay input contract.
 - The control remains prototype IMGUI art; final Canvas styling and physical-device validation are pending.
+
+
+## 2026-11-05 — M55 Canvas joystick and UI migration audit
+
+- Replaced the mobile joystick IMGUI drawing with a dedicated Screen Space Overlay Canvas and two non-raycastable uGUI Images.
+- Preserved touch ownership, dead zone, normalized movement output, safe-area touch bounds and interruption reset behavior.
+- Positioned the Canvas independently of the player transform, below the primary HUD sorting order; it recalculates when screen dimensions, safe area or Canvas scale changes.
+- Added a read-only Editor UI migration audit that lists runtime OnGUI entry points and checks the HUD/joystick Canvas implementations.
+- PrototypeHud retains its IMGUI renderer only as a fallback when MobileHudCanvas is absent; this is reported rather than misrepresented as a full IMGUI removal.
+- Source review only. Unity compilation, audit execution, Play Mode layout/touch testing, portrait/landscape and physical-device checks remain pending.
