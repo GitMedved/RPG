@@ -694,3 +694,13 @@
 - Corrected the general Production Asset Audit to inspect the actual runtime Resources voice folder rather than the legacy placeholder path.
 - The audit is read-only and does not create empty clips or alter import settings.
 - Source review only. Unity compilation and Editor menu execution remain pending; no WAV files are currently confirmed in the repository.
+
+
+## 2026-11-05 — M52 complete procedural texture library
+
+- Added an Editor-only generator for 24 reusable stylized surfaces covering lawn, soil, wood, bark, house plaster, roof, patio, sand, foliage, fabric, ceramic, painted metal, paving, pond, flowers, vegetables, gravel, fence paint and reusable fur/leather starters.
+- Each surface produces 512×512 Base Color, tangent-space Normal and grayscale Height PNG maps, plus a matching URP Lit material (Standard fallback).
+- Texture noise is deterministic and periodic; imports use repeat wrapping, mipmaps and compression for a mobile-conscious baseline.
+- Added a manifest and a read-only audit command. No external packages or runtime dependencies were added.
+- The source generator is committed; binary PNG and material assets are created inside Unity when the user runs the menu command. Character-specific UV atlases are intentionally deferred until final Mia/Max meshes and UVs exist.
+- Source review only. Unity compilation, generation, material/shader review, scene assignment and Android/iOS profiling remain pending.
