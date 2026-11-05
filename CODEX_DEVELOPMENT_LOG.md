@@ -732,3 +732,12 @@
 - Added a read-only Editor UI migration audit that lists runtime OnGUI entry points and checks the HUD/joystick Canvas implementations.
 - PrototypeHud retains its IMGUI renderer only as a fallback when MobileHudCanvas is absent; this is reported rather than misrepresented as a full IMGUI removal.
 - Source review only. Unity compilation, audit execution, Play Mode layout/touch testing, portrait/landscape and physical-device checks remain pending.
+
+
+## 2026-11-05 — M56 responsive Canvas detail panels
+
+- Added safe-area viewport sizing for the shared Canvas detail panel, clamping its dimensions to the available area while preserving the existing portrait design size when space allows.
+- Backpack, World Map, Settings and Adventure Journal continue to share the same panel, content, scroll view and action callbacks.
+- Extended the UI migration audit to verify the responsive panel sizing implementation.
+- Updated the PrototypeHud class summary to identify its IMGUI path as a legacy fallback, not the normal runtime HUD.
+- Source review only. Unity compile, audit execution, portrait/landscape visual review, tablet/phone layout and physical-device testing remain pending.
