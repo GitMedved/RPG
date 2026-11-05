@@ -359,12 +359,8 @@ namespace MiaMax.Gameplay
 
         private static Material SurfaceOrColor(string surfaceName, Color fallback)
         {
-#if UNITY_EDITOR
-            Material generated = UnityEditor.AssetDatabase.LoadAssetAtPath<Material>(
-                "Assets/_Project/Art/Materials/Generated/" + surfaceName + ".mat");
-            if (generated != null) return generated;
-#endif
-            return Mat(fallback);
+            Material generated = Resources.Load<Material>("MiaMax/Materials/" + surfaceName);
+            return generated != null ? generated : Mat(fallback);
         }
 
         private static Material Mat(Color color)
