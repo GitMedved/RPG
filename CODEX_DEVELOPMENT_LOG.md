@@ -685,3 +685,12 @@
 - Missing WAV files remain silent and never block gameplay; no empty or synthetic placeholder audio was committed.
 - No save schema, reward, economy, tutorial or interaction timing changes.
 - Source review only. Unity compilation, audio import/playback, Play Mode and Android/iOS device checks remain pending.
+
+
+## 2026-11-05 — M51 voice asset readiness audit
+
+- Added an Editor audit for all 16 stable M49 voice take IDs, checking the exact `Assets/Resources/MiaMax/Audio/Voice/` resource paths.
+- The report separates available and pending clips and explicitly notes that presence checks do not approve voice quality, licensing or import settings.
+- Corrected the general Production Asset Audit to inspect the actual runtime Resources voice folder rather than the legacy placeholder path.
+- The audit is read-only and does not create empty clips or alter import settings.
+- Source review only. Unity compilation and Editor menu execution remain pending; no WAV files are currently confirmed in the repository.
