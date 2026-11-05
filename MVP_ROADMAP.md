@@ -296,3 +296,8 @@ Added a read-only Editor command that checks the 16 named M49 audition clips in 
 ## 41. M53 — Release readiness audit and pre-release plan — 2026-11-05
 
 Added a read-only Editor release audit covering Build Settings scenes, Android/iOS identifiers, product identity/version, URP asset presence, production character models/prefabs/animation, generated texture sets, UI sprites and audio assets. The audit intentionally reports manual blockers for executed smoke tests, physical-device validation and privacy/child-safety/store review; it does not claim to build or certify the game. Added `PRE_RELEASE_PLAN.md` with phased acceptance gates from local verification through production art, gameplay, UI, audio, technical hardening, Android/iOS QA and store submission. Source review only; Unity compilation and audit execution remain pending.
+
+
+## 42. M54 — Mobile joystick safe-area hardening — 2026-11-05
+
+Made the prototype touch joystick safe-area-aware and responsive to screen width. Touch sensitivity now matches its rendered radius, and movement resets on app pause/focus loss or component disable to prevent stuck input. The control remains an IMGUI prototype; final Canvas art and device validation are still required. See `M54_MOBILE_JOYSTICK_HARDENING.md`.
