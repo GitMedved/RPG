@@ -317,3 +317,8 @@ Locked the voice bible: American English, natural cartoon acting, Mia bright/swe
 ## M50 — Contextual character voice triggers
 
 Connected the M49 voice IDs to confirmed gameplay outcomes: Mia reacts to planting, harvesting and workshop actions; Max gives a curious meow when a keepsake is discovered. Triggers are centralized, rate-limited and silent when the corresponding WAV is not imported. No placeholder audio is generated. See [M50 Contextual Voice Triggers](M50_CONTEXTUAL_VOICE_TRIGGERS.md).
+
+
+## M51 — Voice asset readiness audit
+
+Added **Tools → Mia & Max → Voice Asset Audit** to check all 16 named M49 audition takes at their exact Unity Resources paths and report missing/available clips without changing project assets. Corrected the general production audit to look in the actual runtime voice folder. See [M51 Voice Asset Audit](M51_VOICE_ASSET_AUDIT.md).
