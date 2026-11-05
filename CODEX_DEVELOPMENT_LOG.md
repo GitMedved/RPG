@@ -713,3 +713,12 @@
 - Added `PRE_RELEASE_PLAN.md` with P0–P7 gates, exit criteria, first-release must-haves and post-launch deferrals.
 - No player settings, signing credentials, platform identifiers or build configurations were changed.
 - Static source review only. Unity compilation, menu execution, Android/iOS builds and device QA remain pending.
+
+
+## 2026-11-05 — M54 mobile joystick safe-area hardening
+
+- Anchored the touch region and visual joystick to `Screen.safeArea` and scaled its radius within conservative mobile bounds.
+- Normalized movement against the actual responsive radius.
+- Reset movement on component disable, app focus loss and pause to avoid stuck input after interruptions.
+- Preserved the one-finger ownership rule and existing gameplay input contract.
+- The control remains prototype IMGUI art; final Canvas styling and physical-device validation are pending.
