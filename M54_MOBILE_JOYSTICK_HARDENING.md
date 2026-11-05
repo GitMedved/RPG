@@ -15,3 +15,6 @@
 5. Verify the HUD buttons remain reachable and do not overlap the joystick.
 
 This is still a lightweight prototype visual using IMGUI and raw touch input, not the final skinned Canvas control. Unity compilation, touch hardware validation and device profiling remain pending.
+
+
+**Follow-up (M55):** The joystick visual has since been migrated from IMGUI to a dedicated Canvas. Touch handling and safe-area behavior remain the same; see `M55_CANVAS_JOYSTICK_AND_UI_AUDIT.md`.
