@@ -291,3 +291,8 @@ Connected successful farming, workshop and keepsake outcomes to stable Mia/Max v
 ## 39. M51 — Voice asset readiness audit — 2026-11-05
 
 Added a read-only Editor command that checks the 16 named M49 audition clips in their exact Resources folder and reports available/missing assets. Corrected the general asset audit folder. The tool does not create placeholders or certify licensing/quality. See `M51_VOICE_ASSET_AUDIT.md`.
+
+
+## 41. M53 — Release readiness audit and pre-release plan — 2026-11-05
+
+Added a read-only Editor release audit covering Build Settings scenes, Android/iOS identifiers, product identity/version, URP asset presence, production character models/prefabs/animation, generated texture sets, UI sprites and audio assets. The audit intentionally reports manual blockers for executed smoke tests, physical-device validation and privacy/child-safety/store review; it does not claim to build or certify the game. Added `PRE_RELEASE_PLAN.md` with phased acceptance gates from local verification through production art, gameplay, UI, audio, technical hardening, Android/iOS QA and store submission. Source review only; Unity compilation and audit execution remain pending.
