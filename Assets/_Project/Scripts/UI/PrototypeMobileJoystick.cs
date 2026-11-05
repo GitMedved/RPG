@@ -27,6 +27,7 @@ namespace MiaMax.Gameplay
         private int lastScreenWidth;
         private int lastScreenHeight;
         private Rect lastSafeArea;
+        private float lastCanvasScale = -1f;
 
         private float EffectiveRadius =>
             Mathf.Clamp(radius * Mathf.Clamp(Screen.width / 900f, 0.72f, 1.12f), 60f, 104f);
@@ -64,12 +65,14 @@ namespace MiaMax.Gameplay
 
         private void OnEnable()
         {
+            if (visualCanvas != null) visualCanvas.enabled = true;
             UpdateCanvasLayout(true);
         }
 
         private void OnDisable()
         {
             ResetInput();
+            if (visualCanvas != null) visualCanvas.enabled = false;
         }
 
         private void OnApplicationFocus(bool hasFocus)
@@ -85,6 +88,7 @@ namespace MiaMax.Gameplay
         private void OnDestroy()
         {
             if (Instance == this) Instance = null;
+            if (visualCanvas != null) Destroy(visualCanvas.gameObject);
             if (circleSprite != null) Destroy(circleSprite);
             if (circleTexture != null) Destroy(circleTexture);
         }
@@ -143,7 +147,6 @@ namespace MiaMax.Gameplay
         {
             GameObject canvasObject = new GameObject("MiaMax Joystick Canvas",
                 typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
-            canvasObject.transform.SetParent(transform, false);
 
             visualCanvas = canvasObject.GetComponent<Canvas>();
             visualCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -182,13 +185,16 @@ namespace MiaMax.Gameplay
             if (visualRoot == null || visualCanvas == null) return;
 
             Rect safe = Screen.safeArea;
+            float currentScale = visualCanvas.scaleFactor;
             if (!force && lastScreenWidth == Screen.width &&
-                lastScreenHeight == Screen.height && lastSafeArea == safe)
+                lastScreenHeight == Screen.height && lastSafeArea == safe &&
+                Mathf.Approximately(lastCanvasScale, currentScale))
                 return;
 
             lastScreenWidth = Screen.width;
             lastScreenHeight = Screen.height;
             lastSafeArea = safe;
+            lastCanvasScale = currentScale;
 
             Rect touchRect = JoystickRect;
             float scale = Mathf.Max(0.01f, visualCanvas.scaleFactor);
