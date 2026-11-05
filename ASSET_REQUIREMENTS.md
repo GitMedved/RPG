@@ -53,3 +53,9 @@ PascalCase asset names; descriptive prefixes only where they improve search. Kee
 - No missing dependencies.
 - Licence/provenance recorded.
 - Placeholder status clearly identified.
+
+
+## 11. Generated shared texture library
+M52 adds an editor utility at `Tools/Mia & Max/Generate Complete Texture Library`. It generates a shared, repeatable surface set for backyard, Flower Garden, Woodland Trail, stations, props and future environment kits. Each surface has Base Color, Normal and Height PNG maps plus a matching material. See `M52_COMPLETE_TEXTURE_LIBRARY.md` and `M52_TEXTURE_MANIFEST.csv`.
+
+Do not treat the generated ginger/cream fur materials as final character atlases. Production Mia/Max skin, face, eye, clothing and fur maps must be authored against the approved character meshes and their final UV layouts. The generated surface library is a reusable starter kit; material assignment to final imported meshes and visual/device validation are separate acceptance steps.
