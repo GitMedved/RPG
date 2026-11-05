@@ -18,7 +18,7 @@ namespace MiaMax.EditorTools
         private const string AlbedoFolder = Root + "/Albedo";
         private const string NormalFolder = Root + "/Normal";
         private const string HeightFolder = Root + "/Height";
-        private const string MaterialFolder = "Assets/_Project/Art/Materials/Generated";
+        private const string MaterialFolder = "Assets/Resources/MiaMax/Materials";
         private const int DefaultSize = 512;
 
         private sealed class Surface
@@ -74,7 +74,8 @@ namespace MiaMax.EditorTools
             EnsureFolder(AlbedoFolder);
             EnsureFolder(NormalFolder);
             EnsureFolder(HeightFolder);
-            EnsureFolder("Assets/_Project/Art/Materials");
+            EnsureFolder("Assets/Resources");
+            EnsureFolder("Assets/Resources/MiaMax");
             EnsureFolder(MaterialFolder);
 
             int created = 0;
