@@ -322,3 +322,8 @@ Connected the M49 voice IDs to confirmed gameplay outcomes: Mia reacts to planti
 ## M51 — Voice asset readiness audit
 
 Added **Tools → Mia & Max → Voice Asset Audit** to check all 16 named M49 audition takes at their exact Unity Resources paths and report missing/available clips without changing project assets. Corrected the general production audit to look in the actual runtime voice folder. See [M51 Voice Asset Audit](M51_VOICE_ASSET_AUDIT.md).
+
+
+## M53 — Release readiness and pre-release plan
+
+Added a read-only release gate report at **Tools → Mia & Max → Release Readiness Audit** and a phased P0–P7 acceptance plan covering art, gameplay, UI, audio, data integrity, Android/iOS device QA and family-safety/store review. See [Pre-release plan](PRE_RELEASE_PLAN.md). Static audit output is not proof of successful builds or device testing.
