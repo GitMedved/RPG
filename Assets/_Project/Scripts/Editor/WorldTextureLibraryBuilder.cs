@@ -139,8 +139,8 @@ namespace MiaMax.EditorTools
             for (int x = 0; x < size; x++)
             {
                 float u = (float)x / size, v = (float)y / size;
-                float n = TileNoise(u, v, s.Scale, 137 + s.Name.GetHashCode());
-                float fine = TileNoise(u, v, s.Scale * 2.7f, 911 + s.Name.GetHashCode());
+                float n = TileNoise(u, v, s.Scale, 137 + StableHash(s.Name));
+                float fine = TileNoise(u, v, s.Scale * 3f, 911 + StableHash(s.Name));
                 float pattern = Pattern(s.Name, u, v);
                 float h = Mathf.Clamp01(.48f + (n - .5f) * .62f + (fine - .5f) * .18f + pattern);
                 pixels[y * size + x] = new Color(h, h, h, 1f);
@@ -229,6 +229,16 @@ namespace MiaMax.EditorTools
                 h = (h ^ (h >> 13)) * 1274126177;
                 h ^= h >> 16;
                 return (h & 0x7fffffff) / 2147483647f;
+            }
+        }
+
+        private static int StableHash(string value)
+        {
+            unchecked
+            {
+                int hash = 23;
+                for (int i = 0; i < value.Length; i++) hash = hash * 31 + value[i];
+                return hash;
             }
         }
 
