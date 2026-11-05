@@ -257,3 +257,8 @@ Added recognizable procedural dressing for the workshop, order board, Adventure 
 ## 33. M43 — Character proxy animation polish — 2026-11-05
 
 Added lightweight idle breathing, head motion, periodic blinking, speed-responsive gait and Max tail sway to procedural character proxies only. Production prefab loading, Animator contracts and gameplay movement remain unchanged. Unity compilation, Play Mode animation review and mobile performance checks remain pending. See `M43_CHARACTER_PROXY_ANIMATION_POLISH.md`.
+
+
+## 34. M44 — Flower Garden & Woodland Trail visual pass — 2026-11-05
+
+Added themed procedural environment dressing to both gated annexes while preserving story unlocks, portals, resource interactions and progression. All new decorative primitive colliders are removed. Unity compilation, Play Mode traversal/interaction and device performance checks remain pending. See `M44_ADVENTURE_ANNEX_VISUAL_PASS.md`.
