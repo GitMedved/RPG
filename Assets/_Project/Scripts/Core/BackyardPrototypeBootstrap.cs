@@ -222,6 +222,8 @@ namespace MiaMax.Gameplay
             CreateTrailResource(content.transform, "trail_berries", "wild_berries", "Wild berries",
                 new Vector3(-30.0f, 0.35f, 0.0f), berry);
 
+            AdventureAnnexVisualPass.BuildWoodlandTrail(content.transform);
+
             GameObject exit = Cube("Woodland_Trail_Return_Gate", new Vector3(-21.4f, 0.9f, -3.5f),
                 new Vector3(0.2f, 1.8f, 1.6f), gateWood, content.transform);
             BackyardInteractable exitInteractable = exit.AddComponent<BackyardInteractable>();
@@ -290,6 +292,8 @@ namespace MiaMax.Gameplay
                 new Vector3(12.8f, 0.45f, 10.8f), petalYellow, leaf);
             CreateGardenResource(content.transform, player, "garden_flower_purple", "flower_purple", "Purple flower",
                 new Vector3(12.8f, 0.45f, 8.0f), petalPurple, leaf);
+
+            AdventureAnnexVisualPass.BuildFlowerGarden(content.transform);
 
             GameObject exit = Cube("Flower_Garden_Return_Gate", new Vector3(9.2f, 0.9f, 8.0f),
                 new Vector3(0.2f, 1.8f, 1.2f), wood, content.transform);
