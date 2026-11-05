@@ -49,6 +49,7 @@ namespace MiaMax.Gameplay
                 Part(parent, PrimitiveType.Sphere, "Garden_Fence_Base_Shrub",
                     new Vector3(x, 0.38f, 11.95f), new Vector3(0.50f, 0.38f, 0.42f), i % 2 == 0 ? leaf : leafLight);
             }
+            parent.gameObject.AddComponent<AdventureAnnexAtmospherePrototype>().Configure(false);
         }
 
         public static void BuildWoodlandTrail(Transform parent)
@@ -121,6 +122,7 @@ namespace MiaMax.Gameplay
             }
             Mushroom(parent, new Vector3(-32.1f, 0.12f, -5.4f), mushroomStem, mushroomCap);
             Mushroom(parent, new Vector3(-24.0f, 0.12f, 0.2f), mushroomStem, mushroomCap);
+            parent.gameObject.AddComponent<AdventureAnnexAtmospherePrototype>().Configure(true);
         }
 
         private static void Bed(Transform parent, string name, Vector3 p, Vector3 size, Material soil, Material edge)
