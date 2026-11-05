@@ -11,11 +11,14 @@ Adds an editor-only texture authoring tool for the current backyard, Flower Gard
 5. Run **Tools → Mia & Max → Audit Generated Texture Library** and inspect the Console report.
 
 The generator creates:
-- 24 stylized surfaces;
-- 24 Base Color maps (512×512);
-- 24 tangent-space Normal maps;
-- 24 grayscale Height maps;
-- 24 matching URP Lit materials (Standard fallback if URP Lit is unavailable).
+- 40 stylized surfaces;
+- 40 Base Color maps (512×512);
+- 40 tangent-space Normal maps;
+- 40 grayscale Height maps;
+- 40 matching URP Lit materials (Standard fallback if URP Lit is unavailable).
+
+## Runtime integration
+Generated materials are stored in `Assets/Resources/MiaMax/Materials/` so they are included in player builds. The backyard bootstrap loads the generated lawn, plaster, roof, fence, wood, foliage, soil, path and bark materials when present, and retains its original colour-only fallback when the library has not yet been generated.
 
 ## Coverage
 Grass/lawn, garden soil, warm wood, tree bark, cream plaster, roof shingles, patio stone, play sand, leaves, canvas fabric, ceramic glaze, painted metal, paving brick, pond water, flower petals, vegetable greens/reds/oranges/purples, gravel path, white fence paint, brown leather, ginger fur and cream fur.
