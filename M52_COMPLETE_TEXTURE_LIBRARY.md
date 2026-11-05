@@ -21,7 +21,7 @@ The generator creates:
 Generated materials are stored in `Assets/Resources/MiaMax/Materials/` so they are included in player builds. The backyard bootstrap loads the generated lawn, plaster, roof, fence, wood, foliage, soil, path and bark materials when present, and retains its original colour-only fallback when the library has not yet been generated.
 
 ## Coverage
-Grass/lawn, garden soil, warm wood, tree bark, cream plaster, roof shingles, patio stone, play sand, leaves, canvas fabric, ceramic glaze, painted metal, paving brick, pond water, flower petals, vegetable greens/reds/oranges/purples, gravel path, white fence paint, brown leather, ginger fur and cream fur.
+Grass/lawn, garden soil, warm wood, tree bark, cream plaster, roof shingles, patio stone, play sand, leaves, canvas fabric, ceramic glaze, painted metal, paving brick, pond water, flower petals, vegetable greens/reds/oranges/purples, gravel path, white fence paint, brown leather, ginger and cream fur starters, warm skin, blonde hair, blue denim, white cotton, green eyes, toy plastic, illustrated paper, interior wallpaper, wood and tile flooring, wicker, soft rubber, mossy stone, mushroom caps, berry skin and pond reeds.
 
 Maps are generated deterministically, use periodic noise and repeat wrapping, and are compressed with mipmaps. Normal maps are imported as Unity normal maps. Materials use conservative smoothness/metallic values.
 
