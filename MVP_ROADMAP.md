@@ -266,3 +266,7 @@ Added themed procedural environment dressing to both gated annexes while preserv
 ## 35. M45 — Annex atmosphere and ambient motion — 2026-11-05
 
 Added low-amplitude foliage sway and capped ambient pollen/firefly-like particles to the two story-gated annexes. Each annex uses one controller; effects activate only with the unlocked content root, use no extra lights/colliders and do not change gameplay or save data. Unity compilation, Play Mode and device performance checks remain pending. See `M45_ANNEX_ATMOSPHERE.md`.
+
+## 36. M46 — Main backyard ambient life — 2026-11-05
+
+Added cached, low-amplitude wind motion for decorative foliage in the main yard. The motion respects Reduced Motion. Optional wind and bird loops load from Resources and respect the effects-volume setting; actual sound files remain pending. No gameplay colliders, save data or interaction behavior changed. See `M46_BACKYARD_AMBIENCE.md`.
