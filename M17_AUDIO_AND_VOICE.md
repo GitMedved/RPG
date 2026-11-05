@@ -41,3 +41,7 @@ No recording of a child's voice or personal data is required for this milestone.
 
 ## Acceptance
 All clips have documented provenance/licence, no clipping or abrupt tails, correct cue mapping, separate volume controls, pause/background behaviour verified, and audio tested on speakers and headphones. Until clips are imported, the project intentionally remains silent.
+
+
+## M49 voice identity and playback update
+The current approved direction is American English with natural cartoon acting. Mia is bright, sweet and playful. Max is a funny cat with short scripted phrases where appropriate plus expressive meows, chirps and purrs. The first 16-cue audition script and exact recording/import pipeline are documented in `M49_MIA_MAX_VOICE_TEST_AND_UNITY_PIPELINE.md`. Approved individual takes belong in `Assets/Resources/MiaMax/Audio/Voice/` and can be played by stable ID through `GameAudioService.PlayVoiceLine(string)`. The older starter lines above are superseded by the M49 audition set. No final audio recordings are bundled yet; preserve rights/provenance and do not clone or upload private voices without permission.
