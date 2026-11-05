@@ -638,3 +638,13 @@
 - Effects are attached to the existing gated content roots and pause/clear when those roots are disabled.
 - Existing portals, resource pickups, rewards, progression and save data are unchanged.
 - Static source review only; Unity compile, Play Mode and mobile performance remain unverified.
+
+## 2026-11-05 — M46 main backyard ambient life
+
+- Added `BackyardAmbientPrototype`, attached after main-yard visual dressing is built.
+- Cached and animated only decorative tree canopy, shrubs, flower details and patio planter foliage; gameplay objects and interactables are untouched.
+- Gentle wind motion uses cached transforms and a small number of sine calculations; no per-frame scene searches or new particle systems.
+- Honors the persisted Reduced Motion preference; when enabled, decorative transforms return to their authored base rotations.
+- Added optional looping wind and birds AudioSources. Clips load from `Resources/MiaMax/Audio/Ambience/backyard_wind` and `backyard_birds`; no recordings are bundled. Effects volume preference controls their level.
+- No changes to save schema, rewards, collisions, player movement or interactions.
+- Source-level checks only; Unity compile, Play Mode, audio import/playback and mobile profiling remain pending.
