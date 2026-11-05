@@ -675,3 +675,13 @@
 - Extended `GameAudioService` with resource-based voice playback from `Resources/MiaMax/Audio/Voice/`; playback replaces the previous line and uses the dedicated voice AudioSource / Voice volume mix.
 - Added recording, export, licence/provenance, import and Unity/device acceptance guidance.
 - No WAV files or canonical TTS provider/voice IDs are included. Dialogue triggers are not yet wired to gameplay. Unity compile, audio playback and device tests remain pending.
+
+
+## 2026-11-05 — M50 contextual Mia & Max voice triggers
+
+- Added a centralized `GameVoiceDirector` that routes successful gameplay outcomes to the stable M49 voice IDs.
+- Mia now has optional cues for planting, harvesting, starting a workshop recipe and collecting a finished product; Max has a curious meow cue for keepsake discovery.
+- Added a 2.5-second per-cue cooldown. Failed gameplay operations do not trigger voice.
+- Missing WAV files remain silent and never block gameplay; no empty or synthetic placeholder audio was committed.
+- No save schema, reward, economy, tutorial or interaction timing changes.
+- Source review only. Unity compilation, audio import/playback, Play Mode and Android/iOS device checks remain pending.
