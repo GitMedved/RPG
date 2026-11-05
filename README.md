@@ -292,3 +292,7 @@ Added subtle procedural idle breathing, head motion, blinking, speed-responsive 
 ## M44 — Flower Garden & Woodland Trail visual pass
 
 Added themed procedural dressing to both story-gated annexes: raised flower beds, flower clusters, a bird bath and stepping stones in the Flower Garden; layered canopies, mossy rocks, ferns, a fallen log, berries and mushrooms in the Woodland Trail. Existing portals, unlocks, resources and interactions are preserved; decorative colliders are removed. See [M44 Annex Visual Pass](M44_ADVENTURE_ANNEX_VISUAL_PASS.md).
+
+## M45 — Annex atmosphere and ambient motion
+
+Added one lightweight atmosphere controller to each story-gated annex. Flower stems, leaves and blooms sway subtly in the Flower Garden; canopy clusters and fern fronds move gently in the Woodland Trail. Each annex also gets a low-rate, capped local particle effect (pollen or firefly-like motes). Effects run only while the corresponding gated content is active, use no extra lights or colliders, and preserve existing interactions and progression. See [M45 Annex Atmosphere](M45_ANNEX_ATMOSPHERE.md).
