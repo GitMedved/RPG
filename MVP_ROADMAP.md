@@ -262,3 +262,7 @@ Added lightweight idle breathing, head motion, periodic blinking, speed-responsi
 ## 34. M44 — Flower Garden & Woodland Trail visual pass — 2026-11-05
 
 Added themed procedural environment dressing to both gated annexes while preserving story unlocks, portals, resource interactions and progression. All new decorative primitive colliders are removed. Unity compilation, Play Mode traversal/interaction and device performance checks remain pending. See `M44_ADVENTURE_ANNEX_VISUAL_PASS.md`.
+
+## 35. M45 — Annex atmosphere and ambient motion — 2026-11-05
+
+Added low-amplitude foliage sway and capped ambient pollen/firefly-like particles to the two story-gated annexes. Each annex uses one controller; effects activate only with the unlocked content root, use no extra lights/colliders and do not change gameplay or save data. Unity compilation, Play Mode and device performance checks remain pending. See `M45_ANNEX_ATMOSPHERE.md`.
