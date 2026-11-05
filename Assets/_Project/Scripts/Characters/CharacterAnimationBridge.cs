@@ -74,8 +74,9 @@ namespace MiaMax.Gameplay
             }
 
             if (hasSpeed) animator.SetFloat(SpeedId, smoothedSpeed, damping, Time.deltaTime);
-            if (hasGrounded && characterController != null)
-                animator.SetBool(GroundedId, characterController.isGrounded);
+            if (hasGrounded)
+                // Max is moved by companion-follow rather than a CharacterController.
+                animator.SetBool(GroundedId, characterController == null || characterController.isGrounded);
         }
 
         public void PlayInteract()
