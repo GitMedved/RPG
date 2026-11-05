@@ -41,6 +41,86 @@ namespace MiaMax.EditorTools
                 "OK");
         }
 
+        [MenuItem("Tools/Mia & Max/Validate Character Runtime Prefabs")]
+        public static void ValidateRuntimePrefabs()
+        {
+            int ready = 0;
+            int pending = 0;
+            var report = new System.Text.StringBuilder();
+            report.AppendLine("MIA & MAX — CHARACTER RUNTIME PREFAB VALIDATION");
+            ValidateRuntimePrefab("Mia", ref ready, ref pending, report);
+            ValidateRuntimePrefab("Max", ref ready, ref pending, report);
+            report.AppendLine();
+            report.AppendLine("Ready: " + ready + " / 2");
+            report.AppendLine("Pending: " + pending + " / 2");
+            report.AppendLine("A valid prefab and Avatar do not mean that production animation clips or state transitions exist.");
+            Debug.Log(report.ToString());
+            EditorUtility.DisplayDialog("Character Runtime Validation",
+                "Ready: " + ready + " / 2\nPending: " + pending + " / 2\n\nFull details are in the Console.",
+                "OK");
+        }
+
+        private static void ValidateRuntimePrefab(string characterName, ref int ready, ref int pending,
+            System.Text.StringBuilder report)
+        {
+            string path = "Assets/Resources/MiaMax/Characters/" + characterName + ".prefab";
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            if (prefab == null)
+            {
+                pending++;
+                report.AppendLine("[PENDING] " + characterName + " runtime prefab missing: " + path);
+                return;
+            }
+
+            Animator animator = prefab.GetComponentInChildren<Animator>(true);
+            if (animator == null)
+            {
+                pending++;
+                report.AppendLine("[PENDING] " + characterName + " Animator component missing.");
+                return;
+            }
+
+            bool avatarValid = animator.avatar != null && animator.avatar.isValid;
+            bool controllerAssigned = animator.runtimeAnimatorController != null;
+            bool rootMotionOff = !animator.applyRootMotion;
+            bool contract = HasParameter(animator, "Speed", AnimatorControllerParameterType.Float) &&
+                HasParameter(animator, "Grounded", AnimatorControllerParameterType.Bool) &&
+                HasParameter(animator, "Interact", AnimatorControllerParameterType.Trigger) &&
+                HasParameter(animator, "Celebrate", AnimatorControllerParameterType.Trigger);
+
+            if (avatarValid && controllerAssigned && rootMotionOff && contract)
+            {
+                ready++;
+                report.AppendLine("[READY] " + characterName + " prefab, Avatar, Animator contract and root-motion setting.");
+            }
+            else
+            {
+                pending++;
+                report.AppendLine("[PENDING] " + characterName +
+                    " — Avatar valid: " + avatarValid +
+                    "; Controller assigned: " + controllerAssigned +
+                    "; Root Motion disabled: " + rootMotionOff +
+                    "; Parameters complete: " + contract);
+            }
+
+            if (animator.runtimeAnimatorController != null)
+                report.AppendLine("         Controller: " + animator.runtimeAnimatorController.name);
+            if (animator.avatar != null)
+                report.AppendLine("         Avatar: " + animator.avatar.name +
+                    " (Humanoid: " + animator.avatar.isHuman + ")");
+        }
+
+        private static bool HasParameter(Animator animator, string parameterName,
+            AnimatorControllerParameterType expectedType)
+        {
+            if (animator == null || animator.runtimeAnimatorController == null) return false;
+            int id = Animator.StringToHash(parameterName);
+            AnimatorControllerParameter[] parameters = animator.parameters;
+            for (int i = 0; i < parameters.Length; i++)
+                if (parameters[i].nameHash == id && parameters[i].type == expectedType) return true;
+            return false;
+        }
+
         [MenuItem("Tools/Mia & Max/Apply Character FBX Import Profiles")]
         public static void ApplyImportProfiles()
         {
@@ -150,6 +230,8 @@ namespace MiaMax.EditorTools
 
             Animator animator = modelInstance.GetComponentInChildren<Animator>();
             if (animator == null) animator = modelInstance.AddComponent<Animator>();
+            // CharacterController / companion-follow own world movement; clips animate in place.
+            animator.applyRootMotion = false;
 
             AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(controllerPath);
             if (controller != null) animator.runtimeAnimatorController = controller;
