@@ -18,6 +18,7 @@ namespace MiaMax.Gameplay
         private Text tutorialText;
         private Text feedbackText;
         private GameObject detailPanel;
+        private RectTransform detailPanelRect;
         private Text detailTitle;
         private Text detailBody;
         private RectTransform detailContent;
@@ -164,6 +165,7 @@ namespace MiaMax.Gameplay
                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero,
                 new Vector2(620f, 1040f), new Vector2(0.5f, 0.5f));
             detailPanel = panel.gameObject;
+            detailPanelRect = (RectTransform)panel.transform;
             detailTitle = MakeText("Detail Panel Title", panel.transform, "BACKPACK", 34,
                 TextAnchor.MiddleLeft, Cream, new Vector2(28f, -92f), new Vector2(-100f, -18f));
             detailTitle.rectTransform.anchorMin = new Vector2(0f, 1f);
@@ -318,10 +320,24 @@ namespace MiaMax.Gameplay
             safeRoot.offsetMax = Vector2.zero;
         }
 
+        private void ApplyResponsiveLayout()
+        {
+            if (safeRoot == null || detailPanelRect == null) return;
+
+            // Keep the detail sheet within the safe-area viewport in both portrait
+            // and landscape. CanvasScaler supplies the device-specific scale factor.
+            float availableWidth = Mathf.Max(280f, safeRoot.rect.width - 32f);
+            float availableHeight = Mathf.Max(420f, safeRoot.rect.height - 32f);
+            detailPanelRect.sizeDelta = new Vector2(
+                Mathf.Min(620f, availableWidth),
+                Mathf.Min(1040f, availableHeight));
+        }
+
         private void Refresh()
         {
             if (hud == null) return;
             ApplySafeArea();
+            ApplyResponsiveLayout();
             statusText.text = hud.StatusText;
             bool showDetails = hud.InventoryOpen || hud.MapOpen || hud.SettingsOpen || hud.JournalOpen;
             detailPanel.SetActive(showDetails);
