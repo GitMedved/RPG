@@ -304,3 +304,8 @@ Added subtle wind-driven motion to the central tree canopy, lawn-edge shrubs, de
 ## M47 — Production character runtime hardening
 
 Hardened the runtime Animator bridge for imported Mia/Max prefabs: animation parameters are checked before use, root motion is disabled so gameplay movement remains authoritative, and late-assigned controllers can be rebound. Added `Tools → Mia & Max → Validate Character Runtime Prefabs` to check prefab, Avatar, Animator Controller and the four agreed parameters. This validates integration scaffolding only; it does not create production models, animation clips or state transitions. See [M47 Character Runtime Validation](M47_CHARACTER_RUNTIME_VALIDATION.md).
+
+
+## M48 — Character Animator state machines
+
+Added **Tools → Mia & Max → Build Character Animator State Machines**. The Editor builder maps explicitly named imported clips to Idle, Walk, Run, Interact and Celebrate states, with speed-threshold locomotion transitions and one-shot action transitions. Missing clips are reported rather than fabricated; an empty Idle state is only a placeholder. The builder rebuilds the generated Base Layer, so custom states in that layer must be backed up or moved before rerunning. No production clips are included. See [M48 Character Animator State Machines](M48_CHARACTER_ANIMATOR_STATE_MACHINES.md).
