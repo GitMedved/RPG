@@ -598,3 +598,13 @@
 - Explicitly kept fog disabled so the Flower Garden and Woodland Trail annexes remain visible.
 - Did not create extra real-time lights or change gameplay, camera follow, colliders or save data.
 - Added M41 acceptance documentation. Source inspection only; Unity compile, visual evaluation and device performance checks remain pending.
+
+
+## 2026-11-05 — M42 Backyard station visual pass
+
+- Added `BackyardStationVisuals` with five station-specific procedural visual treatments.
+- Workshop now reads as a workbench with pot and recipe details; order and journal boards have framed notices; arcade has a cabinet/screen/controls; collection station has a display book and pedestal.
+- Integrated dressing after existing interaction components are configured.
+- Preserved original station root transforms, colliders, event subscriptions and gameplay services; hid only root renderers and removed colliders from decorative children.
+- No economy, save schema or progression changes.
+- Static source review only; Unity compilation, Play Mode interactions, collision checks and device performance remain unverified.
