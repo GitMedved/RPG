@@ -327,3 +327,8 @@ Added **Tools → Mia & Max → Voice Asset Audit** to check all 16 named M49 au
 ## M53 — Release readiness and pre-release plan
 
 Added a read-only release gate report at **Tools → Mia & Max → Release Readiness Audit** and a phased P0–P7 acceptance plan covering art, gameplay, UI, audio, data integrity, Android/iOS device QA and family-safety/store review. See [Pre-release plan](PRE_RELEASE_PLAN.md). Static audit output is not proof of successful builds or device testing.
+
+
+## M54 — Mobile joystick safe-area hardening
+
+The prototype touch joystick now adapts to device safe areas and screen width and clears movement after pause/focus loss. Physical-device validation and final Canvas styling remain open. See [M54 Mobile Joystick Hardening](M54_MOBILE_JOYSTICK_HARDENING.md).
