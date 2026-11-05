@@ -247,3 +247,8 @@ Added a coherent procedural dressing layer to the existing backyard: house door/
 ## 31. M41 — Backyard lighting & atmosphere — 2026-11-04
 
 Added a warm daylight setup for the runtime prototype using the existing camera and directional sun: soft solid-color sky, three-tone ambient lighting, warm sunlight and softer shadows. No additional lights or gameplay changes. Final skybox, post-processing, baked lighting and mobile performance validation remain pending. See `M41_BACKYARD_LIGHTING_ATMOSPHERE.md`.
+
+
+## 32. M42 — Backyard station visual pass — 2026-11-05
+
+Added recognizable procedural dressing for the workshop, order board, Adventure Journal board, arcade cabinet and collection book. Original interactive roots/colliders and gameplay components are retained; added decorative colliders are removed. Unity compile, Play Mode interaction/collision, aspect-ratio and device performance checks remain pending. See `M42_BACKYARD_STATION_VISUAL_PASS.md`.
