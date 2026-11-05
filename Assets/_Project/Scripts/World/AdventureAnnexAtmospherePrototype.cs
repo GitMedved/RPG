@@ -117,7 +117,7 @@ namespace MiaMax.Gameplay
             renderer.receiveShadows = false;
 
             ambience = particles;
-            ambience.Play();
+            if (isActiveAndEnabled) ambience.Play();
         }
 
         private void OnDisable()
