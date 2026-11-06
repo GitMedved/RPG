@@ -5,6 +5,22 @@ using MiaMax.Infrastructure.Save;
 
 namespace MiaMax.Domain.Progression
 {
+    public enum QuestAvailability
+    {
+        InProgress,
+        ReadyToClaim,
+        Claimed
+    }
+
+    public sealed class QuestSnapshot
+    {
+        public string Id { get; internal set; }
+        public string Title { get; internal set; }
+        public QuestAvailability Availability { get; internal set; }
+        public int RewardCoins { get; internal set; }
+        public int RewardExperience { get; internal set; }
+    }
+
     /// <summary>
     /// Small, deterministic starter quest chain based on existing level and order systems.
     /// Rewards can only be claimed once and all state is stored in the local player save.
@@ -43,6 +59,26 @@ namespace MiaMax.Domain.Progression
 
         public int CompletedCount => Quests.Count(x => x.IsComplete(session.Data));
         public int ClaimedCount => session.Data.ClaimedQuests.Count(x => x != null);
+
+        public IReadOnlyList<QuestSnapshot> GetQuestSnapshots()
+        {
+            var snapshots = new List<QuestSnapshot>(Quests.Length);
+            foreach (Definition quest in Quests)
+            {
+                bool claimed = IsClaimed(quest.Id);
+                bool complete = quest.IsComplete(session.Data);
+                snapshots.Add(new QuestSnapshot
+                {
+                    Id = quest.Id,
+                    Title = quest.Title,
+                    Availability = claimed ? QuestAvailability.Claimed :
+                        complete ? QuestAvailability.ReadyToClaim : QuestAvailability.InProgress,
+                    RewardCoins = quest.Coins,
+                    RewardExperience = quest.Experience
+                });
+            }
+            return snapshots;
+        }
 
         public string GetSummary()
         {
