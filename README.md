@@ -342,3 +342,8 @@ Replaced the prototype mobile joystick's IMGUI visual with a dedicated Screen Sp
 ## M56 — Responsive Canvas detail panels
 
 The shared Canvas detail sheet now clamps its dimensions to the active safe-area viewport, preventing the Backpack, World Map, Settings and Adventure Journal panel from extending off-screen on landscape and shorter displays. The UI Migration Audit also checks this responsive sizing path. Unity compilation, portrait/landscape visual review and phone/tablet device checks remain pending. See [M56 Responsive Canvas Detail Panels](M56_RESPONSIVE_CANVAS_DETAIL_PANELS.md).
+
+
+## M57 — Compact responsive detail panels
+
+Improved the shared detail sheet for short landscape displays: the bottom settings/journal action zone now adapts its height and row spacing, while the scroll viewport receives the remaining panel area. Settings controls and all 11 journal actions keep their existing callbacks and compact into shorter rows when needed. The UI Migration Audit checks for this responsive path. Unity compilation, visual review and device testing remain pending. See [M57 Compact Responsive Detail Panels](M57_COMPACT_RESPONSIVE_DETAIL_PANELS.md).
