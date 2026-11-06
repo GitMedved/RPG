@@ -384,6 +384,19 @@ namespace MiaMax.Gameplay
             }
         }
 
+        private static RectTransform MakeRect(string name, Transform parent)
+        {
+            GameObject go = new GameObject(name, typeof(RectTransform));
+            go.transform.SetParent(parent, false);
+            RectTransform rect = (RectTransform)go.transform;
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+            rect.localScale = Vector3.one;
+            return rect;
+        }
+
         private static void SetResponsiveRow(RectTransform rect, float y, float height)
         {
             if (rect == null) return;
