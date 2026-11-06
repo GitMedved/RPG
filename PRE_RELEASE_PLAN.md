@@ -99,3 +99,10 @@ Run **Tools → Mia & Max → Release Readiness Audit** for a first static repor
 The feature branch now contains shared Canvas card/state builders, a route navigation stack, bounded button typography, read-only quest-card snapshots, an authorable backyard content catalog, expanded character action triggers and a consolidated gameplay/character Editor audit. See [M60–M70 implementation package](M60_M70_IMPLEMENTATION_PACKAGE.md).
 
 These are engineering foundations only. They do not close P1–P4 release gates: final Mia/Max models and UVs, authored animation clips, populated and balanced content, full screen migration, licensed audio, Unity compile/Play Mode evidence, clean Android/iOS builds and physical-device QA remain open.
+
+
+## Engineering progress note — M71–M75 (2026-11-06)
+
+The feature branch now includes interrupted temporary-save recovery, normalization of duplicate/malformed saved gameplay data, an additive starter catalog builder, and a coverage audit for 16 known starter IDs. The Editor smoke suite has been expanded to 8 checks. See [M71–M75 save and content pipeline](M71_M75_SAVE_AND_CONTENT_PIPELINE.md).
+
+These are source-level improvements only. The new smoke checks and catalog-generation command have not yet been executed in Unity. P0 remains open until local compile, all audits, clean scene/Play Mode checks and save/reload regression are recorded. Production character/environment assets, licensed audio, platform builds, physical-device QA and family-safety/legal review remain open.
