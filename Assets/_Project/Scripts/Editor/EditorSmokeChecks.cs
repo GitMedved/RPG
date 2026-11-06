@@ -30,9 +30,10 @@ namespace MiaMax.EditorTools
                 RunCheck("Production, orders and daily progress", TestProductionAndOrders, ref passed);
                 RunCheck("Daily goal reward idempotency", TestDailyReward, ref passed);
                 RunCheck("Save validation and backup recovery", TestSaveRecovery, ref passed);
+                RunCheck("Interrupted temporary-save recovery", TestInterruptedSaveRecovery, ref passed);
                 RunCheck("Six-step tutorial gameplay flow", TestTutorialFlow, ref passed);
 
-                string message = "Core smoke checks passed: " + passed + "/6.\n\n" +
+                string message = "Core smoke checks passed: " + passed + "/7.\n\n"+
                     "This verifies deterministic domain/save paths only. Play Mode, scene interaction, " +
                     "UI layout, FBX import and Android/iOS builds still require separate validation.";
                 Debug.Log("[Mia & Max] " + message);
@@ -137,6 +138,44 @@ namespace MiaMax.EditorTools
                 "Daily reward should grant the configured coin amount.");
             Require(session.Data.Progress.Experience == beforeExperience + DailyTaskService.RewardExperience,
                 "Daily reward should grant the configured XP amount.");
+        }
+
+        private static void TestInterruptedSaveRecovery()
+        {
+            string directory = Path.Combine(Path.GetTempPath(),
+                "MiaMaxInterruptedSave_" + Guid.NewGuid().ToString("N"));
+            try
+            {
+                LocalSaveService saveService = new LocalSaveService(directory);
+                PlayerSaveData initial = new PlayerSaveData();
+                initial.CreatedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                initial.Progress.Coins = 100;
+                saveService.Save(initial);
+
+                PlayerSaveData next = saveService.LoadOrCreate();
+                next.Progress.Coins = 200;
+                saveService.Save(next); // Leaves a known-good backup at 100 coins.
+
+                string primary = Path.Combine(directory, "mia_max_save.json");
+                string temporary = Path.Combine(directory, "mia_max_save.tmp");
+                File.Delete(primary);
+
+                PlayerSaveData interrupted = new PlayerSaveData();
+                interrupted.CreatedAtUnix = initial.CreatedAtUnix;
+                interrupted.UpdatedAtUnix = next.UpdatedAtUnix + 60;
+                interrupted.Progress.Coins = 300;
+                File.WriteAllText(temporary, JsonUtility.ToJson(interrupted, true));
+
+                PlayerSaveData recovered = saveService.LoadOrCreate();
+                Require(recovered.Progress.Coins == 300,
+                    "When primary is absent, the newest complete temp save should be restored.");
+                Require(File.Exists(primary), "Recovered temp save should be promoted to primary.");
+                Require(!File.Exists(temporary), "Recovered temp file should be cleaned up.");
+            }
+            finally
+            {
+                if (Directory.Exists(directory)) Directory.Delete(directory, true);
+            }
         }
 
         private static void TestTutorialFlow()
