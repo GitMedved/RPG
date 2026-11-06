@@ -8,7 +8,7 @@ using UnityEngine;
 namespace MiaMax.EditorTools
 {
     /// <summary>
-    /// Static integration audit for the M64-M70 gameplay/content/character foundations.
+    /// Static integration audit for the M64-M74 gameplay/content/character foundations.
     /// It checks repository assets only; it does not run gameplay or certify release readiness.
     /// </summary>
     public static class GameplayReleaseAudit
@@ -33,6 +33,7 @@ namespace MiaMax.EditorTools
                 "Domain/Progression/QuestService.cs",
                 "Domain/Progression/UpgradeService.cs",
                 "Domain/Progression/BackyardContentCatalog.cs",
+                "Editor/BackyardContentCatalogBuilder.cs",
                 "Gameplay/MobileUiComponents.cs",
                 "Gameplay/MobileUiNavigationStack.cs",
                 "Characters/CharacterAnimationBridge.cs",
@@ -80,6 +81,7 @@ namespace MiaMax.EditorTools
                             report.AppendLine("         - " + issues[j]);
                         pending++;
                     }
+                    CheckStarterCatalogCoverage(catalog, path, report, ref ready, ref pending);
                 }
             }
 
@@ -98,6 +100,35 @@ namespace MiaMax.EditorTools
             EditorUtility.DisplayDialog("Mia & Max Integration Audit",
                 "Audit complete. Ready: " + ready + "\nPending: " + pending +
                 "\n\nSee the Console for details. Manual Unity and device gates remain required.", "OK");
+        }
+
+        private static void CheckStarterCatalogCoverage(BackyardContentCatalog catalog, string path,
+            System.Text.StringBuilder report, ref int ready, ref int pending)
+        {
+            string[] requiredIds =
+            {
+                "crop_carrot", "crop_tomato", "crop_strawberry",
+                "recipe_carrot_soup", "recipe_strawberry_juice", "recipe_wooden_toy",
+                "order_soup_01", "order_juice_01", "order_toy_01",
+                "quest_first_steps", "quest_first_order", "quest_order_master", "quest_flower_friend",
+                "match3", "fishing", "max_run"
+            };
+            var missing = new List<string>();
+            for (int i = 0; i < requiredIds.Length; i++)
+                if (!catalog.TryGet(requiredIds[i], out _)) missing.Add(requiredIds[i]);
+
+            if (missing.Count == 0)
+            {
+                report.AppendLine("[READY] Starter gameplay catalog coverage: " +
+                    requiredIds.Length + " known crop/recipe/order/quest/mini-game IDs (" + path + ")");
+                ready++;
+            }
+            else
+            {
+                report.AppendLine("[PENDING] Starter gameplay catalog entries missing (" + path + "): " +
+                    string.Join(", ", missing.ToArray()));
+                pending++;
+            }
         }
 
         private static void AddCheck(System.Text.StringBuilder report, string path, bool found,
