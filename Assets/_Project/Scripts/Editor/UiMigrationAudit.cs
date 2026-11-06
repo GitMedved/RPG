@@ -65,6 +65,10 @@ namespace MiaMax.EditorTools
                 "Mobile HUD Canvas: " + (hudCanvas ? "FOUND" : "MISSING") + "\n" +
                 "Joystick Canvas: " + (joystickCanvas ? "FOUND" : "MISSING") + "\n" +
                 "Responsive detail panel and compact controls: " + (responsiveDetailPanel ? "FOUND" : "MISSING") + "\n" +
+                "Shared theme and button states: " + (sharedTheme ? "FOUND" : "MISSING") + "\n" +
+                "Reusable cards and state messages: " + (reusableComponents ? "FOUND" : "MISSING") + "\n" +
+                "Navigation stack: " + (navigationStack ? "FOUND" : "MISSING") + "\n" +
+                "Accessible action palette: " + (buttonContrast ? "PASS" : "CHECK") + "\n" +
                 "PrototypeHud IMGUI fallback: " + (legacyFallback ? "PRESENT (intentional fallback)" : "NOT FOUND") + "\n" +
                 "Remaining OnGUI files: " + imguiFiles.Count + "\n" +
                 string.Join("\n", imguiFiles.ToArray()) + "\n\n" +
