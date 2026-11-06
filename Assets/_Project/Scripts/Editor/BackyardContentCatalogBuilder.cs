@@ -143,8 +143,7 @@ namespace MiaMax.EditorTools
         private static int Add(BackyardContentCatalog catalog, BackyardContentEntry entry)
         {
             if (catalog.TryGet(entry.Id, out _)) return 0;
-            catalog.AddEntry(entry);
-            return 1;
+            return catalog.TryAdd(entry) ? 1 : 0;
         }
     }
 }
