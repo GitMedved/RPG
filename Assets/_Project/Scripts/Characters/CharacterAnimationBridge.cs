@@ -1,4 +1,5 @@
 using UnityEngine;
+using MiaMax.Domain;
 using MiaMax.Infrastructure.Save;
 
 namespace MiaMax.Gameplay
