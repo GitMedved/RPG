@@ -760,3 +760,11 @@
 - Extended the UI Migration Audit to check the theme source and its use by the HUD.
 - Kept the implementation independent of unapproved external fonts/sprites; final visual assets remain pending.
 - Source review only. Unity compilation, audit execution, visual contrast, portrait/landscape, touch and device checks remain pending.
+
+
+## 2026-11-06 — M59 mobile UI contrast
+
+- Added relative-luminance and contrast-ratio helpers to `MobileUiTheme`.
+- Button labels automatically choose the more readable cream or ink text color for each button background.
+- Darkened the leaf-green action color and extended the UI Migration Audit with 4.5:1 contrast checks for the core action palette.
+- Source changes reviewed; Unity audit execution, full accessibility review and physical-device validation remain pending.
