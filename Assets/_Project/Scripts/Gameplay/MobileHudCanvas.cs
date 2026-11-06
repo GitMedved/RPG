@@ -89,7 +89,7 @@ namespace MiaMax.Gameplay
             statusText.horizontalOverflow = HorizontalWrapMode.Wrap;
             statusText.verticalOverflow = VerticalWrapMode.Overflow;
 
-            Image giftPanel = MakePanel("Daily Gift Panel", safeRoot, new Color(0.94f, 0.88f, 0.72f, 0.98f),
+            Image giftPanel = MakePanel("Daily Gift Panel", safeRoot, MobileUiTheme.SoftPanel,
                 new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(16f, -202f),
                 new Vector2(352f, 74f), new Vector2(0f, 1f));
             giftButton = MakeButton("Daily Gift", giftPanel.transform, MobileUiTheme.Honey, "DAILY GIFT",
@@ -162,7 +162,7 @@ namespace MiaMax.Gameplay
 
         private void BuildDetailPanel(Transform parent)
         {
-            Image panel = MakePanel("Canvas Detail Panel", parent, new Color(0.12f, 0.19f, 0.17f, 0.98f),
+            Image panel = MakePanel("Canvas Detail Panel", parent, MobileUiTheme.DeepPanel,
                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero,
                 new Vector2(620f, 1040f), new Vector2(0.5f, 0.5f));
             detailPanel = panel.gameObject;
@@ -414,8 +414,7 @@ namespace MiaMax.Gameplay
                 reducedMotionLabel.text = hud.ReducedMotionEnabled ? "REDUCED MOTION: ON" : "REDUCED MOTION: OFF";
             }
             giftButtonText.text = hud.DailyGiftLabel;
-            giftButton.interactable = hud.CanClaimDailyGift;
-            giftButton.targetGraphic.color = hud.CanClaimDailyGift ? MobileUiTheme.Honey : new Color(0.43f, 0.46f, 0.39f, 0.9f);
+            MobileUiTheme.ApplyAvailability(giftButton, hud.CanClaimDailyGift, MobileUiTheme.Honey);
 
             journalButtonText.text = hud.JournalOpen ? "CLOSE JOURNAL" : "ADVENTURE JOURNAL";
             settingsButtonText.text = hud.SettingsOpen ? "CLOSE SETTINGS" : "SETTINGS";
@@ -467,7 +466,7 @@ namespace MiaMax.Gameplay
                 TextAnchor.MiddleCenter, MobileUiTheme.Cream, new Vector2(8f, 4f), new Vector2(-8f, -4f));
             labelText.fontStyle = FontStyle.Bold;
             labelText.resizeTextForBestFit = true;
-            labelText.resizeTextMinSize = Mathf.Max(14, fontSize - 5);
+            labelText.resizeTextMinSize = Mathf.Max(MobileUiTheme.MinimumButtonFontSize, fontSize - MobileUiTheme.ButtonFontShrink);
             labelText.resizeTextMaxSize = fontSize;
             labelText.raycastTarget = false;
             return button;
