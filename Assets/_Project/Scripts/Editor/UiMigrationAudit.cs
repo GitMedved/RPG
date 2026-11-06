@@ -46,6 +46,9 @@ namespace MiaMax.EditorTools
             bool sharedTheme = themeSource.Contains("ApplyButton") &&
                 themeSource.Contains("ApplyAvailability") && hudSource.Contains("MobileUiTheme.ApplyButton") &&
                 hudSource.Contains("MobileUiTheme.ApplyAvailability");
+            bool buttonContrast = MiaMax.Gameplay.MobileUiTheme.HasAccessibleButtonTextContrast(MiaMax.Gameplay.MobileUiTheme.Forest) &&
+                MiaMax.Gameplay.MobileUiTheme.HasAccessibleButtonTextContrast(MiaMax.Gameplay.MobileUiTheme.Leaf) &&
+                MiaMax.Gameplay.MobileUiTheme.HasAccessibleButtonTextContrast(MiaMax.Gameplay.MobileUiTheme.Honey);
             bool legacyFallback = imguiFiles.Contains(ScriptsRoot + "/Gameplay/PrototypeHud.cs");
 
             Debug.Log("[Mia & Max] UI migration audit\n" +
@@ -57,7 +60,7 @@ namespace MiaMax.EditorTools
                 string.Join("\n", imguiFiles.ToArray()) + "\n\n" +
                 "The audit does not validate visual layout, touch response or device behavior.");
 
-            if (!joystickCanvas || !hudCanvas || !responsiveDetailPanel || !sharedTheme)
+            if (!joystickCanvas || !hudCanvas || !responsiveDetailPanel || !sharedTheme || !buttonContrast)
                 Debug.LogError("[Mia & Max] UI migration audit found a missing Canvas implementation.");
             else if (imguiFiles.Count > 1)
                 Debug.LogWarning("[Mia & Max] Additional IMGUI entry points remain. Review the file list above.");
