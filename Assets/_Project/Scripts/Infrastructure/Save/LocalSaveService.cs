@@ -191,16 +191,70 @@ namespace MiaMax.Infrastructure.Save
                 if (stack == null || string.IsNullOrWhiteSpace(stack.ItemId) || stack.Quantity <= 0)
                     data.Inventory.RemoveAt(i);
             }
+            // Normalize duplicate stacks so inventory operations always address one
+            // canonical stack per item. Clamp on overflow rather than wrapping negative.
+            for (int i = 0; i < data.Inventory.Count; i++)
+            {
+                for (int j = data.Inventory.Count - 1; j > i; j--)
+                {
+                    if (data.Inventory[i].ItemId != data.Inventory[j].ItemId) continue;
+                    long combined = (long)data.Inventory[i].Quantity + data.Inventory[j].Quantity;
+                    data.Inventory[i].Quantity = (int)Math.Min(int.MaxValue, combined);
+                    data.Inventory.RemoveAt(j);
+                }
+            }
 
+            var plotIds = new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
+            for (int i = data.FarmPlots.Count - 1; i >= 0; i--)
+            {
+                var plot = data.FarmPlots[i];
+                if (plot == null || string.IsNullOrWhiteSpace(plot.PlotId) || !plotIds.Add(plot.PlotId))
+                {
+                    data.FarmPlots.RemoveAt(i);
+                    continue;
+                }
+                if (string.IsNullOrWhiteSpace(plot.CropId) || plot.PlantedAtUnix <= 0)
+                {
+                    plot.CropId = null;
+                    plot.PlantedAtUnix = 0;
+                }
+            }
+            if (data.FarmPlots.Count > 100)
+                data.FarmPlots.RemoveRange(100, data.FarmPlots.Count - 100);
+
+            string recipeInput;
+            int recipeQuantity;
+            int recipeDuration;
+            if (data.ProductionJob == null ||
+                !data.ProductionJob.IsActive ||
+                !MiaMax.Domain.ProductionService.Recipe(data.ProductionJob.RecipeId,
+                    out recipeInput, out recipeQuantity, out recipeDuration) ||
+                data.ProductionJob.DurationSeconds <= 0)
+                data.ProductionJob = new MiaMax.Domain.Production.ProductionJobData();
+
+            var orderIds = new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
+            for (int i = data.CompletedOrders.Count - 1; i >= 0; i--)
+            {
+                var order = data.CompletedOrders[i];
+                if (order == null || string.IsNullOrWhiteSpace(order.OrderId) || !orderIds.Add(order.OrderId))
+                    data.CompletedOrders.RemoveAt(i);
+            }
+            if (data.CompletedOrders.Count > 500)
+                data.CompletedOrders.RemoveRange(0, data.CompletedOrders.Count - 500);
+
+            var questIds = new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
             for (int i = data.ClaimedQuests.Count - 1; i >= 0; i--)
             {
                 var quest = data.ClaimedQuests[i];
-                if (quest == null || string.IsNullOrWhiteSpace(quest.QuestId))
+                if (quest == null || string.IsNullOrWhiteSpace(quest.QuestId) || !questIds.Add(quest.QuestId))
                     data.ClaimedQuests.RemoveAt(i);
             }
+            if (data.ClaimedQuests.Count > 100)
+                data.ClaimedQuests.RemoveRange(0, data.ClaimedQuests.Count - 100);
 
+            var areaIds = new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
             for (int i = data.UnlockedWorldAreas.Count - 1; i >= 0; i--)
-                if (string.IsNullOrWhiteSpace(data.UnlockedWorldAreas[i]))
+                if (string.IsNullOrWhiteSpace(data.UnlockedWorldAreas[i]) || !areaIds.Add(data.UnlockedWorldAreas[i]))
                     data.UnlockedWorldAreas.RemoveAt(i);
 
             long now = UtcNow();
