@@ -236,12 +236,30 @@ namespace MiaMax.EditorTools
                 data.Progress.Coins = 123;
                 data.GardenLevel = 99;
                 data.Settings.UiScale = 4f;
+                data.Inventory.Add(new MiaMax.Domain.Inventory.ItemStackData("test_stack", 2));
+                data.Inventory.Add(new MiaMax.Domain.Inventory.ItemStackData("test_stack", 3));
+                long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                data.FarmPlots.Add(new FarmPlotData { PlotId = "plot_a", CropId = FarmingService.Carrot, PlantedAtUnix = now });
+                data.FarmPlots.Add(new FarmPlotData { PlotId = "plot_a", CropId = FarmingService.Tomato, PlantedAtUnix = now });
+                data.ProductionJob = new ProductionJobData { RecipeId = "unknown_recipe", StartedAtUnix = now, DurationSeconds = 30 };
+                data.CompletedOrders.Add(new CompletedOrderData { OrderId = "order_a", CompletedAtUnix = now });
+                data.CompletedOrders.Add(new CompletedOrderData { OrderId = "order_a", CompletedAtUnix = now });
+                data.ClaimedQuests.Add(new QuestProgressData { QuestId = "quest_a", ClaimedAtUnix = now });
+                data.ClaimedQuests.Add(new QuestProgressData { QuestId = "quest_a", ClaimedAtUnix = now });
 
                 saveService.Save(data);
                 PlayerSaveData normalized = saveService.LoadOrCreate();
                 Require(normalized.GardenLevel == 2, "Save validation should clamp garden level.");
                 Require(Math.Abs(normalized.Settings.UiScale - 1.15f) < 0.001f,
                     "Save validation should clamp UI scale.");
+                Require(normalized.Inventory.Count == 1 && normalized.Inventory[0].Quantity == 5,
+                    "Duplicate inventory stacks should merge into one canonical stack.");
+                Require(normalized.FarmPlots.Count == 1,
+                    "Duplicate farm plot IDs should be removed.");
+                Require(normalized.ProductionJob == null || !normalized.ProductionJob.IsActive,
+                    "Unknown production recipes should not survive save validation.");
+                Require(normalized.CompletedOrders.Count == 1 && normalized.ClaimedQuests.Count == 1,
+                    "Duplicate completed orders and quest claims should be removed.");
 
                 normalized.Progress.Coins = 456;
                 saveService.Save(normalized);
