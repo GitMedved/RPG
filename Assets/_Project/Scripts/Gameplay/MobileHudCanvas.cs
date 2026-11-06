@@ -47,17 +47,21 @@ namespace MiaMax.Gameplay
         private Button interactButton;
         private Text interactButtonText;
         private float nextRefresh;
+        private bool canvasReady;
 
         private void Start()
         {
             hud = GetComponent<PrototypeHud>();
             BuildCanvas();
+            canvasReady = HasRequiredReferences();
+            if (!canvasReady)
+                Debug.LogError("[Mia & Max] Mobile HUD was not fully constructed. Check the preceding Canvas setup exception; Refresh has been disabled to prevent cascading NullReferenceExceptions.", this);
             Refresh();
         }
 
         private void Update()
         {
-            if (Time.unscaledTime < nextRefresh) return;
+            if (!canvasReady || Time.unscaledTime < nextRefresh) return;
             nextRefresh = Time.unscaledTime + 0.2f;
             Refresh();
         }
@@ -404,17 +408,21 @@ namespace MiaMax.Gameplay
             rect.sizeDelta = new Vector2(rect.sizeDelta.x, height);
         }
 
+        private bool HasRequiredReferences()
+        {
+            return hud != null && statusText != null && detailPanel != null &&
+                settingsControls != null && journalControls != null &&
+                detailTitle != null && detailBody != null && detailContent != null && detailScroll != null &&
+                vibrationLabel != null && reducedMotionLabel != null &&
+                giftButton != null && giftButtonText != null &&
+                journalButtonText != null && settingsButtonText != null && mapButtonText != null &&
+                backpackButtonText != null && interactButton != null && interactButtonText != null &&
+                promptText != null && feedbackText != null && tutorialText != null;
+        }
+
         private void Refresh()
         {
-            if (hud == null || statusText == null || detailPanel == null ||
-                settingsControls == null || journalControls == null ||
-                detailTitle == null || detailBody == null || detailContent == null || detailScroll == null ||
-                vibrationLabel == null || reducedMotionLabel == null ||
-                giftButton == null || giftButtonText == null ||
-                journalButtonText == null || settingsButtonText == null || mapButtonText == null ||
-                backpackButtonText == null || interactButton == null || interactButtonText == null ||
-                promptText == null || feedbackText == null || tutorialText == null)
-                return;
+            if (!canvasReady || !HasRequiredReferences()) return;
 
             ApplySafeArea();
             ApplyResponsiveLayout();
