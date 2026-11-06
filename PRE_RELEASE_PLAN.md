@@ -92,3 +92,10 @@ Still not release-ready:
 Record the date, Unity version, device model/OS, build number, test result and link to logs/screenshots for each gate. A green static audit is only a checklist result; it never substitutes for a clean build or a real-device test.
 
 Run **Tools → Mia & Max → Release Readiness Audit** for a first static report, then run the dedicated texture, production, voice and core smoke audits. The release audit deliberately keeps physical-device and legal sign-off open until a human records evidence.
+
+
+## Engineering progress note — M60–M70 (2026-11-06)
+
+The feature branch now contains shared Canvas card/state builders, a route navigation stack, bounded button typography, read-only quest-card snapshots, an authorable backyard content catalog, expanded character action triggers and a consolidated gameplay/character Editor audit. See [M60–M70 implementation package](M60_M70_IMPLEMENTATION_PACKAGE.md).
+
+These are engineering foundations only. They do not close P1–P4 release gates: final Mia/Max models and UVs, authored animation clips, populated and balanced content, full screen migration, licensed audio, Unity compile/Play Mode evidence, clean Android/iOS builds and physical-device QA remain open.
