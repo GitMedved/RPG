@@ -31,9 +31,10 @@ namespace MiaMax.EditorTools
                 RunCheck("Daily goal reward idempotency", TestDailyReward, ref passed);
                 RunCheck("Save validation and backup recovery", TestSaveRecovery, ref passed);
                 RunCheck("Interrupted temporary-save recovery", TestInterruptedSaveRecovery, ref passed);
+                RunCheck("Content catalog safe authoring", TestContentCatalogAuthoring, ref passed);
                 RunCheck("Six-step tutorial gameplay flow", TestTutorialFlow, ref passed);
 
-                string message = "Core smoke checks passed: " + passed + "/7.\n\n"+
+                string message = "Core smoke checks passed: " + passed + "/8.\n\n" +
                     "This verifies deterministic domain/save paths only. Play Mode, scene interaction, " +
                     "UI layout, FBX import and Android/iOS builds still require separate validation.";
                 Debug.Log("[Mia & Max] " + message);
@@ -175,6 +176,39 @@ namespace MiaMax.EditorTools
             finally
             {
                 if (Directory.Exists(directory)) Directory.Delete(directory, true);
+            }
+        }
+
+        private static void TestContentCatalogAuthoring()
+        {
+            BackyardContentCatalog catalog = ScriptableObject.CreateInstance<BackyardContentCatalog>();
+            try
+            {
+                var entry = new BackyardContentEntry
+                {
+                    Id = "smoke_crop",
+                    Kind = BackyardContentKind.Crop,
+                    DisplayName = "Smoke Crop",
+                    AreaId = "backyard"
+                };
+                Require(catalog.TryAdd(entry), "A new stable catalog entry should be accepted.");
+                Require(!catalog.TryAdd(new BackyardContentEntry
+                {
+                    Id = "smoke_crop",
+                    Kind = BackyardContentKind.Crop,
+                    DisplayName = "Duplicate",
+                    AreaId = "backyard"
+                }), "A duplicate catalog ID must be rejected.");
+                Require(catalog.Entries.Count == 1, "Duplicate insertion must not change catalog size.");
+                Require(catalog.Validate().Count == 0, "A complete basic catalog entry should validate.");
+
+                entry.RewardQuantity = 1;
+                Require(catalog.Validate().Count > 0,
+                    "Catalog validation should report a reward quantity without a reward item ID.");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(catalog);
             }
         }
 
