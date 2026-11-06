@@ -741,3 +741,13 @@
 - Extended the UI migration audit to verify the responsive panel sizing implementation.
 - Updated the PrototypeHud class summary to identify its IMGUI path as a legacy fallback, not the normal runtime HUD.
 - Source review only. Unity compile, audit execution, portrait/landscape visual review, tablet/phone layout and physical-device testing remain pending.
+
+
+## 2026-11-06 — M57 compact responsive detail panels
+
+- Replaced fixed detail-scroll viewport bottom spacing with a dynamically calculated action-zone reservation.
+- Settings controls resize row heights and positions for short displays while preserving the existing five audio/UI settings and accessibility toggles.
+- Adventure Journal's 11 action buttons retain their two-column layout and dynamically compress row height and spacing.
+- The scroll viewport now receives the remaining detail-panel area, avoiding the near-zero landscape viewport caused by fixed offsets.
+- Extended the UI migration audit to check for compact controls and dynamic viewport sizing.
+- Source review only; Unity compile, audit execution, landscape/portrait visual review, scroll/tap behavior and physical-device checks remain pending.
