@@ -41,6 +41,11 @@ namespace MiaMax.EditorTools
                 hudSource.Contains("safeRoot.rect.width") && hudSource.Contains("safeRoot.rect.height") &&
                 hudSource.Contains("controlsHeight") && hudSource.Contains("detailViewportRect.offsetMin") &&
                 hudSource.Contains("journalActionRects") && hudSource.Contains("settingLabelRects");
+            string themePath = ScriptsRoot + "/Gameplay/MobileUiTheme.cs";
+            string themeSource = File.Exists(themePath) ? File.ReadAllText(themePath) : string.Empty;
+            bool sharedTheme = themeSource.Contains("ApplyButton") &&
+                themeSource.Contains("ApplyAvailability") && hudSource.Contains("MobileUiTheme.ApplyButton") &&
+                hudSource.Contains("MobileUiTheme.ApplyAvailability");
             bool legacyFallback = imguiFiles.Contains(ScriptsRoot + "/Gameplay/PrototypeHud.cs");
 
             Debug.Log("[Mia & Max] UI migration audit\n" +
@@ -52,7 +57,7 @@ namespace MiaMax.EditorTools
                 string.Join("\n", imguiFiles.ToArray()) + "\n\n" +
                 "The audit does not validate visual layout, touch response or device behavior.");
 
-            if (!joystickCanvas || !hudCanvas || !responsiveDetailPanel)
+            if (!joystickCanvas || !hudCanvas || !responsiveDetailPanel || !sharedTheme)
                 Debug.LogError("[Mia & Max] UI migration audit found a missing Canvas implementation.");
             else if (imguiFiles.Count > 1)
                 Debug.LogWarning("[Mia & Max] Additional IMGUI entry points remain. Review the file list above.");
