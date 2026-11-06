@@ -40,6 +40,11 @@ namespace MiaMax.EditorTools
             EnsureParameter(controller, "Grounded", AnimatorControllerParameterType.Bool);
             EnsureParameter(controller, "Interact", AnimatorControllerParameterType.Trigger);
             EnsureParameter(controller, "Celebrate", AnimatorControllerParameterType.Trigger);
+            EnsureParameter(controller, "Garden", AnimatorControllerParameterType.Trigger);
+            EnsureParameter(controller, "Reaction", AnimatorControllerParameterType.Trigger);
+            EnsureParameter(controller, "Jump", AnimatorControllerParameterType.Trigger);
+            EnsureParameter(controller, "Sleep", AnimatorControllerParameterType.Trigger);
+            EnsureParameter(controller, "Play", AnimatorControllerParameterType.Trigger);
 
             Dictionary<string, AnimationClip> clips = FindClips(clipFolder);
             AnimationClip idleClip = FindClip(clips, "idle");
@@ -47,6 +52,11 @@ namespace MiaMax.EditorTools
             AnimationClip runClip = FindClip(clips, "run");
             AnimationClip interactClip = FindClip(clips, "interact");
             AnimationClip celebrateClip = FindClip(clips, "celebrate");
+            AnimationClip gardenClip = FindClip(clips, "garden");
+            AnimationClip reactionClip = FindClip(clips, "reaction");
+            AnimationClip jumpClip = FindClip(clips, "jump");
+            AnimationClip sleepClip = FindClip(clips, "sleep");
+            AnimationClip playClip = FindClip(clips, "play");
 
             AnimatorStateMachine machine = controller.layers[0].stateMachine;
             AnimatorState[] oldStates = new AnimatorState[machine.states.Length];
@@ -60,6 +70,11 @@ namespace MiaMax.EditorTools
             AnimatorState run = runClip != null ? AddState(machine, "Run", runClip, new Vector3(700f, 80f, 0f)) : null;
             AnimatorState interact = interactClip != null ? AddState(machine, "Interact", interactClip, new Vector3(480f, 240f, 0f)) : null;
             AnimatorState celebrate = celebrateClip != null ? AddState(machine, "Celebrate", celebrateClip, new Vector3(700f, 240f, 0f)) : null;
+            AnimatorState garden = gardenClip != null ? AddState(machine, "Garden", gardenClip, new Vector3(920f, 240f, 0f)) : null;
+            AnimatorState reaction = reactionClip != null ? AddState(machine, "Reaction", reactionClip, new Vector3(1140f, 240f, 0f)) : null;
+            AnimatorState jump = jumpClip != null ? AddState(machine, "Jump", jumpClip, new Vector3(920f, 400f, 0f)) : null;
+            AnimatorState sleep = sleepClip != null ? AddState(machine, "Sleep", sleepClip, new Vector3(1140f, 400f, 0f)) : null;
+            AnimatorState playful = playClip != null ? AddState(machine, "Play", playClip, new Vector3(1360f, 400f, 0f)) : null;
             machine.defaultState = idle;
 
             if (walk != null)
@@ -80,11 +95,18 @@ namespace MiaMax.EditorTools
 
             AddActionTransitions(machine, interact, idle, "Interact");
             AddActionTransitions(machine, celebrate, idle, "Celebrate");
+            AddActionTransitions(machine, garden, idle, "Garden");
+            AddActionTransitions(machine, reaction, idle, "Reaction");
+            AddActionTransitions(machine, jump, idle, "Jump");
+            AddActionTransitions(machine, sleep, idle, "Sleep");
+            AddActionTransitions(machine, playful, idle, "Play");
 
             EditorUtility.SetDirty(controller);
             Debug.Log("[M48] " + character + " Animator built. Clips found — Idle: " + Has(idleClip) +
                 ", Walk: " + Has(walkClip) + ", Run: " + Has(runClip) +
                 ", Interact: " + Has(interactClip) + ", Celebrate: " + Has(celebrateClip) +
+                ", Garden: " + Has(gardenClip) + ", Reaction: " + Has(reactionClip) +
+                ", Jump: " + Has(jumpClip) + ", Sleep: " + Has(sleepClip) + ", Play: " + Has(playClip) +
                 ". Missing clips remain unbuilt; Idle uses an empty placeholder if absent.");
         }
 
