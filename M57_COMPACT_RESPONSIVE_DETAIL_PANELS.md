@@ -5,7 +5,9 @@
 - The scroll viewport is resized to the remaining space instead of retaining fixed 300 px bottom and 118 px top offsets.
 - Settings rows, +/- controls and accessibility toggles scale their row height for shorter displays.
 - The 11 Adventure Journal actions retain their two-column layout and dynamically compress row height and spacing.
-- Portrait layouts preserve the original 38 px control rows; compact landscape layouts reduce them toward 26 px.
+- Portrait layouts preserve the original 38 px control rows; compact landscape layouts reduce them toward 20 px.
+- The panel dimensions are capped by the actual safe-area size; the layout no longer forces a minimum panel width or height that could exceed a very short viewport.
+- Added the Unity `.meta` asset for the new Editor audit script.
 - The UI Migration Audit now checks for compact controls and dynamic viewport sizing.
 
 ## Validation required in Unity
