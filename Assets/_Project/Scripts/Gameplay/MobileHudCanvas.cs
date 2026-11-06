@@ -340,8 +340,8 @@ namespace MiaMax.Gameplay
 
             // Keep the detail sheet within the safe-area viewport in both portrait
             // and landscape. CanvasScaler supplies the device-specific scale factor.
-            float availableWidth = Mathf.Max(280f, safeRoot.rect.width - 32f);
-            float availableHeight = Mathf.Max(420f, safeRoot.rect.height - 32f);
+            float availableWidth = Mathf.Max(1f, safeRoot.rect.width - 32f);
+            float availableHeight = Mathf.Max(1f, safeRoot.rect.height - 32f);
             float panelWidth = Mathf.Min(620f, availableWidth);
             float panelHeight = Mathf.Min(1040f, availableHeight);
             detailPanelRect.sizeDelta = new Vector2(panelWidth, panelHeight);
@@ -349,7 +349,7 @@ namespace MiaMax.Gameplay
             // Reserve a compact, predictable action zone at the bottom. The scroll
             // viewport receives all remaining space instead of being squeezed to a
             // near-zero height on short landscape displays.
-            float controlsHeight = Mathf.Clamp(panelHeight * 0.43f, 176f, 260f);
+            float controlsHeight = Mathf.Min(260f, Mathf.Max(136f, panelHeight * 0.43f));
             if (settingsControlsRect != null)
                 settingsControlsRect.sizeDelta = new Vector2(-48f, controlsHeight);
             if (journalControlsRect != null)
@@ -360,9 +360,9 @@ namespace MiaMax.Gameplay
                 detailViewportRect.offsetMax = new Vector2(-24f, -118f);
             }
 
-            float compact = Mathf.Clamp01((720f - panelHeight) / 300f);
-            float rowHeight = Mathf.Lerp(38f, 26f, compact);
-            float rowGap = Mathf.Lerp(4f, 3f, compact);
+            float compact = Mathf.Clamp01((720f - panelHeight) / 420f);
+            float rowHeight = Mathf.Lerp(38f, 20f, compact);
+            float rowGap = Mathf.Lerp(4f, 2f, compact);
             float settingStep = rowHeight + rowGap;
             for (int i = 0; i < settingLabelRects.Length; i++)
             {
