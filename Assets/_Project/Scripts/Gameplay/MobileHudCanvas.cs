@@ -406,7 +406,16 @@ namespace MiaMax.Gameplay
 
         private void Refresh()
         {
-            if (hud == null) return;
+            if (hud == null || statusText == null || detailPanel == null ||
+                settingsControls == null || journalControls == null ||
+                detailTitle == null || detailBody == null || detailContent == null || detailScroll == null ||
+                vibrationLabel == null || reducedMotionLabel == null ||
+                giftButton == null || giftButtonText == null ||
+                journalButtonText == null || settingsButtonText == null || mapButtonText == null ||
+                backpackButtonText == null || interactButton == null || interactButtonText == null ||
+                promptText == null || feedbackText == null || tutorialText == null)
+                return;
+
             ApplySafeArea();
             ApplyResponsiveLayout();
             statusText.text = hud.StatusText;
@@ -514,7 +523,7 @@ namespace MiaMax.Gameplay
             rect.offsetMin = offsetMin;
             rect.offsetMax = offsetMax;
             Text text = go.GetComponent<Text>();
-            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             text.fontSize = size;
             text.alignment = alignment;
             text.color = color;
