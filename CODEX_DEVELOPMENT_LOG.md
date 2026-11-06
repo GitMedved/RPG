@@ -751,3 +751,12 @@
 - The scroll viewport now receives the remaining detail-panel area, avoiding the near-zero landscape viewport caused by fixed offsets.
 - Extended the UI migration audit to check for compact controls and dynamic viewport sizing.
 - Source review only; Unity compile, audit execution, landscape/portrait visual review, scroll/tap behavior and physical-device checks remain pending.
+
+
+## 2026-11-06 — M58 shared mobile UI theme
+
+- Added `MobileUiTheme` to centralize the runtime HUD palette, panel colors, button tint states and disabled appearance.
+- Migrated MobileHudCanvas button construction and key action availability states to the shared theme without changing gameplay callbacks.
+- Extended the UI Migration Audit to check the theme source and its use by the HUD.
+- Kept the implementation independent of unapproved external fonts/sprites; final visual assets remain pending.
+- Source review only. Unity compilation, audit execution, visual contrast, portrait/landscape, touch and device checks remain pending.
