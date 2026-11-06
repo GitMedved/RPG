@@ -19,11 +19,21 @@ namespace MiaMax.Gameplay
         private static readonly int GroundedId = Animator.StringToHash("Grounded");
         private static readonly int InteractId = Animator.StringToHash("Interact");
         private static readonly int CelebrateId = Animator.StringToHash("Celebrate");
+        private static readonly int GardenId = Animator.StringToHash("Garden");
+        private static readonly int ReactionId = Animator.StringToHash("Reaction");
+        private static readonly int JumpId = Animator.StringToHash("Jump");
+        private static readonly int SleepId = Animator.StringToHash("Sleep");
+        private static readonly int PlayId = Animator.StringToHash("Play");
 
         private bool hasSpeed;
         private bool hasGrounded;
         private bool hasInteract;
         private bool hasCelebrate;
+        private bool hasGarden;
+        private bool hasReaction;
+        private bool hasJump;
+        private bool hasSleep;
+        private bool hasPlay;
         private Vector3 previousPosition;
         private float smoothedSpeed;
 
@@ -45,6 +55,11 @@ namespace MiaMax.Gameplay
             hasGrounded = HasParameter(animator, GroundedId, AnimatorControllerParameterType.Bool);
             hasInteract = HasParameter(animator, InteractId, AnimatorControllerParameterType.Trigger);
             hasCelebrate = HasParameter(animator, CelebrateId, AnimatorControllerParameterType.Trigger);
+            hasGarden = HasParameter(animator, GardenId, AnimatorControllerParameterType.Trigger);
+            hasReaction = HasParameter(animator, ReactionId, AnimatorControllerParameterType.Trigger);
+            hasJump = HasParameter(animator, JumpId, AnimatorControllerParameterType.Trigger);
+            hasSleep = HasParameter(animator, SleepId, AnimatorControllerParameterType.Trigger);
+            hasPlay = HasParameter(animator, PlayId, AnimatorControllerParameterType.Trigger);
         }
 
         private static bool HasParameter(Animator target, int id, AnimatorControllerParameterType type)
@@ -91,6 +106,19 @@ namespace MiaMax.Gameplay
             if (IsReducedMotionEnabled()) return;
             if (animator != null && animator.isActiveAndEnabled && hasCelebrate)
                 animator.SetTrigger(CelebrateId);
+        }
+
+        public void PlayGarden() { PlayAction(GardenId, hasGarden); }
+        public void PlayReaction() { PlayAction(ReactionId, hasReaction); }
+        public void PlayJump() { PlayAction(JumpId, hasJump); }
+        public void PlaySleep() { PlayAction(SleepId, hasSleep); }
+        public void PlayPlayfulAction() { PlayAction(PlayId, hasPlay); }
+
+        private void PlayAction(int triggerId, bool supported)
+        {
+            if (IsReducedMotionEnabled()) return;
+            if (animator != null && animator.isActiveAndEnabled && supported)
+                animator.SetTrigger(triggerId);
         }
 
         private static bool IsReducedMotionEnabled()
