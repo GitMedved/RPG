@@ -21,13 +21,14 @@ namespace MiaMax.Gameplay
             Material doorLight = Mat(new Color(0.58f, 0.36f, 0.21f));
             Material brass = Mat(new Color(0.88f, 0.67f, 0.28f));
             Material timber = Mat(new Color(0.64f, 0.43f, 0.25f));
+            Material soil = Mat(new Color(0.43f, 0.29f, 0.19f));
             Material terracotta = Mat(new Color(0.76f, 0.34f, 0.22f));
             Material planterGreen = Mat(new Color(0.24f, 0.43f, 0.19f));
             Material flowerPink = Mat(new Color(0.96f, 0.48f, 0.64f));
             Material flowerYellow = Mat(new Color(0.98f, 0.78f, 0.25f));
 
             BuildHouseFacade(root.transform, cream, frame, glass, glassLight, door, doorLight, brass);
-            BuildGardenDetails(root.transform, timber);
+            BuildGardenDetails(root.transform, timber, soil);
             BuildPatioPlanters(root.transform, terracotta, planterGreen, flowerPink, flowerYellow);
             BuildSandboxTrim(root.transform, timber, cream);
         }
@@ -87,7 +88,7 @@ namespace MiaMax.Gameplay
                 new Vector3(2.10f, 0.13f, 0.34f), frame, parent);
         }
 
-        private static void BuildGardenDetails(Transform parent, Material timber)
+        private static void BuildGardenDetails(Transform parent, Material timber, Material soil)
         {
             // Slim edging frames the existing interactive plots without covering their crop visuals.
             for (int i = 0; i < 3; i++)
