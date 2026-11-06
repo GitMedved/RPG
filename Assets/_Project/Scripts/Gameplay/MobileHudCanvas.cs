@@ -19,6 +19,13 @@ namespace MiaMax.Gameplay
         private Text feedbackText;
         private GameObject detailPanel;
         private RectTransform detailPanelRect;
+        private RectTransform detailViewportRect;
+        private RectTransform settingsControlsRect;
+        private RectTransform journalControlsRect;
+        private readonly RectTransform[] settingLabelRects = new RectTransform[5];
+        private readonly RectTransform[] settingMinusRects = new RectTransform[5];
+        private readonly RectTransform[] settingPlusRects = new RectTransform[5];
+        private readonly RectTransform[] journalActionRects = new RectTransform[11];
         private Text detailTitle;
         private Text detailBody;
         private RectTransform detailContent;
@@ -185,6 +192,7 @@ namespace MiaMax.Gameplay
                 typeof(RectTransform), typeof(Image), typeof(Mask));
             viewportObject.transform.SetParent(panel.transform, false);
             RectTransform viewport = (RectTransform)viewportObject.transform;
+            detailViewportRect = viewport;
             viewport.anchorMin = Vector2.zero;
             viewport.anchorMax = Vector2.one;
             viewport.offsetMin = new Vector2(24f, 300f);
@@ -221,6 +229,7 @@ namespace MiaMax.Gameplay
             settingsControls = new GameObject("Settings Canvas Controls", typeof(RectTransform));
             settingsControls.transform.SetParent(panel.transform, false);
             RectTransform controlsRect = (RectTransform)settingsControls.transform;
+            settingsControlsRect = controlsRect;
             controlsRect.anchorMin = new Vector2(0f, 0f);
             controlsRect.anchorMax = new Vector2(1f, 0f);
             controlsRect.pivot = new Vector2(0.5f, 0f);
@@ -234,6 +243,7 @@ namespace MiaMax.Gameplay
                 float y = 216f - i * 42f;
                 Text label = MakeText("Setting " + settingNames[i], controlsRect, settingNames[i], 22,
                     TextAnchor.MiddleLeft, Cream, Vector2.zero, Vector2.zero);
+                settingLabelRects[i] = label.rectTransform;
                 label.rectTransform.anchorMin = new Vector2(0f, 0f);
                 label.rectTransform.anchorMax = new Vector2(0.52f, 0f);
                 label.rectTransform.pivot = new Vector2(0f, 0f);
@@ -242,12 +252,14 @@ namespace MiaMax.Gameplay
 
                 Button minus = MakeButton("Decrease " + settingNames[i], controlsRect, Leaf, "−",
                     Vector2.zero, Vector2.one, out _, 24);
+                settingMinusRects[i] = (RectTransform)minus.transform;
                 SetControlRect(minus, new Vector2(0.62f, 0f), new Vector2(0.74f, 0f),
                     new Vector2(0f, y), new Vector2(0f, 38f));
                 minus.onClick.AddListener(() => hud?.AdjustSettingFromCanvas(setting, -0.05f));
 
                 Button plus = MakeButton("Increase " + settingNames[i], controlsRect, Honey, "+",
                     Vector2.zero, Vector2.one, out _, 24);
+                settingPlusRects[i] = (RectTransform)plus.transform;
                 SetControlRect(plus, new Vector2(0.80f, 0f), new Vector2(0.92f, 0f),
                     new Vector2(0f, y), new Vector2(0f, 38f));
                 plus.onClick.AddListener(() => hud?.AdjustSettingFromCanvas(setting, 0.05f));
@@ -269,6 +281,7 @@ namespace MiaMax.Gameplay
             journalControls = new GameObject("Adventure Journal Canvas Actions", typeof(RectTransform));
             journalControls.transform.SetParent(panel.transform, false);
             RectTransform journalRect = (RectTransform)journalControls.transform;
+            journalControlsRect = journalRect;
             journalRect.anchorMin = new Vector2(0f, 0f);
             journalRect.anchorMax = new Vector2(1f, 0f);
             journalRect.pivot = new Vector2(0.5f, 0f);
@@ -291,6 +304,7 @@ namespace MiaMax.Gameplay
                 Button actionButton = MakeButton("Journal Action " + action, journalRect,
                     action % 3 == 0 ? Honey : Leaf, journalActions[i],
                     Vector2.zero, Vector2.one, out _, 17);
+                journalActionRects[i] = (RectTransform)actionButton.transform;
                 SetControlRect(actionButton,
                     new Vector2(column * 0.5f, 0f), new Vector2((column + 1) * 0.5f, 0f),
                     new Vector2(column == 0 ? 0f : 4f, 216f - row * 42f),
@@ -328,9 +342,59 @@ namespace MiaMax.Gameplay
             // and landscape. CanvasScaler supplies the device-specific scale factor.
             float availableWidth = Mathf.Max(280f, safeRoot.rect.width - 32f);
             float availableHeight = Mathf.Max(420f, safeRoot.rect.height - 32f);
-            detailPanelRect.sizeDelta = new Vector2(
-                Mathf.Min(620f, availableWidth),
-                Mathf.Min(1040f, availableHeight));
+            float panelWidth = Mathf.Min(620f, availableWidth);
+            float panelHeight = Mathf.Min(1040f, availableHeight);
+            detailPanelRect.sizeDelta = new Vector2(panelWidth, panelHeight);
+
+            // Reserve a compact, predictable action zone at the bottom. The scroll
+            // viewport receives all remaining space instead of being squeezed to a
+            // near-zero height on short landscape displays.
+            float controlsHeight = Mathf.Clamp(panelHeight * 0.43f, 176f, 260f);
+            if (settingsControlsRect != null)
+                settingsControlsRect.sizeDelta = new Vector2(-48f, controlsHeight);
+            if (journalControlsRect != null)
+                journalControlsRect.sizeDelta = new Vector2(-48f, controlsHeight);
+            if (detailViewportRect != null)
+            {
+                detailViewportRect.offsetMin = new Vector2(24f, controlsHeight + 28f);
+                detailViewportRect.offsetMax = new Vector2(-24f, -118f);
+            }
+
+            float compact = Mathf.Clamp01((720f - panelHeight) / 300f);
+            float rowHeight = Mathf.Lerp(38f, 26f, compact);
+            float rowGap = Mathf.Lerp(4f, 3f, compact);
+            float settingStep = rowHeight + rowGap;
+            for (int i = 0; i < settingLabelRects.Length; i++)
+            {
+                float y = rowHeight + 6f + (4 - i) * settingStep;
+                SetResponsiveRow(settingLabelRects[i], y, rowHeight);
+                SetResponsiveRow(settingMinusRects[i], y, rowHeight);
+                SetResponsiveRow(settingPlusRects[i], y, rowHeight);
+            }
+
+            SetResponsiveRow((RectTransform)vibrationLabel.transform.parent, 0f, rowHeight);
+            SetResponsiveRow((RectTransform)reducedMotionLabel.transform.parent, 0f, rowHeight);
+
+            for (int i = 0; i < journalActionRects.Length; i++)
+            {
+                RectTransform rect = journalActionRects[i];
+                if (rect == null) continue;
+                int row = i / 2;
+                int column = i % 2;
+                rect.anchorMin = new Vector2(column * 0.5f, 0f);
+                rect.anchorMax = new Vector2((column + 1) * 0.5f, 0f);
+                rect.pivot = new Vector2(0.5f, 0f);
+                rect.anchoredPosition = new Vector2(column == 0 ? 0f : 4f,
+                    controlsHeight - rowHeight - 4f - row * (rowHeight + rowGap));
+                rect.sizeDelta = new Vector2(column == 0 ? -6f : 0f, rowHeight);
+            }
+        }
+
+        private static void SetResponsiveRow(RectTransform rect, float y, float height)
+        {
+            if (rect == null) return;
+            rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, y);
+            rect.sizeDelta = new Vector2(rect.sizeDelta.x, height);
         }
 
         private void Refresh()
