@@ -51,7 +51,7 @@ namespace MiaMax.EditorTools
             bool reusableComponents = componentsSource.Contains("CreateCard") &&
                 componentsSource.Contains("CreateStateMessage") &&
                 componentsSource.Contains("ApplyButtonTypography") &&
-                hudSource.Contains("MobileUiComponents.ApplyButtonTypography");
+                themeSource.Contains("MobileUiComponents.ApplyButtonTypography");
             string navigationPath = ScriptsRoot + "/Gameplay/MobileUiNavigationStack.cs";
             string navigationSource = File.Exists(navigationPath) ? File.ReadAllText(navigationPath) : string.Empty;
             bool navigationStack = navigationSource.Contains("public bool Push(") &&
