@@ -768,3 +768,18 @@
 - Button labels automatically choose the more readable cream or ink text color for each button background.
 - Darkened the leaf-green action color and extended the UI Migration Audit with 4.5:1 contrast checks for the core action palette.
 - Source changes reviewed; Unity audit execution, full accessibility review and physical-device validation remain pending.
+
+ 
+## 2026-11-06 — M60–M70 UI, gameplay and character foundations
+
+- **M60:** added shared uGUI card, label and loading/empty-state builders. State copy is supplied by the screen; no fake progress is generated.
+- **M61:** added a route-key navigation stack with push/back/reset and change notifications. It is deliberately decoupled from existing HUD callbacks until each screen is migrated.
+- **M62–M63:** shared layout-based card composition and bounded button typography are available; the existing safe-area/compact landscape panel and contrast helpers remain. Full screen-reader, focus-order, touch-target and device review remains open.
+- **M64–M65:** added a static integration gate for the farming/production/order/quest/upgrade/mini-game/reward dependencies. Existing wallet, upgrade and unique reward-claim rules remain authoritative; no economy values were changed and balance testing remains open.
+- **M66:** added read-only quest snapshots for stable quest cards and claim states; rewards still flow only through the existing claim method.
+- **M67:** added an authorable BackyardContentCatalog ScriptableObject with stable IDs and validation. No content asset is auto-created or wired into runtime until content/reward values are reviewed.
+- **M68:** consolidated production FBX intake and asset checks in the integration workflow. Final models, UVs, atlases, materials and licences remain external inputs.
+- **M69:** expanded Mia/Max animation bridge and Animator builder with optional Garden, Reaction, Jump, Sleep and Play actions; states are created only when imported clips exist.
+- **M70:** added **Tools → Mia & Max → Gameplay & Character Integration Audit** for source dependencies, catalog structure and expected clip-name coverage; expanded the UI audit for reusable components and navigation.
+- Added `M60_M70_IMPLEMENTATION_PACKAGE.md` with scope and local acceptance steps.
+- Static source review only. Unity compilation, audit execution, content authoring, full gameplay-loop playthrough, economy tuning, imported character rig/clip review and Android/iOS device tests remain pending.
