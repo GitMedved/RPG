@@ -465,6 +465,7 @@ namespace MiaMax.Gameplay
             labelText = MakeText(name + " Label", go.transform, label, fontSize,
                 TextAnchor.MiddleCenter, MobileUiTheme.Cream, new Vector2(8f, 4f), new Vector2(-8f, -4f));
             labelText.fontStyle = FontStyle.Bold;
+            labelText.color = MobileUiTheme.GetReadableButtonText(color);
             labelText.resizeTextForBestFit = true;
             labelText.resizeTextMinSize = Mathf.Max(MobileUiTheme.MinimumButtonFontSize, fontSize - MobileUiTheme.ButtonFontShrink);
             labelText.resizeTextMaxSize = fontSize;
