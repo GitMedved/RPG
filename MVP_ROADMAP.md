@@ -316,3 +316,8 @@ Made the shared Canvas detail sheet fit the active safe-area viewport by clampin
 ## 45. M57 — Compact responsive detail panels — 2026-11-06
 
 Adjusted the shared detail sheet's internal layout for landscape and shorter displays. Settings and journal action rows compress to fit a dedicated bottom action zone, while the scroll viewport is resized to the actual remaining panel area. All existing callbacks are preserved. The UI audit checks for the new responsive path. Local Unity compile, visual and touch validation remain required. See M57_COMPACT_RESPONSIVE_DETAIL_PANELS.md.
+
+
+## 46. M58 — Shared mobile UI theme — 2026-11-06
+
+Centralized the runtime HUD palette and button interaction states in `MobileUiTheme`; migrated the Canvas HUD's button construction, panel tokens and enabled/disabled feedback to the shared theme. Extended the UI audit to verify the integration. This is still prototype styling without final approved fonts/sprites. Unity compilation, visual acceptance, accessibility contrast and device checks remain required. See M58_SHARED_MOBILE_UI_THEME.md.
