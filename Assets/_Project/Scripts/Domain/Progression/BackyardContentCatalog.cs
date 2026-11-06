@@ -55,6 +55,14 @@ namespace MiaMax.Domain.Progression
             return false;
         }
 
+        public bool TryAdd(BackyardContentEntry entry)
+        {
+            if (entry == null || string.IsNullOrWhiteSpace(entry.Id) || TryGet(entry.Id, out _))
+                return false;
+            entries.Add(entry);
+            return true;
+        }
+
         public List<string> Validate()
         {
             var issues = new List<string>();
