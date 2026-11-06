@@ -34,8 +34,8 @@ namespace MiaMax.EditorTools
             Add(results, "Enabled build scenes", enabledScenes > 0,
                 enabledScenes + " enabled scene(s) in Build Settings. The prototype scene must be added and tested.", true);
 
-            string androidId = PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Android);
-            string iosId = PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.iOS);
+            string androidId = PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.Android);
+            string iosId = PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.iOS);
             Add(results, "Android application ID", IsConfiguredId(androidId), Display(androidId), true);
             Add(results, "iOS bundle ID", IsConfiguredId(iosId), Display(iosId), true);
             Add(results, "Company and product identity",
