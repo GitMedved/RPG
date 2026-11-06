@@ -48,12 +48,6 @@ namespace MiaMax.Gameplay
         private Text interactButtonText;
         private float nextRefresh;
 
-        private static readonly Color Ink = new Color(0.16f, 0.20f, 0.18f, 1f);
-        private static readonly Color Cream = new Color(0.98f, 0.94f, 0.82f, 1f);
-        private static readonly Color Forest = new Color(0.22f, 0.36f, 0.29f, 0.98f);
-        private static readonly Color Leaf = new Color(0.38f, 0.53f, 0.35f, 1f);
-        private static readonly Color Honey = new Color(0.82f, 0.57f, 0.25f, 1f);
-
         private void Start()
         {
             hud = GetComponent<PrototypeHud>();
@@ -87,23 +81,23 @@ namespace MiaMax.Gameplay
             safeRoot = MakeRect("Safe Area", canvas.transform);
             ApplySafeArea();
 
-            Image statusCard = MakePanel("Player Status Card", safeRoot, Forest,
+            Image statusCard = MakePanel("Player Status Card", safeRoot, MobileUiTheme.Forest,
                 new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(16f, -16f),
                 new Vector2(352f, 174f), new Vector2(0f, 1f));
             statusText = MakeText("Player Status", statusCard.transform, string.Empty, 27,
-                TextAnchor.MiddleLeft, Cream, new Vector2(20f, 12f), new Vector2(-20f, -12f));
+                TextAnchor.MiddleLeft, MobileUiTheme.Cream, new Vector2(20f, 12f), new Vector2(-20f, -12f));
             statusText.horizontalOverflow = HorizontalWrapMode.Wrap;
             statusText.verticalOverflow = VerticalWrapMode.Overflow;
 
             Image giftPanel = MakePanel("Daily Gift Panel", safeRoot, new Color(0.94f, 0.88f, 0.72f, 0.98f),
                 new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(16f, -202f),
                 new Vector2(352f, 74f), new Vector2(0f, 1f));
-            giftButton = MakeButton("Daily Gift", giftPanel.transform, Honey, "DAILY GIFT",
+            giftButton = MakeButton("Daily Gift", giftPanel.transform, MobileUiTheme.Honey, "DAILY GIFT",
                 Vector2.zero, Vector2.one, out giftButtonText, 23);
             giftButton.onClick.AddListener(() => hud?.ClaimDailyGift());
 
             journalButton = MakeTopButton("Journal Button", "ADVENTURE JOURNAL", safeRoot,
-                new Vector2(1f, 1f), new Vector2(-16f, -16f), Forest, out journalButtonText);
+                new Vector2(1f, 1f), new Vector2(-16f, -16f), MobileUiTheme.Forest, out journalButtonText);
             journalButton.onClick.AddListener(() => hud?.ToggleJournal());
             settingsButton = MakeTopButton("Settings Button", "SETTINGS", safeRoot,
                 new Vector2(1f, 1f), new Vector2(-16f, -94f), new Color(0.30f, 0.39f, 0.39f, 0.98f), out settingsButtonText);
@@ -115,7 +109,7 @@ namespace MiaMax.Gameplay
             Image dock = MakePanel("Bottom Action Dock", safeRoot, new Color(0.13f, 0.20f, 0.18f, 0.96f),
                 new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 18f),
                 new Vector2(680f, 142f), new Vector2(0.5f, 0f));
-            backpackButton = MakeButton("Backpack Button", dock.transform, Leaf, "BACKPACK",
+            backpackButton = MakeButton("Backpack Button", dock.transform, MobileUiTheme.Leaf, "BACKPACK",
                 Vector2.zero, Vector2.one, out backpackButtonText, 25);
             RectTransform backpackRect = (RectTransform)backpackButton.transform;
             backpackRect.anchorMin = new Vector2(0f, 0f);
@@ -124,7 +118,7 @@ namespace MiaMax.Gameplay
             backpackRect.offsetMax = new Vector2(-6f, -10f);
             backpackButton.onClick.AddListener(() => hud?.ToggleInventory());
 
-            interactButton = MakeButton("Interact Button", dock.transform, Honey, "EXPLORE",
+            interactButton = MakeButton("Interact Button", dock.transform, MobileUiTheme.Honey, "EXPLORE",
                 Vector2.zero, Vector2.one, out interactButtonText, 25);
             RectTransform interactRect = (RectTransform)interactButton.transform;
             interactRect.anchorMin = new Vector2(0.5f, 0f);
@@ -134,7 +128,7 @@ namespace MiaMax.Gameplay
             interactButton.onClick.AddListener(() => hud?.TryInteractFromHud());
 
             promptText = MakeText("Nearby Prompt", safeRoot, "Explore the backyard", 24,
-                TextAnchor.MiddleCenter, Cream, Vector2.zero, Vector2.zero);
+                TextAnchor.MiddleCenter, MobileUiTheme.Cream, Vector2.zero, Vector2.zero);
             promptText.rectTransform.anchorMin = new Vector2(0.08f, 0f);
             promptText.rectTransform.anchorMax = new Vector2(0.92f, 0f);
             promptText.rectTransform.pivot = new Vector2(0.5f, 0f);
@@ -145,7 +139,7 @@ namespace MiaMax.Gameplay
                 new Vector2(0.08f, 1f), new Vector2(0.92f, 1f), new Vector2(0f, -270f),
                 new Vector2(0f, 66f), new Vector2(0.5f, 1f));
             tutorialText = MakeText("Tutorial Hint", safeRoot, string.Empty, 22,
-                TextAnchor.MiddleCenter, Ink, Vector2.zero, Vector2.zero);
+                TextAnchor.MiddleCenter, MobileUiTheme.Ink, Vector2.zero, Vector2.zero);
             tutorialText.rectTransform.anchorMin = new Vector2(0.08f, 1f);
             tutorialText.rectTransform.anchorMax = new Vector2(0.92f, 1f);
             tutorialText.rectTransform.pivot = new Vector2(0.5f, 1f);
@@ -156,7 +150,7 @@ namespace MiaMax.Gameplay
                 new Vector2(0.12f, 1f), new Vector2(0.88f, 1f), new Vector2(0f, -350f),
                 new Vector2(0f, 76f), new Vector2(0.5f, 1f));
             feedbackText = MakeText("Gameplay Feedback", safeRoot, string.Empty, 25,
-                TextAnchor.MiddleCenter, Cream, Vector2.zero, Vector2.zero);
+                TextAnchor.MiddleCenter, MobileUiTheme.Cream, Vector2.zero, Vector2.zero);
             feedbackText.rectTransform.anchorMin = new Vector2(0.12f, 1f);
             feedbackText.rectTransform.anchorMax = new Vector2(0.88f, 1f);
             feedbackText.rectTransform.pivot = new Vector2(0.5f, 1f);
@@ -174,11 +168,11 @@ namespace MiaMax.Gameplay
             detailPanel = panel.gameObject;
             detailPanelRect = (RectTransform)panel.transform;
             detailTitle = MakeText("Detail Panel Title", panel.transform, "BACKPACK", 34,
-                TextAnchor.MiddleLeft, Cream, new Vector2(28f, -92f), new Vector2(-100f, -18f));
+                TextAnchor.MiddleLeft, MobileUiTheme.Cream, new Vector2(28f, -92f), new Vector2(-100f, -18f));
             detailTitle.rectTransform.anchorMin = new Vector2(0f, 1f);
             detailTitle.rectTransform.anchorMax = new Vector2(1f, 1f);
             detailTitle.rectTransform.pivot = new Vector2(0.5f, 1f);
-            Button close = MakeButton("Detail Panel Close", panel.transform, Honey, "CLOSE",
+            Button close = MakeButton("Detail Panel Close", panel.transform, MobileUiTheme.Honey, "CLOSE",
                 Vector2.zero, Vector2.one, out _, 20);
             RectTransform closeRect = (RectTransform)close.transform;
             closeRect.anchorMin = new Vector2(1f, 1f);
@@ -213,7 +207,7 @@ namespace MiaMax.Gameplay
             detailContent.sizeDelta = new Vector2(0f, 600f);
 
             detailBody = MakeText("Detail Panel Body", detailContent, string.Empty, 29,
-                TextAnchor.UpperLeft, Cream, new Vector2(8f, 8f), new Vector2(-8f, -8f));
+                TextAnchor.UpperLeft, MobileUiTheme.Cream, new Vector2(8f, 8f), new Vector2(-8f, -8f));
             detailBody.horizontalOverflow = HorizontalWrapMode.Wrap;
             detailBody.verticalOverflow = VerticalWrapMode.Overflow;
 
@@ -242,7 +236,7 @@ namespace MiaMax.Gameplay
                 int setting = i;
                 float y = 216f - i * 42f;
                 Text label = MakeText("Setting " + settingNames[i], controlsRect, settingNames[i], 22,
-                    TextAnchor.MiddleLeft, Cream, Vector2.zero, Vector2.zero);
+                    TextAnchor.MiddleLeft, MobileUiTheme.Cream, Vector2.zero, Vector2.zero);
                 settingLabelRects[i] = label.rectTransform;
                 label.rectTransform.anchorMin = new Vector2(0f, 0f);
                 label.rectTransform.anchorMax = new Vector2(0.52f, 0f);
@@ -250,14 +244,14 @@ namespace MiaMax.Gameplay
                 label.rectTransform.anchoredPosition = new Vector2(8f, y);
                 label.rectTransform.sizeDelta = new Vector2(0f, 38f);
 
-                Button minus = MakeButton("Decrease " + settingNames[i], controlsRect, Leaf, "−",
+                Button minus = MakeButton("Decrease " + settingNames[i], controlsRect, MobileUiTheme.Leaf, "−",
                     Vector2.zero, Vector2.one, out _, 24);
                 settingMinusRects[i] = (RectTransform)minus.transform;
                 SetControlRect(minus, new Vector2(0.62f, 0f), new Vector2(0.74f, 0f),
                     new Vector2(0f, y), new Vector2(0f, 38f));
                 minus.onClick.AddListener(() => hud?.AdjustSettingFromCanvas(setting, -0.05f));
 
-                Button plus = MakeButton("Increase " + settingNames[i], controlsRect, Honey, "+",
+                Button plus = MakeButton("Increase " + settingNames[i], controlsRect, MobileUiTheme.Honey, "+",
                     Vector2.zero, Vector2.one, out _, 24);
                 settingPlusRects[i] = (RectTransform)plus.transform;
                 SetControlRect(plus, new Vector2(0.80f, 0f), new Vector2(0.92f, 0f),
@@ -265,13 +259,13 @@ namespace MiaMax.Gameplay
                 plus.onClick.AddListener(() => hud?.AdjustSettingFromCanvas(setting, 0.05f));
             }
 
-            Button vibration = MakeButton("Vibration Toggle", controlsRect, Leaf, "VIBRATION",
+            Button vibration = MakeButton("Vibration Toggle", controlsRect, MobileUiTheme.Leaf, "VIBRATION",
                 Vector2.zero, Vector2.one, out vibrationLabel, 20);
             SetControlRect(vibration, new Vector2(0f, 0f), new Vector2(0.48f, 0f),
                 new Vector2(0f, 8f), new Vector2(0f, 38f));
             vibration.onClick.AddListener(() => hud?.ToggleVibrationFromCanvas());
 
-            Button reduced = MakeButton("Reduced Motion Toggle", controlsRect, Leaf, "REDUCED MOTION",
+            Button reduced = MakeButton("Reduced Motion Toggle", controlsRect, MobileUiTheme.Leaf, "REDUCED MOTION",
                 Vector2.zero, Vector2.one, out reducedMotionLabel, 18);
             SetControlRect(reduced, new Vector2(0.52f, 0f), new Vector2(1f, 0f),
                 new Vector2(0f, 8f), new Vector2(0f, 38f));
@@ -302,7 +296,7 @@ namespace MiaMax.Gameplay
                 int row = i / 2;
                 int column = i % 2;
                 Button actionButton = MakeButton("Journal Action " + action, journalRect,
-                    action % 3 == 0 ? Honey : Leaf, journalActions[i],
+                    action % 3 == 0 ? MobileUiTheme.Honey : MobileUiTheme.Leaf, journalActions[i],
                     Vector2.zero, Vector2.one, out _, 17);
                 journalActionRects[i] = (RectTransform)actionButton.transform;
                 SetControlRect(actionButton,
@@ -421,7 +415,7 @@ namespace MiaMax.Gameplay
             }
             giftButtonText.text = hud.DailyGiftLabel;
             giftButton.interactable = hud.CanClaimDailyGift;
-            giftButton.targetGraphic.color = hud.CanClaimDailyGift ? Honey : new Color(0.43f, 0.46f, 0.39f, 0.9f);
+            giftButton.targetGraphic.color = hud.CanClaimDailyGift ? MobileUiTheme.Honey : new Color(0.43f, 0.46f, 0.39f, 0.9f);
 
             journalButtonText.text = hud.JournalOpen ? "CLOSE JOURNAL" : "ADVENTURE JOURNAL";
             settingsButtonText.text = hud.SettingsOpen ? "CLOSE SETTINGS" : "SETTINGS";
@@ -431,7 +425,7 @@ namespace MiaMax.Gameplay
             bool canInteract = hud.CanInteract;
             interactButton.interactable = canInteract;
             interactButtonText.text = canInteract ? "INTERACT" : "EXPLORE";
-            interactButton.targetGraphic.color = canInteract ? Honey : new Color(0.43f, 0.46f, 0.39f, 0.9f);
+            interactButton.targetGraphic.color = canInteract ? MobileUiTheme.Honey : new Color(0.43f, 0.46f, 0.39f, 0.9f);
             promptText.text = hud.InteractionPrompt;
             feedbackText.text = hud.FeedbackText;
             feedbackText.gameObject.SetActive(!string.IsNullOrEmpty(hud.FeedbackText));
@@ -468,16 +462,9 @@ namespace MiaMax.Gameplay
             Image image = go.GetComponent<Image>();
             image.color = color;
             Button button = go.GetComponent<Button>();
-            button.targetGraphic = image;
-            button.transition = Selectable.Transition.ColorTint;
-            ColorBlock colors = button.colors;
-            colors.normalColor = color;
-            colors.highlightedColor = Color.Lerp(color, Color.white, 0.12f);
-            colors.pressedColor = Color.Lerp(color, Ink, 0.18f);
-            colors.disabledColor = new Color(color.r, color.g, color.b, 0.55f);
-            button.colors = colors;
+            MobileUiTheme.ApplyButton(button, image, color);
             labelText = MakeText(name + " Label", go.transform, label, fontSize,
-                TextAnchor.MiddleCenter, Cream, new Vector2(8f, 4f), new Vector2(-8f, -4f));
+                TextAnchor.MiddleCenter, MobileUiTheme.Cream, new Vector2(8f, 4f), new Vector2(-8f, -4f));
             labelText.fontStyle = FontStyle.Bold;
             labelText.resizeTextForBestFit = true;
             labelText.resizeTextMinSize = Mathf.Max(14, fontSize - 5);
