@@ -358,3 +358,8 @@ Introduced `MobileUiTheme` as the shared source for the runtime HUD palette, pan
 ## M59 — Mobile UI contrast and readable labels
 
 Improved button-label legibility by choosing cream or dark-ink text according to the button background's measured contrast, and darkened the leaf-green action color. The UI Migration Audit now checks a 4.5:1 contrast threshold for the core action palette. This is a focused contrast check, not a complete accessibility certification. Unity audit execution and device review remain pending. See [M59 Mobile UI Contrast](M59_MOBILE_UI_CONTRAST.md).
+
+
+## M71–M75 — Save resilience and starter content pipeline
+
+Added interrupted-write save recovery, defensive normalization for malformed/duplicate saved state, a non-destructive starter catalog builder, and an integration-audit check for 16 known gameplay content IDs. The expanded Editor smoke suite now contains eight checks. Run **Tools → Mia & Max → Run Core Smoke Checks**, then **Tools → Mia & Max → Create or Update Starter Content Catalog**, and finally **Tools → Mia & Max → Gameplay & Character Integration Audit**. These commands must be run in the local Unity Editor; source changes do not count as execution evidence. See [M71–M75 implementation notes](M71_M75_SAVE_AND_CONTENT_PIPELINE.md).
