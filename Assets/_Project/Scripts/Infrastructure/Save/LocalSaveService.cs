@@ -31,7 +31,35 @@ namespace MiaMax.Infrastructure.Save
             string backup = Path.Combine(directory, BackupFileName);
 
             PlayerSaveData data = TryRead(primary);
-            if (data != null) return Validate(data);
+            if (data != null)
+            {
+                data = Validate(data);
+                // A valid primary always wins; an orphaned temp file is from an interrupted
+                // older write and must not replace a committed save.
+                DeleteIfExists(Path.Combine(directory, TempFileName));
+                return data;
+            }
+
+            // Save writes a complete temp file before rotating the primary. If the app was
+            // interrupted after the rotation but before the final move, the primary is absent
+            // and the temp file may be the newest complete copy.
+            if (!File.Exists(primary))
+            {
+                PlayerSaveData interrupted = TryRead(Path.Combine(directory, TempFileName));
+                if (interrupted != null)
+                {
+                    interrupted = Validate(interrupted);
+                    PlayerSaveData knownGoodBackup = TryRead(backup);
+                    if (knownGoodBackup == null ||
+                        interrupted.UpdatedAtUnix >= knownGoodBackup.UpdatedAtUnix)
+                    {
+                        File.Copy(Path.Combine(directory, TempFileName), primary, true);
+                        DeleteIfExists(Path.Combine(directory, TempFileName));
+                        Debug.LogWarning("Recovered the most recent complete save from the temporary file.");
+                        return interrupted;
+                    }
+                }
+            }
 
             data = TryRead(backup);
             if (data != null)
@@ -67,6 +95,11 @@ namespace MiaMax.Infrastructure.Save
             }
 
             File.Move(temp, primary);
+        }
+
+        private static void DeleteIfExists(string path)
+        {
+            if (File.Exists(path)) File.Delete(path);
         }
 
         private static PlayerSaveData TryRead(string path)
