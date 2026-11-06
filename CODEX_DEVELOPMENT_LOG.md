@@ -783,3 +783,12 @@
 - **M70:** added **Tools → Mia & Max → Gameplay & Character Integration Audit** for source dependencies, catalog structure and expected clip-name coverage; expanded the UI audit for reusable components and navigation.
 - Added `M60_M70_IMPLEMENTATION_PACKAGE.md` with scope and local acceptance steps.
 - Static source review only. Unity compilation, audit execution, content authoring, full gameplay-loop playthrough, economy tuning, imported character rig/clip review and Android/iOS device tests remain pending.
+## M71–M75 — Save recovery and content authoring — 2026-11-06
+
+- **M71:** added recovery of the newest complete temporary save when the primary file is absent after an interrupted write; valid primary saves retain priority and schema mismatches remain explicit errors.
+- **M72:** normalized malformed save collections: duplicate inventory stacks, farm plot IDs, completed orders, quest claims and unlocked areas; invalid production jobs are cleared.
+- **M73:** added a non-destructive starter catalog builder and duplicate-safe catalog insertion; existing content IDs are not overwritten.
+- **M74:** expanded the gameplay integration audit to verify 16 known starter content IDs, not only catalog structure.
+- **M75:** documented the local acceptance handoff and test profile safeguards. See `M71_M75_SAVE_AND_CONTENT_PIPELINE.md`.
+
+Source-level implementation only. The new 8-check smoke suite, catalog builder and audits still require local Unity execution; save/reload, gameplay and Android/iOS device acceptance remain open.
