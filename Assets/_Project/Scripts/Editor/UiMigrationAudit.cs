@@ -38,13 +38,15 @@ namespace MiaMax.EditorTools
             string hudSource = File.Exists(hudPath) ? File.ReadAllText(hudPath) : string.Empty;
             bool hudCanvas = hudSource.Contains("ScreenSpaceOverlay");
             bool responsiveDetailPanel = hudSource.Contains("ApplyResponsiveLayout") &&
-                hudSource.Contains("safeRoot.rect.width") && hudSource.Contains("safeRoot.rect.height");
+                hudSource.Contains("safeRoot.rect.width") && hudSource.Contains("safeRoot.rect.height") &&
+                hudSource.Contains("controlsHeight") && hudSource.Contains("detailViewportRect.offsetMin") &&
+                hudSource.Contains("journalActionRects") && hudSource.Contains("settingLabelRects");
             bool legacyFallback = imguiFiles.Contains(ScriptsRoot + "/Gameplay/PrototypeHud.cs");
 
             Debug.Log("[Mia & Max] UI migration audit\n" +
                 "Mobile HUD Canvas: " + (hudCanvas ? "FOUND" : "MISSING") + "\n" +
                 "Joystick Canvas: " + (joystickCanvas ? "FOUND" : "MISSING") + "\n" +
-                "Responsive detail panel: " + (responsiveDetailPanel ? "FOUND" : "MISSING") + "\n" +
+                "Responsive detail panel and compact controls: " + (responsiveDetailPanel ? "FOUND" : "MISSING") + "\n" +
                 "PrototypeHud IMGUI fallback: " + (legacyFallback ? "PRESENT (intentional fallback)" : "NOT FOUND") + "\n" +
                 "Remaining OnGUI files: " + imguiFiles.Count + "\n" +
                 string.Join("\n", imguiFiles.ToArray()) + "\n\n" +
