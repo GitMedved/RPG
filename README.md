@@ -43,6 +43,7 @@ Pre-production Unity prototype. The repository began as a README-only project; t
 - [M34 Canvas Mobile HUD](M34_CANVAS_MOBILE_HUD.md)
 - [M35 Canvas Backpack & World Map](M35_CANVAS_BACKPACK_MAP_FEEDBACK.md)
 - [M36 Canvas Settings & Accessibility](M36_CANVAS_SETTINGS_ACCESSIBILITY.md)
+- [M60–M70 UI, Gameplay & Character Foundations](M60_M70_IMPLEMENTATION_PACKAGE.md)
 
 ## Unity project scaffold
 
