@@ -333,3 +333,10 @@ Added contrast-aware button label colors, adjusted the leaf-green action token a
 Implemented reusable Canvas card/state components, a route navigation stack, shared button typography, read-only quest snapshots, an authorable backyard content catalog, expanded character animation actions and a consolidated Editor integration audit. Existing domain economy/reward systems remain unchanged and authoritative. This is an engineering foundation package, not acceptance of finished screens, balanced content, final art or animation. See `M60_M70_IMPLEMENTATION_PACKAGE.md`.
 
 **Still required:** migrate each screen to the shared components/navigation; author and review the content catalog; tune economy through playtesting; import approved Mia/Max production meshes and clips; run all Editor audits and Unity compile/Play Mode checks; test save/reload and physical devices.
+
+
+## 49. M71–M75 — Save resilience and content authoring pipeline — 2026-11-06
+
+Improved interrupted-write recovery and save payload normalization, added an additive starter content catalog builder for known crops/recipes/orders/quests/mini-games, and expanded the integration audit to check all 16 known IDs. Added smoke coverage for save normalization, temporary-file recovery and duplicate-safe catalog authoring. The expected Editor smoke suite is now 8/8, but has not yet been run locally. See `M71_M75_SAVE_AND_CONTENT_PIPELINE.md`.
+
+**Next:** run the local smoke suite and create/review the catalog asset; then wire catalog-backed presentation only where it can remain consistent with authoritative gameplay services. Continue production art/animation/audio work and complete full gameplay/save/device acceptance.
