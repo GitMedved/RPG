@@ -352,3 +352,8 @@ Improved the shared detail sheet for short landscape displays: the bottom settin
 ## M58 — Shared mobile UI theme
 
 Introduced `MobileUiTheme` as the shared source for the runtime HUD palette, panel tokens and uGUI button interaction states. The mobile HUD now uses common button styling and consistent enabled/disabled availability states for key actions. The UI Migration Audit verifies the theme integration. No production font or sprite assets were invented; the UI remains a styled prototype pending approved art. Unity compilation and visual/device acceptance remain pending. See [M58 Shared Mobile UI Theme](M58_SHARED_MOBILE_UI_THEME.md).
+
+
+## M59 — Mobile UI contrast and readable labels
+
+Improved button-label legibility by choosing cream or dark-ink text according to the button background's measured contrast, and darkened the leaf-green action color. The UI Migration Audit now checks a 4.5:1 contrast threshold for the core action palette. This is a focused contrast check, not a complete accessibility certification. Unity audit execution and device review remain pending. See [M59 Mobile UI Contrast](M59_MOBILE_UI_CONTRAST.md).
