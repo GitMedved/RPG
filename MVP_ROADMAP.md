@@ -321,3 +321,8 @@ Adjusted the shared detail sheet's internal layout for landscape and shorter dis
 ## 46. M58 — Shared mobile UI theme — 2026-11-06
 
 Centralized the runtime HUD palette and button interaction states in `MobileUiTheme`; migrated the Canvas HUD's button construction, panel tokens and enabled/disabled feedback to the shared theme. Extended the UI audit to verify the integration. This is still prototype styling without final approved fonts/sprites. Unity compilation, visual acceptance, accessibility contrast and device checks remain required. See M58_SHARED_MOBILE_UI_THEME.md.
+
+
+## 47. M59 — Mobile UI contrast and readable labels — 2026-11-06
+
+Added contrast-aware button label colors, adjusted the leaf-green action token and extended the Editor UI audit with a 4.5:1 contrast check for core button backgrounds. This is a focused palette check only; complete accessibility and device validation remain required. See M59_MOBILE_UI_CONTRAST.md.
