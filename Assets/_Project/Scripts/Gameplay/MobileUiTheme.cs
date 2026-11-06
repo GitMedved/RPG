@@ -36,6 +36,7 @@ namespace MiaMax.Gameplay
             colors.selectedColor = Color.Lerp(baseColor, Color.white, 0.08f);
             colors.disabledColor = new Color(baseColor.r, baseColor.g, baseColor.b, 0.55f);
             button.colors = colors;
+            MobileUiComponents.ApplyButtonTypography(button, MinimumButtonFontSize, ButtonFontShrink);
         }
 
         public static Color GetReadableButtonText(Color background)
