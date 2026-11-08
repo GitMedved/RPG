@@ -11,6 +11,7 @@ namespace MiaMax.Gameplay
         private BackyardInteractable interactable;
         private int lastRemaining = -1;
         private UpgradeService upgrades;
+        private int lastProgressStep = -1;
         public void Configure(BackyardInteractable target) { interactable = target; interactable.Interacted += OnInteract; }
         private void Update()
         {
@@ -22,6 +23,16 @@ namespace MiaMax.Gameplay
             if (service == null) return;
             int remaining = service.RemainingSeconds;
             if (remaining != lastRemaining) { lastRemaining = remaining; UpdateLabel(); }
+
+            var activeJob = service.ActiveJob;
+            int progressStep = activeJob != null && activeJob.IsActive
+                ? Mathf.Clamp(Mathf.FloorToInt(service.Progress01 * 4f), 0, 4) : -1;
+            if (progressStep != lastProgressStep)
+            {
+                if (progressStep > 0 && progressStep < 4)
+                    BackyardFeedbackVfx.PlayWorkshopProgress(transform.position + Vector3.up * 1.35f);
+                lastProgressStep = progressStep;
+            }
         }
         private void OnDestroy() { if (interactable != null) interactable.Interacted -= OnInteract; }
         private void OnInteract()
@@ -31,14 +42,22 @@ namespace MiaMax.Gameplay
             if (job != null && job.IsActive)
             {
                 if (service.RemainingSeconds == 0 && service.TryCollect())
+                {
                     GameVoiceDirector.PlayMia("mia_success_01");
+                    BackyardFeedbackVfx.PlayWorkshopComplete(transform.position + Vector3.up * 1.25f);
+                }
             }
             else
             {
                 bool started = service.TryStart(ProductionService.CarrotSoup);
                 if (!started) started = service.TryStart(ProductionService.StrawberryJuice);
                 if (!started) started = service.TryStart(ProductionService.WoodenToy);
-                if (started) GameVoiceDirector.PlayMia("mia_interact_01");
+                if (started)
+                {
+                    GameVoiceDirector.PlayMia("mia_interact_01");
+                    lastProgressStep = 0;
+                    BackyardFeedbackVfx.PlayWorkshopStart(transform.position + Vector3.up * 1.2f);
+                }
             }
             UpdateLabel();
         }
