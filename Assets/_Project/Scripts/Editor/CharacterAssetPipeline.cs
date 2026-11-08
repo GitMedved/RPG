@@ -263,6 +263,16 @@ namespace MiaMax.EditorTools
             if (animator.avatar == null && importedAvatar != null) animator.avatar = importedAvatar;
 
             string prefabPath = resourcesFolder + "/" + characterName + ".prefab";
+            // Never silently replace a manually reviewed or customized runtime prefab.
+            // Rebuild only after an explicit backup/removal by the developer.
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath) != null)
+            {
+                Debug.LogWarning(characterName + " runtime prefab already exists at " + prefabPath +
+                    ". It was preserved. Back it up and remove it explicitly before rebuilding from FBX.");
+                Object.DestroyImmediate(wrapper);
+                return false;
+            }
+
             PrefabUtility.SaveAsPrefabAsset(wrapper, prefabPath);
             Object.DestroyImmediate(wrapper);
             return AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath) != null;
