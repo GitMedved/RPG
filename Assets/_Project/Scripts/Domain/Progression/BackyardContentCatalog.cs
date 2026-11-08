@@ -99,9 +99,9 @@ namespace MiaMax.Domain.Progression
         {
             var issues = new List<string>();
             var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            for (int i = 0; i < entries.Count; i++)
+            for (int i = 0; i < Entries.Count; i++)
             {
-                BackyardContentEntry entry = entries[i];
+                BackyardContentEntry entry = Entries[i];
                 if (entry == null)
                 {
                     issues.Add("Entry " + i + " is null.");
