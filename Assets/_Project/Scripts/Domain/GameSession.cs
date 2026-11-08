@@ -29,12 +29,14 @@ namespace MiaMax.Domain
         }
 
         /// <summary>Charges an upgrade and increments its level in one observable transaction.</summary>
-        public bool TryPurchaseUpgrade(int cost, ref int currentLevel, int maxLevel)
+        public bool TryPurchaseUpgrade(int cost, bool gardenUpgrade, int maxLevel)
         {
+            int currentLevel = gardenUpgrade ? Data.GardenLevel : Data.WorkshopLevel;
             if (cost <= 0 || maxLevel <= 0 || currentLevel < 0 ||
                 currentLevel >= maxLevel || Data.Progress.Coins < cost) return false;
             Data.Progress.Coins -= cost;
-            currentLevel++;
+            if (gardenUpgrade) Data.GardenLevel++;
+            else Data.WorkshopLevel++;
             Notify();
             return true;
         }
