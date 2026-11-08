@@ -432,3 +432,13 @@ The authoring catalog now has indexed ID lookup, case-insensitive duplicate prot
 - Environment dressing avoids duplicate roots and tolerates missing preferred shaders.
 - Gameplay integration audit checks the material bindings and bootstrap connection.
 - Generated PNG/material assets still need local Editor generation and visual acceptance. See M151_M160_BACKYARD_MATERIAL_INTEGRATION.md.
+
+
+## M161–M200 — Backyard polish, mobile budgets and release verification foundations
+
+- M161–M170: added deterministic flower pockets and low-profile lawn-edge stones to the existing backyard dressing. Placement is fixed, decorative colliders are removed by the shared primitive helper, and stone shadows are disabled to restrain rendering cost.
+- M171–M180: extended the Gameplay & Character Integration Audit with a source-contract check for deterministic placement, collider removal and the decorative shadow policy.
+- M181–M190: consolidated mobile performance acceptance into an explicit review gate: draw calls/material sharing, shadow distance/cascades, overdraw, texture compression/mipmaps, particle caps, render scale and low/mid-tier profiling. No global quality settings are silently changed by prototype code.
+- M191–M200: documented visual acceptance boundaries, clean-import verification, scene/build inclusion, fresh-profile loop, save/reload, offline and device evidence requirements in the handoff notes.
+
+Source-level changes only. Unity compilation, Editor audits, Play Mode visual review, profiler capture, Android/iOS builds and physical-device testing must still be completed locally. Procedural additions remain prototype dressing, not approved final environment art.
