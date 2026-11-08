@@ -340,3 +340,8 @@ Implemented reusable Canvas card/state components, a route navigation stack, sha
 Improved interrupted-write recovery and save payload normalization, added an additive starter content catalog builder for known crops/recipes/orders/quests/mini-games, and expanded the integration audit to check all 16 known IDs. Added smoke coverage for save normalization, temporary-file recovery and duplicate-safe catalog authoring. The expected Editor smoke suite is now 8/8, but has not yet been run locally. See `M71_M75_SAVE_AND_CONTENT_PIPELINE.md`.
 
 **Next:** run the local smoke suite and create/review the catalog asset; then wire catalog-backed presentation only where it can remain consistent with authoritative gameplay services. Continue production art/animation/audio work and complete full gameplay/save/device acceptance.
+
+
+## M76–M80 — Content catalog reliability — 2026-11-08
+
+The authoring catalog now has indexed ID lookup, case-insensitive duplicate protection, kind-filtered queries and stricter validation. Core smoke checks cover lookup semantics and required item references; the gameplay audit validates all 16 starter IDs against their expected content kinds. The catalog remains an authoring/index layer; domain services remain authoritative for economy and progression. Local Unity validation is required before wiring catalog data into runtime screens. See M76_M80_CONTENT_CATALOG_RELIABILITY.md.
