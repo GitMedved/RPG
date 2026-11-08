@@ -28,6 +28,17 @@ namespace MiaMax.Domain
             return true;
         }
 
+        /// <summary>Charges an upgrade and increments its level in one observable transaction.</summary>
+        public bool TryPurchaseUpgrade(int cost, ref int currentLevel, int maxLevel)
+        {
+            if (cost <= 0 || maxLevel <= 0 || currentLevel < 0 ||
+                currentLevel >= maxLevel || Data.Progress.Coins < cost) return false;
+            Data.Progress.Coins -= cost;
+            currentLevel++;
+            Notify();
+            return true;
+        }
+
         public bool TrySpendCoins(int amount)
         {
             if (amount <= 0 || Data.Progress.Coins < amount) return false;
