@@ -228,15 +228,19 @@ namespace MiaMax.EditorTools
             ref int prefabsScanned,
             ref int prefabCount)
         {
-            string[] allPrefabGuids = AssetDatabase.FindAssets("t:Prefab");
+            // Search all project assets and filter by the actual .prefab extension.
+            // This avoids relying on Unity's type-token indexing for Prefab assets.
+            string[] allAssetGuids = AssetDatabase.FindAssets("", new[] { "Assets" });
             var projectPrefabPaths = new List<string>();
-            for (int i = 0; i < allPrefabGuids.Length; i++)
+            for (int i = 0; i < allAssetGuids.Length; i++)
             {
-                string candidatePath = AssetDatabase.GUIDToAssetPath(allPrefabGuids[i]);
+                string candidatePath = AssetDatabase.GUIDToAssetPath(allAssetGuids[i]);
                 if (!string.IsNullOrEmpty(candidatePath) &&
-                    candidatePath.StartsWith("Assets/", StringComparison.OrdinalIgnoreCase))
+                    candidatePath.StartsWith("Assets/", StringComparison.OrdinalIgnoreCase) &&
+                    candidatePath.EndsWith(".prefab", StringComparison.OrdinalIgnoreCase))
                     projectPrefabPaths.Add(candidatePath);
             }
+            projectPrefabPaths.Sort(StringComparer.OrdinalIgnoreCase);
             prefabCount = projectPrefabPaths.Count;
 
             for (int i = 0; i < projectPrefabPaths.Count; i++)
