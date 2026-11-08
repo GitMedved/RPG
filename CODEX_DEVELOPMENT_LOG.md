@@ -885,3 +885,12 @@ Connected story quest presentation and reward values to the authored BackyardCon
 - Extended GameplayReleaseAudit with source-level checks for the character pipeline safeguards.
 - Added `CHARACTER_PRODUCTION_HANDOFF.md` describing the reviewed-reference-to-runtime-prefab workflow.
 - Static source edits only; Unity compilation, model import, Avatar inspection, prefab generation, smoke checks, Play Mode and device validation were not run.
+
+
+## 2026-11-08 — M131–M140 compile repair from local Unity log
+
+- Fixed BackyardFeedbackVfx namespace imports for MiaMax.Domain.GameSession and MiaMax.Infrastructure.Save.GameSessionBootstrap.
+- Added Unity's built-in com.unity.modules.particlesystem module to Packages/manifest.json, resolving the missing ParticleSystem type-forwarder dependency reported by the Unity compiler.
+- Strengthened Gameplay & Character Integration Audit to check both VFX namespace imports and the required built-in module declaration.
+- The supplied local log showed 16/16 deterministic smoke scenarios passing; save-recovery warnings were emitted by deliberate corruption/recovery scenarios that also passed.
+- Source/manifest updates committed only. Unity package resolution, compilation, audit rerun and Play Mode still require local confirmation.
