@@ -349,6 +349,40 @@ namespace MiaMax.EditorTools
             if (valid) ready++; else pending++;
         }
 
+        private static void CheckInteractiveProgressPresentation(System.Text.StringBuilder report,
+            ref int ready, ref int pending)
+        {
+            string farmingPath = Scripts + "/Domain/Farming/FarmingService.cs";
+            string farmVisualPath = Scripts + "/Gameplay/FarmPlotPrototype.cs";
+            string productionPath = Scripts + "/Domain/Production/ProductionService.cs";
+            string stationPath = Scripts + "/Gameplay/ProductionStationPrototype.cs";
+            string hudPath = Scripts + "/Gameplay/PrototypeHud.cs";
+            string canvasPath = Scripts + "/Gameplay/MobileHudCanvas.cs";
+            string smokePath = Scripts + "/Editor/EditorSmokeChecks.cs";
+            bool growth = File.Exists(farmingPath) &&
+                File.ReadAllText(farmingPath).Contains("GrowthProgress01") &&
+                File.ReadAllText(farmingPath).Contains("SecondsUntilHarvest");
+            bool farmVisual = File.Exists(farmVisualPath) &&
+                File.ReadAllText(farmVisualPath).Contains("Growing · ") &&
+                File.ReadAllText(farmVisualPath).Contains("nextRefreshTime");
+            bool production = File.Exists(productionPath) &&
+                File.ReadAllText(productionPath).Contains("public float Progress01");
+            bool station = File.Exists(stationPath) &&
+                File.ReadAllText(stationPath).Contains("service.Progress01");
+            bool upgradeUi = File.Exists(hudPath) &&
+                File.ReadAllText(hudPath).Contains("CanUpgradeGarden") &&
+                File.ReadAllText(hudPath).Contains("NextGardenHarvestYield") &&
+                File.Exists(canvasPath) &&
+                File.ReadAllText(canvasPath).Contains("journalActionButtons[7]");
+            bool smoke = File.Exists(smokePath) &&
+                File.ReadAllText(smokePath).Contains("GrowthProgress01") &&
+                File.ReadAllText(smokePath).Contains("production.Progress01");
+            bool valid = growth && farmVisual && production && station && upgradeUi && smoke;
+            report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
+                "Crop/workshop progress presentation and mobile upgrade affordability states");
+            if (valid) ready++; else pending++;
+        }
+
         private static void CheckCharacterClips(string character, string[] requiredKeywords,
             System.Text.StringBuilder report, ref int ready, ref int pending)
         {
