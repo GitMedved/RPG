@@ -63,8 +63,8 @@ namespace MiaMax.Domain
         private void ApplyExperience(int amount)
         {
             long total = (long)Data.Progress.Experience + amount;
-            int level = Math.Max(1, Data.Progress.Level);
             const int maxLevel = 100;
+            int level = Math.Max(1, Math.Min(maxLevel, Data.Progress.Level));
             while (level < maxLevel && total >= ExperienceForNextLevel(level))
             {
                 total -= ExperienceForNextLevel(level);
