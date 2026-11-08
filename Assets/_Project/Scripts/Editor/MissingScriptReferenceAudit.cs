@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -228,17 +229,21 @@ namespace MiaMax.EditorTools
             ref int prefabsScanned,
             ref int prefabCount)
         {
-            // Search all project assets and filter by the actual .prefab extension.
-            // This avoids relying on Unity's type-token indexing for Prefab assets.
-            string[] allAssetGuids = AssetDatabase.FindAssets("", new[] { "Assets" });
-            var projectPrefabPaths = new List<string>();
-            for (int i = 0; i < allAssetGuids.Length; i++)
+            // Enumerate the Assets directory directly so discovery does not depend on
+            // AssetDatabase search-index/type-token results.
+            string assetsRoot = Application.dataPath;
+            string[] prefabFiles = Directory.GetFiles(
+                assetsRoot, "*.prefab", SearchOption.AllDirectories);
+            var projectPrefabPaths = new List<string>(prefabFiles.Length);
+            for (int i = 0; i < prefabFiles.Length; i++)
             {
-                string candidatePath = AssetDatabase.GUIDToAssetPath(allAssetGuids[i]);
-                if (!string.IsNullOrEmpty(candidatePath) &&
-                    candidatePath.StartsWith("Assets/", StringComparison.OrdinalIgnoreCase) &&
-                    candidatePath.EndsWith(".prefab", StringComparison.OrdinalIgnoreCase))
-                    projectPrefabPaths.Add(candidatePath);
+                string absolutePath = prefabFiles[i].Replace('\\\\', '/');
+                string normalizedRoot = assetsRoot.Replace('\\\\', '/');
+                if (!absolutePath.StartsWith(normalizedRoot + "/", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                string assetPath = "Assets" + absolutePath.Substring(normalizedRoot.Length);
+                projectPrefabPaths.Add(assetPath);
             }
             projectPrefabPaths.Sort(StringComparer.OrdinalIgnoreCase);
             prefabCount = projectPrefabPaths.Count;
