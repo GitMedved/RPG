@@ -27,6 +27,7 @@ namespace MiaMax.EditorTools
             string[] requiredScripts =
             {
                 "Domain/GameSession.cs",
+                "Domain/Inventory/InventoryService.cs",
                 "Domain/Farming/FarmingService.cs",
                 "Domain/Production/ProductionService.cs",
                 "Domain/Orders/OrderBoardService.cs",
@@ -54,6 +55,9 @@ namespace MiaMax.EditorTools
             CheckQuestPrerequisiteContract(report, ref ready, ref pending);
             CheckAtomicItemRewardContract(report, ref ready, ref pending);
             CheckFirstLoopSmokeCoverage(report, ref ready, ref pending);
+            CheckInventoryFacade(report, ref ready, ref pending);
+            CheckSharedProgressionRewards(report, ref ready, ref pending);
+            CheckAtomicUpgradePurchase(report, ref ready, ref pending);
 
             string[] catalogGuids = AssetDatabase.FindAssets("t:BackyardContentCatalog");
             if (catalogGuids.Length == 0)
@@ -253,11 +257,66 @@ namespace MiaMax.EditorTools
         {
             string smokePath = Scripts + "/Editor/EditorSmokeChecks.cs";
             bool valid = File.Exists(smokePath) &&
-                File.ReadAllText(smokePath).Contains("Core smoke checks passed: \" + passed + \"/13.") &&
+                File.ReadAllText(smokePath).Contains("Core smoke checks passed: \" + passed + \"/15.") &&
                 File.ReadAllText(smokePath).Contains("TestFirstSessionLoop") &&
                 File.ReadAllText(smokePath).Contains("TestCatalogDrivenProductionAndOrders");
             report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
                 "13-scenario smoke suite includes catalog-driven production, delivery and fresh-profile loop");
+            if (valid) ready++; else pending++;
+        }
+
+
+        private static void CheckInventoryFacade(System.Text.StringBuilder report,
+            ref int ready, ref int pending)
+        {
+            string inventoryPath = Scripts + "/Domain/Inventory/InventoryService.cs";
+            string productionPath = Scripts + "/Domain/Production/ProductionService.cs";
+            string ordersPath = Scripts + "/Domain/Orders/OrderBoardService.cs";
+            bool facade = File.Exists(inventoryPath) &&
+                File.ReadAllText(inventoryPath).Contains("GetSnapshot()") &&
+                File.ReadAllText(inventoryPath).Contains("new ItemStackData(stack.ItemId, stack.Quantity)");
+            bool production = File.Exists(productionPath) &&
+                File.ReadAllText(productionPath).Contains("inventory.Has(input, quantity)") &&
+                File.ReadAllText(productionPath).Contains("public bool CanStart");
+            bool orders = File.Exists(ordersPath) &&
+                File.ReadAllText(ordersPath).Contains("inventory.Has(order.ItemId, order.Quantity)");
+            bool valid = facade && production && orders;
+            report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
+                "Inventory facade, detached snapshots and production/order availability queries");
+            if (valid) ready++; else pending++;
+        }
+
+        private static void CheckSharedProgressionRewards(System.Text.StringBuilder report,
+            ref int ready, ref int pending)
+        {
+            string sessionPath = Scripts + "/Domain/GameSession.cs";
+            string dailyPath = Scripts + "/Domain/Progression/DailyTaskService.cs";
+            string achievementPath = Scripts + "/Domain/Progression/AchievementService.cs";
+            bool shared = File.Exists(sessionPath) &&
+                File.ReadAllText(sessionPath).Contains("private void ApplyExperience");
+            bool daily = File.Exists(dailyPath) &&
+                File.ReadAllText(dailyPath).Contains("session.TryGrantRewards(RewardCoins, RewardExperience)");
+            bool achievement = File.Exists(achievementPath) &&
+                File.ReadAllText(achievementPath).Contains("session.TryGrantRewards(definition.Coins, definition.Experience)");
+            bool valid = shared && daily && achievement;
+            report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
+                "Shared bounded XP progression for daily tasks, achievements and quests");
+            if (valid) ready++; else pending++;
+        }
+
+        private static void CheckAtomicUpgradePurchase(System.Text.StringBuilder report,
+            ref int ready, ref int pending)
+        {
+            string sessionPath = Scripts + "/Domain/GameSession.cs";
+            string upgradePath = Scripts + "/Domain/Progression/UpgradeService.cs";
+            bool session = File.Exists(sessionPath) &&
+                File.ReadAllText(sessionPath).Contains("TryPurchaseUpgrade(int cost, ref int currentLevel, int maxLevel)");
+            bool upgrade = File.Exists(upgradePath) &&
+                File.ReadAllText(upgradePath).Contains("TryPurchaseUpgrade(GardenUpgradeCost") &&
+                File.ReadAllText(upgradePath).Contains("TryPurchaseUpgrade(WorkshopUpgradeCost");
+            bool valid = session && upgrade;
+            report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
+                "Atomic upgrade currency deduction and level increment");
             if (valid) ready++; else pending++;
         }
 
