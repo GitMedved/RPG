@@ -277,7 +277,8 @@ namespace MiaMax.EditorTools
                 File.ReadAllText(inventoryPath).Contains("new ItemStackData(stack.ItemId, stack.Quantity)");
             bool production = File.Exists(productionPath) &&
                 File.ReadAllText(productionPath).Contains("inventory.Has(input, quantity)") &&
-                File.ReadAllText(productionPath).Contains("public bool CanStart");
+                File.ReadAllText(productionPath).Contains("public bool CanStart") &&
+                File.ReadAllText(productionPath).Contains("public bool CanCollect");
             bool orders = File.Exists(ordersPath) &&
                 File.ReadAllText(ordersPath).Contains("inventory.Has(order.ItemId, order.Quantity)");
             bool valid = facade && production && orders;
