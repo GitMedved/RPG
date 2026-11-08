@@ -25,6 +25,7 @@ namespace MiaMax.Domain.Progression
         public string RequiredQuestId;
         public string RequiredItemId;
         [Min(0)] public int RequiredQuantity;
+        [Min(1)] public int DurationSeconds = 180;
         public string RewardItemId;
         [Min(0)] public int RewardQuantity;
         [Min(0)] public int RewardCoins;
@@ -122,7 +123,7 @@ namespace MiaMax.Domain.Progression
                 if (string.IsNullOrWhiteSpace(entry.AreaId))
                     issues.Add("Entry " + i + " (" + entry.Id + ") has no area ID.");
                 if (entry.RequiredQuantity < 0 || entry.RewardQuantity < 0 ||
-                    entry.RewardCoins < 0 || entry.RewardExperience < 0)
+                    entry.RewardCoins < 0 || entry.RewardExperience < 0 || entry.DurationSeconds < 0)
                     issues.Add("Entry " + i + " (" + entry.Id + ") has a negative quantity or reward.");
                 if (entry.RequiredQuantity > 0 && string.IsNullOrWhiteSpace(entry.RequiredItemId))
                     issues.Add("Entry " + i + " (" + entry.Id + ") has a required quantity but no required item ID.");
