@@ -22,6 +22,7 @@ namespace MiaMax.Domain.Progression
         public string DisplayName;
         public string AreaId = "backyard";
         public string UnlockAreaId;
+        public string RequiredQuestId;
         public string RequiredItemId;
         [Min(0)] public int RequiredQuantity;
         public string RewardItemId;
@@ -130,6 +131,16 @@ namespace MiaMax.Domain.Progression
                 if (!string.IsNullOrWhiteSpace(entry.UnlockAreaId) &&
                     string.Equals(entry.AreaId, entry.UnlockAreaId, StringComparison.Ordinal))
                     issues.Add("Entry " + i + " (" + entry.Id + ") unlocks its own area.");
+                if (!string.IsNullOrWhiteSpace(entry.RequiredQuestId) &&
+                    string.Equals(entry.Id, entry.RequiredQuestId, StringComparison.OrdinalIgnoreCase))
+                    issues.Add("Entry " + i + " (" + entry.Id + ") requires itself.");
+            }
+            for (int i = 0; i < Entries.Count; i++)
+            {
+                BackyardContentEntry entry = Entries[i];
+                if (entry == null || string.IsNullOrWhiteSpace(entry.RequiredQuestId)) continue;
+                if (!TryGet(entry.RequiredQuestId, BackyardContentKind.StoryGoal, out _))
+                    issues.Add("Entry " + i + " (" + entry.Id + ") references missing story goal: " + entry.RequiredQuestId);
             }
             return issues;
         }
