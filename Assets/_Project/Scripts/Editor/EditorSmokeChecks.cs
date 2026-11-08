@@ -33,8 +33,9 @@ namespace MiaMax.EditorTools
                 RunCheck("Interrupted temporary-save recovery", TestInterruptedSaveRecovery, ref passed);
                 RunCheck("Content catalog safe authoring", TestContentCatalogAuthoring, ref passed);
                 RunCheck("Six-step tutorial gameplay flow", TestTutorialFlow, ref passed);
+                RunCheck("Atomic quest rewards and level cap", TestQuestRewardAtomicity, ref passed);
 
-                string message = "Core smoke checks passed: " + passed + "/8.\n\n" +
+                string message = "Core smoke checks passed: " + passed + "/9.\n\n" +
                     "This verifies deterministic domain/save paths only. Play Mode, scene interaction, " +
                     "UI layout, FBX import and Android/iOS builds still require separate validation.";
                 Debug.Log("[Mia & Max] " + message);
@@ -332,6 +333,28 @@ namespace MiaMax.EditorTools
             {
                 if (Directory.Exists(directory)) Directory.Delete(directory, true);
             }
+        }
+
+        private static void TestQuestRewardAtomicity()
+        {
+            GameSession session = NewSession();
+            session.Data.Progress.Level = 2;
+            session.Data.Progress.Coins = int.MaxValue;
+            QuestService quests = new QuestService(session);
+            string title;
+
+            Require(!quests.TryClaimNext(out title), "Quest reward must reject wallet overflow.");
+            Require(quests.ClaimedCount == 0, "Rejected reward must not mark the quest claimed.");
+            Require(session.Data.Progress.Coins == int.MaxValue, "Rejected reward must not change coins.");
+
+            session.Data.Progress.Coins = 0;
+            session.Data.Progress.Level = 99;
+            session.Data.Progress.Experience = GameSession.ExperienceForNextLevel(99) - 1;
+            Require(quests.TryClaimNext(out title), "Quest should be claimable when reward capacity is available.");
+            Require(quests.ClaimedCount == 1 && session.Data.Progress.Level == 100,
+                "Quest should commit once and progression should stop at level 100.");
+            Require(session.Data.Progress.Experience < GameSession.ExperienceForNextLevel(100),
+                "XP at the level cap must remain below the next-level threshold.");
         }
 
         private static GameSession NewSession()
