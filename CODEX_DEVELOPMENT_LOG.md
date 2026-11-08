@@ -838,3 +838,16 @@ Connected story quest presentation and reward values to the authored BackyardCon
 - Static source review only. Unity compilation, 15/15 smoke execution, integration audit execution, Play Mode and device QA remain pending.
 
 **Local acceptance:** pull codex/mia-max-foundation; run Core Smoke Checks (expected 15/15) and Gameplay & Character Integration Audit; verify production affordances, upgrades, daily rewards and achievements in Play Mode. See M101_M110_INVENTORY_ECONOMY_PROGRESSION.md.
+
+
+## 2026-11-08 — M111–M120 economy balance and garden/workshop progression
+
+- **M111–M112:** introduced EconomyBalance as the centralized source for upgrade costs, level cap, garden yield, harvest rewards and workshop time multipliers.
+- **M113–M114:** connected UpgradeService to shared curves and added affordability/next-level preview queries for UI.
+- **M115–M116:** made harvest rewards atomic across crop inventory, coins and XP. Mature plots are restored if the reward transaction is rejected; harvest and planting reward values are centralized.
+- **M117–M118:** exposed deterministic upgrade preview values without changing the player save schema.
+- **M119:** expanded Core Smoke Checks to 16 scenarios, including deterministic economy curves and harvest success/overflow rollback.
+- **M120:** extended Gameplay & Character Integration Audit to cover EconomyBalance and atomic harvest.
+- Static repository review only. Unity compilation, 16/16 smoke execution, audit execution, Play Mode and device QA remain pending.
+
+**Local acceptance:** pull codex/mia-max-foundation; run Core Smoke Checks (expected 16/16) and Gameplay & Character Integration Audit; verify garden upgrade yield, workshop duration and harvest rollback in Play Mode. See M111_M120_ECONOMY_AND_GARDEN_UPGRADES.md.
