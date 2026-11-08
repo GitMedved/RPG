@@ -77,16 +77,13 @@ namespace MiaMax.Domain.Progression
             if (session.Data.Progress.Coins > int.MaxValue - RewardCoins ||
                 session.Data.Progress.Experience > int.MaxValue - RewardExperience) return false;
 
-            // Apply the claim as one state change so an autosave cannot persist only half the reward.
+            // Share the session's level-cap logic with quests and all other reward sources.
             Data.RewardClaimed = true;
-            session.Data.Progress.Coins += RewardCoins;
-            session.Data.Progress.Experience += RewardExperience;
-            while (session.Data.Progress.Experience >= GameSession.ExperienceForNextLevel(session.Data.Progress.Level))
+            if (!session.TryGrantRewards(RewardCoins, RewardExperience))
             {
-                session.Data.Progress.Experience -= GameSession.ExperienceForNextLevel(session.Data.Progress.Level);
-                session.Data.Progress.Level++;
+                Data.RewardClaimed = false;
+                return false;
             }
-            session.NotifyExternalStateChanged();
             return true;
         }
 
