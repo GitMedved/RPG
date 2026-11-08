@@ -48,6 +48,8 @@ namespace MiaMax.EditorTools
                 AddCheck(report, Scripts + "/" + requiredScripts[i], File.Exists(Scripts + "/" + requiredScripts[i]),
                     ref ready, ref pending);
 
+            CheckRewardTransactionContract(report, ref ready, ref pending);
+
             string[] catalogGuids = AssetDatabase.FindAssets("t:BackyardContentCatalog");
             if (catalogGuids.Length == 0)
             {
@@ -151,6 +153,22 @@ namespace MiaMax.EditorTools
             report.AppendLine((found ? "[READY] " : "[PENDING] ") + path);
             if (found) ready++;
             else pending++;
+        }
+
+        private static void CheckRewardTransactionContract(System.Text.StringBuilder report,
+            ref int ready, ref int pending)
+        {
+            string sessionPath = Scripts + "/Domain/GameSession.cs";
+            string questPath = Scripts + "/Domain/Progression/QuestService.cs";
+            bool sessionContract = File.Exists(sessionPath) &&
+                File.ReadAllText(sessionPath).Contains("TryGrantRewards") &&
+                File.ReadAllText(sessionPath).Contains("const int maxLevel = 100");
+            bool questContract = File.Exists(questPath) &&
+                File.ReadAllText(questPath).Contains("session.TryGrantRewards(quest.Coins, quest.Experience)");
+            bool valid = sessionContract && questContract;
+            report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
+                "Atomic quest reward transaction and bounded level progression");
+            if (valid) ready++; else pending++;
         }
 
         private static void CheckCharacterClips(string character, string[] requiredKeywords,
