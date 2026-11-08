@@ -381,3 +381,15 @@ The authoring catalog now has indexed ID lookup, case-insensitive duplicate prot
 - Garden and Workshop upgrades deduct currency and increment their level atomically in one state notification.
 - Expanded Core Smoke Checks to 15 scenarios and extended Gameplay & Character Integration Audit.
 - No save schema change. Static source review only; Unity compile, smoke execution and Play Mode remain pending. See M101_M110_INVENTORY_ECONOMY_PROGRESSION.md.
+
+
+## M111–M120 — Economy balance and garden/workshop progression
+
+- Added EconomyBalance as the single source of truth for upgrade prices, garden harvest yield, harvest rewards and workshop production-time multipliers.
+- UpgradeService now exposes affordability checks and next-level previews for garden yield and workshop production duration; the maximum upgrade level comes from the shared balance rules.
+- Workshop duration uses deterministic integer percentage arithmetic, avoiding floating-point rounding errors.
+- Harvest now preflights inventory/currency/XP capacity, clears the plot and grants crop plus rewards as one observable transaction; rejected rewards preserve the mature crop.
+- Plant and harvest XP/coin values are centralized. No save schema change.
+- Core Editor Smoke Checks expanded to 16 scenarios, including economy curves, upgrade preview, successful upgraded harvest and overflow rollback.
+- Gameplay & Character Integration Audit now checks the economy balance service and atomic harvest contract.
+- Static source review only. Unity compile, 16/16 smoke execution, audit, Play Mode and device QA remain pending. See M111_M120_ECONOMY_AND_GARDEN_UPGRADES.md.
