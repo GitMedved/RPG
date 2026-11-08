@@ -353,3 +353,11 @@ The authoring catalog now has indexed ID lookup, case-insensitive duplicate prot
 - Combined coin/XP rewards are validated before either balance changes; quest claims cannot be recorded when the reward is rejected.
 - Core Editor smoke coverage expanded to nine grouped checks; local Unity execution and Play Mode acceptance remain required.
 - No save schema change. See `M81_M85_PROGRESSION_REWARD_HARDENING.md`.
+
+
+## M86–M90 — Runtime content catalog integration
+
+- Story quest names, displayed rewards and payout values now resolve from the runtime Resources catalog, with safe built-in fallback.
+- Starter catalog builder writes to Resources and preserves/migrates the older prototype asset.
+- Editor smoke coverage expanded to 10 scenarios; runtime and build validation remain pending.
+- No save schema change. See `M86_M90_RUNTIME_CONTENT_CATALOG.md`.
