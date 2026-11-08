@@ -201,7 +201,26 @@ namespace MiaMax.EditorTools
                 }), "A duplicate catalog ID must be rejected.");
                 Require(catalog.Entries.Count == 1, "Duplicate insertion must not change catalog size.");
                 Require(catalog.Validate().Count == 0, "A complete basic catalog entry should validate.");
+                Require(catalog.TryGet("SMOKE_CROP", out BackyardContentEntry caseInsensitive) &&
+                    caseInsensitive == entry, "Catalog lookup should be case-insensitive for stable IDs.");
+                Require(!catalog.TryAdd(new BackyardContentEntry
+                {
+                    Id = "SMOKE_CROP",
+                    Kind = BackyardContentKind.Crop,
+                    DisplayName = "Case Variant Duplicate",
+                    AreaId = "backyard"
+                }), "Case-only duplicate IDs must be rejected.");
+                Require(catalog.TryGet("smoke_crop", BackyardContentKind.Crop, out _),
+                    "Kind-filtered lookup should return a matching content entry.");
+                Require(!catalog.TryGet("smoke_crop", BackyardContentKind.Recipe, out _),
+                    "Kind-filtered lookup must reject a mismatched content kind.");
+                Require(catalog.GetByKind(BackyardContentKind.Crop).Count == 1,
+                    "Kind query should return exactly the crop entry.");
 
+                entry.RequiredQuantity = 1;
+                Require(catalog.Validate().Count > 0,
+                    "Catalog validation should report a required quantity without a required item ID.");
+                entry.RequiredQuantity = 0;
                 entry.RewardQuantity = 1;
                 Require(catalog.Validate().Count > 0,
                     "Catalog validation should report a reward quantity without a reward item ID.");
