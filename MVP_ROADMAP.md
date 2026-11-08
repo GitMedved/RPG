@@ -349,7 +349,7 @@ The authoring catalog now has indexed ID lookup, case-insensitive duplicate prot
 
 ## M81–M85 — Progression and reward transaction hardening
 
-- Player level progression is bounded at level 100 and XP thresholds are safe from integer overflow.
+- Player level progression is bounded at level 100, including normalization of legacy saves; XP thresholds are safe from integer overflow.
 - Combined coin/XP rewards are validated before either balance changes; quest claims cannot be recorded when the reward is rejected.
 - Core Editor smoke coverage expanded to nine grouped checks; local Unity execution and Play Mode acceptance remain required.
 - No save schema change. See `M81_M85_PROGRESSION_REWARD_HARDENING.md`.
