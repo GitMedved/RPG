@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System.IO;
 using MiaMax.Domain;
 using MiaMax.Domain.Farming;
 using MiaMax.Domain.Progression;
@@ -13,12 +14,22 @@ namespace MiaMax.EditorTools
     /// </summary>
     public static class BackyardContentCatalogBuilder
     {
-        private const string CatalogPath = "Assets/_Project/ScriptableObjects/BackyardContentCatalog.asset";
+        private const string CatalogPath = "Assets/Resources/MiaMax/Content/BackyardContentCatalog.asset";
+        private const string LegacyCatalogPath = "Assets/_Project/ScriptableObjects/BackyardContentCatalog.asset";
 
         [MenuItem("Tools/Mia & Max/Create or Update Starter Content Catalog")]
         public static void CreateOrUpdate()
         {
+            Directory.CreateDirectory("Assets/Resources/MiaMax/Content");
+            AssetDatabase.Refresh();
             BackyardContentCatalog catalog = AssetDatabase.LoadAssetAtPath<BackyardContentCatalog>(CatalogPath);
+            if (catalog == null && AssetDatabase.LoadAssetAtPath<BackyardContentCatalog>(LegacyCatalogPath) != null)
+            {
+                string moveError = AssetDatabase.MoveAsset(LegacyCatalogPath, CatalogPath);
+                if (!string.IsNullOrEmpty(moveError))
+                    Debug.LogError("[Mia & Max] Could not move legacy content catalog: " + moveError);
+                catalog = AssetDatabase.LoadAssetAtPath<BackyardContentCatalog>(CatalogPath);
+            }
             bool created = catalog == null;
             if (created)
             {
