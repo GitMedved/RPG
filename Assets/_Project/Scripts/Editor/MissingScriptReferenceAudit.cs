@@ -228,12 +228,20 @@ namespace MiaMax.EditorTools
             ref int prefabsScanned,
             ref int prefabCount)
         {
-            string[] prefabGuids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets" });
-            prefabCount = prefabGuids.Length;
-
-            for (int i = 0; i < prefabGuids.Length; i++)
+            string[] allPrefabGuids = AssetDatabase.FindAssets("t:Prefab");
+            var projectPrefabPaths = new List<string>();
+            for (int i = 0; i < allPrefabGuids.Length; i++)
             {
-                string path = AssetDatabase.GUIDToAssetPath(prefabGuids[i]);
+                string candidatePath = AssetDatabase.GUIDToAssetPath(allPrefabGuids[i]);
+                if (!string.IsNullOrEmpty(candidatePath) &&
+                    candidatePath.StartsWith("Assets/", StringComparison.OrdinalIgnoreCase))
+                    projectPrefabPaths.Add(candidatePath);
+            }
+            prefabCount = projectPrefabPaths.Count;
+
+            for (int i = 0; i < projectPrefabPaths.Count; i++)
+            {
+                string path = projectPrefabPaths[i];
                 GameObject prefab = null;
 
                 try
