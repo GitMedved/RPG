@@ -284,9 +284,15 @@ namespace MiaMax.Gameplay
                     productionService.RemainingSeconds > 0 ? RecipeName(job.RecipeId) + " · " + productionService.RemainingSeconds + "s left" :
                     RecipeName(job.RecipeId) + " · READY TO COLLECT";
                 string garden = upgradeService == null ? string.Empty :
-                    "Garden Lv." + upgradeService.GardenLevel + (upgradeService.GardenAtMax ? " · MAX" : " · next " + upgradeService.GardenUpgradeCost + " coins");
+                    "Garden Lv." + upgradeService.GardenLevel + " · yield " + upgradeService.HarvestYield +
+                    (upgradeService.GardenAtMax ? " · MAX" : " · next " + upgradeService.NextGardenHarvestYield +
+                    " crops for " + upgradeService.GardenUpgradeCost + " coins" +
+                    (upgradeService.CanUpgradeGarden ? " · READY" : " · NEED MORE COINS"));
                 string workshopLevel = upgradeService == null ? string.Empty :
-                    "Workshop Lv." + upgradeService.WorkshopLevel + (upgradeService.WorkshopAtMax ? " · MAX" : " · next " + upgradeService.WorkshopUpgradeCost + " coins");
+                    "Workshop Lv." + upgradeService.WorkshopLevel +
+                    (upgradeService.WorkshopAtMax ? " · MAX" : " · next " +
+                    upgradeService.WorkshopUpgradeCost + " coins · " +
+                    (upgradeService.CanUpgradeWorkshop ? "READY" : "NEED MORE COINS"));
                 string trail = questService != null && questService.IsAreaUnlocked("woodland_trail")
                     ? "Woodland Trail discoveries: " + (boundSession.Data.CollectedTrailResources != null ? boundSession.Data.CollectedTrailResources.Count : 0) + "/3"
                     : "Woodland Trail: complete the Flower Garden story quest to unlock";
@@ -303,6 +309,8 @@ namespace MiaMax.Gameplay
             }
         }
 
+        public bool CanUpgradeGarden => upgradeService != null && upgradeService.CanUpgradeGarden;
+        public bool CanUpgradeWorkshop => upgradeService != null && upgradeService.CanUpgradeWorkshop;
         public void PerformJournalAction(int action)
         {
             if (boundSession == null) return;
