@@ -261,7 +261,7 @@ namespace MiaMax.EditorTools
                 File.ReadAllText(smokePath).Contains("TestFirstSessionLoop") &&
                 File.ReadAllText(smokePath).Contains("TestCatalogDrivenProductionAndOrders");
             report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
-                "13-scenario smoke suite includes catalog-driven production, delivery and fresh-profile loop");
+                "15-scenario smoke suite includes inventory, progression transactions and the fresh-profile loop");
             if (valid) ready++; else pending++;
         }
 
