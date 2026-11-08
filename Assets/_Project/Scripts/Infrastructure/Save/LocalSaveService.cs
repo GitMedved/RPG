@@ -155,8 +155,10 @@ namespace MiaMax.Infrastructure.Save
             data.Settings.VoiceVolume = Clamp01(data.Settings.VoiceVolume);
             data.Settings.UiScale = Math.Max(0.85f, Math.Min(1.15f, data.Settings.UiScale));
             if (data.Progress == null) data.Progress = new MiaMax.Domain.Progression.PlayerProgressData();
-            data.Progress.Level = Math.Max(1, data.Progress.Level);
-            data.Progress.Experience = Math.Max(0, data.Progress.Experience);
+            data.Progress.Level = Math.Max(1, Math.Min(100, data.Progress.Level));
+            data.Progress.Experience = Math.Max(0, Math.Min(
+                MiaMax.Domain.GameSession.ExperienceForNextLevel(data.Progress.Level) - 1,
+                data.Progress.Experience));
             data.Progress.Coins = Math.Max(0, data.Progress.Coins);
             if (data.Inventory == null) data.Inventory = new System.Collections.Generic.List<MiaMax.Domain.Inventory.ItemStackData>();
             if (data.FarmPlots == null) data.FarmPlots = new System.Collections.Generic.List<MiaMax.Domain.Farming.FarmPlotData>();
