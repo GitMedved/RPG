@@ -883,4 +883,5 @@ Connected story quest presentation and reward values to the authored BackyardCon
 - Expanded fresh Animator controller scaffolds to the complete nine-parameter bridge contract.
 - Made ProductionAssetAudit skip missing folders safely and report them as pending.
 - Extended GameplayReleaseAudit with source-level checks for the character pipeline safeguards.
+- Added `CHARACTER_PRODUCTION_HANDOFF.md` describing the reviewed-reference-to-runtime-prefab workflow.
 - Static source edits only; Unity compilation, model import, Avatar inspection, prefab generation, smoke checks, Play Mode and device validation were not run.
