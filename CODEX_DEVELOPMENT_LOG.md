@@ -811,3 +811,16 @@ Bounded player progression at level 100, normalized legacy save values on load, 
 Connected story quest presentation and reward values to the authored BackyardContentCatalog at runtime through Resources. The starter catalog builder now places the asset under Assets/Resources/MiaMax/Content and migrates the previous prototype location without overwriting authored entries. Added a tenth deterministic Editor smoke scenario and an audit check for runtime catalog wiring. Built-in quest metadata remains as a fallback when a catalog entry is absent; quest completion conditions remain authoritative in QuestService. No save schema change. See `M86_M90_RUNTIME_CONTENT_CATALOG.md`.
 
 **Local verification pending:** Unity compilation, starter catalog generation/migration, 10/10 smoke checks, integration audit, Play Mode quest payout and save/reload, and Android/iOS build inclusion.
+
+
+## 2026-11-08 — M91–M100 first-release gameplay loop integration
+
+- **M91–M92:** connected recipe and order content to the runtime catalog. Added custom catalog orders, recipe durations, output quantities and catalog reward values while retaining built-in fallback definitions.
+- **M93–M94:** added StoryGoal prerequisite references and validation, made the starter quest chain sequential, and connected quest claims to Flower Garden/Woodland Trail area unlocks.
+- **M95–M96:** added overflow-safe item/reward operations and atomic production start, collection and order delivery state changes. Save listeners now observe the job cleared/output granted and the order completed/item consumed/reward granted together.
+- **M97–M98:** catalog recipes and orders are filtered by saved area unlocks; existing save schema and fallback behavior are preserved.
+- **M99:** added deterministic first-session flow coverage through opening quest, production, delivery, next quest and local save/reload.
+- **M100:** extended Gameplay & Character Integration Audit with catalog integration, prerequisite, transaction and first-loop source checks.
+- Expanded Core Smoke Checks from 10 to 13 scenarios. Expected local result is 13/13; not yet run in Unity. Static repository review only, not a Unity compile or Play Mode result.
+
+**Local acceptance required:** update branch, create/review the Resources catalog, run 13/13 smoke checks and Gameplay & Character Integration Audit, then test the first loop and both area gates in Play Mode. Android/iOS builds and physical-device QA remain separate release gates. See M91_M100_FIRST_RELEASE_GAMEPLAY_LOOP.md.
