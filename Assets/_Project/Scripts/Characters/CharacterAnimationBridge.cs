@@ -37,10 +37,20 @@ namespace MiaMax.Gameplay
         private bool hasPlay;
         private Vector3 previousPosition;
         private float smoothedSpeed;
+        private RuntimeAnimatorController boundController;
+
+        /// <summary>Allows an editor-built runtime prefab to bind its imported Animator explicitly.</summary>
+        public void Configure(Animator target, CharacterController movementController = null)
+        {
+            animator = target;
+            characterController = movementController;
+            BindAnimator();
+            previousPosition = transform.position;
+        }
 
         private void Awake()
         {
-            if (characterController == null) characterController = GetComponent<CharacterController>();
+            if (characterController == null) characterController = GetComponentInParent<CharacterController>();
             BindAnimator();
             previousPosition = transform.position;
         }
@@ -61,6 +71,7 @@ namespace MiaMax.Gameplay
             hasJump = HasParameter(animator, JumpId, AnimatorControllerParameterType.Trigger);
             hasSleep = HasParameter(animator, SleepId, AnimatorControllerParameterType.Trigger);
             hasPlay = HasParameter(animator, PlayId, AnimatorControllerParameterType.Trigger);
+            boundController = animator.runtimeAnimatorController;
         }
 
         private static bool HasParameter(Animator target, int id, AnimatorControllerParameterType type)
@@ -81,13 +92,19 @@ namespace MiaMax.Gameplay
             smoothedSpeed = Mathf.Lerp(smoothedSpeed, Mathf.Clamp01(measured / Mathf.Max(0.1f, runSpeed)),
                 1f - Mathf.Exp(-Time.deltaTime / damping));
 
-            if (animator == null || !animator.isActiveAndEnabled) return;
-            if (animator.runtimeAnimatorController == null)
+            if (animator == null)
             {
-                // Supports a controller assigned after the character prefab was instantiated.
+                // Supports an Animator added to a model after the bridge was instantiated.
                 BindAnimator();
-                if (animator == null || animator.runtimeAnimatorController == null) return;
+                if (animator == null) return;
             }
+            else if (animator.runtimeAnimatorController != boundController)
+            {
+                // Re-cache parameter hashes when a controller is replaced at runtime.
+                BindAnimator();
+            }
+
+            if (!animator.isActiveAndEnabled || animator.runtimeAnimatorController == null) return;
 
             if (hasSpeed) animator.SetFloat(SpeedId, smoothedSpeed, damping, Time.deltaTime);
             if (hasGrounded)
