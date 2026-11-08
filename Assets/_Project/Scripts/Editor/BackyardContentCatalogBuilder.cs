@@ -76,17 +76,17 @@ namespace MiaMax.EditorTools
             added += Add(catalog, new BackyardContentEntry
             {
                 Id = "quest_first_order", Kind = BackyardContentKind.StoryGoal, DisplayName = "Helping the Neighbours",
-                AreaId = "backyard", RewardCoins = 15, RewardExperience = 20
+                AreaId = "backyard", RequiredQuestId = "quest_first_steps", RewardCoins = 15, RewardExperience = 20
             });
             added += Add(catalog, new BackyardContentEntry
             {
                 Id = "quest_order_master", Kind = BackyardContentKind.StoryGoal, DisplayName = "A Busy Little Backyard",
-                AreaId = "backyard", UnlockAreaId = "flower_garden", RewardCoins = 30, RewardExperience = 35
+                AreaId = "backyard", RequiredQuestId = "quest_first_order", UnlockAreaId = "flower_garden", RewardCoins = 30, RewardExperience = 35
             });
             added += Add(catalog, new BackyardContentEntry
             {
                 Id = "quest_flower_friend", Kind = BackyardContentKind.StoryGoal, DisplayName = "A Path Beyond the Garden",
-                AreaId = "flower_garden", UnlockAreaId = "woodland_trail", RewardCoins = 40, RewardExperience = 45
+                AreaId = "flower_garden", RequiredQuestId = "quest_order_master", UnlockAreaId = "woodland_trail", RewardCoins = 40, RewardExperience = 45
             });
 
             AddMiniGame(catalog, "match3", "Garden Match", ref added);
