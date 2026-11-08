@@ -484,12 +484,34 @@ namespace MiaMax.EditorTools
                     DisplayName = "First Delivery", AreaId = "backyard",
                     RequiredQuestId = "quest_first_steps", RewardCoins = 5, RewardExperience = 5
                 }), "Second story goal should be added.");
+                Require(catalog.TryAdd(new BackyardContentEntry
+                {
+                    Id = "recipe_flower_garden", Kind = BackyardContentKind.Recipe,
+                    DisplayName = "Flower Garden Basket", AreaId = "flower_garden",
+                    RequiredItemId = "flower_crop", RequiredQuantity = 1,
+                    RewardItemId = "flower_basket", RewardQuantity = 1, RewardExperience = 1
+                }), "Flower Garden recipe should be added.");
+                Require(catalog.TryAdd(new BackyardContentEntry
+                {
+                    Id = "order_flower_garden", Kind = BackyardContentKind.Order,
+                    DisplayName = "Flower Garden Delivery", AreaId = "flower_garden",
+                    RequiredItemId = "flower_delivery", RequiredQuantity = 1,
+                    RewardCoins = 5
+                }), "Flower Garden order should be added.");
                 Require(catalog.Validate().Count == 0,
                     "Catalog story-goal prerequisite references should validate.");
 
                 GameSession session = NewSession();
                 session.Data.Progress.Level = 2;
                 QuestService quests = new QuestService(session, catalog);
+                Require(session.AddItem("flower_crop", 1) && session.AddItem("flower_delivery", 1),
+                    "Could not seed locked-area content fixtures.");
+                ProductionService areaProduction = new ProductionService(session, catalog);
+                OrderBoardService areaOrders = new OrderBoardService(session, catalog);
+                Require(!areaProduction.TryStart("recipe_flower_garden"),
+                    "Production in a locked area must not start.");
+                Require(!areaOrders.CanComplete("order_flower_garden"),
+                    "Orders in a locked area must remain unavailable.");
                 var snapshots = quests.GetQuestSnapshots();
                 Require(snapshots[0].Availability == QuestAvailability.ReadyToClaim,
                     "First quest should be ready when its completion condition is met.");
@@ -500,6 +522,10 @@ namespace MiaMax.EditorTools
                     "First quest should claim before the dependent quest.");
                 Require(quests.IsAreaUnlocked("flower_garden"),
                     "Claiming the catalog quest should unlock its configured area.");
+                Require(areaProduction.TryStart("recipe_flower_garden"),
+                    "Production should become available after its area unlock.");
+                Require(areaOrders.CanComplete("order_flower_garden"),
+                    "Area order should become available after its area unlock.");
                 session.Data.CompletedOrders.Add(new CompletedOrderData { OrderId = "smoke_order" });
                 snapshots = quests.GetQuestSnapshots();
                 Require(snapshots[1].Availability == QuestAvailability.ReadyToClaim,
