@@ -122,6 +122,19 @@ namespace MiaMax.EditorTools
                 EconomyBalance.AdjustProductionDuration(180, 2) == 126,
                 "Workshop production duration curve should be deterministic.");
 
+            var growthSession = NewSession();
+            var growthService = new FarmingService(growthSession);
+            FarmPlotData growing = growthService.GetPlot("growth_progress_plot");
+            growing.CropId = FarmingService.Carrot;
+            growing.PlantedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - 30;
+            Require(growthService.GrowthStage(growing) == 2 &&
+                growthService.GrowthProgress01(growing) >= 0.5f &&
+                growthService.GrowthProgress01(growing) < 1f &&
+                growthService.SecondsUntilHarvest(growing) <= 30,
+                "Crop growth progress and harvest countdown should reflect elapsed grow time.");
+
+
+
             GameSession session = NewSession();
             Require(session.TryAddCoins(60), "Could not seed garden upgrade wallet.");
             UpgradeService upgrades = new UpgradeService(session);
