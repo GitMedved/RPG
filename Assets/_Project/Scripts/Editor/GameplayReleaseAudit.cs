@@ -30,7 +30,6 @@ namespace MiaMax.EditorTools
                 "Domain/Farming/FarmingService.cs",
                 "Domain/Production/ProductionService.cs",
                 "Domain/Orders/OrderBoardService.cs",
-                "Domain/Progression/QuestService.cs",
                 "Domain/Progression/UpgradeService.cs",
                 "Domain/Progression/BackyardContentCatalog.cs",
                 "Domain/Progression/QuestService.cs",
@@ -51,6 +50,10 @@ namespace MiaMax.EditorTools
 
             CheckRewardTransactionContract(report, ref ready, ref pending);
             CheckRuntimeCatalogIntegration(report, ref ready, ref pending);
+            CheckCatalogDrivenLoop(report, ref ready, ref pending);
+            CheckQuestPrerequisiteContract(report, ref ready, ref pending);
+            CheckAtomicItemRewardContract(report, ref ready, ref pending);
+            CheckFirstLoopSmokeCoverage(report, ref ready, ref pending);
 
             string[] catalogGuids = AssetDatabase.FindAssets("t:BackyardContentCatalog");
             if (catalogGuids.Length == 0)
@@ -167,7 +170,7 @@ namespace MiaMax.EditorTools
                 File.ReadAllText(sessionPath).Contains("TryGrantRewards") &&
                 File.ReadAllText(sessionPath).Contains("const int maxLevel = 100");
             bool questContract = File.Exists(questPath) &&
-                File.ReadAllText(questPath).Contains("session.TryGrantRewards(quest.Coins, quest.Experience)");
+                File.ReadAllText(questPath).Contains("session.TryGrantRewards(rewardCoins, rewardExperience)");
             bool saveContract = File.Exists(savePath) &&
                 File.ReadAllText(savePath).Contains("Math.Min(100, data.Progress.Level)");
             bool valid = sessionContract && questContract && saveContract;
@@ -188,6 +191,70 @@ namespace MiaMax.EditorTools
             bool valid = questLoadsResources && builderUsesResources;
             report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
                 "Runtime Resources catalog loading and starter catalog build path");
+            if (valid) ready++; else pending++;
+        }
+
+
+        private static void CheckCatalogDrivenLoop(System.Text.StringBuilder report,
+            ref int ready, ref int pending)
+        {
+            string productionPath = Scripts + "/Domain/Production/ProductionService.cs";
+            string ordersPath = Scripts + "/Domain/Orders/OrderBoardService.cs";
+            bool production = File.Exists(productionPath) &&
+                File.ReadAllText(productionPath).Contains("BackyardContentKind.Recipe") &&
+                File.ReadAllText(productionPath).Contains("TryGrantItemAndRewards");
+            bool orders = File.Exists(ordersPath) &&
+                File.ReadAllText(ordersPath).Contains("BackyardContentKind.Order") &&
+                File.ReadAllText(ordersPath).Contains("TryConsumeItemAndGrantRewards");
+            bool valid = production && orders;
+            report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
+                "Catalog-driven recipes, custom orders and atomic craft/delivery transactions");
+            if (valid) ready++; else pending++;
+        }
+
+        private static void CheckQuestPrerequisiteContract(System.Text.StringBuilder report,
+            ref int ready, ref int pending)
+        {
+            string catalogPath = Scripts + "/Domain/Progression/BackyardContentCatalog.cs";
+            string questPath = Scripts + "/Domain/Progression/QuestService.cs";
+            string builderPath = Scripts + "/Editor/BackyardContentCatalogBuilder.cs";
+            bool catalog = File.Exists(catalogPath) &&
+                File.ReadAllText(catalogPath).Contains("RequiredQuestId") &&
+                File.ReadAllText(catalogPath).Contains("references missing story goal");
+            bool quest = File.Exists(questPath) &&
+                File.ReadAllText(questPath).Contains("private bool IsEligible") &&
+                File.ReadAllText(questPath).Contains("IsAreaUnlocked");
+            bool builder = File.Exists(builderPath) &&
+                File.ReadAllText(builderPath).Contains("RequiredQuestId = \"quest_order_master\"");
+            bool valid = catalog && quest && builder;
+            report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
+                "Validated story prerequisites and ordered Flower Garden/Woodland Trail quest chain");
+            if (valid) ready++; else pending++;
+        }
+
+        private static void CheckAtomicItemRewardContract(System.Text.StringBuilder report,
+            ref int ready, ref int pending)
+        {
+            string sessionPath = Scripts + "/Domain/GameSession.cs";
+            bool valid = File.Exists(sessionPath) &&
+                File.ReadAllText(sessionPath).Contains("TryGrantItemAndRewards") &&
+                File.ReadAllText(sessionPath).Contains("TryConsumeItemAndGrantRewards") &&
+                File.ReadAllText(sessionPath).Contains("CanConsumeItemAndGrantRewards");
+            report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
+                "Atomic inventory, coin and XP reward APIs");
+            if (valid) ready++; else pending++;
+        }
+
+        private static void CheckFirstLoopSmokeCoverage(System.Text.StringBuilder report,
+            ref int ready, ref int pending)
+        {
+            string smokePath = Scripts + "/Editor/EditorSmokeChecks.cs";
+            bool valid = File.Exists(smokePath) &&
+                File.ReadAllText(smokePath).Contains("Core smoke checks passed: \" + passed + "/13.") &&
+                File.ReadAllText(smokePath).Contains("TestFirstSessionLoop") &&
+                File.ReadAllText(smokePath).Contains("TestCatalogDrivenProductionAndOrders");
+            report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
+                "13-scenario smoke suite includes catalog-driven production, delivery and fresh-profile loop");
             if (valid) ready++; else pending++;
         }
 
