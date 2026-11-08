@@ -347,10 +347,19 @@ namespace MiaMax.EditorTools
             Require(quests.ClaimedCount == 0, "Rejected reward must not mark the quest claimed.");
             Require(session.Data.Progress.Coins == int.MaxValue, "Rejected reward must not change coins.");
 
+            int notifications = 0;
+            bool notificationSawClaim = false;
+            session.StateChanged += () =>
+            {
+                notifications++;
+                notificationSawClaim = quests.ClaimedCount == 1;
+            };
             session.Data.Progress.Coins = 0;
             session.Data.Progress.Level = 99;
             session.Data.Progress.Experience = GameSession.ExperienceForNextLevel(99) - 1;
             Require(quests.TryClaimNext(out title), "Quest should be claimable when reward capacity is available.");
+            Require(notifications == 1 && notificationSawClaim,
+                "Autosave listeners must observe the claim and reward together in one notification.");
             Require(quests.ClaimedCount == 1 && session.Data.Progress.Level == 100,
                 "Quest should commit once and progression should stop at level 100.");
             Require(session.Data.Progress.Experience < GameSession.ExperienceForNextLevel(100),
