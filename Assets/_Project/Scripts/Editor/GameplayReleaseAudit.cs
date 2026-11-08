@@ -253,7 +253,7 @@ namespace MiaMax.EditorTools
         {
             string smokePath = Scripts + "/Editor/EditorSmokeChecks.cs";
             bool valid = File.Exists(smokePath) &&
-                File.ReadAllText(smokePath).Contains("Core smoke checks passed: \" + passed + "/13.") &&
+                File.ReadAllText(smokePath).Contains("Core smoke checks passed: \" + passed + \"/13.") &&
                 File.ReadAllText(smokePath).Contains("TestFirstSessionLoop") &&
                 File.ReadAllText(smokePath).Contains("TestCatalogDrivenProductionAndOrders");
             report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
