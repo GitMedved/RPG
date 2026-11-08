@@ -30,6 +30,11 @@ namespace MiaMax.EditorTools
                 "Domain/Inventory/InventoryService.cs",
                 "Domain/Farming/FarmingService.cs",
                 "Domain/Production/ProductionService.cs",
+                "Gameplay/FarmPlotPrototype.cs",
+                "Gameplay/ProductionStationPrototype.cs",
+                "Gameplay/MobileHudCanvas.cs",
+                "Gameplay/PrototypeHud.cs",
+                "Domain/Production/ProductionService.cs",
                 "Domain/Orders/OrderBoardService.cs",
                 "Domain/Progression/UpgradeService.cs",
                 "Domain/Progression/EconomyBalance.cs",
@@ -60,6 +65,7 @@ namespace MiaMax.EditorTools
             CheckSharedProgressionRewards(report, ref ready, ref pending);
             CheckAtomicUpgradePurchase(report, ref ready, ref pending);
             CheckEconomyBalance(report, ref ready, ref pending);
+            CheckInteractiveProgressPresentation(report, ref ready, ref pending);
 
             string[] catalogGuids = AssetDatabase.FindAssets("t:BackyardContentCatalog");
             if (catalogGuids.Length == 0)
