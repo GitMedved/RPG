@@ -11,20 +11,21 @@ namespace MiaMax.Gameplay
     {
         public static void Build()
         {
+            if (GameObject.Find("M40_Backyard_Environment_Dressing") != null) return;
             GameObject root = new GameObject("M40_Backyard_Environment_Dressing");
 
-            Material cream = Mat(new Color(0.98f, 0.91f, 0.75f));
-            Material frame = Mat(new Color(0.91f, 0.86f, 0.72f));
+            Material cream = SurfaceOrColor("Plaster_Cream", new Color(0.98f, 0.91f, 0.75f));
+            Material frame = SurfaceOrColor("Fence_WhitePaint", new Color(0.91f, 0.86f, 0.72f));
             Material glass = Mat(new Color(0.42f, 0.72f, 0.82f));
             Material glassLight = Mat(new Color(0.68f, 0.86f, 0.88f));
-            Material door = Mat(new Color(0.43f, 0.25f, 0.15f));
+            Material door = SurfaceOrColor("Wood_Warm", new Color(0.43f, 0.25f, 0.15f));
             Material doorLight = Mat(new Color(0.58f, 0.36f, 0.21f));
             Material brass = Mat(new Color(0.88f, 0.67f, 0.28f));
-            Material timber = Mat(new Color(0.64f, 0.43f, 0.25f));
-            Material soil = Mat(new Color(0.43f, 0.29f, 0.19f));
+            Material timber = SurfaceOrColor("Wood_Warm", new Color(0.64f, 0.43f, 0.25f));
+            Material soil = SurfaceOrColor("Soil_Garden", new Color(0.43f, 0.29f, 0.19f));
             Material terracotta = Mat(new Color(0.76f, 0.34f, 0.22f));
-            Material planterGreen = Mat(new Color(0.24f, 0.43f, 0.19f));
-            Material flowerPink = Mat(new Color(0.96f, 0.48f, 0.64f));
+            Material planterGreen = SurfaceOrColor("Leaf_Green", new Color(0.24f, 0.43f, 0.19f));
+            Material flowerPink = SurfaceOrColor("Flower_Petal", new Color(0.96f, 0.48f, 0.64f));
             Material flowerYellow = Mat(new Color(0.98f, 0.78f, 0.25f));
 
             BuildHouseFacade(root.transform, cream, frame, glass, glassLight, door, doorLight, brass);
@@ -156,10 +157,23 @@ namespace MiaMax.Gameplay
                 new Vector3(0.38f, 0.30f, 0.38f), timber, parent);
         }
 
+        private static Material SurfaceOrColor(string surfaceName, Color fallback)
+        {
+            Material generated = Resources.Load<Material>("MiaMax/Materials/" + surfaceName);
+            return generated != null ? generated : Mat(fallback);
+        }
+
         private static Material Mat(Color color)
         {
             Shader shader = Shader.Find("Universal Render Pipeline/Lit");
             if (shader == null) shader = Shader.Find("Standard");
+            if (shader == null) shader = Shader.Find("Sprites/Default");
+            if (shader == null)
+            {
+                Debug.LogError("Mia & Max environment art: no supported shader is available.");
+                return null;
+            }
+
             Material material = new Material(shader) { color = color };
             if (material.HasProperty("_Smoothness")) material.SetFloat("_Smoothness", 0.18f);
             return material;
