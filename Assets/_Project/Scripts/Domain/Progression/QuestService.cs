@@ -94,20 +94,24 @@ namespace MiaMax.Domain.Progression
             Definition quest = Quests.FirstOrDefault(x => x.IsComplete(session.Data) && !IsClaimed(x.Id));
             if (quest == null) return false;
 
-            // Apply the complete reward before recording the claim; overflow rejects both.
-            if (!session.TryGrantRewards(quest.Coins, quest.Experience)) return false;
+            // Prepare all persistent quest state before the single reward notification.
+            // The preflight makes the following grant deterministic on Unity's main thread.
+            if (!session.CanGrantRewards(quest.Coins, quest.Experience)) return false;
             session.Data.ClaimedQuests.Add(new QuestProgressData
             {
                 QuestId = quest.Id,
                 ClaimedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
             });
-
             if (quest.Id == "quest_order_master" && !session.Data.UnlockedWorldAreas.Contains("flower_garden"))
                 session.Data.UnlockedWorldAreas.Add("flower_garden");
             if (quest.Id == "quest_flower_friend" && !session.Data.UnlockedWorldAreas.Contains("woodland_trail"))
                 session.Data.UnlockedWorldAreas.Add("woodland_trail");
 
-            session.NotifyExternalStateChanged();
+            if (!session.TryGrantRewards(quest.Coins, quest.Experience))
+            {
+                session.Data.ClaimedQuests.RemoveAt(session.Data.ClaimedQuests.Count - 1);
+                return false;
+            }
             claimedTitle = quest.Title;
             return true;
         }
