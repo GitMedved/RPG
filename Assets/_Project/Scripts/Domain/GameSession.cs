@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using MiaMax.Domain.Inventory;
+using MiaMax.Domain.Production;
 using MiaMax.Infrastructure.Save;
 
 namespace MiaMax.Domain
@@ -130,6 +131,34 @@ namespace MiaMax.Domain
             stack.Quantity -= quantity;
             if (stack.Quantity == 0) Data.Inventory.Remove(stack);
             Data.Progress.Coins += coins;
+            if (experience > 0) ApplyExperience(experience);
+            Notify();
+            return true;
+        }
+
+        public bool TryStartProduction(string itemId, int quantity, ProductionJobData job)
+        {
+            if (job == null || !job.IsActive || string.IsNullOrWhiteSpace(itemId) || quantity <= 0) return false;
+            ItemStackData stack = Data.Inventory.Find(x => x.ItemId == itemId);
+            if (stack == null || stack.Quantity < quantity ||
+                (Data.ProductionJob != null && Data.ProductionJob.IsActive)) return false;
+            stack.Quantity -= quantity;
+            if (stack.Quantity == 0) Data.Inventory.Remove(stack);
+            Data.ProductionJob = job;
+            Notify();
+            return true;
+        }
+
+        public bool TryCompleteProduction(ProductionJobData expectedJob, string outputItemId,
+            int outputQuantity, int experience)
+        {
+            if (expectedJob == null || !ReferenceEquals(Data.ProductionJob, expectedJob) ||
+                !CanGrantItemAndRewards(outputItemId, outputQuantity, 0, experience)) return false;
+
+            ItemStackData stack = Data.Inventory.Find(x => x.ItemId == outputItemId);
+            if (stack == null) Data.Inventory.Add(new ItemStackData(outputItemId, outputQuantity));
+            else stack.Quantity += outputQuantity;
+            Data.ProductionJob = new ProductionJobData();
             if (experience > 0) ApplyExperience(experience);
             Notify();
             return true;
