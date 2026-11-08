@@ -7,33 +7,34 @@ The next target is a **first playable Release Candidate**, not a feature-complet
 ## Repository facts observed on 2026-11-08
 
 - Unity editor version recorded by the repository: 6000.3.0f1.
-- The feature branch contains the prototype bootstrap and gameplay systems.
-- The branch tree currently has no committed `.unity` scene asset.
-- The branch tree currently has no `ProjectSettings/EditorBuildSettings.asset`.
+- The feature branch is `codex/mia-max-foundation`.
+- Commit `ee76ae427e031452973ad7fab798fa124ac69310` includes the saved `Assets/_Project/Scenes/Backyard.unity` scene and `ProjectSettings/EditorBuildSettings.asset`.
+- The saved Backyard scene is the sole enabled Build Settings scene in the developer-reported local audit. `UntitledBackup.unity` is retained but is not a build scene.
 - No GitHub Actions workflow is currently committed.
-- Character image references and the backyard reference collage are present.
-- Final Mia/Max production models, rigged animation clips, final UI artwork and licensed audio recordings are not established by the repository snapshot.
-- These facts mean the repository is not yet a reproducible mobile release candidate.
+- Character image references, backyard and room reference collages, and a 40-material / 40-map-per-channel generated surface library are present.
+- The repository snapshot contains no production Mia/Max FBX models, runtime character prefabs, authored character animation clips, production UI sprites, voice recordings, SFX, or music/ambience clips.
+- The project is a playable prototype foundation, not a release candidate. A clean-clone open/build check is still required.
 
 ## Latest developer-reported validation (2026-11-08)
 
-- The developer's local Unity Console reports **Core Smoke Checks passed: 16/16**. This covers deterministic domain/save paths only; it does not cover Play Mode, scene interaction, UI layout, FBX import, or mobile builds.
-- The supplied local Release Readiness Audit reports one valid enabled scene and a local `ProjectSettings/EditorBuildSettings.asset`.
-- Important reproducibility gap: the remote branch tree still contains **no committed `.unity` scene** and **no committed `ProjectSettings/EditorBuildSettings.asset`**. The local audit result therefore does not yet prove a clean clone can open/build the same startup scene. Commit the scene, its `.meta`, and Build Settings before treating RC0 as complete.
-- The smoke-check tool now records a successful 16/16 result in Unity's current Editor session, and the release audit can read it when run afterwards. This is session-scoped convenience, not portable or commit-bound QA evidence; retain the Console log with the tested commit SHA.
+- Core Smoke Checks passed **16/16** in the developer's Unity Editor session. These cover deterministic domain/save paths only; they do not cover Play Mode, scene interaction, UI layout, FBX import, or mobile builds.
+- The local Release Readiness Audit reported one valid enabled scene, persisted Build Settings, configured Android/iOS identifiers, company/product identity, release version 1.0, URP assignments and all 40 generated materials plus 40 Albedo, 40 Normal and 40 Height maps.
+- The audit reported **11 / 22 static checks ready** and **11 open blockers**: production Mia model, production Max model, runtime character prefabs, animation clips, UI production sprites, voice recordings, sound effects, music/ambience, session smoke-check evidence, privacy/child-safety/store review, and physical-device validation.
+- The local smoke-check pass is session-scoped convenience, not portable or commit-bound QA evidence; retain the Console log with the tested commit SHA.
+- Git push of commit `ee76ae427e031452973ad7fab798fa124ac69310` to `origin/codex/mia-max-foundation` succeeded. The branch is now published.
 
-## RC0 — Create a reproducible Unity project
+## RC0 — Reproducible Unity project
 
+**Repository-content portion: completed in commit `ee76ae4`.** The saved scene, its metadata and Build Settings are committed.
+
+Remaining clean-clone verification:
 1. Pull `codex/mia-max-foundation`.
 2. Open with Unity 6000.3.0f1 and wait for package resolution/import.
-3. Resolve every compiler error and missing script/reference.
-4. Run `Mia & Max > Setup Backyard Prototype Scene`.
-5. Save the generated scene under `Assets/_Project/Scenes/` with a stable name such as `MiaMax_Backyard`.
-6. Add that saved scene to Build Settings and make it the first enabled scene.
-7. Save project settings and commit the scene, its `.meta`, and `ProjectSettings/EditorBuildSettings.asset`.
-8. Close Unity, reopen the project from a clean pull/import and confirm the saved scene loads without relying on an unsaved editor state.
+3. Confirm clean Editor compilation and no missing scripts/references.
+4. Close Unity, reopen the project from the committed branch and confirm `Assets/_Project/Scenes/Backyard.unity` loads as the startup scene without relying on an unsaved editor state.
+5. Enter Play Mode and verify the saved scene starts correctly.
 
-**Exit evidence:** committed scene and Build Settings; clean Editor compile; no missing references.
+**Exit evidence:** clean clone/import; clean Editor compile; saved scene opens and enters Play Mode without missing references.
 
 ## RC1 — Functional acceptance
 
@@ -89,6 +90,6 @@ Do not claim compliance or store acceptance based only on source code. No public
 
 The audit checks static project configuration and asset presence. It cannot prove likeness quality, animation quality, legal rights, gameplay fun, build success, device stability, store compliance or publisher approval. Manual gates remain explicit.
 
-## Immediate next action for the developer
+## Immediate next action
 
-Complete RC0 locally. The release audit now explicitly checks for a saved enabled scene and persisted Build Settings. After RC0, paste the full Console output of Release Readiness Audit and Core Smoke Checks; address the concrete blockers in that report rather than adding more features.
+The next highest-value step is production content creation and integration, starting with approved Mia and Max character models, rigs, animation clips and runtime prefabs. The developer's reference images are already committed; no further reference upload is needed for this stage. In parallel, the developer can complete the clean-clone startup-scene verification and manual Play Mode acceptance.
