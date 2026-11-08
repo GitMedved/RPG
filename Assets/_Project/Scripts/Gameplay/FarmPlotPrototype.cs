@@ -66,6 +66,16 @@ namespace MiaMax.Gameplay
                 nextRefreshTime = Time.unscaledTime + 0.25f;
                 Refresh();
             }
+
+            if (cropRoot != null && cropRoot.gameObject.activeSelf)
+            {
+                GameSession session = GameSessionBootstrap.Current;
+                bool reducedMotion = session != null && session.Data != null &&
+                    session.Data.Settings != null && session.Data.Settings.ReducedMotion;
+                float sway = reducedMotion ? 0f :
+                    Mathf.Sin(Time.unscaledTime * 1.55f + Mathf.Abs(GetInstanceID() % 17)) * 1.25f;
+                cropRoot.localRotation = Quaternion.Euler(0f, 0f, sway);
+            }
         }
 
         private void OnDestroy()
@@ -86,6 +96,7 @@ namespace MiaMax.Gameplay
                     if (!farming.TryPlant(plotId, crop)) continue;
                     new TutorialService(GameSessionBootstrap.Current).TryAdvance(TutorialService.Plant);
                     GameVoiceDirector.PlayMia("mia_plant_01");
+                    BackyardFeedbackVfx.PlayPlant(transform.position + Vector3.up * 0.62f);
                     break;
                 }
             }
@@ -93,6 +104,7 @@ namespace MiaMax.Gameplay
             {
                 new TutorialService(GameSessionBootstrap.Current).TryAdvance(TutorialService.Harvest);
                 GameVoiceDirector.PlayMia("mia_harvest_01");
+                BackyardFeedbackVfx.PlayHarvest(transform.position + Vector3.up * 0.78f);
             }
 
             Refresh();
