@@ -425,3 +425,10 @@ The authoring catalog now has indexed ID lookup, case-insensitive duplicate prot
 - Corrected the VFX script's domain/bootstrap namespace imports and explicitly enabled Unity's built-in Particle System module in the package manifest.
 - Integration audit now verifies those compile dependencies, not only VFX call-site presence.
 - Local Unity package resolution and recompilation remain required after pull.
+
+
+## M151–M160 — Backyard production material integration
+- Existing procedural world materials are now consumed by the house/garden/patio dressing, with safe color fallbacks when the local texture library has not yet been generated.
+- Environment dressing avoids duplicate roots and tolerates missing preferred shaders.
+- Gameplay integration audit checks the material bindings and bootstrap connection.
+- Generated PNG/material assets still need local Editor generation and visual acceptance. See M151_M160_BACKYARD_MATERIAL_INTEGRATION.md.
