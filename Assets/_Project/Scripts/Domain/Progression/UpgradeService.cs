@@ -26,18 +26,12 @@ namespace MiaMax.Domain.Progression
 
         public bool TryUpgradeGarden()
         {
-            if (GardenAtMax || !session.TrySpendCoins(GardenUpgradeCost)) return false;
-            session.Data.GardenLevel++;
-            session.NotifyExternalStateChanged();
-            return true;
+            return session.TryPurchaseUpgrade(GardenUpgradeCost, ref session.Data.GardenLevel, MaxLevel);
         }
 
         public bool TryUpgradeWorkshop()
         {
-            if (WorkshopAtMax || !session.TrySpendCoins(WorkshopUpgradeCost)) return false;
-            session.Data.WorkshopLevel++;
-            session.NotifyExternalStateChanged();
-            return true;
+            return session.TryPurchaseUpgrade(WorkshopUpgradeCost, ref session.Data.WorkshopLevel, MaxLevel);
         }
 
         /// <summary>Base harvest is two crops; each garden level adds one.</summary>
