@@ -129,6 +129,17 @@ namespace MiaMax.Domain.Progression
                     issues.Add("Entry " + i + " (" + entry.Id + ") has a required quantity but no required item ID.");
                 if (entry.RewardQuantity > 0 && string.IsNullOrWhiteSpace(entry.RewardItemId))
                     issues.Add("Entry " + i + " (" + entry.Id + ") has reward quantity but no reward item ID.");
+                if (entry.Kind == BackyardContentKind.Recipe &&
+                    (string.IsNullOrWhiteSpace(entry.RequiredItemId) || entry.RequiredQuantity <= 0 ||
+                     string.IsNullOrWhiteSpace(entry.RewardItemId) || entry.RewardQuantity <= 0 || entry.DurationSeconds <= 0))
+                    issues.Add("Recipe entry " + i + " (" + entry.Id + ") must define valid input, output and duration.");
+                if (entry.Kind == BackyardContentKind.Order &&
+                    (string.IsNullOrWhiteSpace(entry.RequiredItemId) || entry.RequiredQuantity <= 0 ||
+                     (entry.RewardCoins <= 0 && entry.RewardExperience <= 0)))
+                    issues.Add("Order entry " + i + " (" + entry.Id + ") must define required items and a positive reward.");
+                if (entry.Kind == BackyardContentKind.StoryGoal &&
+                    entry.RewardCoins <= 0 && entry.RewardExperience <= 0)
+                    issues.Add("Story goal entry " + i + " (" + entry.Id + ") must define a positive reward.");
                 if (!string.IsNullOrWhiteSpace(entry.UnlockAreaId) &&
                     string.Equals(entry.AreaId, entry.UnlockAreaId, StringComparison.Ordinal))
                     issues.Add("Entry " + i + " (" + entry.Id + ") unlocks its own area.");
