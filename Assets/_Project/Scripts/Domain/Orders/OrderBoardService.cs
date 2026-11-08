@@ -42,6 +42,7 @@ namespace MiaMax.Domain
         private List<OrderDefinition> GetOrders()
         {
             var result = new List<OrderDefinition>();
+            var includedIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             for (int i = 0; i < DefaultOrders.Length; i++)
             {
                 OrderDefinition fallback = DefaultOrders[i];
@@ -58,6 +59,29 @@ namespace MiaMax.Domain
                     });
                 }
                 else result.Add(fallback);
+                includedIds.Add(fallback.Id);
+            }
+
+            if (catalog != null)
+            {
+                IReadOnlyList<BackyardContentEntry> authoredOrders = catalog.GetByKind(BackyardContentKind.Order);
+                for (int i = 0; i < authoredOrders.Count; i++)
+                {
+                    BackyardContentEntry entry = authoredOrders[i];
+                    if (entry == null || string.IsNullOrWhiteSpace(entry.Id) || includedIds.Contains(entry.Id) ||
+                        string.IsNullOrWhiteSpace(entry.RequiredItemId) || entry.RequiredQuantity <= 0 ||
+                        (entry.RewardCoins <= 0 && entry.RewardExperience <= 0)) continue;
+                    result.Add(new OrderDefinition
+                    {
+                        Id = entry.Id,
+                        ItemId = entry.RequiredItemId,
+                        Quantity = entry.RequiredQuantity,
+                        Coins = entry.RewardCoins,
+                        Experience = entry.RewardExperience,
+                        DisplayName = string.IsNullOrWhiteSpace(entry.DisplayName) ? entry.Id : entry.DisplayName
+                    });
+                    includedIds.Add(entry.Id);
+                }
             }
             return result;
         }
@@ -75,19 +99,18 @@ namespace MiaMax.Domain
         public bool TryComplete(string id)
         {
             OrderDefinition order = GetOrders().FirstOrDefault(x => x.Id == id);
-            if (order == null || IsCompleted(id) || !session.CanGrantRewards(order.Coins, order.Experience))
+            if (order == null || IsCompleted(id) ||
+                !session.CanConsumeItemAndGrantRewards(order.ItemId, order.Quantity, order.Coins, order.Experience))
                 return false;
-            if (!session.TryRemoveItem(order.ItemId, order.Quantity)) return false;
 
             session.Data.CompletedOrders.Add(new CompletedOrderData
             {
                 OrderId = id,
                 CompletedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
             });
-            if (!session.TryGrantRewards(order.Coins, order.Experience))
+            if (!session.TryConsumeItemAndGrantRewards(order.ItemId, order.Quantity, order.Coins, order.Experience))
             {
                 session.Data.CompletedOrders.RemoveAt(session.Data.CompletedOrders.Count - 1);
-                session.AddItem(order.ItemId, order.Quantity);
                 return false;
             }
 
