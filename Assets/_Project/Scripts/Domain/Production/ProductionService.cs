@@ -80,10 +80,15 @@ namespace MiaMax.Domain
             {
                 input = entry.RequiredItemId;
                 quantity = entry.RequiredQuantity;
-                seconds = DefaultDuration(id);
-                return !string.IsNullOrWhiteSpace(input) && quantity > 0;
+                seconds = entry.DurationSeconds > 0 ? entry.DurationSeconds : DefaultDuration(id);
+                return IsAreaUnlocked(entry.AreaId) && !string.IsNullOrWhiteSpace(input) && quantity > 0;
             }
             return Recipe(id, out input, out quantity, out seconds);
+        }
+
+        private bool IsAreaUnlocked(string areaId)
+        {
+            return string.IsNullOrWhiteSpace(areaId) || new QuestService(session, catalog).IsAreaUnlocked(areaId);
         }
 
         private bool TryResolveOutput(string id, out string output, out int quantity, out int experience)
@@ -93,7 +98,7 @@ namespace MiaMax.Domain
                 output = entry.RewardItemId;
                 quantity = entry.RewardQuantity;
                 experience = entry.RewardExperience;
-                return !string.IsNullOrWhiteSpace(output) && quantity > 0;
+                return IsAreaUnlocked(entry.AreaId) && !string.IsNullOrWhiteSpace(output) && quantity > 0;
             }
 
             output = OutputFor(id);
