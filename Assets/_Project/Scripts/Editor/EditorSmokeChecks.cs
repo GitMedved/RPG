@@ -38,8 +38,10 @@ namespace MiaMax.EditorTools
                 RunCheck("Catalog-driven production and custom orders", TestCatalogDrivenProductionAndOrders, ref passed);
                 RunCheck("Quest prerequisites and world-area unlocks", TestQuestPrerequisitesAndAreas, ref passed);
                 RunCheck("First-session production-to-delivery loop", TestFirstSessionLoop, ref passed);
+                RunCheck("Inventory facade and detached snapshots", TestInventoryService, ref passed);
+                RunCheck("Shared level cap and atomic progression rewards", TestSharedProgressionTransactions, ref passed);
 
-                string message = "Core smoke checks passed: " + passed + "/13.\n\n" +
+                string message = "Core smoke checks passed: " + passed + "/15.\n\n" +
                     "This verifies deterministic domain/save paths only. Play Mode, scene interaction, " +
                     "UI layout, FBX import and Android/iOS builds still require separate validation.";
                 Debug.Log("[Mia & Max] " + message);
@@ -586,6 +588,74 @@ namespace MiaMax.EditorTools
             {
                 if (Directory.Exists(directory)) Directory.Delete(directory, true);
             }
+        }
+
+
+        private static void TestInventoryService()
+        {
+            GameSession session = NewSession();
+            InventoryService inventory = new InventoryService(session);
+            Require(inventory.TryAdd("test_berry", 5), "Inventory service should add a valid stack.");
+            Require(inventory.Count == 1 && inventory.GetQuantity("test_berry") == 5,
+                "Inventory facade should expose canonical stack count and quantity.");
+            Require(inventory.Has("test_berry", 5) && !inventory.Has("test_berry", 6),
+                "Inventory availability checks should compare the requested quantity.");
+            var snapshot = inventory.GetSnapshot();
+            Require(snapshot.Count == 1 && snapshot[0].Quantity == 5,
+                "Inventory snapshot should contain a detached copy of the stack.");
+            snapshot[0].Quantity = 999;
+            Require(inventory.GetQuantity("test_berry") == 5,
+                "Mutating a read snapshot must not mutate saved inventory.");
+            Require(inventory.TryConsume("test_berry", 2) && inventory.GetQuantity("test_berry") == 3,
+                "Inventory service should delegate validated consumption to the session.");
+            Require(!inventory.TryConsume("test_berry", 4),
+                "Inventory service must reject consumption beyond the available stack.");
+        }
+
+        private static void TestSharedProgressionTransactions()
+        {
+            GameSession upgradeSession = NewSession();
+            Require(upgradeSession.TryAddCoins(200), "Could not seed upgrade wallet.");
+            UpgradeService upgrades = new UpgradeService(upgradeSession);
+            int upgradeNotifications = 0;
+            upgradeSession.StateChanged += () => upgradeNotifications++;
+            Require(upgrades.TryUpgradeGarden(), "Garden upgrade should purchase successfully.");
+            Require(upgradeNotifications == 1 && upgradeSession.Data.Progress.Coins == 140 &&
+                upgradeSession.Data.GardenLevel == 1,
+                "Upgrade cost and level must commit in one notification.");
+
+            GameSession dailySession = NewSession();
+            dailySession.Data.Progress.Level = 99;
+            dailySession.Data.Progress.Experience = GameSession.ExperienceForNextLevel(99) - 1;
+            DailyTaskService daily = new DailyTaskService(dailySession);
+            daily.RecordHarvest(); daily.RecordHarvest();
+            daily.RecordCraft(); daily.RecordDelivery(); daily.RecordExploration();
+            int dailyNotifications = 0;
+            dailySession.StateChanged += () => dailyNotifications++;
+            Require(daily.TryClaimReward(), "Completed daily goals should grant their reward.");
+            Require(dailyNotifications == 1 && daily.IsRewardClaimed &&
+                dailySession.Data.Progress.Level == 100 &&
+                dailySession.Data.Progress.Experience < GameSession.ExperienceForNextLevel(100),
+                "Daily reward must use the shared level cap and commit exactly once.");
+
+            GameSession achievementSession = NewSession();
+            achievementSession.Data.Progress.Level = 100;
+            achievementSession.Data.Progress.Experience = GameSession.ExperienceForNextLevel(100) - 1;
+            AchievementService achievements = new AchievementService(achievementSession);
+            achievementSession.Data.Achievements.Add(new AchievementProgressData
+            {
+                AchievementId = "harvest_10", Progress = 10
+            });
+            int achievementNotifications = 0;
+            achievementSession.StateChanged += () => achievementNotifications++;
+            string title;
+            int coins, experience;
+            Require(achievements.TryClaimNext(out title, out coins, out experience),
+                "Completed lifetime achievement should grant its reward.");
+            Require(achievementNotifications == 1 && title == "Green Fingers" &&
+                achievementSession.Data.Progress.Level == 100 &&
+                achievementSession.Data.Progress.Experience < GameSession.ExperienceForNextLevel(100),
+                "Achievement reward must use the shared level cap and commit exactly once.");
         }
 
         private static GameSession NewSession()
