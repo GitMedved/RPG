@@ -804,3 +804,10 @@ Added indexed, case-insensitive catalog lookups, kind-filtered queries and stric
 Bounded player progression at level 100, normalized legacy save values on load, centralized XP application, and added an atomic coin/XP reward operation. Quest claims now fail safely when the complete reward cannot be applied, rather than recording a claim after a partial or rejected payout. Added a ninth Editor smoke scenario and extended the gameplay integration audit with a source-contract check. Save schema remains unchanged. The expected smoke result is 9/9 but still requires local Unity execution. See `M81_M85_PROGRESSION_REWARD_HARDENING.md`.
 
 **Validation still required:** Unity compile, 9/9 smoke checks, Gameplay & Character Integration Audit, Play Mode quest/reward/level-cap walkthrough, and save/reload. These source changes have not been executed in Unity.
+
+
+## M86–M90 — Runtime content catalog integration — 2026-11-08
+
+Connected story quest presentation and reward values to the authored BackyardContentCatalog at runtime through Resources. The starter catalog builder now places the asset under Assets/Resources/MiaMax/Content and migrates the previous prototype location without overwriting authored entries. Added a tenth deterministic Editor smoke scenario and an audit check for runtime catalog wiring. Built-in quest metadata remains as a fallback when a catalog entry is absent; quest completion conditions remain authoritative in QuestService. No save schema change. See `M86_M90_RUNTIME_CONTENT_CATALOG.md`.
+
+**Local verification pending:** Unity compilation, starter catalog generation/migration, 10/10 smoke checks, integration audit, Play Mode quest payout and save/reload, and Android/iOS build inclusion.
