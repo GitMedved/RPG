@@ -411,3 +411,10 @@ The authoring catalog now has indexed ID lookup, case-insensitive duplicate prot
 - Added restrained crop idle sway with Reduced Motion support.
 - Extended static integration audit to verify VFX wiring.
 - Unity compilation, editor checks, Play Mode and device validation remain manual gates.
+
+
+## M141–M150 — Production character pipeline and asset validation
+- Runtime prefab pipeline now binds the animation bridge to imported Animator components and validates render geometry plus the complete parameter contract.
+- Character bridge refreshes its parameter cache when an Animator Controller is replaced.
+- Production asset audit handles absent folders without avoidable AssetDatabase missing-folder warnings.
+- Production FBX models, UV-specific textures, authored animation clips and device validation remain outstanding release gates.
