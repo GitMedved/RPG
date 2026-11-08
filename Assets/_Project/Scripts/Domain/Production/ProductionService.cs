@@ -56,6 +56,17 @@ namespace MiaMax.Domain
             return session.TryStartProduction(input, quantity, job);
         }
 
+        public float Progress01
+        {
+            get
+            {
+                ProductionJobData job = ActiveJob;
+                if (job == null || !job.IsActive || job.DurationSeconds <= 0) return 0f;
+                long elapsed = Math.Max(0, DateTimeOffset.UtcNow.ToUnixTimeSeconds() - job.StartedAtUnix);
+                return Mathf.Clamp01((float)elapsed / job.DurationSeconds);
+            }
+        }
+
         public int RemainingSeconds
         {
             get
