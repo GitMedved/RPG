@@ -417,4 +417,5 @@ The authoring catalog now has indexed ID lookup, case-insensitive duplicate prot
 - Runtime prefab pipeline now binds the animation bridge to imported Animator components and validates render geometry plus the complete parameter contract.
 - Character bridge refreshes its parameter cache when an Animator Controller is replaced.
 - Production asset audit handles absent folders without avoidable AssetDatabase missing-folder warnings.
+- Added `CHARACTER_PRODUCTION_HANDOFF.md` with the approved-reference, FBX, rig, clip and validation handoff contract.
 - Production FBX models, UV-specific textures, authored animation clips and device validation remain outstanding release gates.
