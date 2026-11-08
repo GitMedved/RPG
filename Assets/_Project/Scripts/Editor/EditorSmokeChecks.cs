@@ -289,6 +289,8 @@ namespace MiaMax.EditorTools
                 data.CreatedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 data.Progress.Coins = 123;
                 data.GardenLevel = 99;
+                data.Progress.Level = 1000;
+                data.Progress.Experience = int.MaxValue;
                 data.Settings.UiScale = 4f;
                 data.Inventory.Add(new MiaMax.Domain.Inventory.ItemStackData("test_stack", 2));
                 data.Inventory.Add(new MiaMax.Domain.Inventory.ItemStackData("test_stack", 3));
@@ -304,6 +306,9 @@ namespace MiaMax.EditorTools
                 saveService.Save(data);
                 PlayerSaveData normalized = saveService.LoadOrCreate();
                 Require(normalized.GardenLevel == 2, "Save validation should clamp garden level.");
+                Require(normalized.Progress.Level == 100 &&
+                    normalized.Progress.Experience < GameSession.ExperienceForNextLevel(100),
+                    "Save validation should normalize legacy progression to the level cap.");
                 Require(Math.Abs(normalized.Settings.UiScale - 1.15f) < 0.001f,
                     "Save validation should clamp UI scale.");
                 Require(normalized.Inventory.Count == 1 && normalized.Inventory[0].Quantity == 5,
