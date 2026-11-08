@@ -44,11 +44,16 @@ namespace MiaMax.Domain
         }
 
         /// <summary>Applies a coin/XP reward as one validated state transition.</summary>
+        public bool CanGrantRewards(int coins, int experience)
+        {
+            return coins >= 0 && experience >= 0 && (coins > 0 || experience > 0) &&
+                Data.Progress.Coins <= int.MaxValue - coins &&
+                Data.Progress.Experience <= int.MaxValue - experience;
+        }
+
         public bool TryGrantRewards(int coins, int experience)
         {
-            if (coins < 0 || experience < 0 || (coins == 0 && experience == 0)) return false;
-            if (Data.Progress.Coins > int.MaxValue - coins ||
-                Data.Progress.Experience > int.MaxValue - experience) return false;
+            if (!CanGrantRewards(coins, experience)) return false;
             Data.Progress.Coins += coins;
             if (experience > 0) ApplyExperience(experience);
             Notify();
