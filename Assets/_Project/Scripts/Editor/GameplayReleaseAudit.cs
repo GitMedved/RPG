@@ -325,6 +325,12 @@ namespace MiaMax.EditorTools
             System.Text.StringBuilder report, ref int ready, ref int pending)
         {
             string folder = "Assets/_Project/Art/Characters/Runtime/" + character;
+            if (!AssetDatabase.IsValidFolder(folder))
+            {
+                report.AppendLine("[PENDING] " + character + " animation folder not created yet: " + folder);
+                pending++;
+                return;
+            }
             string[] guids = AssetDatabase.FindAssets("t:AnimationClip", new[] { folder });
             var names = new HashSet<string>();
             for (int i = 0; i < guids.Length; i++)
