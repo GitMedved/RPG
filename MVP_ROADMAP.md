@@ -345,3 +345,11 @@ Improved interrupted-write recovery and save payload normalization, added an add
 ## M76–M80 — Content catalog reliability — 2026-11-08
 
 The authoring catalog now has indexed ID lookup, case-insensitive duplicate protection, kind-filtered queries and stricter validation. Core smoke checks cover lookup semantics and required item references; the gameplay audit validates all 16 starter IDs against their expected content kinds. The catalog remains an authoring/index layer; domain services remain authoritative for economy and progression. Local Unity validation is required before wiring catalog data into runtime screens. See M76_M80_CONTENT_CATALOG_RELIABILITY.md.
+
+
+## M81–M85 — Progression and reward transaction hardening
+
+- Player level progression is bounded at level 100 and XP thresholds are safe from integer overflow.
+- Combined coin/XP rewards are validated before either balance changes; quest claims cannot be recorded when the reward is rejected.
+- Core Editor smoke coverage expanded to nine grouped checks; local Unity execution and Play Mode acceptance remain required.
+- No save schema change. See `M81_M85_PROGRESSION_REWARD_HARDENING.md`.
