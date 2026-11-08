@@ -54,8 +54,11 @@ namespace MiaMax.EditorTools
 
             foreach (Check check in checks)
             {
-                string[] assets = AssetDatabase.FindAssets(check.SearchFilter, new[] { check.Folder });
-                bool found = assets != null && assets.Length > 0;
+                bool folderExists = AssetDatabase.IsValidFolder(check.Folder);
+                string[] assets = folderExists
+                    ? AssetDatabase.FindAssets(check.SearchFilter, new[] { check.Folder })
+                    : new string[0];
+                bool found = folderExists && assets != null && assets.Length > 0;
                 if (found) ready++;
                 else pending++;
 
