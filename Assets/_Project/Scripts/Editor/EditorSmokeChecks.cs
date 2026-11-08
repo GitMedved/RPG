@@ -188,7 +188,11 @@ namespace MiaMax.EditorTools
                 "A second production job must not start while the slot is occupied.");
 
             production.ActiveJob.StartedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - 10;
+            production.ActiveJob.DurationSeconds = 20;
+            Require(production.Progress01 >= 0.5f && production.Progress01 <= 0.6f,
+                "Workshop progress should expose elapsed production as a normalized value.");
             production.ActiveJob.DurationSeconds = 1;
+            Require(production.Progress01 == 1f, "Completed production progress should clamp to one.");
             Require(production.CanCollect, "Finished production should expose a collectable state.");
             Require(production.TryCollect(), "Finished soup should be collectable.");
             Require(!production.CanCollect, "Collected production should no longer be collectable.");
