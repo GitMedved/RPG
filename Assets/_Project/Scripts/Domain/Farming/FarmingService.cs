@@ -66,11 +66,23 @@ namespace MiaMax.Domain.Farming
         public int GrowthStage(FarmPlotData plot)
         {
             if (plot == null || !plot.IsPlanted) return 0;
+            float progress = GrowthProgress01(plot);
+            if (progress >= 1f) return 3;
+            return progress < 0.5f ? 1 : 2;
+        }
+        public float GrowthProgress01(FarmPlotData plot)
+        {
+            if (plot == null || !plot.IsPlanted) return 0f;
             long elapsed = Math.Max(0, DateTimeOffset.UtcNow.ToUnixTimeSeconds() - plot.PlantedAtUnix);
-            int minutes = GrowMinutes(plot.CropId);
-            long totalSeconds = minutes * 60L;
-            if (elapsed >= totalSeconds) return 3;
-            return 1 + (int)(elapsed / (totalSeconds / 2f));
+            long totalSeconds = GrowMinutes(plot.CropId) * 60L;
+            return totalSeconds <= 0 ? 1f : (float)Math.Min(1d, (double)elapsed / totalSeconds);
+        }
+        public int SecondsUntilHarvest(FarmPlotData plot)
+        {
+            if (plot == null || !plot.IsPlanted) return 0;
+            long elapsed = Math.Max(0, DateTimeOffset.UtcNow.ToUnixTimeSeconds() - plot.PlantedAtUnix);
+            long remaining = GrowMinutes(plot.CropId) * 60L - elapsed;
+            return (int)Math.Max(0L, Math.Min(int.MaxValue, remaining));
         }
         public static bool IsValidCrop(string id) => id == Carrot || id == Tomato || id == Strawberry;
         public static string SeedFor(string crop) => "seed_" + crop.Substring(5);
