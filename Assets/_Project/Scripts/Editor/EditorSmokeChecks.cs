@@ -40,8 +40,9 @@ namespace MiaMax.EditorTools
                 RunCheck("First-session production-to-delivery loop", TestFirstSessionLoop, ref passed);
                 RunCheck("Inventory facade and detached snapshots", TestInventoryService, ref passed);
                 RunCheck("Shared level cap and atomic progression rewards", TestSharedProgressionTransactions, ref passed);
+                RunCheck("Central economy balance and atomic harvest", TestEconomyAndHarvest, ref passed);
 
-                string message = "Core smoke checks passed: " + passed + "/15.\n\n" +
+                string message = "Core smoke checks passed: " + passed + "/16.\n\n" +
                     "This verifies deterministic domain/save paths only. Play Mode, scene interaction, " +
                     "UI layout, FBX import and Android/iOS builds still require separate validation.";
                 Debug.Log("[Mia & Max] " + message);
@@ -104,6 +105,57 @@ namespace MiaMax.EditorTools
             session.Data.WorkshopLevel = 2;
             Require(upgrades.AdjustProductionDuration(180) == 126,
                 "Workshop level two should reduce 180 seconds by 30 percent.");
+        }
+
+        private static void TestEconomyAndHarvest()
+        {
+            Require(EconomyBalance.UpgradeCost(0) == 60 &&
+                EconomyBalance.UpgradeCost(1) == 120 &&
+                EconomyBalance.UpgradeCost(2) == int.MaxValue,
+                "Upgrade cost curve should be centralized and stop at max level.");
+            Require(EconomyBalance.HarvestYield(0) == 2 &&
+                EconomyBalance.HarvestYield(1) == 3 &&
+                EconomyBalance.HarvestYield(2) == 4,
+                "Garden yield curve should add one crop per level.");
+            Require(EconomyBalance.AdjustProductionDuration(180, 0) == 180 &&
+                EconomyBalance.AdjustProductionDuration(180, 1) == 153 &&
+                EconomyBalance.AdjustProductionDuration(180, 2) == 126,
+                "Workshop production duration curve should be deterministic.");
+
+            GameSession session = NewSession();
+            Require(session.TryAddCoins(60), "Could not seed garden upgrade wallet.");
+            UpgradeService upgrades = new UpgradeService(session);
+            Require(upgrades.CanUpgradeGarden && upgrades.NextGardenHarvestYield == 3,
+                "Upgrade UI query should expose affordability and next yield.");
+            Require(upgrades.TryUpgradeGarden(), "Garden level one purchase should succeed.");
+
+            FarmingService farming = new FarmingService(session);
+            FarmPlotData plot = farming.GetPlot("smoke_harvest_plot");
+            plot.CropId = FarmingService.Carrot;
+            plot.PlantedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - 120;
+            int coinsBefore = session.Data.Progress.Coins;
+            int xpBefore = session.Data.Progress.Experience;
+            Require(farming.TryHarvest("smoke_harvest_plot", out string harvested) &&
+                harvested == FarmingService.Carrot,
+                "Mature crop should harvest successfully.");
+            Require(session.Data.Inventory.Exists(x => x.ItemId == FarmingService.Carrot && x.Quantity == 3),
+                "Garden level one should grant three crops.");
+            Require(session.Data.Progress.Coins == coinsBefore + EconomyBalance.HarvestCoins &&
+                session.Data.Progress.Experience == xpBefore + EconomyBalance.HarvestExperience,
+                "Harvest should grant its configured coin and XP rewards.");
+            Require(!plot.IsPlanted, "Successful harvest should clear the farm plot.");
+
+            GameSession overflowSession = NewSession();
+            FarmingService overflowFarming = new FarmingService(overflowSession);
+            FarmPlotData overflowPlot = overflowFarming.GetPlot("overflow_harvest_plot");
+            overflowPlot.CropId = FarmingService.Carrot;
+            overflowPlot.PlantedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - 120;
+            overflowSession.Data.Progress.Coins = int.MaxValue;
+            Require(!overflowFarming.TryHarvest("overflow_harvest_plot", out _),
+                "Harvest must reject an overflowing reward before changing inventory.");
+            Require(overflowPlot.IsPlanted &&
+                !overflowSession.Data.Inventory.Exists(x => x.ItemId == FarmingService.Carrot),
+                "Rejected harvest must preserve the crop and leave inventory unchanged.");
         }
 
         private static void TestProductionAndOrders()
