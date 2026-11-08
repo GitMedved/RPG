@@ -13,6 +13,7 @@ namespace MiaMax.Domain
         public const string WoodenToy = "recipe_wooden_toy";
 
         private readonly GameSession session;
+        private readonly InventoryService inventory;
         private readonly BackyardContentCatalog catalog;
 
         public ProductionService(GameSession session) : this(session,
@@ -21,14 +22,27 @@ namespace MiaMax.Domain
         public ProductionService(GameSession session, BackyardContentCatalog catalog)
         {
             this.session = session ?? throw new ArgumentNullException(nameof(session));
+            inventory = new InventoryService(session);
             this.catalog = catalog;
         }
 
         public ProductionJobData ActiveJob => session.Data.ProductionJob;
 
-        public bool TryStart(string recipeId)
+        public bool CanStart(string recipeId)
         {
             if (ActiveJob != null && ActiveJob.IsActive) return false;
+            string input;
+            int quantity;
+            int seconds;
+            return TryResolveRecipe(recipeId, out input, out quantity, out seconds) &&
+                inventory.Has(input, quantity);
+        }
+
+        public bool CanCollect => ActiveJob != null && ActiveJob.IsActive && RemainingSeconds <= 0;
+
+        public bool TryStart(string recipeId)
+        {
+            if (!CanStart(recipeId)) return false;
             string input;
             int quantity;
             int seconds;
@@ -56,7 +70,7 @@ namespace MiaMax.Domain
         public bool TryCollect()
         {
             ProductionJobData job = ActiveJob;
-            if (job == null || !job.IsActive || RemainingSeconds > 0) return false;
+            if (!CanCollect) return false;
 
             string output;
             int outputQuantity;
