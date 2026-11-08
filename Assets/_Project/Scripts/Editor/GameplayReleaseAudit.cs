@@ -202,7 +202,8 @@ namespace MiaMax.EditorTools
             string ordersPath = Scripts + "/Domain/Orders/OrderBoardService.cs";
             bool production = File.Exists(productionPath) &&
                 File.ReadAllText(productionPath).Contains("BackyardContentKind.Recipe") &&
-                File.ReadAllText(productionPath).Contains("TryGrantItemAndRewards");
+                File.ReadAllText(productionPath).Contains("TryStartProduction") &&
+                File.ReadAllText(productionPath).Contains("TryCompleteProduction");
             bool orders = File.Exists(ordersPath) &&
                 File.ReadAllText(ordersPath).Contains("BackyardContentKind.Order") &&
                 File.ReadAllText(ordersPath).Contains("TryConsumeItemAndGrantRewards");
@@ -238,6 +239,8 @@ namespace MiaMax.EditorTools
             string sessionPath = Scripts + "/Domain/GameSession.cs";
             bool valid = File.Exists(sessionPath) &&
                 File.ReadAllText(sessionPath).Contains("TryGrantItemAndRewards") &&
+                File.ReadAllText(sessionPath).Contains("TryStartProduction") &&
+                File.ReadAllText(sessionPath).Contains("TryCompleteProduction") &&
                 File.ReadAllText(sessionPath).Contains("TryConsumeItemAndGrantRewards") &&
                 File.ReadAllText(sessionPath).Contains("CanConsumeItemAndGrantRewards");
             report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
