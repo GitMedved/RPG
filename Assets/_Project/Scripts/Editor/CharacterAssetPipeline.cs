@@ -4,6 +4,7 @@ using System.IO;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
+using MiaMax.Gameplay;
 
 namespace MiaMax.EditorTools
 {
@@ -89,9 +90,16 @@ namespace MiaMax.EditorTools
             bool contract = HasParameter(animator, "Speed", AnimatorControllerParameterType.Float) &&
                 HasParameter(animator, "Grounded", AnimatorControllerParameterType.Bool) &&
                 HasParameter(animator, "Interact", AnimatorControllerParameterType.Trigger) &&
-                HasParameter(animator, "Celebrate", AnimatorControllerParameterType.Trigger);
+                HasParameter(animator, "Celebrate", AnimatorControllerParameterType.Trigger) &&
+                HasParameter(animator, "Garden", AnimatorControllerParameterType.Trigger) &&
+                HasParameter(animator, "Reaction", AnimatorControllerParameterType.Trigger) &&
+                HasParameter(animator, "Jump", AnimatorControllerParameterType.Trigger) &&
+                HasParameter(animator, "Sleep", AnimatorControllerParameterType.Trigger) &&
+                HasParameter(animator, "Play", AnimatorControllerParameterType.Trigger);
+            bool hasGeometry = prefab.GetComponentInChildren<SkinnedMeshRenderer>(true) != null ||
+                prefab.GetComponentInChildren<MeshRenderer>(true) != null;
 
-            if (avatarValid && rigTypeValid && controllerAssigned && rootMotionOff && contract)
+            if (avatarValid && rigTypeValid && controllerAssigned && rootMotionOff && contract && hasGeometry)
             {
                 ready++;
                 report.AppendLine("[READY] " + characterName + " prefab, Avatar, Animator contract and root-motion setting.");
@@ -104,7 +112,8 @@ namespace MiaMax.EditorTools
                     "; Expected rig type: " + rigTypeValid +
                     "; Controller assigned: " + controllerAssigned +
                     "; Root Motion disabled: " + rootMotionOff +
-                    "; Parameters complete: " + contract);
+                    "; Parameters complete: " + contract +
+                    "; Render geometry present: " + hasGeometry);
             }
 
             if (animator.runtimeAnimatorController != null)
@@ -237,6 +246,9 @@ namespace MiaMax.EditorTools
             if (animator == null) animator = modelInstance.AddComponent<Animator>();
             // CharacterController / companion-follow own world movement; clips animate in place.
             animator.applyRootMotion = false;
+            CharacterAnimationBridge bridge = wrapper.GetComponent<CharacterAnimationBridge>();
+            if (bridge == null) bridge = wrapper.AddComponent<CharacterAnimationBridge>();
+            bridge.Configure(animator);
 
             AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(controllerPath);
             if (controller != null) animator.runtimeAnimatorController = controller;
@@ -265,6 +277,11 @@ namespace MiaMax.EditorTools
             controller.AddParameter("Grounded", AnimatorControllerParameterType.Bool);
             controller.AddParameter("Interact", AnimatorControllerParameterType.Trigger);
             controller.AddParameter("Celebrate", AnimatorControllerParameterType.Trigger);
+            controller.AddParameter("Garden", AnimatorControllerParameterType.Trigger);
+            controller.AddParameter("Reaction", AnimatorControllerParameterType.Trigger);
+            controller.AddParameter("Jump", AnimatorControllerParameterType.Trigger);
+            controller.AddParameter("Sleep", AnimatorControllerParameterType.Trigger);
+            controller.AddParameter("Play", AnimatorControllerParameterType.Trigger);
             EditorUtility.SetDirty(controller);
         }
 
