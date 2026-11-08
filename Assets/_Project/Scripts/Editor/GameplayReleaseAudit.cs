@@ -70,6 +70,7 @@ namespace MiaMax.EditorTools
             CheckEconomyBalance(report, ref ready, ref pending);
             CheckInteractiveProgressPresentation(report, ref ready, ref pending);
             CheckActionFeedbackVfx(report, ref ready, ref pending);
+            CheckEnvironmentMaterialIntegration(report, ref ready, ref pending);
             CheckCharacterPipelineContract(report, ref ready, ref pending);
 
             string[] catalogGuids = AssetDatabase.FindAssets("t:BackyardContentCatalog");
@@ -413,6 +414,28 @@ namespace MiaMax.EditorTools
             bool valid = vfx && farm && station;
             report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
                 "One-shot planting, harvest and workshop particle feedback is integrated");
+            if (valid) ready++; else pending++;
+        }
+
+        private static void CheckEnvironmentMaterialIntegration(System.Text.StringBuilder report,
+            ref int ready, ref int pending)
+        {
+            string artPath = "Assets/_Project/Scripts/World/BackyardEnvironmentArtPass.cs";
+            string bootstrapPath = "Assets/_Project/Scripts/Core/BackyardPrototypeBootstrap.cs";
+            string art = File.Exists(artPath) ? File.ReadAllText(artPath) : string.Empty;
+            string bootstrap = File.Exists(bootstrapPath) ? File.ReadAllText(bootstrapPath) : string.Empty;
+            bool surfaces = art.Contains("SurfaceOrColor(\"Plaster_Cream\"") &&
+                art.Contains("SurfaceOrColor(\"Fence_WhitePaint\"") &&
+                art.Contains("SurfaceOrColor(\"Wood_Warm\"") &&
+                art.Contains("SurfaceOrColor(\"Soil_Garden\"") &&
+                art.Contains("SurfaceOrColor(\"Leaf_Green\"") &&
+                art.Contains("Resources.Load<Material>(\"MiaMax/Materials/\"");
+            bool integration = bootstrap.Contains("BackyardEnvironmentArtPass.Build()");
+            bool safeBuild = art.Contains("M40_Backyard_Environment_Dressing") &&
+                art.Contains("if (shader == null) shader = Shader.Find(\"Sprites/Default\")");
+            bool valid = surfaces && integration && safeBuild;
+            report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
+                "Backyard environment dressing consumes generated world materials with safe fallbacks");
             if (valid) ready++; else pending++;
         }
 
