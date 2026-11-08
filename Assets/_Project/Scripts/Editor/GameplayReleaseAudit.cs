@@ -71,6 +71,7 @@ namespace MiaMax.EditorTools
             CheckInteractiveProgressPresentation(report, ref ready, ref pending);
             CheckActionFeedbackVfx(report, ref ready, ref pending);
             CheckEnvironmentMaterialIntegration(report, ref ready, ref pending);
+            CheckEnvironmentGroundCover(report, ref ready, ref pending);
             CheckCharacterPipelineContract(report, ref ready, ref pending);
 
             string[] catalogGuids = AssetDatabase.FindAssets("t:BackyardContentCatalog");
@@ -436,6 +437,23 @@ namespace MiaMax.EditorTools
             bool valid = surfaces && integration && safeBuild;
             report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
                 "Backyard environment dressing consumes generated world materials with safe fallbacks");
+            if (valid) ready++; else pending++;
+        }
+
+        private static void CheckEnvironmentGroundCover(System.Text.StringBuilder report,
+            ref int ready, ref int pending)
+        {
+            string path = "Assets/_Project/Scripts/World/BackyardEnvironmentArtPass.cs";
+            string source = File.Exists(path) ? File.ReadAllText(path) : string.Empty;
+            bool deterministic = source.Contains("Vector3[] patches") && source.Contains("Vector3[] stones") &&
+                !source.Contains("UnityEngine.Random") && !source.Contains("Random.Range(");
+            bool safeDecor = source.Contains("BuildGardenBorderAndGroundCover") &&
+                source.Contains("GroundCover_Bloom_") && source.Contains("Garden_Edge_Stone_") &&
+                source.Contains("Object.Destroy(collider)");
+            bool budget = source.Contains("renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off");
+            bool valid = deterministic && safeDecor && budget;
+            report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
+                "Backyard ground-cover source contract (fixed placement, decorative collider removal, restrained stone shadows)");
             if (valid) ready++; else pending++;
         }
 
