@@ -8,7 +8,7 @@ using UnityEngine;
 namespace MiaMax.EditorTools
 {
     /// <summary>
-    /// Static integration audit for the M64-M74 gameplay/content/character foundations.
+    /// Static integration audit for the M64-M78 gameplay/content/character foundations.
     /// It checks repository assets only; it does not run gameplay or certify release readiness.
     /// </summary>
     public static class GameplayReleaseAudit
@@ -113,20 +113,34 @@ namespace MiaMax.EditorTools
                 "quest_first_steps", "quest_first_order", "quest_order_master", "quest_flower_friend",
                 "match3", "fishing", "max_run"
             };
-            var missing = new List<string>();
+            BackyardContentKind[] requiredKinds =
+            {
+                BackyardContentKind.Crop, BackyardContentKind.Crop, BackyardContentKind.Crop,
+                BackyardContentKind.Recipe, BackyardContentKind.Recipe, BackyardContentKind.Recipe,
+                BackyardContentKind.Order, BackyardContentKind.Order, BackyardContentKind.Order,
+                BackyardContentKind.StoryGoal, BackyardContentKind.StoryGoal,
+                BackyardContentKind.StoryGoal, BackyardContentKind.StoryGoal,
+                BackyardContentKind.MiniGame, BackyardContentKind.MiniGame, BackyardContentKind.MiniGame
+            };
+            var issues = new List<string>();
             for (int i = 0; i < requiredIds.Length; i++)
-                if (!catalog.TryGet(requiredIds[i], out _)) missing.Add(requiredIds[i]);
+            {
+                if (!catalog.TryGet(requiredIds[i], out BackyardContentEntry entry))
+                    issues.Add(requiredIds[i] + " (missing)");
+                else if (entry.Kind != requiredKinds[i])
+                    issues.Add(requiredIds[i] + " (expected " + requiredKinds[i] + ", found " + entry.Kind + ")");
+            }
 
-            if (missing.Count == 0)
+            if (issues.Count == 0)
             {
                 report.AppendLine("[READY] Starter gameplay catalog coverage: " +
-                    requiredIds.Length + " known crop/recipe/order/quest/mini-game IDs (" + path + ")");
+                    requiredIds.Length + " IDs with correct content kinds (" + path + ")");
                 ready++;
             }
             else
             {
-                report.AppendLine("[PENDING] Starter gameplay catalog entries missing (" + path + "): " +
-                    string.Join(", ", missing.ToArray()));
+                report.AppendLine("[PENDING] Starter gameplay catalog coverage issues (" + path + "): " +
+                    string.Join(", ", issues.ToArray()));
                 pending++;
             }
         }
