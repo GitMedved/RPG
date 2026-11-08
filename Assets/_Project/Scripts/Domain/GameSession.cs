@@ -92,8 +92,7 @@ namespace MiaMax.Domain
 
         public bool CanGrantItemAndRewards(string itemId, int quantity, int coins, int experience)
         {
-            if (string.IsNullOrWhiteSpace(itemId) || quantity <= 0 || coins < 0 || experience < 0 ||
-                (coins == 0 && experience == 0)) return false;
+            if (string.IsNullOrWhiteSpace(itemId) || quantity <= 0 || coins < 0 || experience < 0) return false;
             if (Data.Progress.Coins > int.MaxValue - coins ||
                 Data.Progress.Experience > int.MaxValue - experience) return false;
             ItemStackData stack = Data.Inventory.Find(x => x.ItemId == itemId);
