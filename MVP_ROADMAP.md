@@ -371,3 +371,13 @@ The authoring catalog now has indexed ID lookup, case-insensitive duplicate prot
 - Inventory, production start/collection and order delivery use preflighted state transitions so save listeners observe completed transactions.
 - Editor smoke suite expanded to 13 scenarios, including custom catalog recipes/orders, area gates and a fresh-profile craft/deliver/quest/save loop.
 - No save schema change. Source changes and static review only; Unity compile, smoke execution, integration audit, Play Mode and device acceptance remain pending. See M91_M100_FIRST_RELEASE_GAMEPLAY_LOOP.md.
+
+
+## M101–M110 — Inventory, economy and progression consistency
+
+- Added InventoryService as the query/mutation facade with detached snapshots; production and orders use its quantity checks.
+- Added production CanStart/CanCollect presentation affordances.
+- Daily-task and achievement rewards now use GameSession's shared bounded XP/reward transaction.
+- Garden and Workshop upgrades deduct currency and increment their level atomically in one state notification.
+- Expanded Core Smoke Checks to 15 scenarios and extended Gameplay & Character Integration Audit.
+- No save schema change. Static source review only; Unity compile, smoke execution and Play Mode remain pending. See M101_M110_INVENTORY_ECONOMY_PROGRESSION.md.
