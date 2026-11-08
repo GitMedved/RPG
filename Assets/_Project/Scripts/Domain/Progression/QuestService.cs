@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MiaMax.Infrastructure.Save;
+using UnityEngine;
 
 namespace MiaMax.Domain.Progression
 {
@@ -49,10 +50,17 @@ namespace MiaMax.Domain.Progression
         };
 
         private readonly GameSession session;
+        private readonly BackyardContentCatalog catalog;
 
-        public QuestService(GameSession session)
+        public QuestService(GameSession session) : this(session,
+            Resources.Load<BackyardContentCatalog>("MiaMax/Content/BackyardContentCatalog"))
+        {
+        }
+
+        public QuestService(GameSession session, BackyardContentCatalog catalog)
         {
             this.session = session ?? throw new ArgumentNullException(nameof(session));
+            this.catalog = catalog;
             if (session.Data.ClaimedQuests == null) session.Data.ClaimedQuests = new List<QuestProgressData>();
             if (session.Data.UnlockedWorldAreas == null) session.Data.UnlockedWorldAreas = new List<string>();
         }
@@ -70,11 +78,11 @@ namespace MiaMax.Domain.Progression
                 snapshots.Add(new QuestSnapshot
                 {
                     Id = quest.Id,
-                    Title = quest.Title,
+                    Title = GetTitle(quest),
                     Availability = claimed ? QuestAvailability.Claimed :
                         complete ? QuestAvailability.ReadyToClaim : QuestAvailability.InProgress,
-                    RewardCoins = quest.Coins,
-                    RewardExperience = quest.Experience
+                    RewardCoins = GetCoins(quest),
+                    RewardExperience = GetExperience(quest)
                 });
             }
             return snapshots;
@@ -96,23 +104,24 @@ namespace MiaMax.Domain.Progression
 
             // Prepare all persistent quest state before the single reward notification.
             // The preflight makes the following grant deterministic on Unity's main thread.
-            if (!session.CanGrantRewards(quest.Coins, quest.Experience)) return false;
+            int rewardCoins = GetCoins(quest);
+            int rewardExperience = GetExperience(quest);
+            if (!session.CanGrantRewards(rewardCoins, rewardExperience)) return false;
             session.Data.ClaimedQuests.Add(new QuestProgressData
             {
                 QuestId = quest.Id,
                 ClaimedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
             });
-            if (quest.Id == "quest_order_master" && !session.Data.UnlockedWorldAreas.Contains("flower_garden"))
-                session.Data.UnlockedWorldAreas.Add("flower_garden");
-            if (quest.Id == "quest_flower_friend" && !session.Data.UnlockedWorldAreas.Contains("woodland_trail"))
-                session.Data.UnlockedWorldAreas.Add("woodland_trail");
+            string unlockArea = GetUnlockArea(quest);
+            if (!string.IsNullOrWhiteSpace(unlockArea) && !session.Data.UnlockedWorldAreas.Contains(unlockArea))
+                session.Data.UnlockedWorldAreas.Add(unlockArea);
 
-            if (!session.TryGrantRewards(quest.Coins, quest.Experience))
+            if (!session.TryGrantRewards(rewardCoins, rewardExperience))
             {
                 session.Data.ClaimedQuests.RemoveAt(session.Data.ClaimedQuests.Count - 1);
                 return false;
             }
-            claimedTitle = quest.Title;
+            claimedTitle = GetTitle(quest);
             return true;
         }
 
@@ -120,6 +129,37 @@ namespace MiaMax.Domain.Progression
         {
             return !string.IsNullOrWhiteSpace(areaId) &&
                 session.Data.UnlockedWorldAreas.Contains(areaId);
+        }
+
+        private string GetTitle(Definition quest)
+        {
+            return TryGetCatalogEntry(quest, out BackyardContentEntry entry) &&
+                !string.IsNullOrWhiteSpace(entry.DisplayName) ? entry.DisplayName : quest.Title;
+        }
+
+        private int GetCoins(Definition quest)
+        {
+            return TryGetCatalogEntry(quest, out BackyardContentEntry entry) ? entry.RewardCoins : quest.Coins;
+        }
+
+        private int GetExperience(Definition quest)
+        {
+            return TryGetCatalogEntry(quest, out BackyardContentEntry entry) ? entry.RewardExperience : quest.Experience;
+        }
+
+        private string GetUnlockArea(Definition quest)
+        {
+            if (TryGetCatalogEntry(quest, out BackyardContentEntry entry) &&
+                !string.IsNullOrWhiteSpace(entry.UnlockAreaId))
+                return entry.UnlockAreaId;
+            if (quest.Id == "quest_order_master") return "flower_garden";
+            if (quest.Id == "quest_flower_friend") return "woodland_trail";
+            return null;
+        }
+
+        private bool TryGetCatalogEntry(Definition quest, out BackyardContentEntry entry)
+        {
+            return catalog != null && catalog.TryGet(quest.Id, BackyardContentKind.StoryGoal, out entry);
         }
 
         private bool IsClaimed(string id)
