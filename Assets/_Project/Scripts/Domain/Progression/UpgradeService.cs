@@ -41,8 +41,11 @@ namespace MiaMax.Domain.Progression
         public int AdjustProductionDuration(int baseSeconds)
         {
             if (baseSeconds <= 0) return 0;
-            float multiplier = WorkshopLevel == 1 ? 0.85f : WorkshopLevel >= 2 ? 0.70f : 1f;
-            return Math.Max(1, (int)Math.Ceiling(baseSeconds * multiplier));
+            // Integer ceiling avoids float representation turning 180 * 0.85 into 154.
+            int percent = WorkshopLevel == 1 ? 85 : WorkshopLevel >= 2 ? 70 : 100;
+            long scaledSeconds = (long)baseSeconds * percent;
+            long roundedSeconds = (scaledSeconds + 99L) / 100L;
+            return (int)Math.Max(1L, Math.Min(int.MaxValue, roundedSeconds));
         }
 
         private static int CostFor(int currentLevel)
