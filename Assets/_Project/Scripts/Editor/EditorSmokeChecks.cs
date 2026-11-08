@@ -34,6 +34,7 @@ namespace MiaMax.EditorTools
                 RunCheck("Content catalog safe authoring", TestContentCatalogAuthoring, ref passed);
                 RunCheck("Six-step tutorial gameplay flow", TestTutorialFlow, ref passed);
                 RunCheck("Atomic quest rewards and level cap", TestQuestRewardAtomicity, ref passed);
+                RunCheck("Runtime content catalog drives quest metadata", TestRuntimeQuestCatalog, ref passed);
 
                 string message = "Core smoke checks passed: " + passed + "/9.\n\n" +
                     "This verifies deterministic domain/save paths only. Play Mode, scene interaction, " +
@@ -369,6 +370,44 @@ namespace MiaMax.EditorTools
                 "Quest should commit once and progression should stop at level 100.");
             Require(session.Data.Progress.Experience < GameSession.ExperienceForNextLevel(100),
                 "XP at the level cap must remain below the next-level threshold.");
+        }
+
+        private static void TestRuntimeQuestCatalog()
+        {
+            BackyardContentCatalog catalog = ScriptableObject.CreateInstance<BackyardContentCatalog>();
+            try
+            {
+                Require(catalog.TryAdd(new BackyardContentEntry
+                {
+                    Id = "quest_first_steps",
+                    Kind = BackyardContentKind.StoryGoal,
+                    DisplayName = "A Catalog Adventure",
+                    AreaId = "backyard",
+                    RewardCoins = 27,
+                    RewardExperience = 31,
+                    UnlockAreaId = "flower_garden"
+                }), "Test catalog entry should be accepted.");
+
+                GameSession session = NewSession();
+                session.Data.Progress.Level = 2;
+                QuestService quests = new QuestService(session, catalog);
+                var snapshot = quests.GetQuestSnapshots()[0];
+                Require(snapshot.Title == "A Catalog Adventure" &&
+                    snapshot.RewardCoins == 27 && snapshot.RewardExperience == 31,
+                    "Quest cards should resolve title and rewards from the runtime catalog.");
+
+                string claimedTitle;
+                Require(quests.TryClaimNext(out claimedTitle), "Catalog-backed quest should be claimable.");
+                Require(claimedTitle == "A Catalog Adventure" &&
+                    session.Data.Progress.Coins == 27 && session.Data.Progress.Experience == 31,
+                    "Quest claim should use catalog title and reward values.");
+                Require(quests.IsAreaUnlocked("flower_garden"),
+                    "Catalog-defined quest area unlock should persist in the session.");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(catalog);
+            }
         }
 
         private static GameSession NewSession()
