@@ -33,15 +33,13 @@ namespace MiaMax.Domain
             int quantity;
             int seconds;
             if (!TryResolveRecipe(recipeId, out input, out quantity, out seconds)) return false;
-            if (!session.TryRemoveItem(input, quantity)) return false;
-            session.Data.ProductionJob = new ProductionJobData
+            var job = new ProductionJobData
             {
                 RecipeId = recipeId,
                 StartedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                 DurationSeconds = new UpgradeService(session).AdjustProductionDuration(seconds)
             };
-            session.NotifyExternalStateChanged();
-            return true;
+            return session.TryStartProduction(input, quantity, job);
         }
 
         public int RemainingSeconds
@@ -64,9 +62,7 @@ namespace MiaMax.Domain
             int outputQuantity;
             int experience;
             if (!TryResolveOutput(job.RecipeId, out output, out outputQuantity, out experience) ||
-                !session.TryGrantItemAndRewards(output, outputQuantity, 0, experience)) return false;
-
-            session.Data.ProductionJob = new ProductionJobData();
+                !session.TryCompleteProduction(job, output, outputQuantity, experience)) return false;
             new DailyTaskService(session).RecordCraft();
             new AchievementService(session).RecordCraft();
             new TutorialService(session).TryAdvance(TutorialService.Craft);
