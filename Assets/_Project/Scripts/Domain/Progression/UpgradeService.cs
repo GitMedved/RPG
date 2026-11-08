@@ -9,7 +9,7 @@ namespace MiaMax.Domain.Progression
     /// </summary>
     public sealed class UpgradeService
     {
-        public const int MaxLevel = 2;
+        public const int MaxLevel = EconomyBalance.MaxUpgradeLevel;
         private readonly GameSession session;
 
         public UpgradeService(GameSession session)
