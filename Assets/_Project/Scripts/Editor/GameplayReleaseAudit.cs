@@ -394,9 +394,15 @@ namespace MiaMax.EditorTools
             string vfxPath = Scripts + "/Gameplay/BackyardFeedbackVfx.cs";
             string farmPath = Scripts + "/Gameplay/FarmPlotPrototype.cs";
             string stationPath = Scripts + "/Gameplay/ProductionStationPrototype.cs";
+            string manifestPath = "Packages/manifest.json";
+            string vfxSource = File.Exists(vfxPath) ? File.ReadAllText(vfxPath) : string.Empty;
+            string manifest = File.Exists(manifestPath) ? File.ReadAllText(manifestPath) : string.Empty;
             bool vfx = File.Exists(vfxPath) &&
-                File.ReadAllText(vfxPath).Contains("ParticleSystemStopAction.Destroy") &&
-                File.ReadAllText(vfxPath).Contains("PlayWorkshopComplete");
+                vfxSource.Contains("using MiaMax.Domain;") &&
+                vfxSource.Contains("using MiaMax.Infrastructure.Save;") &&
+                vfxSource.Contains("ParticleSystemStopAction.Destroy") &&
+                vfxSource.Contains("PlayWorkshopComplete") &&
+                manifest.Contains("\"com.unity.modules.particlesystem\": \"1.0.0\"");
             bool farm = File.Exists(farmPath) &&
                 File.ReadAllText(farmPath).Contains("PlayPlant") &&
                 File.ReadAllText(farmPath).Contains("PlayHarvest");
