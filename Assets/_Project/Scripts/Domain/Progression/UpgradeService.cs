@@ -19,9 +19,11 @@ namespace MiaMax.Domain.Progression
 
         public int GardenLevel => session.Data.GardenLevel;
         public int WorkshopLevel => session.Data.WorkshopLevel;
-        public int GardenUpgradeCost => CostFor(GardenLevel);
-        public int WorkshopUpgradeCost => CostFor(WorkshopLevel);
+        public int GardenUpgradeCost => EconomyBalance.UpgradeCost(GardenLevel);
+        public int WorkshopUpgradeCost => EconomyBalance.UpgradeCost(WorkshopLevel);
         public bool GardenAtMax => GardenLevel >= MaxLevel;
+        public bool CanUpgradeGarden => !GardenAtMax && session.Data.Progress.Coins >= GardenUpgradeCost;
+        public bool CanUpgradeWorkshop => !WorkshopAtMax && session.Data.Progress.Coins >= WorkshopUpgradeCost;
         public bool WorkshopAtMax => WorkshopLevel >= MaxLevel;
 
         public bool TryUpgradeGarden()
@@ -35,22 +37,15 @@ namespace MiaMax.Domain.Progression
         }
 
         /// <summary>Base harvest is two crops; each garden level adds one.</summary>
-        public int HarvestYield => 2 + GardenLevel;
+        public int HarvestYield => EconomyBalance.HarvestYield(GardenLevel);
+        public int NextGardenHarvestYield => EconomyBalance.HarvestYield(GardenLevel + 1);
+        public int NextWorkshopDuration(int baseSeconds) => EconomyBalance.AdjustProductionDuration(baseSeconds, WorkshopLevel + 1);
 
         /// <summary>Workshop level 1 is 15% faster; level 2 is 30% faster.</summary>
         public int AdjustProductionDuration(int baseSeconds)
         {
-            if (baseSeconds <= 0) return 0;
-            // Integer ceiling avoids float representation turning 180 * 0.85 into 154.
-            int percent = WorkshopLevel == 1 ? 85 : WorkshopLevel >= 2 ? 70 : 100;
-            long scaledSeconds = (long)baseSeconds * percent;
-            long roundedSeconds = (scaledSeconds + 99L) / 100L;
-            return (int)Math.Max(1L, Math.Min(int.MaxValue, roundedSeconds));
+            return EconomyBalance.AdjustProductionDuration(baseSeconds, WorkshopLevel);
         }
 
-        private static int CostFor(int currentLevel)
-        {
-            return currentLevel <= 0 ? 60 : currentLevel == 1 ? 120 : int.MaxValue;
-        }
     }
 }
