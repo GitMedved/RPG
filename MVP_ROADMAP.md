@@ -361,3 +361,13 @@ The authoring catalog now has indexed ID lookup, case-insensitive duplicate prot
 - Starter catalog builder writes to Resources and preserves/migrates the older prototype asset.
 - Editor smoke coverage expanded to 10 scenarios; runtime and build validation remain pending.
 - No save schema change. See `M86_M90_RUNTIME_CONTENT_CATALOG.md`.
+
+
+## M91–M100 — First-release gameplay loop integration
+
+- Recipes and order deliveries now consume authored catalog definitions, including configurable requirements, outputs, rewards and durations; built-in definitions remain the fallback.
+- Story goals support validated prerequisites. The opening quest chain is sequential and claims unlock Flower Garden, then Woodland Trail.
+- Catalog recipes and orders respect their area's unlock state.
+- Inventory, production start/collection and order delivery use preflighted state transitions so save listeners observe completed transactions.
+- Editor smoke suite expanded to 13 scenarios, including custom catalog recipes/orders, area gates and a fresh-profile craft/deliver/quest/save loop.
+- No save schema change. Source changes and static review only; Unity compile, smoke execution, integration audit, Play Mode and device acceptance remain pending. See M91_M100_FIRST_RELEASE_GAMEPLAY_LOOP.md.
