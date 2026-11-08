@@ -17,6 +17,16 @@ namespace MiaMax.EditorTools
         [MenuItem("Tools/Mia & Max/Audit Missing Script References")]
         public static void Run()
         {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                EditorUtility.DisplayDialog("Mia & Max — Missing Script Audit",
+                    "Stop Play Mode, wait until Unity returns to Edit Mode, then run this audit again. " +
+                    "Opening project scenes for a complete audit is not supported during Play Mode.",
+                    "OK");
+                Debug.LogWarning("[Mia & Max] Missing script audit was not run: exit Play Mode first.");
+                return;
+            }
+
             int total = 0;
             int scenesScanned = 0;
             int prefabsScanned = 0;
@@ -39,7 +49,7 @@ namespace MiaMax.EditorTools
 
             // Open each unopened scene additively, inspect it, then close only that scene.
             // Existing scenes are not saved, closed, or reloaded.
-            string[] sceneGuids = AssetDatabase.FindAssets("t:Scene");
+            string[] sceneGuids = AssetDatabase.FindAssets("t:Scene", new[] { "Assets" });
             for (int i = 0; i < sceneGuids.Length; i++)
             {
                 string path = AssetDatabase.GUIDToAssetPath(sceneGuids[i]);
