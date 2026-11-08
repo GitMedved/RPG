@@ -45,6 +45,8 @@ namespace MiaMax.EditorTools
                 "Gameplay/MobileUiComponents.cs",
                 "Gameplay/MobileUiNavigationStack.cs",
                 "Characters/CharacterAnimationBridge.cs",
+                "Editor/CharacterAssetPipeline.cs",
+                "Editor/ProductionAssetAudit.cs",
                 "Editor/CharacterAnimatorStateMachineBuilder.cs",
                 "MiniGames/Match3/Match3Board.cs",
                 "MiniGames/Fishing/FishingTimingSession.cs",
@@ -68,6 +70,7 @@ namespace MiaMax.EditorTools
             CheckEconomyBalance(report, ref ready, ref pending);
             CheckInteractiveProgressPresentation(report, ref ready, ref pending);
             CheckActionFeedbackVfx(report, ref ready, ref pending);
+            CheckCharacterPipelineContract(report, ref ready, ref pending);
 
             string[] catalogGuids = AssetDatabase.FindAssets("t:BackyardContentCatalog");
             if (catalogGuids.Length == 0)
@@ -404,6 +407,27 @@ namespace MiaMax.EditorTools
             bool valid = vfx && farm && station;
             report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
                 "One-shot planting, harvest and workshop particle feedback is integrated");
+            if (valid) ready++; else pending++;
+        }
+
+        private static void CheckCharacterPipelineContract(System.Text.StringBuilder report,
+            ref int ready, ref int pending)
+        {
+            string bridgePath = Scripts + "/Characters/CharacterAnimationBridge.cs";
+            string pipelinePath = Scripts + "/Editor/CharacterAssetPipeline.cs";
+            string assetAuditPath = Scripts + "/Editor/ProductionAssetAudit.cs";
+            bool bridge = File.Exists(bridgePath) &&
+                File.ReadAllText(bridgePath).Contains("boundController") &&
+                File.ReadAllText(bridgePath).Contains("GetComponentInParent<CharacterController>");
+            bool pipeline = File.Exists(pipelinePath) &&
+                File.ReadAllText(pipelinePath).Contains("bridge.Configure(animator)") &&
+                File.ReadAllText(pipelinePath).Contains("Render geometry present") &&
+                File.ReadAllText(pipelinePath).Contains("AnimatorControllerParameterType.Trigger");
+            bool audit = File.Exists(assetAuditPath) &&
+                File.ReadAllText(assetAuditPath).Contains("AssetDatabase.IsValidFolder");
+            bool valid = bridge && pipeline && audit;
+            report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
+                "Character runtime bridge rebinding, prefab geometry validation and safe asset-folder audit");
             if (valid) ready++; else pending++;
         }
 
