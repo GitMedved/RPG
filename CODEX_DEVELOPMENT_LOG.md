@@ -824,3 +824,17 @@ Connected story quest presentation and reward values to the authored BackyardCon
 - Expanded Core Smoke Checks from 10 to 13 scenarios. Expected local result is 13/13; not yet run in Unity. Static repository review only, not a Unity compile or Play Mode result.
 
 **Local acceptance required:** update branch, create/review the Resources catalog, run 13/13 smoke checks and Gameplay & Character Integration Audit, then test the first loop and both area gates in Play Mode. Android/iOS builds and physical-device QA remain separate release gates. See M91_M100_FIRST_RELEASE_GAMEPLAY_LOOP.md.
+
+
+## 2026-11-08 — M101–M110 inventory, economy and progression consistency
+
+- **M101:** introduced InventoryService for canonical quantity/availability queries, validated add/consume operations and detached read snapshots.
+- **M102:** connected production and order availability checks to InventoryService; added CanStart and CanCollect production affordances.
+- **M103–M105:** routed daily-task and achievement rewards through GameSession.TryGrantRewards so XP uses the same level-100 cap as quest rewards; claim markers roll back if the transaction is rejected.
+- **M106:** made Garden/Workshop upgrade purchase a single wallet+level transaction and one observable state notification.
+- **M107–M108:** kept mutation ownership in GameSession and preserved the existing save schema.
+- **M109:** expanded Editor Smoke Checks from 13 to 15 scenarios, covering detached inventory snapshots, daily/achievement reward cap behavior and atomic upgrades.
+- **M110:** extended Gameplay & Character Integration Audit with inventory, shared XP and atomic upgrade contracts.
+- Static source review only. Unity compilation, 15/15 smoke execution, integration audit execution, Play Mode and device QA remain pending.
+
+**Local acceptance:** pull codex/mia-max-foundation; run Core Smoke Checks (expected 15/15) and Gameplay & Character Integration Audit; verify production affordances, upgrades, daily rewards and achievements in Play Mode. See M101_M110_INVENTORY_ECONOMY_PROGRESSION.md.
