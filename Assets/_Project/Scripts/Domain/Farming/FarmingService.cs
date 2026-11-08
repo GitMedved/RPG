@@ -31,7 +31,7 @@ namespace MiaMax.Domain.Farming
             if (plot.IsPlanted || !session.TryRemoveItem(SeedFor(cropId), 1)) return false;
             plot.CropId = cropId;
             plot.PlantedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            session.AddExperience(2);
+            session.AddExperience(EconomyBalance.PlantExperience);
             new TutorialService(session).TryAdvance(TutorialService.Plant);
             session.NotifyExternalStateChanged();
             return true;
@@ -42,9 +42,21 @@ namespace MiaMax.Domain.Farming
             cropId = plot.CropId;
             if (!plot.IsPlanted || GrowthStage(plot) < 3) return false;
             int harvestQuantity = new UpgradeService(session).HarvestYield;
-            if (!session.AddItem(cropId, harvestQuantity)) return false;
-            plot.CropId = null; plot.PlantedAtUnix = 0;
-            session.AddExperience(8); session.TryAddCoins(3);
+            if (!session.CanGrantItemAndRewards(cropId, harvestQuantity,
+                EconomyBalance.HarvestCoins, EconomyBalance.HarvestExperience)) return false;
+
+            // Clear the plot before the single inventory/reward notification. Roll back if preflight changes.
+            string harvestedCrop = plot.CropId;
+            long plantedAt = plot.PlantedAtUnix;
+            plot.CropId = null;
+            plot.PlantedAtUnix = 0;
+            if (!session.TryGrantItemAndRewards(harvestedCrop, harvestQuantity,
+                EconomyBalance.HarvestCoins, EconomyBalance.HarvestExperience))
+            {
+                plot.CropId = harvestedCrop;
+                plot.PlantedAtUnix = plantedAt;
+                return false;
+            }
             new DailyTaskService(session).RecordHarvest();
             new AchievementService(session).RecordHarvest();
             new TutorialService(session).TryAdvance(TutorialService.Harvest);
