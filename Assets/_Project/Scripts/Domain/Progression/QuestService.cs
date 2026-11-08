@@ -34,6 +34,7 @@ namespace MiaMax.Domain.Progression
             public string Title;
             public int Coins;
             public int Experience;
+            public string RequiredQuestId;
             public Func<PlayerSaveData, bool> IsComplete;
         }
 
@@ -41,11 +42,11 @@ namespace MiaMax.Domain.Progression
         {
             new Definition { Id = "quest_first_steps", Title = "A New Adventure", Coins = 10, Experience = 15,
                 IsComplete = save => save.Progress.Level >= 2 },
-            new Definition { Id = "quest_first_order", Title = "Helping the Neighbours", Coins = 15, Experience = 20,
+            new Definition { Id = "quest_first_order", Title = "Helping the Neighbours", Coins = 15, Experience = 20, RequiredQuestId = "quest_first_steps",
                 IsComplete = save => save.CompletedOrders.Any(x => x != null) },
-            new Definition { Id = "quest_order_master", Title = "A Busy Little Backyard", Coins = 30, Experience = 35,
+            new Definition { Id = "quest_order_master", Title = "A Busy Little Backyard", Coins = 30, Experience = 35, RequiredQuestId = "quest_first_order",
                 IsComplete = save => save.CompletedOrders.Count(x => x != null) >= 3 },
-            new Definition { Id = "quest_flower_friend", Title = "A Path Beyond the Garden", Coins = 40, Experience = 45,
+            new Definition { Id = "quest_flower_friend", Title = "A Path Beyond the Garden", Coins = 40, Experience = 45, RequiredQuestId = "quest_order_master",
                 IsComplete = save => save.CollectedGardenResources != null && save.CollectedGardenResources.Count >= 3 }
         };
 
@@ -80,7 +81,7 @@ namespace MiaMax.Domain.Progression
                     Id = quest.Id,
                     Title = GetTitle(quest),
                     Availability = claimed ? QuestAvailability.Claimed :
-                        complete ? QuestAvailability.ReadyToClaim : QuestAvailability.InProgress,
+                        complete && IsEligible(quest) ? QuestAvailability.ReadyToClaim : QuestAvailability.InProgress,
                     RewardCoins = GetCoins(quest),
                     RewardExperience = GetExperience(quest)
                 });
@@ -90,7 +91,7 @@ namespace MiaMax.Domain.Progression
 
         public string GetSummary()
         {
-            int claimable = Quests.Count(x => x.IsComplete(session.Data) && !IsClaimed(x.Id));
+            int claimable = Quests.Count(x => x.IsComplete(session.Data) && !IsClaimed(x.Id) && IsEligible(x));
             return "Story quests: " + ClaimedCount + "/" + Quests.Length +
                 " rewards claimed. Ready to claim: " + claimable +
                 ". Interact to claim the next reward.";
@@ -99,7 +100,7 @@ namespace MiaMax.Domain.Progression
         public bool TryClaimNext(out string claimedTitle)
         {
             claimedTitle = null;
-            Definition quest = Quests.FirstOrDefault(x => x.IsComplete(session.Data) && !IsClaimed(x.Id));
+            Definition quest = Quests.FirstOrDefault(x => x.IsComplete(session.Data) && !IsClaimed(x.Id) && IsEligible(x));
             if (quest == null) return false;
 
             // Prepare all persistent quest state before the single reward notification.
@@ -161,6 +162,15 @@ namespace MiaMax.Domain.Progression
         {
             entry = null;
             return catalog != null && catalog.TryGet(quest.Id, BackyardContentKind.StoryGoal, out entry);
+        }
+
+        private bool IsEligible(Definition quest)
+        {
+            string requiredQuestId = quest.RequiredQuestId;
+            if (TryGetCatalogEntry(quest, out BackyardContentEntry entry) &&
+                !string.IsNullOrWhiteSpace(entry.RequiredQuestId))
+                requiredQuestId = entry.RequiredQuestId;
+            return string.IsNullOrWhiteSpace(requiredQuestId) || IsClaimed(requiredQuestId);
         }
 
         private bool IsClaimed(string id)
