@@ -77,7 +77,8 @@ namespace MiaMax.Domain.Progression
         {
             if (entry == null || string.IsNullOrWhiteSpace(entry.Id) || TryGet(entry.Id, out _))
                 return false;
-            Entries.Add(entry);
+            if (entries == null) entries = new List<BackyardContentEntry>();
+            entries.Add(entry);
             lookup = null;
             return true;
         }
