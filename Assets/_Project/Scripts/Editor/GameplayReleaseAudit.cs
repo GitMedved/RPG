@@ -33,6 +33,7 @@ namespace MiaMax.EditorTools
                 "Domain/Progression/QuestService.cs",
                 "Domain/Progression/UpgradeService.cs",
                 "Domain/Progression/BackyardContentCatalog.cs",
+                "Domain/Progression/QuestService.cs",
                 "Editor/BackyardContentCatalogBuilder.cs",
                 "Gameplay/MobileUiComponents.cs",
                 "Gameplay/MobileUiNavigationStack.cs",
@@ -49,6 +50,7 @@ namespace MiaMax.EditorTools
                     ref ready, ref pending);
 
             CheckRewardTransactionContract(report, ref ready, ref pending);
+            CheckRuntimeCatalogIntegration(report, ref ready, ref pending);
 
             string[] catalogGuids = AssetDatabase.FindAssets("t:BackyardContentCatalog");
             if (catalogGuids.Length == 0)
@@ -171,6 +173,21 @@ namespace MiaMax.EditorTools
             bool valid = sessionContract && questContract && saveContract;
             report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
                 "Atomic quest reward transaction and bounded level progression");
+            if (valid) ready++; else pending++;
+        }
+
+        private static void CheckRuntimeCatalogIntegration(System.Text.StringBuilder report,
+            ref int ready, ref int pending)
+        {
+            string questPath = Scripts + "/Domain/Progression/QuestService.cs";
+            string builderPath = Scripts + "/Editor/BackyardContentCatalogBuilder.cs";
+            bool questLoadsResources = File.Exists(questPath) &&
+                File.ReadAllText(questPath).Contains("Resources.Load<BackyardContentCatalog>");
+            bool builderUsesResources = File.Exists(builderPath) &&
+                File.ReadAllText(builderPath).Contains("Assets/Resources/MiaMax/Content/BackyardContentCatalog.asset");
+            bool valid = questLoadsResources && builderUsesResources;
+            report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
+                "Runtime Resources catalog loading and starter catalog build path");
             if (valid) ready++; else pending++;
         }
 
