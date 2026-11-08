@@ -27,8 +27,8 @@ namespace MiaMax.EditorTools
                 return;
 
             capturedUnityWarnings.Add(
-                "During: " + currentAuditTarget + "\\nWarning: " + condition +
-                (string.IsNullOrEmpty(stackTrace) ? "" : "\\nStack: " + stackTrace));
+                "During: " + currentAuditTarget + "\nWarning: " + condition +
+                (string.IsNullOrEmpty(stackTrace) ? "" : "\nStack: " + stackTrace));
         }
 
         [MenuItem("Tools/Mia & Max/Audit Missing Script References")]
@@ -98,21 +98,21 @@ namespace MiaMax.EditorTools
                 scope == AuditScope.Scenes ? "Scenes only" : "Prefabs only";
 
             string report =
-                "[Mia & Max] Missing script reference audit — " + scopeLabel + "\\n" +
-                "Scenes scanned: " + scenesScanned + " / " + sceneCount + " project scene(s)\\n" +
-                "Prefabs scanned: " + prefabsScanned + " / " + prefabCount + " project prefab(s)\\n" +
-                "Missing MonoBehaviour references: " + total + "\\n" +
+                "[Mia & Max] Missing script reference audit — " + scopeLabel + "\n" +
+                "Scenes scanned: " + scenesScanned + " / " + sceneCount + " project scene(s)\n" +
+                "Prefabs scanned: " + prefabsScanned + " / " + prefabCount + " project prefab(s)\n" +
+                "Missing MonoBehaviour references: " + total + "\n" +
                 (findings.Count == 0
                     ? "No missing references found in scanned assets."
-                    : string.Join("\\n", findings.ToArray())) +
+                    : string.Join("\n", findings.ToArray())) +
                 (scanErrors.Count == 0 ? "" :
-                    "\\n\\nScan errors (" + scanErrors.Count + "):\\n" +
-                    string.Join("\\n", scanErrors.ToArray())) +
+                    "\n\nScan errors (" + scanErrors.Count + "):\n" +
+                    string.Join("\n", scanErrors.ToArray())) +
                 (capturedUnityWarnings.Count == 0 ? "" :
-                    "\\n\\nCaptured Unity missing-script warnings (" +
-                    capturedUnityWarnings.Count + "):\\n" +
-                    string.Join("\\n\\n", capturedUnityWarnings.ToArray())) +
-                "\\n\\nRead-only audit: no components were removed and no scenes were saved. " +
+                    "\n\nCaptured Unity missing-script warnings (" +
+                    capturedUnityWarnings.Count + "):\n" +
+                    string.Join("\n\n", capturedUnityWarnings.ToArray())) +
+                "\n\nRead-only audit: no components were removed and no scenes were saved. " +
                 "Runtime-generated objects are not included.";
 
             if (total > 0 || scanErrors.Count > 0)
@@ -123,12 +123,12 @@ namespace MiaMax.EditorTools
             EditorUtility.DisplayDialog(
                 "Mia & Max — Missing Script Audit",
                 "Scope: " + scopeLabel +
-                "\\nMissing references: " + total +
-                "\\nScenes scanned: " + scenesScanned + " / " + sceneCount +
-                "\\nPrefabs scanned: " + prefabsScanned + " / " + prefabCount +
-                "\\nScan errors: " + scanErrors.Count +
-                "\\nCaptured Unity warnings: " + capturedUnityWarnings.Count +
-                "\\n\\nFull report is in the Console.",
+                "\nMissing references: " + total +
+                "\nScenes scanned: " + scenesScanned + " / " + sceneCount +
+                "\nPrefabs scanned: " + prefabsScanned + " / " + prefabCount +
+                "\nScan errors: " + scanErrors.Count +
+                "\nCaptured Unity warnings: " + capturedUnityWarnings.Count +
+                "\n\nFull report is in the Console.",
                 "OK");
         }
 
