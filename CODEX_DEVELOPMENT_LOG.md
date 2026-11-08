@@ -851,3 +851,16 @@ Connected story quest presentation and reward values to the authored BackyardCon
 - Static repository review only. Unity compilation, 16/16 smoke execution, audit execution, Play Mode and device QA remain pending.
 
 **Local acceptance:** pull codex/mia-max-foundation; run Core Smoke Checks (expected 16/16) and Gameplay & Character Integration Audit; verify garden upgrade yield, workshop duration and harvest rollback in Play Mode. See M111_M120_ECONOMY_AND_GARDEN_UPGRADES.md.
+
+
+## 2026-11-08 — M121–M130 garden/workshop feedback and mobile upgrade UX
+
+- **M121–M122:** added crop growth progress and seconds-to-harvest queries; stage calculation now uses the same normalized progress value.
+- **M123–M124:** FarmPlotPrototype refresh is throttled to 4 updates/second and smoothly scales placeholder crop visuals through growth stages; nearby prompt reports planting, remaining grow time or harvest readiness.
+- **M125–M126:** ProductionService exposes normalized progress; workshop prompt displays elapsed percentage, remaining seconds and the applied workshop level bonus.
+- **M127–M128:** Adventure Journal shows current/next garden yield, upgrade prices and affordability; mobile upgrade buttons reflect unavailable purchases.
+- **M129:** smoke coverage checks growth countdown and workshop progress within the existing 16 scenarios.
+- **M130:** integration audit checks crop/workshop progress presentation and mobile upgrade affordances.
+- Static source review only. Unity compilation, 16/16 smoke execution, audit execution, Play Mode and device QA remain pending.
+
+**Local acceptance:** pull codex/mia-max-foundation; run Core Smoke Checks (expected 16/16) and Gameplay & Character Integration Audit; verify crop growth countdown, workshop progress and disabled/available upgrade buttons in portrait and landscape. See M121_M130_GARDEN_WORKSHOP_FEEDBACK.md.
