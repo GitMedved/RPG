@@ -14,6 +14,18 @@ namespace MiaMax.EditorTools
     /// </summary>
     public static class MissingScriptReferenceAudit
     {
+        private static string currentAuditTarget = "Audit initialization";
+        private static readonly List<string> capturedUnityWarnings = new List<string>();
+
+        private static void CaptureAuditWarning(string condition, string stackTrace, LogType type)
+        {
+            if (type != LogType.Warning || string.IsNullOrEmpty(condition) ||
+                condition.IndexOf("The referenced script (Unknown) on this Behaviour is missing!", StringComparison.OrdinalIgnoreCase) < 0)
+                return;
+            capturedUnityWarnings.Add("During: " + currentAuditTarget + "\nWarning: " + condition +
+                (string.IsNullOrEmpty(stackTrace) ? "" : "\nStack: " + stackTrace));
+        }
+
         [MenuItem("Tools/Mia & Max/Audit Missing Script References")]
         public static void Run()
         {
@@ -33,6 +45,9 @@ namespace MiaMax.EditorTools
             List<string> findings = new List<string>();
             List<string> scanErrors = new List<string>();
             HashSet<string> loadedScenePaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            capturedUnityWarnings.Clear();
+            Application.logMessageReceived += CaptureAuditWarning;
+            currentAuditTarget = "Scanning currently loaded scenes";
 
             // Scan currently loaded scenes first, preserving their current in-memory state.
             for (int sceneIndex = 0; sceneIndex < SceneManager.sceneCount; sceneIndex++)
@@ -43,6 +58,7 @@ namespace MiaMax.EditorTools
                 if (!string.IsNullOrEmpty(scene.path))
                     loadedScenePaths.Add(scene.path);
 
+                currentAuditTarget = "Inspecting loaded scene: " + scene.path;
                 ScanScene(scene, findings, ref total);
                 scenesScanned++;
             }
@@ -58,6 +74,7 @@ namespace MiaMax.EditorTools
                 Scene openedScene = default(Scene);
                 try
                 {
+                    currentAuditTarget = "Opening project scene: " + path;
                     openedScene = EditorSceneManager.OpenScene(path, OpenSceneMode.Additive);
                     if (!openedScene.IsValid() || !openedScene.isLoaded)
                     {
@@ -65,6 +82,7 @@ namespace MiaMax.EditorTools
                         continue;
                     }
 
+                    currentAuditTarget = "Inspecting project scene: " + path;
                     ScanScene(openedScene, findings, ref total);
                     scenesScanned++;
                 }
@@ -78,6 +96,7 @@ namespace MiaMax.EditorTools
                     {
                         try
                         {
+                            currentAuditTarget = "Closing audit scene: " + path;
                             EditorSceneManager.CloseScene(openedScene, true);
                         }
                         catch (Exception exception)
@@ -96,9 +115,11 @@ namespace MiaMax.EditorTools
                 GameObject prefab = null;
                 try
                 {
+                    currentAuditTarget = "Loading prefab contents: " + path;
                     prefab = PrefabUtility.LoadPrefabContents(path);
                     if (prefab != null)
                     {
+                        currentAuditTarget = "Inspecting prefab: " + path;
                         ScanHierarchy(prefab, "Prefab '" + path + "'", findings, ref total);
                         prefabsScanned++;
                     }
@@ -117,6 +138,7 @@ namespace MiaMax.EditorTools
                     {
                         try
                         {
+                            currentAuditTarget = "Unloading prefab contents: " + path;
                             PrefabUtility.UnloadPrefabContents(prefab);
                         }
                         catch (Exception exception)
@@ -127,6 +149,9 @@ namespace MiaMax.EditorTools
                 }
             }
 
+            Application.logMessageReceived -= CaptureAuditWarning;
+            currentAuditTarget = "Audit finished";
+
             string report = "[Mia & Max] Missing script reference audit\n" +
                 "Scenes scanned: " + scenesScanned + " / " + sceneGuids.Length + " project scene(s)\n" +
                 "Prefabs scanned: " + prefabsScanned + " / " + prefabGuids.Length + " project prefab(s)\n" +
@@ -135,6 +160,7 @@ namespace MiaMax.EditorTools
                     string.Join("\n", findings.ToArray())) +
                 (scanErrors.Count == 0 ? "" : "\n\nScan warnings (" + scanErrors.Count + "):\n" +
                     string.Join("\n", scanErrors.ToArray())) +
+                (capturedUnityWarnings.Count == 0 ? "" : "\n\nCaptured Unity missing-script warnings (" + capturedUnityWarnings.Count + "):\n" + string.Join("\n\n", capturedUnityWarnings.ToArray())) +
                 "\n\nRead-only audit: no components were removed and no scenes were saved. " +
                 "Runtime-generated objects are not included.";
 
@@ -150,6 +176,7 @@ namespace MiaMax.EditorTools
                 "\nScenes scanned: " + scenesScanned + " / " + sceneGuids.Length +
                 "\nPrefabs scanned: " + prefabsScanned + " / " + prefabGuids.Length +
                 "\nScan warnings: " + scanErrors.Count +
+                "\nCaptured Unity warnings: " + capturedUnityWarnings.Count +
                 "\n\nFull report is in the Console.", "OK");
         }
 
