@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using UnityEditor;
 using UnityEditor.Build;
@@ -27,12 +28,26 @@ namespace MiaMax.EditorTools
         {
             var results = new List<Result>();
             int enabledScenes = 0;
+            int invalidEnabledScenes = 0;
             foreach (EditorBuildSettingsScene scene in EditorBuildSettings.scenes)
-                if (scene != null && scene.enabled && !string.IsNullOrWhiteSpace(scene.path))
-                    enabledScenes++;
+            {
+                if (scene == null || !scene.enabled || string.IsNullOrWhiteSpace(scene.path))
+                    continue;
 
-            Add(results, "Enabled build scenes", enabledScenes > 0,
-                enabledScenes + " enabled scene(s) in Build Settings. The prototype scene must be added and tested.", true);
+                if (AssetDatabase.LoadAssetAtPath<SceneAsset>(scene.path) != null)
+                    enabledScenes++;
+                else
+                    invalidEnabledScenes++;
+            }
+
+            Add(results, "Saved build scenes", enabledScenes > 0 && invalidEnabledScenes == 0,
+                enabledScenes + " valid enabled scene(s); " + invalidEnabledScenes +
+                " enabled scene path(s) missing or invalid. A runtime-generated prototype is not a substitute for a saved startup scene.", true);
+            bool buildSettingsCommitted = File.Exists("ProjectSettings/EditorBuildSettings.asset");
+            Add(results, "Persisted Build Settings", buildSettingsCommitted,
+                buildSettingsCommitted
+                    ? "ProjectSettings/EditorBuildSettings.asset exists in the project."
+                    : "ProjectSettings/EditorBuildSettings.asset is missing; configure and save the startup scene in Build Settings, then commit the file.", true);
 
             string androidId = PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.Android);
             string iosId = PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.iOS);
@@ -118,6 +133,9 @@ namespace MiaMax.EditorTools
 
         private static int AssetCount(string filter, string folder)
         {
+            if (!AssetDatabase.IsValidFolder(folder))
+                return 0;
+
             string[] assets = AssetDatabase.FindAssets(filter, new[] { folder });
             return assets == null ? 0 : assets.Length;
         }
