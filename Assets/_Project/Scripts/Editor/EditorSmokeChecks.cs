@@ -35,8 +35,11 @@ namespace MiaMax.EditorTools
                 RunCheck("Six-step tutorial gameplay flow", TestTutorialFlow, ref passed);
                 RunCheck("Atomic quest rewards and level cap", TestQuestRewardAtomicity, ref passed);
                 RunCheck("Runtime content catalog drives quest metadata", TestRuntimeQuestCatalog, ref passed);
+                RunCheck("Catalog-driven production and custom orders", TestCatalogDrivenProductionAndOrders, ref passed);
+                RunCheck("Quest prerequisites and world-area unlocks", TestQuestPrerequisitesAndAreas, ref passed);
+                RunCheck("First-session production-to-delivery loop", TestFirstSessionLoop, ref passed);
 
-                string message = "Core smoke checks passed: " + passed + "/10.\n\n" +
+                string message = "Core smoke checks passed: " + passed + "/13.\n\n" +
                     "This verifies deterministic domain/save paths only. Play Mode, scene interaction, " +
                     "UI layout, FBX import and Android/iOS builds still require separate validation.";
                 Debug.Log("[Mia & Max] " + message);
@@ -407,6 +410,155 @@ namespace MiaMax.EditorTools
             finally
             {
                 UnityEngine.Object.DestroyImmediate(catalog);
+            }
+        }
+
+
+        private static void TestCatalogDrivenProductionAndOrders()
+        {
+            BackyardContentCatalog catalog = ScriptableObject.CreateInstance<BackyardContentCatalog>();
+            try
+            {
+                Require(catalog.TryAdd(new BackyardContentEntry
+                {
+                    Id = "recipe_custom_meal", Kind = BackyardContentKind.Recipe,
+                    DisplayName = "Custom Meal", AreaId = "backyard",
+                    RequiredItemId = "test_crop", RequiredQuantity = 2,
+                    RewardItemId = "test_meal", RewardQuantity = 2, RewardExperience = 7
+                }), "Custom recipe should be accepted.");
+                Require(catalog.TryAdd(new BackyardContentEntry
+                {
+                    Id = "order_custom_delivery", Kind = BackyardContentKind.Order,
+                    DisplayName = "Custom Delivery", AreaId = "backyard",
+                    RequiredItemId = "test_meal", RequiredQuantity = 2,
+                    RewardCoins = 23, RewardExperience = 9
+                }), "Custom order should be accepted.");
+
+                GameSession session = NewSession();
+                Require(session.AddItem("test_crop", 2), "Could not seed custom recipe ingredients.");
+                ProductionService production = new ProductionService(session, catalog);
+                Require(production.TryStart("recipe_custom_meal"),
+                    "Catalog-defined recipe should start with its required ingredients.");
+                production.ActiveJob.StartedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - 10;
+                production.ActiveJob.DurationSeconds = 1;
+                Require(production.TryCollect(), "Catalog-defined recipe should collect.");
+                Require(session.Data.Inventory.Exists(x => x.ItemId == "test_meal" && x.Quantity == 2),
+                    "Catalog recipe output item and quantity should be granted.");
+                Require(session.Data.Progress.Experience == 7,
+                    "Catalog recipe XP reward should be applied.");
+
+                OrderBoardService orders = new OrderBoardService(session, catalog);
+                Require(orders.CanComplete("order_custom_delivery"),
+                    "Custom catalog order should appear on the order board.");
+                Require(orders.TryComplete("order_custom_delivery"),
+                    "Custom catalog order should consume its required quantity and pay rewards.");
+                Require(!session.Data.Inventory.Exists(x => x.ItemId == "test_meal"),
+                    "Order delivery should consume the configured item quantity.");
+                Require(session.Data.Progress.Coins == 23 && session.Data.Progress.Experience == 16,
+                    "Order coin and XP rewards should come from the catalog.");
+                Require(orders.IsCompleted("order_custom_delivery"),
+                    "Custom order completion should persist in session state.");
+                Require(!orders.TryComplete("order_custom_delivery"),
+                    "Custom order must not be claimable twice.");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(catalog);
+            }
+        }
+
+        private static void TestQuestPrerequisitesAndAreas()
+        {
+            BackyardContentCatalog catalog = ScriptableObject.CreateInstance<BackyardContentCatalog>();
+            try
+            {
+                Require(catalog.TryAdd(new BackyardContentEntry
+                {
+                    Id = "quest_first_steps", Kind = BackyardContentKind.StoryGoal,
+                    DisplayName = "First Steps", AreaId = "backyard",
+                    RewardCoins = 5, RewardExperience = 5, UnlockAreaId = "flower_garden"
+                }), "First story goal should be added.");
+                Require(catalog.TryAdd(new BackyardContentEntry
+                {
+                    Id = "quest_first_order", Kind = BackyardContentKind.StoryGoal,
+                    DisplayName = "First Delivery", AreaId = "backyard",
+                    RequiredQuestId = "quest_first_steps", RewardCoins = 5, RewardExperience = 5
+                }), "Second story goal should be added.");
+                Require(catalog.Validate().Count == 0,
+                    "Catalog story-goal prerequisite references should validate.");
+
+                GameSession session = NewSession();
+                session.Data.Progress.Level = 2;
+                QuestService quests = new QuestService(session, catalog);
+                var snapshots = quests.GetQuestSnapshots();
+                Require(snapshots[0].Availability == QuestAvailability.ReadyToClaim,
+                    "First quest should be ready when its completion condition is met.");
+                Require(snapshots[1].Availability == QuestAvailability.InProgress,
+                    "Second quest must remain gated until its prerequisite is claimed.");
+                string title;
+                Require(quests.TryClaimNext(out title) && title == "First Steps",
+                    "First quest should claim before the dependent quest.");
+                Require(quests.IsAreaUnlocked("flower_garden"),
+                    "Claiming the catalog quest should unlock its configured area.");
+                session.Data.CompletedOrders.Add(new CompletedOrderData { OrderId = "smoke_order" });
+                snapshots = quests.GetQuestSnapshots();
+                Require(snapshots[1].Availability == QuestAvailability.ReadyToClaim,
+                    "Dependent quest should become ready after its prerequisite is claimed.");
+                Require(quests.TryClaimNext(out title) && title == "First Delivery",
+                    "Second quest should become claimable after its prerequisite.");
+                Require(catalog.TryAdd(new BackyardContentEntry
+                {
+                    Id = "broken_goal", Kind = BackyardContentKind.StoryGoal,
+                    DisplayName = "Broken Goal", AreaId = "backyard", RequiredQuestId = "missing_goal"
+                }), "Malformed prerequisite fixture should be insertable for validation.");
+                Require(catalog.Validate().Count > 0,
+                    "Catalog validation should report a missing story-goal prerequisite.");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(catalog);
+            }
+        }
+
+        private static void TestFirstSessionLoop()
+        {
+            string directory = Path.Combine(Path.GetTempPath(),
+                "MiaMaxFirstLoop_" + Guid.NewGuid().ToString("N"));
+            try
+            {
+                GameSession session = NewSession();
+                session.Data.Progress.Level = 2;
+                QuestService quests = new QuestService(session);
+                string title;
+                Require(quests.TryClaimNext(out title),
+                    "Fresh profile at the first quest milestone should claim its opening story reward.");
+
+                Require(session.AddItem("crop_carrot", 3), "Could not seed the first-session crop ingredients.");
+                ProductionService production = new ProductionService(session);
+                Require(production.TryStart(ProductionService.CarrotSoup),
+                    "First-session player should be able to start carrot soup.");
+                production.ActiveJob.StartedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - 10;
+                production.ActiveJob.DurationSeconds = 1;
+                Require(production.TryCollect(), "First-session player should collect the finished soup.");
+
+                OrderBoardService orders = new OrderBoardService(session);
+                Require(orders.TryComplete("order_soup_01"),
+                    "First-session player should deliver the crafted soup order.");
+                Require(quests.TryClaimNext(out title) && title == "Helping the Neighbours",
+                    "First delivery should unlock the next story quest reward.");
+                Require(quests.ClaimedCount == 2 && orders.IsCompleted("order_soup_01"),
+                    "First-session loop should preserve both quest claims and delivery completion.");
+
+                LocalSaveService save = new LocalSaveService(directory);
+                save.Save(session.Data);
+                PlayerSaveData restored = save.LoadOrCreate();
+                Require(restored.ClaimedQuests.Count == 2 &&
+                    restored.CompletedOrders.Exists(x => x != null && x.OrderId == "order_soup_01"),
+                    "First-session progression should survive a local save/reload.");
+            }
+            finally
+            {
+                if (Directory.Exists(directory)) Directory.Delete(directory, true);
             }
         }
 
