@@ -94,14 +94,13 @@ namespace MiaMax.Domain.Progression
             Definition quest = Quests.FirstOrDefault(x => x.IsComplete(session.Data) && !IsClaimed(x.Id));
             if (quest == null) return false;
 
-            // Record the claim before applying rewards so repeated interactions cannot duplicate them.
+            // Apply the complete reward before recording the claim; overflow rejects both.
+            if (!session.TryGrantRewards(quest.Coins, quest.Experience)) return false;
             session.Data.ClaimedQuests.Add(new QuestProgressData
             {
                 QuestId = quest.Id,
                 ClaimedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
             });
-            session.TryAddCoins(quest.Coins);
-            session.AddExperience(quest.Experience);
 
             if (quest.Id == "quest_order_master" && !session.Data.UnlockedWorldAreas.Contains("flower_garden"))
                 session.Data.UnlockedWorldAreas.Add("flower_garden");
