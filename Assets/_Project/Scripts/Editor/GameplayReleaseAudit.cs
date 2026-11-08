@@ -32,6 +32,7 @@ namespace MiaMax.EditorTools
                 "Domain/Production/ProductionService.cs",
                 "Gameplay/FarmPlotPrototype.cs",
                 "Gameplay/ProductionStationPrototype.cs",
+                "Gameplay/BackyardFeedbackVfx.cs",
                 "Gameplay/MobileHudCanvas.cs",
                 "Gameplay/PrototypeHud.cs",
                 "Domain/Production/ProductionService.cs",
@@ -66,6 +67,7 @@ namespace MiaMax.EditorTools
             CheckAtomicUpgradePurchase(report, ref ready, ref pending);
             CheckEconomyBalance(report, ref ready, ref pending);
             CheckInteractiveProgressPresentation(report, ref ready, ref pending);
+            CheckActionFeedbackVfx(report, ref ready, ref pending);
 
             string[] catalogGuids = AssetDatabase.FindAssets("t:BackyardContentCatalog");
             if (catalogGuids.Length == 0)
@@ -380,6 +382,28 @@ namespace MiaMax.EditorTools
             bool valid = growth && farmVisual && production && station && upgradeUi && smoke;
             report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
                 "Crop/workshop progress presentation and mobile upgrade affordability states");
+            if (valid) ready++; else pending++;
+        }
+
+        private static void CheckActionFeedbackVfx(System.Text.StringBuilder report,
+            ref int ready, ref int pending)
+        {
+            string vfxPath = Scripts + "/Gameplay/BackyardFeedbackVfx.cs";
+            string farmPath = Scripts + "/Gameplay/FarmPlotPrototype.cs";
+            string stationPath = Scripts + "/Gameplay/ProductionStationPrototype.cs";
+            bool vfx = File.Exists(vfxPath) &&
+                File.ReadAllText(vfxPath).Contains("ParticleSystemStopAction.Destroy") &&
+                File.ReadAllText(vfxPath).Contains("PlayWorkshopComplete");
+            bool farm = File.Exists(farmPath) &&
+                File.ReadAllText(farmPath).Contains("PlayPlant") &&
+                File.ReadAllText(farmPath).Contains("PlayHarvest");
+            bool station = File.Exists(stationPath) &&
+                File.ReadAllText(stationPath).Contains("PlayWorkshopStart") &&
+                File.ReadAllText(stationPath).Contains("PlayWorkshopProgress") &&
+                File.ReadAllText(stationPath).Contains("PlayWorkshopComplete");
+            bool valid = vfx && farm && station;
+            report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
+                "One-shot planting, harvest and workshop particle feedback is integrated");
             if (valid) ready++; else pending++;
         }
 
