@@ -36,7 +36,7 @@ namespace MiaMax.EditorTools
                 RunCheck("Atomic quest rewards and level cap", TestQuestRewardAtomicity, ref passed);
                 RunCheck("Runtime content catalog drives quest metadata", TestRuntimeQuestCatalog, ref passed);
 
-                string message = "Core smoke checks passed: " + passed + "/9.\n\n" +
+                string message = "Core smoke checks passed: " + passed + "/10.\n\n" +
                     "This verifies deterministic domain/save paths only. Play Mode, scene interaction, " +
                     "UI layout, FBX import and Android/iOS builds still require separate validation.";
                 Debug.Log("[Mia & Max] " + message);
