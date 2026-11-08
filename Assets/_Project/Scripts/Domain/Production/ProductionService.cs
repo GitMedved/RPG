@@ -64,10 +64,9 @@ namespace MiaMax.Domain
             int outputQuantity;
             int experience;
             if (!TryResolveOutput(job.RecipeId, out output, out outputQuantity, out experience) ||
-                !session.AddItem(output, outputQuantity)) return false;
+                !session.TryGrantItemAndRewards(output, outputQuantity, 0, experience)) return false;
 
             session.Data.ProductionJob = new ProductionJobData();
-            if (experience > 0) session.AddExperience(experience);
             new DailyTaskService(session).RecordCraft();
             new AchievementService(session).RecordCraft();
             new TutorialService(session).TryAdvance(TutorialService.Craft);
