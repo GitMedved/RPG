@@ -26,6 +26,7 @@ namespace MiaMax.Gameplay
         private readonly RectTransform[] settingMinusRects = new RectTransform[5];
         private readonly RectTransform[] settingPlusRects = new RectTransform[5];
         private readonly RectTransform[] journalActionRects = new RectTransform[11];
+        private readonly Button[] journalActionButtons = new Button[11];
         private Text detailTitle;
         private Text detailBody;
         private RectTransform detailContent;
@@ -303,6 +304,7 @@ namespace MiaMax.Gameplay
                     action % 3 == 0 ? MobileUiTheme.Honey : MobileUiTheme.Leaf, journalActions[i],
                     Vector2.zero, Vector2.one, out _, 17);
                 journalActionRects[i] = (RectTransform)actionButton.transform;
+                journalActionButtons[i] = actionButton;
                 SetControlRect(actionButton,
                     new Vector2(column * 0.5f, 0f), new Vector2((column + 1) * 0.5f, 0f),
                     new Vector2(column == 0 ? 0f : 4f, 216f - row * 42f),
@@ -446,6 +448,10 @@ namespace MiaMax.Gameplay
             giftButtonText.text = hud.DailyGiftLabel;
             MobileUiTheme.ApplyAvailability(giftButton, hud.CanClaimDailyGift, MobileUiTheme.Honey);
 
+            if (journalActionButtons[7] != null)
+                MobileUiTheme.ApplyAvailability(journalActionButtons[7], hud.CanUpgradeGarden, MobileUiTheme.Honey);
+            if (journalActionButtons[8] != null)
+                MobileUiTheme.ApplyAvailability(journalActionButtons[8], hud.CanUpgradeWorkshop, MobileUiTheme.Leaf);
             journalButtonText.text = hud.JournalOpen ? "CLOSE JOURNAL" : "ADVENTURE JOURNAL";
             settingsButtonText.text = hud.SettingsOpen ? "CLOSE SETTINGS" : "SETTINGS";
             mapButtonText.text = hud.MapOpen ? "CLOSE MAP" : "WORLD MAP";
