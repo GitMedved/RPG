@@ -310,7 +310,7 @@ namespace MiaMax.EditorTools
             string sessionPath = Scripts + "/Domain/GameSession.cs";
             string upgradePath = Scripts + "/Domain/Progression/UpgradeService.cs";
             bool session = File.Exists(sessionPath) &&
-                File.ReadAllText(sessionPath).Contains("TryPurchaseUpgrade(int cost, ref int currentLevel, int maxLevel)");
+                File.ReadAllText(sessionPath).Contains("TryPurchaseUpgrade(int cost, bool gardenUpgrade, int maxLevel)");
             bool upgrade = File.Exists(upgradePath) &&
                 File.ReadAllText(upgradePath).Contains("TryPurchaseUpgrade(GardenUpgradeCost") &&
                 File.ReadAllText(upgradePath).Contains("TryPurchaseUpgrade(WorkshopUpgradeCost");
