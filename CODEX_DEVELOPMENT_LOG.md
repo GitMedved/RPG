@@ -801,6 +801,6 @@ Added indexed, case-insensitive catalog lookups, kind-filtered queries and stric
 
 ## M81–M85 — Progression and reward transaction hardening — 2026-11-08
 
-Bounded player progression at level 100, centralized XP application, and added an atomic coin/XP reward operation. Quest claims now fail safely when the complete reward cannot be applied, rather than recording a claim after a partial or rejected payout. Added a ninth Editor smoke scenario and extended the gameplay integration audit with a source-contract check. Save schema remains unchanged. The expected smoke result is 9/9 but still requires local Unity execution. See `M81_M85_PROGRESSION_REWARD_HARDENING.md`.
+Bounded player progression at level 100, normalized legacy save values on load, centralized XP application, and added an atomic coin/XP reward operation. Quest claims now fail safely when the complete reward cannot be applied, rather than recording a claim after a partial or rejected payout. Added a ninth Editor smoke scenario and extended the gameplay integration audit with a source-contract check. Save schema remains unchanged. The expected smoke result is 9/9 but still requires local Unity execution. See `M81_M85_PROGRESSION_REWARD_HARDENING.md`.
 
 **Validation still required:** Unity compile, 9/9 smoke checks, Gameplay & Character Integration Audit, Play Mode quest/reward/level-cap walkthrough, and save/reload. These source changes have not been executed in Unity.
