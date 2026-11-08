@@ -97,6 +97,13 @@ namespace MiaMax.EditorTools
             Require(upgrades.TryUpgradeWorkshop(), "First workshop upgrade should succeed.");
             Require(upgrades.AdjustProductionDuration(180) == 153,
                 "Workshop level one should reduce 180 seconds to 153.");
+            Require(upgrades.AdjustProductionDuration(181) == 154,
+                "Workshop level one should round 181 seconds up to 154 deterministically.");
+            Require(session.Data.WorkshopLevel == 1,
+                "First workshop upgrade should persist level one.");
+            session.Data.WorkshopLevel = 2;
+            Require(upgrades.AdjustProductionDuration(180) == 126,
+                "Workshop level two should reduce 180 seconds by 30 percent.");
         }
 
         private static void TestProductionAndOrders()
