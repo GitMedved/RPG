@@ -14,6 +14,7 @@ namespace MiaMax.Domain
             public string Id;
             public string ItemId;
             public string DisplayName;
+            public string AreaId;
             public int Quantity;
             public int Coins;
             public int Experience;
@@ -21,9 +22,9 @@ namespace MiaMax.Domain
 
         private static readonly OrderDefinition[] DefaultOrders =
         {
-            new OrderDefinition { Id = "order_soup_01", ItemId = "product_carrot_soup", Quantity = 1, Coins = 12, Experience = 10, DisplayName = "Soup Delivery" },
-            new OrderDefinition { Id = "order_juice_01", ItemId = "product_strawberry_juice", Quantity = 1, Coins = 16, Experience = 12, DisplayName = "Juice Delivery" },
-            new OrderDefinition { Id = "order_toy_01", ItemId = "product_wooden_toy", Quantity = 1, Coins = 14, Experience = 11, DisplayName = "Toy Delivery" }
+            new OrderDefinition { Id = "order_soup_01", ItemId = "product_carrot_soup", Quantity = 1, Coins = 12, Experience = 10, DisplayName = "Soup Delivery", AreaId = "backyard" },
+            new OrderDefinition { Id = "order_juice_01", ItemId = "product_strawberry_juice", Quantity = 1, Coins = 16, Experience = 12, DisplayName = "Juice Delivery", AreaId = "backyard" },
+            new OrderDefinition { Id = "order_toy_01", ItemId = "product_wooden_toy", Quantity = 1, Coins = 14, Experience = 11, DisplayName = "Toy Delivery", AreaId = "backyard" }
         };
 
         private readonly GameSession session;
@@ -55,10 +56,12 @@ namespace MiaMax.Domain
                         Quantity = entry.RequiredQuantity > 0 ? entry.RequiredQuantity : fallback.Quantity,
                         Coins = entry.RewardCoins,
                         Experience = entry.RewardExperience,
-                        DisplayName = string.IsNullOrWhiteSpace(entry.DisplayName) ? fallback.DisplayName : entry.DisplayName
+                        DisplayName = string.IsNullOrWhiteSpace(entry.DisplayName) ? fallback.DisplayName : entry.DisplayName,
+                        AreaId = entry.AreaId
                     });
                 }
-                else result.Add(fallback);
+                else if (IsAreaUnlocked(fallback.AreaId)) result.Add(fallback);
+                if (catalog != null && catalog.TryGet(fallback.Id, BackyardContentKind.Order, out BackyardContentEntry areaEntry) && !IsAreaUnlocked(areaEntry.AreaId)) result.RemoveAll(x => x.Id == fallback.Id);
                 includedIds.Add(fallback.Id);
             }
 
@@ -70,7 +73,7 @@ namespace MiaMax.Domain
                     BackyardContentEntry entry = authoredOrders[i];
                     if (entry == null || string.IsNullOrWhiteSpace(entry.Id) || includedIds.Contains(entry.Id) ||
                         string.IsNullOrWhiteSpace(entry.RequiredItemId) || entry.RequiredQuantity <= 0 ||
-                        (entry.RewardCoins <= 0 && entry.RewardExperience <= 0)) continue;
+                        (entry.RewardCoins <= 0 && entry.RewardExperience <= 0) || !IsAreaUnlocked(entry.AreaId)) continue;
                     result.Add(new OrderDefinition
                     {
                         Id = entry.Id,
@@ -78,12 +81,18 @@ namespace MiaMax.Domain
                         Quantity = entry.RequiredQuantity,
                         Coins = entry.RewardCoins,
                         Experience = entry.RewardExperience,
-                        DisplayName = string.IsNullOrWhiteSpace(entry.DisplayName) ? entry.Id : entry.DisplayName
+                        DisplayName = string.IsNullOrWhiteSpace(entry.DisplayName) ? entry.Id : entry.DisplayName,
+                        AreaId = entry.AreaId
                     });
                     includedIds.Add(entry.Id);
                 }
             }
             return result;
+        }
+
+        private bool IsAreaUnlocked(string areaId)
+        {
+            return string.IsNullOrWhiteSpace(areaId) || new QuestService(session, catalog).IsAreaUnlocked(areaId);
         }
 
         public bool IsCompleted(string id) => session.Data.CompletedOrders.Any(x => x != null && x.OrderId == id);
