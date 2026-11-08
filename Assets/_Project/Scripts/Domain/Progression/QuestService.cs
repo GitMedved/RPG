@@ -127,8 +127,8 @@ namespace MiaMax.Domain.Progression
 
         public bool IsAreaUnlocked(string areaId)
         {
-            return !string.IsNullOrWhiteSpace(areaId) &&
-                session.Data.UnlockedWorldAreas.Contains(areaId);
+            return string.Equals(areaId, "backyard", StringComparison.Ordinal) ||
+                (!string.IsNullOrWhiteSpace(areaId) && session.Data.UnlockedWorldAreas.Contains(areaId));
         }
 
         private string GetTitle(Definition quest)
@@ -159,6 +159,7 @@ namespace MiaMax.Domain.Progression
 
         private bool TryGetCatalogEntry(Definition quest, out BackyardContentEntry entry)
         {
+            entry = null;
             return catalog != null && catalog.TryGet(quest.Id, BackyardContentKind.StoryGoal, out entry);
         }
 
