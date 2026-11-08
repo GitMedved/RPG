@@ -58,14 +58,11 @@ namespace MiaMax.Domain.Progression
 
             AchievementProgressData state = GetOrCreate(definition.Id);
             state.RewardClaimed = true;
-            session.Data.Progress.Coins += definition.Coins;
-            session.Data.Progress.Experience += definition.Experience;
-            while (session.Data.Progress.Experience >= GameSession.ExperienceForNextLevel(session.Data.Progress.Level))
+            if (!session.TryGrantRewards(definition.Coins, definition.Experience))
             {
-                session.Data.Progress.Experience -= GameSession.ExperienceForNextLevel(session.Data.Progress.Level);
-                session.Data.Progress.Level++;
+                state.RewardClaimed = false;
+                return false;
             }
-            session.NotifyExternalStateChanged();
             title = definition.Title; coins = definition.Coins; experience = definition.Experience;
             return true;
         }
