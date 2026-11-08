@@ -1,8 +1,12 @@
 # Visual Reference Specification — Mia & Max
 
-**Status:** Approved visual source references received in chat on 2026-11-02. These references override generic art-direction assumptions. They are not yet checked into this Git repository.
+**Status:** Approved source references are committed in the repository. These references override generic art-direction assumptions and must remain the visual source of truth.
 
 ## 1. Character source references
+
+Committed originals:
+- `Assets/_Project/Art/Characters/Max.png`
+- `Assets/_Project/Art/Characters/Mia.jpg`
 
 ### Max — Max.png
 - Ginger/orange fluffy cat.
@@ -22,9 +26,14 @@
 
 **Character lock:** Do not redesign, recolour, change hairstyle, change outfit or invent signature accessories without approval. Compare every 3D model against supplied views before acceptance.
 
-## 2. Environment source reference
+## 2. Environment source references
+
+Committed originals:
+- `Assets/_Project/Art/Environment/backyard_collage.png`
+- `Assets/_Project/Art/Environment/room_night_collage.png`
 
 ### Mia & Max Backyard — backyard_collage.png
+
 The board provides a wide establishing view and detail views of the same sunny suburban backyard.
 
 Observed layout and fixed visual elements:
@@ -46,10 +55,15 @@ Observed layout and fixed visual elements:
 - The house is the fixed anchor; patio sits against it; lawn occupies the open centre; fence and landscaping bound the yard.
 - Build a blockout first and compare camera views to the board before adding detail.
 
+### Living-room reference
+Use `room_night_collage.png` for the living-room look, lighting and palette where that environment is used. Do not infer unseen room layout details beyond the supplied reference.
+
 ## 3. Style and rendering
-The board labels the target as a Pixar-style 3D animation reference. For the game, translate this into warm, polished, family-friendly stylized 3D suitable for real-time mobile rendering—not a pre-rendered film asset budget. Use soft forms, appealing materials, readable silhouettes and sunny natural lighting while preserving the concrete reference details above.
+
+The references establish a warm, polished, family-friendly stylized 3D look. Translate this into real-time mobile assets—not a pre-rendered film asset budget. Use soft forms, appealing materials, readable silhouettes and sunny natural lighting while preserving the concrete reference details above.
 
 ## 4. Unity implementation guidance
+
 - Create a Backyard scene blockout with named landmark objects: House, Patio, CentralLawn, WhiteFence, MainTree, SwingSet, Sandbox, ShrubBeds and FlowerPots.
 - Use modular fence, foliage and patio pieces; preserve consistent world scale.
 - Establish one canonical world orientation and record the camera position used for the establishing screenshot.
@@ -58,9 +72,5 @@ The board labels the target as a Pixar-style 3D animation reference. For the gam
 - Final character models, rigs and animations must match these references.
 
 ## 5. Reference asset handling
-The three images were provided as conversation attachments and inspected, but have not yet been committed as binary files in the GitHub repository. Before Codex/Unity can consume them directly from the repo, add the originals under:
-- Reference/Characters/Mia.jpg
-- Reference/Characters/Max.png
-- Reference/Environment/backyard_collage.png
 
-Keep originals unchanged. Store any optimized runtime derivatives separately under Assets/_Project/Art/ and retain originals as source references.
+Keep the committed originals unchanged. Store optimized runtime derivatives separately under `Assets/_Project/Art/` and retain the source references in their current paths. Do not create duplicate copies under a second Reference folder unless a specific tool requires them.
