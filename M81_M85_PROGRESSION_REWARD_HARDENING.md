@@ -3,6 +3,7 @@
 ## M81 — Bounded level progression
 - Centralized XP application in GameSession.
 - Player progression now has a level-100 cap; XP thresholds are clamped to a safe range.
+- Existing saves are normalized on load so legacy level/XP values cannot bypass the cap.
 - Excess XP at the cap is bounded below the next-level threshold rather than overflowing an integer.
 
 ## M82 — Atomic reward grants
