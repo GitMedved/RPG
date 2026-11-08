@@ -28,6 +28,7 @@ namespace MiaMax.Domain
         };
 
         private readonly GameSession session;
+        private readonly InventoryService inventory;
         private readonly BackyardContentCatalog catalog;
 
         public OrderBoardService(GameSession session) : this(session,
@@ -36,6 +37,7 @@ namespace MiaMax.Domain
         public OrderBoardService(GameSession session, BackyardContentCatalog catalog)
         {
             this.session = session ?? throw new ArgumentNullException(nameof(session));
+            inventory = new InventoryService(session);
             this.catalog = catalog;
             if (session.Data.CompletedOrders == null) session.Data.CompletedOrders = new List<CompletedOrderData>();
         }
@@ -101,8 +103,7 @@ namespace MiaMax.Domain
         {
             OrderDefinition order = GetOrders().FirstOrDefault(x => x.Id == id);
             if (order == null || IsCompleted(id)) return false;
-            var stack = session.Data.Inventory.Find(x => x.ItemId == order.ItemId);
-            return stack != null && stack.Quantity >= order.Quantity;
+            return inventory.Has(order.ItemId, order.Quantity);
         }
 
         public bool TryComplete(string id)
