@@ -72,7 +72,7 @@ namespace MiaMax.Domain
             }
             Data.Progress.Level = level;
             Data.Progress.Experience = level >= maxLevel
-                ? Math.Min((int)total, ExperienceForNextLevel(maxLevel) - 1)
+                ? (int)Math.Min(total, ExperienceForNextLevel(maxLevel) - 1L)
                 : (int)Math.Min(int.MaxValue, total);
         }
 
