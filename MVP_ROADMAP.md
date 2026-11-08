@@ -393,3 +393,14 @@ The authoring catalog now has indexed ID lookup, case-insensitive duplicate prot
 - Core Editor Smoke Checks expanded to 16 scenarios, including economy curves, upgrade preview, successful upgraded harvest and overflow rollback.
 - Gameplay & Character Integration Audit now checks the economy balance service and atomic harvest contract.
 - Static source review only. Unity compile, 16/16 smoke execution, audit, Play Mode and device QA remain pending. See M111_M120_ECONOMY_AND_GARDEN_UPGRADES.md.
+
+
+## M121–M130 — Garden/workshop feedback and mobile upgrade UX
+
+- FarmingService exposes normalized crop growth progress and a seconds-until-harvest countdown, using the same growth timing as harvest eligibility.
+- FarmPlotPrototype updates on a bounded 0.25-second cadence, smoothly scales crop visuals across growth stages and displays contextual planting/growth/harvest prompts.
+- ProductionService exposes normalized workshop progress; the workshop interaction prompt shows remaining time and percentage, plus the current workshop speed level when idle.
+- Adventure Journal upgrade summaries show current garden yield, next-level yield, upgrade cost and affordability; workshop upgrade affordability is also shown.
+- Mobile journal upgrade actions visually reflect whether the player can currently afford the purchase.
+- Smoke coverage now checks crop growth progress/countdown and normalized production progress within the existing 16 scenarios. Integration audit covers the new runtime/presentation contracts.
+- No save schema change. Static source review only; Unity compile, smoke execution, Play Mode and device QA remain pending. See M121_M130_GARDEN_WORKSHOP_FEEDBACK.md.
