@@ -97,8 +97,11 @@ namespace MiaMax.EditorTools
             Add(results, "Music and ambience", AssetCount("t:AudioClip", "Assets/_Project/Audio") >= 3,
                 AssetCount("t:AudioClip", "Assets/_Project/Audio") + " clip(s) found. Check music, backyard and woodland loops.", true);
 
-            Add(results, "Core automated smoke checks", false,
-                "Run Tools → Mia & Max → Run Core Smoke Checks and record the result; this audit cannot execute tests.", true);
+            bool smokeChecksPassed = SessionState.GetBool("MiaMax.CoreSmokeChecks.Passed", false);
+            Add(results, "Core automated smoke checks", smokeChecksPassed,
+                smokeChecksPassed
+                    ? "16 / 16 deterministic domain/save checks passed in this Unity Editor session. Play Mode, scene interaction, UI, import and device checks remain separate."
+                    : "Not passed in this Editor session. Run Tools → Mia & Max → Run Core Smoke Checks, then run this audit again. The result is session-scoped and is not portable evidence.", true);
             Add(results, "Privacy / child safety / store review", false,
                 "Manual legal and platform-policy sign-off is required; no approval is inferred from project files.", true);
             Add(results, "Physical device validation", false,
