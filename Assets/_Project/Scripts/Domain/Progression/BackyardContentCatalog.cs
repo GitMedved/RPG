@@ -39,34 +39,66 @@ namespace MiaMax.Domain.Progression
     {
         [SerializeField] private List<BackyardContentEntry> entries = new List<BackyardContentEntry>();
 
-        public IReadOnlyList<BackyardContentEntry> Entries => entries;
+        [NonSerialized] private Dictionary<string, BackyardContentEntry> lookup;
+
+        public IReadOnlyList<BackyardContentEntry> Entries => entries ?? (entries = new List<BackyardContentEntry>());
+        public int Count => Entries.Count;
+
+        private void OnEnable()
+        {
+            lookup = null;
+        }
 
         public bool TryGet(string id, out BackyardContentEntry entry)
         {
             entry = null;
             if (string.IsNullOrWhiteSpace(id)) return false;
-            for (int i = 0; i < entries.Count; i++)
-            {
-                if (entries[i] == null || !string.Equals(entries[i].Id, id, StringComparison.Ordinal))
-                    continue;
-                entry = entries[i];
-                return true;
-            }
+            EnsureLookup();
+            return lookup.TryGetValue(id.Trim(), out entry);
+        }
+
+        public bool TryGet(string id, BackyardContentKind kind, out BackyardContentEntry entry)
+        {
+            if (TryGet(id, out entry) && entry.Kind == kind) return true;
+            entry = null;
             return false;
+        }
+
+        public IReadOnlyList<BackyardContentEntry> GetByKind(BackyardContentKind kind)
+        {
+            var matches = new List<BackyardContentEntry>();
+            for (int i = 0; i < Entries.Count; i++)
+                if (Entries[i] != null && Entries[i].Kind == kind)
+                    matches.Add(Entries[i]);
+            return matches;
         }
 
         public bool TryAdd(BackyardContentEntry entry)
         {
             if (entry == null || string.IsNullOrWhiteSpace(entry.Id) || TryGet(entry.Id, out _))
                 return false;
-            entries.Add(entry);
+            Entries.Add(entry);
+            lookup = null;
             return true;
+        }
+
+        private void EnsureLookup()
+        {
+            if (lookup != null) return;
+            lookup = new Dictionary<string, BackyardContentEntry>(StringComparer.OrdinalIgnoreCase);
+            for (int i = 0; i < Entries.Count; i++)
+            {
+                BackyardContentEntry entry = Entries[i];
+                if (entry == null || string.IsNullOrWhiteSpace(entry.Id)) continue;
+                string id = entry.Id.Trim();
+                if (!lookup.ContainsKey(id)) lookup.Add(id, entry);
+            }
         }
 
         public List<string> Validate()
         {
             var issues = new List<string>();
-            var ids = new HashSet<string>(StringComparer.Ordinal);
+            var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             for (int i = 0; i < entries.Count; i++)
             {
                 BackyardContentEntry entry = entries[i];
@@ -77,8 +109,12 @@ namespace MiaMax.Domain.Progression
                 }
                 if (string.IsNullOrWhiteSpace(entry.Id))
                     issues.Add("Entry " + i + " has no stable ID.");
+                else if (!string.Equals(entry.Id, entry.Id.Trim(), StringComparison.Ordinal))
+                    issues.Add("Entry " + i + " (" + entry.Id + ") has leading or trailing whitespace in its ID.");
                 else if (!ids.Add(entry.Id))
-                    issues.Add("Duplicate content ID: " + entry.Id);
+                    issues.Add("Duplicate content ID (IDs are case-insensitive): " + entry.Id);
+                if (!Enum.IsDefined(typeof(BackyardContentKind), entry.Kind))
+                    issues.Add("Entry " + i + " (" + entry.Id + ") has an unknown content kind.");
                 if (string.IsNullOrWhiteSpace(entry.DisplayName))
                     issues.Add("Entry " + i + " (" + entry.Id + ") has no display name.");
                 if (string.IsNullOrWhiteSpace(entry.AreaId))
@@ -86,8 +122,13 @@ namespace MiaMax.Domain.Progression
                 if (entry.RequiredQuantity < 0 || entry.RewardQuantity < 0 ||
                     entry.RewardCoins < 0 || entry.RewardExperience < 0)
                     issues.Add("Entry " + i + " (" + entry.Id + ") has a negative quantity or reward.");
+                if (entry.RequiredQuantity > 0 && string.IsNullOrWhiteSpace(entry.RequiredItemId))
+                    issues.Add("Entry " + i + " (" + entry.Id + ") has a required quantity but no required item ID.");
                 if (entry.RewardQuantity > 0 && string.IsNullOrWhiteSpace(entry.RewardItemId))
                     issues.Add("Entry " + i + " (" + entry.Id + ") has reward quantity but no reward item ID.");
+                if (!string.IsNullOrWhiteSpace(entry.UnlockAreaId) &&
+                    string.Equals(entry.AreaId, entry.UnlockAreaId, StringComparison.Ordinal))
+                    issues.Add("Entry " + i + " (" + entry.Id + ") unlocks its own area.");
             }
             return issues;
         }
@@ -96,6 +137,7 @@ namespace MiaMax.Domain.Progression
         private void OnValidate()
         {
             if (entries == null) entries = new List<BackyardContentEntry>();
+            lookup = null;
             List<string> issues = Validate();
             for (int i = 0; i < issues.Count; i++)
                 Debug.LogWarning("[Mia & Max Content Catalog] " + issues[i], this);
