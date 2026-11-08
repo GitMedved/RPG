@@ -1,61 +1,110 @@
 # Asset Requirements and Art Pipeline
 
-## 1. Source-of-truth rule
-The supplied references are now available in this conversation: Max.png, Mia.jpg and backyard_collage.png. Their appearance and layout are authoritative. A written specification is in VISUAL_REFERENCE_SPECIFICATION.md. The images have not yet been committed as binary files in this repository, so Codex/Unity cannot load them from the repo until they are copied into Reference/. Do not invent character design details. Until production models are created, use clearly labelled greybox placeholders.
+## 1. Source of truth and approved references
 
-## 2. Approved reference lock\n- Max: ginger fluffy tabby cat, large green eyes, pink nose, cream muzzle/chest, orange striping and fluffy tail. Preserve his supplied face, palette and proportions.\n- Mia: blonde girl with two long braids, green eyes, white short-sleeve T-shirt, blue jeans and white sneakers. Preserve her supplied face, hairstyle and outfit.\n- Backyard: beige two-storey clapboard house, dark roof, white trim, adjoining patio/deck with outdoor seating and black kettle grill, central lawn, white picket fence, mature tree, left-side A-frame swing set, raised sandbox/play bed, shrubs, flowers and potted plants. Sunny daytime lighting. Preserve relative landmark placement from the wide establishing view.\n- Do not mirror the layout. The wide board is the master composition; side/detail panels are the same location.\n\n## 2. Required source package
-Request/collect:
-- Mia: front, side, back, 3/4 views; neutral and expressive face references; outfit details.
-- Max: front, side, back, 3/4 views; fur colour/pattern and face references.
-- Character turntable or short movement video if available.
-- House/backyard/environment images used in the cartoon.
-- Any existing voice samples only if the user has rights to use them in the game.
-- Ownership/licensing notes for every third-party asset.
+The approved visual references are committed in this repository:
+- `Assets/_Project/Art/Characters/Mia.jpg`
+- `Assets/_Project/Art/Characters/Max.png`
+- `Assets/_Project/Art/Environment/backyard_collage.png`
+- `Assets/_Project/Art/Environment/room_night_collage.png`
 
-## 3. Current prototype status\nM2 adds procedural runtime proxy meshes for Mia and Max plus simple backyard detail proxies. They are temporary low-detail placeholders, not approved character models, final proportions, production rigs or authored animations. Do not use these proxies as final art direction.\n\n## 4. Character production requirements
-**Mia:** mobile-ready stylized humanoid model, clean topology, UVs, humanoid-compatible rig where practical, facial expression support and animation retargeting plan. Required animation list: idle, walk, run, interact, garden, celebrate, reaction and mini-game actions.
+The written visual specification is `VISUAL_REFERENCE_SPECIFICATION.md`. These assets and the supplied character/video references are authoritative. Preserve the originals. Do not invent unsupported character, clothing, face, proportion or environment details.
 
-**Max:** stylized quadruped cat model, expressive face/ears/tail, rig suitable for walk/run/jump/sit/sleep/play/eat/reaction/fishing/adventure animations. Ensure silhouette and ginger colouring match references.
+Until production models are approved and integrated, procedural characters and environment pieces must remain clearly identified as placeholders. Do not describe the current prototype proxies as final art.
 
-Deliverables per character: source project, FBX or supported interchange export, textures, rig, animation clips, material setup notes, polygon/texture budgets, licence/provenance and Unity import settings.
+## 2. Approved reference lock
 
-## 5. Environment and props
-MVP backyard kit: ground/terrain, house exterior, fence, garden beds, crop growth stages, trees/shrubs/flowers, pond, workshop exterior, adventure gate, paths, starter decorations and interactable props. Forest kit: ground/foliage, trees, bridge, landmarks, collectible props and friendly-animal placeholder/approved model.
+- **Max:** match the committed reference image for face, proportions, ginger fur, markings, eyes, muzzle, ears and tail. Do not redesign him.
+- **Mia:** match the committed reference image for face, proportions, hair, hairstyle, eyes, clothing and colours. Do not redesign her.
+- **Backyard:** use the wide establishing reference as the master composition. Preserve the relative placement and orientation of the house, patio, lawn, fence, tree, swing, play area, planting and other visible landmarks. Do not mirror the layout.
+- **Interior:** use the committed room reference for the living-room look and palette where that environment is used.
 
-Use modular pieces, shared materials and reusable prefabs. Prioritize readable interaction silhouettes over micro-detail.
+## 3. Required source package
 
-## 6. UI and iconography
+The current committed images are sufficient to begin a first modelling pass. Before final approval, collect additional orthographic views or a turntable only where the existing references do not resolve a modelling decision:
+- Mia: front, side, back and 3/4 views; face and outfit details.
+- Max: front, side, back and 3/4 views; fur pattern, face, paws and tail.
+- Character turntable or movement video if available.
+- Ownership/licensing notes for every third-party asset and any voice samples.
 
-Prototype note: a temporary circular touch joystick and a basic interaction prompt currently use runtime GUI drawing. They are test scaffolding only and must be replaced with approved portrait mobile UI art and scalable Unity UI prefabs before production.
-Portrait layouts: HUD, inventory, quest panel, order board, map, mini-game entry/results, collection book, settings, pause and parent-gated mock shop. Provide scalable vector/source assets where possible, 9-slice panels and icon exports at multiple resolutions. All visible text must be localization-ready English keys.
+Do not block the first modelling pass by requesting redundant references. Record unresolved visual assumptions and obtain approval before finalizing them.
 
-## 7. Audio
-Replaceable music loops, ambient backyard/forest beds, UI feedback, planting/harvesting/production/reward effects, mini-game cues and character vocal placeholders. Record source, licence and usage rights. Do not bake audio assumptions into gameplay logic.
+## 4. Character production requirements
 
-## 8. Technical budgets (initial targets; validate by profiling)
+**Mia**
+- Mobile-ready stylized humanoid mesh with clean topology and UVs.
+- Humanoid-compatible skeleton where practical; stable bone names and bind pose.
+- Facial expression support appropriate to the approved reference.
+- In-place clips: idle, walk, run, interact, garden, celebrate, reaction and required mini-game actions.
+
+**Max**
+- Mobile-ready stylized quadruped cat mesh with clean topology and UVs.
+- Dedicated quadruped rig with expressive face, ears, paws and tail; do not force humanoid retargeting.
+- In-place clips: idle, walk, run, jump, sit, sleep, play, eat, reaction and required fishing/adventure actions.
+
+**Deliverables for each character**
+- Editable source project and interchange/FBX export.
+- Mesh, skeleton/rig, UVs, textures and animation clips.
+- Material setup and Unity import notes.
+- Polygon/texture budgets, licence and provenance.
+- A preview/turntable and a clip list identifying each action and loop/exit behaviour.
+
+## 5. Unity runtime integration
+
+Use the documented runtime layout:
+- `Assets/_Project/Art/Characters/Runtime/Mia/`
+- `Assets/_Project/Art/Characters/Runtime/Max/`
+- `Assets/_Project/Art/Characters/Runtime/Controllers/`
+- `Assets/Resources/MiaMax/Characters/Mia.prefab`
+- `Assets/Resources/MiaMax/Characters/Max.prefab`
+
+Follow `CHARACTER_PRODUCTION_HANDOFF.md` for import profiles, Avatar/rig inspection, Animator state machines, runtime prefab validation and gameplay integration.
+
+Important: an Editor utility can configure import settings and assemble prefabs, but it cannot create production mesh topology, a skeleton, skin weights, UVs, facial rigging, authored animation or voice recordings. Do not mark a character complete based only on file presence.
+
+## 6. Environment and props
+
+MVP backyard kit: ground/terrain, house exterior, fence, garden beds and crop stages, trees/shrubs/flowers, pond, workshop exterior, adventure gate, paths, starter decorations and interactable props. Woodland kit: ground/foliage, trees, bridge, landmarks and collectible props.
+
+Use modular pieces, shared materials and reusable prefabs. Prioritize readable silhouettes and interaction clarity over micro-detail. Replace prototype proxies in the release path with a coherent, reference-matched art set.
+
+## 7. UI and iconography
+
+The temporary runtime-drawn joystick and interaction prompt are test scaffolding, not final UI. Replace them with responsive portrait mobile UI prefabs and approved iconography.
+
+Required screens include HUD, inventory, quest panel, order board, map, mini-game entry/results, collection book, settings and pause. Include safe-area handling, scalable panels, readable touch targets and localization-ready English text keys. Keep any shop mock-up parent-gated and non-functional until a separate monetization/privacy review is approved.
+
+## 8. Audio
+
+Required replaceable assets: Mia dialogue, Max vocalizations, music loops, backyard/woodland ambience, UI feedback, planting/harvesting/crafting/delivery/reward effects and mini-game cues.
+
+Record the source, licence and distribution rights for every recording. Voice direction remains American English: Mia bright, sweet and playful; Max funny cat voice with short spoken phrases and meows. Do not treat playback hooks or empty folders as completed audio content.
+
+## 9. Technical budgets
+
 - Prefer shared materials and texture atlases where they reduce draw calls.
 - Use LOD for large environment assets and instancing for repeated vegetation.
 - Keep texture sizes appropriate to on-screen importance; use platform compression.
-- Use baked lighting for static scenery where possible.
+- Bake lighting for static scenery where practical.
 - Avoid expensive transparent overdraw and excessive real-time shadows.
 - Profile on a low/mid-range Android device and a supported iPhone before finalizing budgets.
 - Keep source files outside runtime folders when they are not needed in builds.
 
-## 9. Naming and folder conventions
-PascalCase asset names; descriptive prefixes only where they improve search. Keep source art in a documented source location and runtime exports in the relevant Art subfolder. Prefabs must not depend on scene-only objects. Every placeholder asset must include `Placeholder` in its name and be listed in the development log.
+## 10. Naming and asset acceptance
 
-## 10. Asset acceptance checklist
-- Matches approved reference and style guide.
-- Correct scale/orientation/pivot.
-- Clean import, materials and textures.
-- Mobile performance reviewed.
-- Animation clips and avatar mapping tested.
-- No missing dependencies.
-- Licence/provenance recorded.
-- Placeholder status clearly identified.
+Use PascalCase names. Keep editable source art documented and runtime exports in the relevant Art subfolder. Prefabs must not depend on scene-only objects. Every placeholder must include `Placeholder` in its name and be listed in the development log.
 
+An asset is accepted only when:
+- It matches the approved references and style guide.
+- Scale, orientation, pivot, topology, UVs, materials and textures are reviewed.
+- Rig deformation and every required animation are previewed.
+- Unity import has no missing dependencies or warnings requiring action.
+- Mobile performance is reviewed.
+- Licence/provenance is recorded.
+- It has been integrated and visually tested in the actual game scene.
 
 ## 11. Generated shared texture library
-M52 adds an editor utility at `Tools/Mia & Max/Generate Complete Texture Library`. It generates a shared, repeatable surface set for backyard, Flower Garden, Woodland Trail, stations, props and future environment kits. Each surface has Base Color, Normal and Height PNG maps plus a matching material. See `M52_COMPLETE_TEXTURE_LIBRARY.md` and `M52_TEXTURE_MANIFEST.csv`.
 
-Do not treat the generated ginger/cream fur materials as final character atlases. Production Mia/Max skin, face, eye, clothing and fur maps must be authored against the approved character meshes and their final UV layouts. The generated surface library is a reusable starter kit; material assignment to final imported meshes and visual/device validation are separate acceptance steps.
+M52 adds `Tools/Mia & Max/Generate Complete Texture Library`, which generates a reusable surface set for backyard, Flower Garden, Woodland Trail, stations and props. Each surface has Base Color, Normal and Height PNG maps plus a matching material. See `M52_COMPLETE_TEXTURE_LIBRARY.md` and `M52_TEXTURE_MANIFEST.csv`.
+
+The generated library is a shared environment starter kit, not final character texture atlases. Mia's skin/face/eyes/clothing and Max's face/eyes/fur maps must be authored against the final character meshes and UV layouts. Material assignment and visual/device validation remain separate acceptance steps.
