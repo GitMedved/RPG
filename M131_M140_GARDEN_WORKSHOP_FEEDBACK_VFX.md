@@ -4,7 +4,7 @@
 
 - Added `BackyardFeedbackVfx`, a lightweight shared ParticleSystem utility for planting, harvesting, workshop start, progress milestones and completed production.
 - Integrated planting and harvest bursts into `FarmPlotPrototype`; successful actions only emit feedback.
-- Added restrained crop sway while a crop is visible. The sway respects the player's Reduced Motion setting.
+- Added restrained crop sway while a crop is visible and disabled animated crop sway and particle bursts when Reduced Motion is enabled.
 - Integrated workshop start/completion bursts and three intermediate progress puffs, driven by normalized production progress rather than per-frame particle spawning.
 - Extended the Gameplay & Character Integration Audit to check the VFX utility and both gameplay integrations.
 - Kept effects procedural and asset-free so the project does not depend on missing textures, prefabs, packages or audio clips.
