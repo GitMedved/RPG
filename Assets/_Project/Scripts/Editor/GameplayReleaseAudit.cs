@@ -160,12 +160,15 @@ namespace MiaMax.EditorTools
         {
             string sessionPath = Scripts + "/Domain/GameSession.cs";
             string questPath = Scripts + "/Domain/Progression/QuestService.cs";
+            string savePath = Scripts + "/Infrastructure/Save/LocalSaveService.cs";
             bool sessionContract = File.Exists(sessionPath) &&
                 File.ReadAllText(sessionPath).Contains("TryGrantRewards") &&
                 File.ReadAllText(sessionPath).Contains("const int maxLevel = 100");
             bool questContract = File.Exists(questPath) &&
                 File.ReadAllText(questPath).Contains("session.TryGrantRewards(quest.Coins, quest.Experience)");
-            bool valid = sessionContract && questContract;
+            bool saveContract = File.Exists(savePath) &&
+                File.ReadAllText(savePath).Contains("Math.Min(100, data.Progress.Level)");
+            bool valid = sessionContract && questContract && saveContract;
             report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
                 "Atomic quest reward transaction and bounded level progression");
             if (valid) ready++; else pending++;
