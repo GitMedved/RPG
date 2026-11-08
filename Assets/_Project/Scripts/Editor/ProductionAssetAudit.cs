@@ -63,7 +63,8 @@ namespace MiaMax.EditorTools
                 else pending++;
 
                 report.Append(found ? "[READY] " : "[PENDING] ");
-                report.AppendLine(check.Label + " — " + check.Folder);
+                report.AppendLine(check.Label + " — " + check.Folder +
+                    (folderExists ? string.Empty : " (folder not created yet)"));
             }
 
             report.AppendLine();
