@@ -106,13 +106,20 @@ namespace MiaMax.EditorTools
             Require(session.AddItem("crop_carrot", 3), "Could not seed production ingredients.");
 
             ProductionService production = new ProductionService(session);
+            Require(production.CanStart(ProductionService.CarrotSoup),
+                "Production availability should report sufficient ingredients and a free slot.");
             Require(production.TryStart(ProductionService.CarrotSoup), "Soup production should start.");
+            Require(!production.CanStart(ProductionService.CarrotSoup),
+                "Production availability should reject a second job while the slot is occupied.");
+            Require(!production.CanCollect, "An unfinished production job should not be collectable.");
             Require(!production.TryStart(ProductionService.CarrotSoup),
                 "A second production job must not start while the slot is occupied.");
 
             production.ActiveJob.StartedAtUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - 10;
             production.ActiveJob.DurationSeconds = 1;
+            Require(production.CanCollect, "Finished production should expose a collectable state.");
             Require(production.TryCollect(), "Finished soup should be collectable.");
+            Require(!production.CanCollect, "Collected production should no longer be collectable.");
             Require(!production.TryCollect(), "A collected production job must not pay out twice.");
             Require(session.Data.Inventory.Exists(x => x.ItemId == "product_carrot_soup" && x.Quantity == 1),
                 "Collected soup should exist in inventory.");
