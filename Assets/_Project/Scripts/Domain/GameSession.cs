@@ -113,6 +113,29 @@ namespace MiaMax.Domain
             return true;
         }
 
+        public bool CanConsumeItemAndGrantRewards(string itemId, int quantity, int coins, int experience)
+        {
+            if (string.IsNullOrWhiteSpace(itemId) || quantity <= 0 || coins < 0 || experience < 0 ||
+                (coins == 0 && experience == 0)) return false;
+            ItemStackData stack = Data.Inventory.Find(x => x.ItemId == itemId);
+            return stack != null && stack.Quantity >= quantity &&
+                Data.Progress.Coins <= int.MaxValue - coins &&
+                Data.Progress.Experience <= int.MaxValue - experience;
+        }
+
+        /// <summary>Consumes an item stack and grants its delivery reward in one state change.</summary>
+        public bool TryConsumeItemAndGrantRewards(string itemId, int quantity, int coins, int experience)
+        {
+            if (!CanConsumeItemAndGrantRewards(itemId, quantity, coins, experience)) return false;
+            ItemStackData stack = Data.Inventory.Find(x => x.ItemId == itemId);
+            stack.Quantity -= quantity;
+            if (stack.Quantity == 0) Data.Inventory.Remove(stack);
+            Data.Progress.Coins += coins;
+            if (experience > 0) ApplyExperience(experience);
+            Notify();
+            return true;
+        }
+
         public bool TryRemoveItem(string itemId, int quantity)
         {
             if (string.IsNullOrWhiteSpace(itemId) || quantity <= 0) return false;
