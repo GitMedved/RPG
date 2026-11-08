@@ -32,6 +32,7 @@ namespace MiaMax.Gameplay
             BuildGardenDetails(root.transform, timber, soil);
             BuildPatioPlanters(root.transform, terracotta, planterGreen, flowerPink, flowerYellow);
             BuildSandboxTrim(root.transform, timber, cream);
+            BuildGardenBorderAndGroundCover(root.transform, planterGreen, flowerPink, flowerYellow, soil);
         }
 
         private static void BuildHouseFacade(Transform parent, Material cream, Material frame,
@@ -155,6 +156,51 @@ namespace MiaMax.Gameplay
                 new Vector3(0.16f, 0.12f, 3.30f), cream, parent);
             Cube("Sandbox_Toy_Block", new Vector3(9.0f, 0.62f, -7.25f),
                 new Vector3(0.38f, 0.30f, 0.38f), timber, parent);
+        }
+
+        // M161-M170: deterministic, low-profile ground cover. Fixed placements avoid runtime random work.
+        private static void BuildGardenBorderAndGroundCover(Transform parent, Material leaves,
+            Material pink, Material yellow, Material soil)
+        {
+            // Three small flower pockets stay outside the starter plots, sandbox and main walking lane.
+            Vector3[] patches =
+            {
+                new Vector3(-12.8f, 0.12f, -10.8f),
+                new Vector3(0.0f, 0.12f, -11.4f),
+                new Vector3(13.4f, 0.12f, 2.2f),
+                new Vector3(-14.2f, 0.12f, 7.0f)
+            };
+            for (int p = 0; p < patches.Length; p++)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    float x = ((i % 2) - 0.5f) * 0.46f;
+                    float z = ((i / 2) - 0.5f) * 0.42f;
+                    Vector3 basePosition = patches[p] + new Vector3(x, 0f, z);
+                    Ellipsoid("GroundCover_Leaf_" + p + "_" + i,
+                        basePosition + Vector3.up * 0.13f,
+                        new Vector3(0.34f, 0.18f, 0.27f), leaves, parent);
+                    Ellipsoid("GroundCover_Bloom_" + p + "_" + i,
+                        basePosition + Vector3.up * 0.27f,
+                        new Vector3(0.13f, 0.12f, 0.13f),
+                        (i + p) % 2 == 0 ? pink : yellow, parent);
+                }
+            }
+
+            // Low, non-interactive stones soften the edge between lawn and garden details.
+            Vector3[] stones =
+            {
+                new Vector3(-5.8f, 0.055f, 5.4f), new Vector3(-5.0f, 0.055f, 5.7f),
+                new Vector3(5.0f, 0.055f, -2.2f), new Vector3(6.0f, 0.055f, -2.0f),
+                new Vector3(-13.8f, 0.055f, -2.5f), new Vector3(14.0f, 0.055f, 8.4f)
+            };
+            for (int i = 0; i < stones.Length; i++)
+            {
+                GameObject stone = Ellipsoid("Garden_Edge_Stone_" + i, stones[i],
+                    new Vector3(0.48f + (i % 2) * 0.12f, 0.11f, 0.34f), soil, parent);
+                Renderer renderer = stone.GetComponent<Renderer>();
+                if (renderer != null) renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            }
         }
 
         private static Material SurfaceOrColor(string surfaceName, Color fallback)
