@@ -38,6 +38,10 @@ namespace MiaMax.Gameplay
         private static void PlayBurst(string effectName, Vector3 position, Color tint,
             int particleCount, float speed, float size)
         {
+            GameSession session = GameSessionBootstrap.Current;
+            if (session != null && session.Data != null && session.Data.Settings != null &&
+                session.Data.Settings.ReducedMotion) return;
+
             GameObject effect = new GameObject(effectName);
             effect.transform.position = position;
             ParticleSystem particles = effect.AddComponent<ParticleSystem>();
