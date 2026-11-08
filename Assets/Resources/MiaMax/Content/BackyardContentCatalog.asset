@@ -1,0 +1,223 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6c1b3954f0a4d82b7e3f9a1c6d80425, type: 3}
+  m_Name: BackyardContentCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::MiaMax.Domain.Progression.BackyardContentCatalog
+  entries:
+  - Id: crop_carrot
+    Kind: 0
+    DisplayName: Carrot
+    AreaId: backyard
+    UnlockAreaId: 
+    RequiredQuestId: 
+    RequiredItemId: seed_carrot
+    RequiredQuantity: 1
+    DurationSeconds: 180
+    RewardItemId: crop_carrot
+    RewardQuantity: 1
+    RewardCoins: 0
+    RewardExperience: 0
+  - Id: crop_tomato
+    Kind: 0
+    DisplayName: Tomato
+    AreaId: backyard
+    UnlockAreaId: 
+    RequiredQuestId: 
+    RequiredItemId: seed_tomato
+    RequiredQuantity: 1
+    DurationSeconds: 180
+    RewardItemId: crop_tomato
+    RewardQuantity: 1
+    RewardCoins: 0
+    RewardExperience: 0
+  - Id: crop_strawberry
+    Kind: 0
+    DisplayName: Strawberry
+    AreaId: backyard
+    UnlockAreaId: 
+    RequiredQuestId: 
+    RequiredItemId: seed_strawberry
+    RequiredQuantity: 1
+    DurationSeconds: 180
+    RewardItemId: crop_strawberry
+    RewardQuantity: 1
+    RewardCoins: 0
+    RewardExperience: 0
+  - Id: recipe_carrot_soup
+    Kind: 1
+    DisplayName: Carrot Soup
+    AreaId: backyard
+    UnlockAreaId: 
+    RequiredQuestId: 
+    RequiredItemId: crop_carrot
+    RequiredQuantity: 3
+    DurationSeconds: 180
+    RewardItemId: product_carrot_soup
+    RewardQuantity: 1
+    RewardCoins: 0
+    RewardExperience: 5
+  - Id: recipe_strawberry_juice
+    Kind: 1
+    DisplayName: Strawberry Juice
+    AreaId: backyard
+    UnlockAreaId: 
+    RequiredQuestId: 
+    RequiredItemId: crop_strawberry
+    RequiredQuantity: 3
+    DurationSeconds: 240
+    RewardItemId: product_strawberry_juice
+    RewardQuantity: 1
+    RewardCoins: 0
+    RewardExperience: 5
+  - Id: recipe_wooden_toy
+    Kind: 1
+    DisplayName: Wooden Toy
+    AreaId: backyard
+    UnlockAreaId: 
+    RequiredQuestId: 
+    RequiredItemId: wood
+    RequiredQuantity: 2
+    DurationSeconds: 300
+    RewardItemId: product_wooden_toy
+    RewardQuantity: 1
+    RewardCoins: 0
+    RewardExperience: 5
+  - Id: order_soup_01
+    Kind: 2
+    DisplayName: Soup Delivery
+    AreaId: backyard
+    UnlockAreaId: 
+    RequiredQuestId: 
+    RequiredItemId: product_carrot_soup
+    RequiredQuantity: 1
+    DurationSeconds: 180
+    RewardItemId: 
+    RewardQuantity: 0
+    RewardCoins: 12
+    RewardExperience: 10
+  - Id: order_juice_01
+    Kind: 2
+    DisplayName: Juice Delivery
+    AreaId: backyard
+    UnlockAreaId: 
+    RequiredQuestId: 
+    RequiredItemId: product_strawberry_juice
+    RequiredQuantity: 1
+    DurationSeconds: 180
+    RewardItemId: 
+    RewardQuantity: 0
+    RewardCoins: 16
+    RewardExperience: 12
+  - Id: order_toy_01
+    Kind: 2
+    DisplayName: Toy Delivery
+    AreaId: backyard
+    UnlockAreaId: 
+    RequiredQuestId: 
+    RequiredItemId: product_wooden_toy
+    RequiredQuantity: 1
+    DurationSeconds: 180
+    RewardItemId: 
+    RewardQuantity: 0
+    RewardCoins: 14
+    RewardExperience: 11
+  - Id: quest_first_steps
+    Kind: 4
+    DisplayName: A New Adventure
+    AreaId: backyard
+    UnlockAreaId: 
+    RequiredQuestId: 
+    RequiredItemId: 
+    RequiredQuantity: 0
+    DurationSeconds: 180
+    RewardItemId: 
+    RewardQuantity: 0
+    RewardCoins: 10
+    RewardExperience: 15
+  - Id: quest_first_order
+    Kind: 4
+    DisplayName: Helping the Neighbours
+    AreaId: backyard
+    UnlockAreaId: 
+    RequiredQuestId: quest_first_steps
+    RequiredItemId: 
+    RequiredQuantity: 0
+    DurationSeconds: 180
+    RewardItemId: 
+    RewardQuantity: 0
+    RewardCoins: 15
+    RewardExperience: 20
+  - Id: quest_order_master
+    Kind: 4
+    DisplayName: A Busy Little Backyard
+    AreaId: backyard
+    UnlockAreaId: flower_garden
+    RequiredQuestId: quest_first_order
+    RequiredItemId: 
+    RequiredQuantity: 0
+    DurationSeconds: 180
+    RewardItemId: 
+    RewardQuantity: 0
+    RewardCoins: 30
+    RewardExperience: 35
+  - Id: quest_flower_friend
+    Kind: 4
+    DisplayName: A Path Beyond the Garden
+    AreaId: flower_garden
+    UnlockAreaId: woodland_trail
+    RequiredQuestId: quest_order_master
+    RequiredItemId: 
+    RequiredQuantity: 0
+    DurationSeconds: 180
+    RewardItemId: 
+    RewardQuantity: 0
+    RewardCoins: 40
+    RewardExperience: 45
+  - Id: match3
+    Kind: 5
+    DisplayName: Garden Match
+    AreaId: backyard
+    UnlockAreaId: 
+    RequiredQuestId: 
+    RequiredItemId: 
+    RequiredQuantity: 0
+    DurationSeconds: 180
+    RewardItemId: 
+    RewardQuantity: 0
+    RewardCoins: 0
+    RewardExperience: 0
+  - Id: fishing
+    Kind: 5
+    DisplayName: Pond Fishing
+    AreaId: backyard
+    UnlockAreaId: 
+    RequiredQuestId: 
+    RequiredItemId: 
+    RequiredQuantity: 0
+    DurationSeconds: 180
+    RewardItemId: 
+    RewardQuantity: 0
+    RewardCoins: 0
+    RewardExperience: 0
+  - Id: max_run
+    Kind: 5
+    DisplayName: Max Run
+    AreaId: backyard
+    UnlockAreaId: 
+    RequiredQuestId: 
+    RequiredItemId: 
+    RequiredQuantity: 0
+    DurationSeconds: 180
+    RewardItemId: 
+    RewardQuantity: 0
+    RewardCoins: 0
+    RewardExperience: 0
