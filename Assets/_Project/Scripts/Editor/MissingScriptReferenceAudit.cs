@@ -237,8 +237,8 @@ namespace MiaMax.EditorTools
             var projectPrefabPaths = new List<string>(prefabFiles.Length);
             for (int i = 0; i < prefabFiles.Length; i++)
             {
-                string absolutePath = prefabFiles[i].Replace('\\\\', '/');
-                string normalizedRoot = assetsRoot.Replace('\\\\', '/');
+                string absolutePath = prefabFiles[i].Replace('\\', '/');
+                string normalizedRoot = assetsRoot.Replace('\\', '/');
                 if (!absolutePath.StartsWith(normalizedRoot + "/", StringComparison.OrdinalIgnoreCase))
                     continue;
 
