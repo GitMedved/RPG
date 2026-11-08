@@ -32,6 +32,7 @@ namespace MiaMax.EditorTools
                 "Domain/Production/ProductionService.cs",
                 "Domain/Orders/OrderBoardService.cs",
                 "Domain/Progression/UpgradeService.cs",
+                "Domain/Progression/EconomyBalance.cs",
                 "Domain/Progression/BackyardContentCatalog.cs",
                 "Domain/Progression/QuestService.cs",
                 "Editor/BackyardContentCatalogBuilder.cs",
@@ -58,6 +59,7 @@ namespace MiaMax.EditorTools
             CheckInventoryFacade(report, ref ready, ref pending);
             CheckSharedProgressionRewards(report, ref ready, ref pending);
             CheckAtomicUpgradePurchase(report, ref ready, ref pending);
+            CheckEconomyBalance(report, ref ready, ref pending);
 
             string[] catalogGuids = AssetDatabase.FindAssets("t:BackyardContentCatalog");
             if (catalogGuids.Length == 0)
@@ -257,11 +259,11 @@ namespace MiaMax.EditorTools
         {
             string smokePath = Scripts + "/Editor/EditorSmokeChecks.cs";
             bool valid = File.Exists(smokePath) &&
-                File.ReadAllText(smokePath).Contains("Core smoke checks passed: \" + passed + \"/15.") &&
+                File.ReadAllText(smokePath).Contains("Core smoke checks passed: \" + passed + \"/16.") &&
                 File.ReadAllText(smokePath).Contains("TestFirstSessionLoop") &&
                 File.ReadAllText(smokePath).Contains("TestCatalogDrivenProductionAndOrders");
             report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
-                "15-scenario smoke suite includes inventory, progression transactions and the fresh-profile loop");
+                "16-scenario smoke suite includes economy balance, atomic harvest and the fresh-profile loop");
             if (valid) ready++; else pending++;
         }
 
@@ -318,6 +320,26 @@ namespace MiaMax.EditorTools
             bool valid = session && upgrade;
             report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
                 "Atomic upgrade currency deduction and level increment");
+            if (valid) ready++; else pending++;
+        }
+
+        private static void CheckEconomyBalance(System.Text.StringBuilder report,
+            ref int ready, ref int pending)
+        {
+            string economyPath = Scripts + "/Domain/Progression/EconomyBalance.cs";
+            string upgradePath = Scripts + "/Domain/Progression/UpgradeService.cs";
+            string farmingPath = Scripts + "/Domain/Farming/FarmingService.cs";
+            bool economy = File.Exists(economyPath) &&
+                File.ReadAllText(economyPath).Contains("ProductionDurationPercent") &&
+                File.ReadAllText(economyPath).Contains("HarvestYield");
+            bool upgrade = File.Exists(upgradePath) &&
+                File.ReadAllText(upgradePath).Contains("CanUpgradeGarden") &&
+                File.ReadAllText(upgradePath).Contains("NextGardenHarvestYield");
+            bool farming = File.Exists(farmingPath) &&
+                File.ReadAllText(farmingPath).Contains("TryGrantItemAndRewards(harvestedCrop");
+            bool valid = economy && upgrade && farming;
+            report.AppendLine((valid ? "[READY] " : "[PENDING] ") +
+                "Central economy curves, upgrade affordability previews and atomic harvest rewards");
             if (valid) ready++; else pending++;
         }
 
