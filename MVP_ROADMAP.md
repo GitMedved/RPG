@@ -419,3 +419,9 @@ The authoring catalog now has indexed ID lookup, case-insensitive duplicate prot
 - Production asset audit handles absent folders without avoidable AssetDatabase missing-folder warnings.
 - Added `CHARACTER_PRODUCTION_HANDOFF.md` with the approved-reference, FBX, rig, clip and validation handoff contract.
 - Production FBX models, UV-specific textures, authored animation clips and device validation remain outstanding release gates.
+
+
+### M131–M140 follow-up — compile repair
+- Corrected the VFX script's domain/bootstrap namespace imports and explicitly enabled Unity's built-in Particle System module in the package manifest.
+- Integration audit now verifies those compile dependencies, not only VFX call-site presence.
+- Local Unity package resolution and recompilation remain required after pull.
