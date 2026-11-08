@@ -15,6 +15,13 @@ The next target is a **first playable Release Candidate**, not a feature-complet
 - Final Mia/Max production models, rigged animation clips, final UI artwork and licensed audio recordings are not established by the repository snapshot.
 - These facts mean the repository is not yet a reproducible mobile release candidate.
 
+## Latest developer-reported validation (2026-11-08)
+
+- The developer's local Unity Console reports **Core Smoke Checks passed: 16/16**. This covers deterministic domain/save paths only; it does not cover Play Mode, scene interaction, UI layout, FBX import, or mobile builds.
+- The supplied local Release Readiness Audit reports one valid enabled scene and a local `ProjectSettings/EditorBuildSettings.asset`.
+- Important reproducibility gap: the remote branch tree still contains **no committed `.unity` scene** and **no committed `ProjectSettings/EditorBuildSettings.asset`**. The local audit result therefore does not yet prove a clean clone can open/build the same startup scene. Commit the scene, its `.meta`, and Build Settings before treating RC0 as complete.
+- The smoke-check tool now records a successful 16/16 result in Unity's current Editor session, and the release audit can read it when run afterwards. This is session-scoped convenience, not portable or commit-bound QA evidence; retain the Console log with the tested commit SHA.
+
 ## RC0 — Create a reproducible Unity project
 
 1. Pull `codex/mia-max-foundation`.
