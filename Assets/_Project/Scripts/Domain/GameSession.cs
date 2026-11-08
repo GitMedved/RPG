@@ -38,14 +38,37 @@ namespace MiaMax.Domain
         public bool AddExperience(int amount)
         {
             if (amount <= 0 || Data.Progress.Experience > int.MaxValue - amount) return false;
-            Data.Progress.Experience += amount;
-            while (Data.Progress.Experience >= ExperienceForNextLevel(Data.Progress.Level))
-            {
-                Data.Progress.Experience -= ExperienceForNextLevel(Data.Progress.Level);
-                Data.Progress.Level++;
-            }
+            ApplyExperience(amount);
             Notify();
             return true;
+        }
+
+        /// <summary>Applies a coin/XP reward as one validated state transition.</summary>
+        public bool TryGrantRewards(int coins, int experience)
+        {
+            if (coins < 0 || experience < 0 || (coins == 0 && experience == 0)) return false;
+            if (Data.Progress.Coins > int.MaxValue - coins ||
+                Data.Progress.Experience > int.MaxValue - experience) return false;
+            Data.Progress.Coins += coins;
+            if (experience > 0) ApplyExperience(experience);
+            Notify();
+            return true;
+        }
+
+        private void ApplyExperience(int amount)
+        {
+            long total = (long)Data.Progress.Experience + amount;
+            int level = Math.Max(1, Data.Progress.Level);
+            const int maxLevel = 100;
+            while (level < maxLevel && total >= ExperienceForNextLevel(level))
+            {
+                total -= ExperienceForNextLevel(level);
+                level++;
+            }
+            Data.Progress.Level = level;
+            Data.Progress.Experience = level >= maxLevel
+                ? Math.Min((int)total, ExperienceForNextLevel(maxLevel) - 1)
+                : (int)Math.Min(int.MaxValue, total);
         }
 
         public bool AddItem(string itemId, int quantity)
@@ -75,7 +98,8 @@ namespace MiaMax.Domain
 
         public static int ExperienceForNextLevel(int level)
         {
-            return 100 + Math.Max(0, level - 1) * 50;
+            int safeLevel = Math.Max(1, Math.Min(100, level));
+            return 100 + (safeLevel - 1) * 50;
         }
 
         public void NotifyExternalStateChanged()
