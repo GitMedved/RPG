@@ -19,9 +19,9 @@ namespace MiaMax.EditorTools
     /// </summary>
     public static class EditorSmokeChecks
     {
-        [MenuItem("Tools/Mia & Max/Run Core Smoke Checks")]
         private const string SmokeCheckSessionKey = "MiaMax.CoreSmokeChecks.Passed";
 
+        [MenuItem("Tools/Mia & Max/Run Core Smoke Checks")]
         public static void Run()
         {
             SessionState.SetBool(SmokeCheckSessionKey, false);
