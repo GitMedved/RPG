@@ -873,3 +873,14 @@ Connected story quest presentation and reward values to the authored BackyardCon
 - Added subtle crop sway that respects Reduced Motion.
 - Extended GameplayReleaseAudit with a source-presence/integration check for the feedback effects.
 - Static source edits only. Unity compile, smoke checks, audit execution, Play Mode, visual QA and device profiling were not run in this environment.
+
+
+## 2026-11-08 — M141–M150: Production character pipeline
+
+- Bound CharacterAnimationBridge to Animators in editor-generated runtime character prefabs.
+- Added runtime Animator Controller rebinding and parent CharacterController discovery.
+- Expanded runtime prefab validation to include render geometry and all bridge parameters.
+- Expanded fresh Animator controller scaffolds to the complete nine-parameter bridge contract.
+- Made ProductionAssetAudit skip missing folders safely and report them as pending.
+- Extended GameplayReleaseAudit with source-level checks for the character pipeline safeguards.
+- Static source edits only; Unity compilation, model import, Avatar inspection, prefab generation, smoke checks, Play Mode and device validation were not run.
