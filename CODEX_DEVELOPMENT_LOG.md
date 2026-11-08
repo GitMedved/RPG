@@ -797,3 +797,10 @@ Source-level implementation only. The new 8-check smoke suite, catalog builder a
 ## M76–M80 — Content catalog reliability — 2026-11-08
 
 Added indexed, case-insensitive catalog lookups, kind-filtered queries and stricter authoring validation. Extended core smoke coverage for duplicate IDs, lookup semantics and required-item validation. The gameplay integration audit now checks the expected kind of all 16 starter IDs. Added the M76–M80 acceptance note. Source review only; Unity compilation, Editor smoke execution, generated catalog inspection, Play Mode and device validation remain pending. See M76_M80_CONTENT_CATALOG_RELIABILITY.md.
+
+
+## M81–M85 — Progression and reward transaction hardening — 2026-11-08
+
+Bounded player progression at level 100, centralized XP application, and added an atomic coin/XP reward operation. Quest claims now fail safely when the complete reward cannot be applied, rather than recording a claim after a partial or rejected payout. Added a ninth Editor smoke scenario and extended the gameplay integration audit with a source-contract check. Save schema remains unchanged. The expected smoke result is 9/9 but still requires local Unity execution. See `M81_M85_PROGRESSION_REWARD_HARDENING.md`.
+
+**Validation still required:** Unity compile, 9/9 smoke checks, Gameplay & Character Integration Audit, Play Mode quest/reward/level-cap walkthrough, and save/reload. These source changes have not been executed in Unity.
