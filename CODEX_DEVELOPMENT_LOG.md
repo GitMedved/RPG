@@ -864,3 +864,12 @@ Connected story quest presentation and reward values to the authored BackyardCon
 - Static source review only. Unity compilation, 16/16 smoke execution, audit execution, Play Mode and device QA remain pending.
 
 **Local acceptance:** pull codex/mia-max-foundation; run Core Smoke Checks (expected 16/16) and Gameplay & Character Integration Audit; verify crop growth countdown, workshop progress and disabled/available upgrade buttons in portrait and landscape. See M121_M130_GARDEN_WORKSHOP_FEEDBACK.md.
+
+
+## 2026-11-08 — M131–M140: Garden, workshop and interaction feedback
+
+- Added procedural one-shot particle feedback for planting, harvesting, workshop start, progress milestones and completed production.
+- Integrated effects into the existing farm plot and production station presentation without changing domain transactions.
+- Added subtle crop sway that respects Reduced Motion.
+- Extended GameplayReleaseAudit with a source-presence/integration check for the feedback effects.
+- Static source edits only. Unity compile, smoke checks, audit execution, Play Mode, visual QA and device profiling were not run in this environment.
