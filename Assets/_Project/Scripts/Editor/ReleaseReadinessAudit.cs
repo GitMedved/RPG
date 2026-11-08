@@ -6,6 +6,8 @@ using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 namespace MiaMax.EditorTools
 {
@@ -62,8 +64,8 @@ namespace MiaMax.EditorTools
                 PlayerSettings.bundleVersion != "0.1",
                 "Version: " + Display(PlayerSettings.bundleVersion), true);
 
-            Add(results, "URP pipeline asset", AssetCount("t:RenderPipelineAsset", "Assets") > 0,
-                AssetCount("t:RenderPipelineAsset", "Assets") + " pipeline asset(s) found. Confirm it is assigned in Graphics and every Quality tier.", true);
+            bool urpAssignmentsReady = CheckUrpAssignments(out string urpDetail);
+            Add(results, "URP pipeline asset and assignments", urpAssignmentsReady, urpDetail, true);
             Add(results, "Production Mia model", AssetCount("Mia t:Model", "Assets/_Project/Art/Characters/Runtime") > 0,
                 "FBX/model presence only; rig and likeness need visual review.", true);
             Add(results, "Production Max model", AssetCount("Max t:Model", "Assets/_Project/Art/Characters/Runtime") > 0,
@@ -138,6 +140,40 @@ namespace MiaMax.EditorTools
 
             string[] assets = AssetDatabase.FindAssets(filter, new[] { folder });
             return assets == null ? 0 : assets.Length;
+        }
+
+        private static bool CheckUrpAssignments(out string detail)
+        {
+            int urpAssetCount = AssetCount("t:UniversalRenderPipelineAsset", "Assets");
+            RenderPipelineAsset graphicsAsset = GraphicsSettings.defaultRenderPipeline;
+            bool graphicsUsesUrp = graphicsAsset is UniversalRenderPipelineAsset;
+            int incompatibleQualityOverrides = 0;
+            string[] qualityNames = QualitySettings.names;
+            int originalQuality = QualitySettings.GetQualityLevel();
+
+            try
+            {
+                for (int i = 0; i < qualityNames.Length; i++)
+                {
+                    QualitySettings.SetQualityLevel(i, false);
+                    RenderPipelineAsset qualityAsset = QualitySettings.renderPipeline;
+                    if (qualityAsset != null && !(qualityAsset is UniversalRenderPipelineAsset))
+                        incompatibleQualityOverrides++;
+                }
+            }
+            finally
+            {
+                if (qualityNames.Length > 0)
+                    QualitySettings.SetQualityLevel(Mathf.Clamp(originalQuality, 0, qualityNames.Length - 1), false);
+            }
+
+            bool ready = urpAssetCount > 0 && graphicsUsesUrp && incompatibleQualityOverrides == 0;
+            detail = urpAssetCount + " URP asset(s); Graphics default: " +
+                (graphicsAsset == null ? "(none)" : graphicsAsset.name) +
+                "; incompatible quality overrides: " + incompatibleQualityOverrides +
+                " / " + qualityNames.Length +
+                ". Quality levels without an override inherit the Graphics asset.";
+            return ready;
         }
 
         private static bool IsConfiguredId(string value)
