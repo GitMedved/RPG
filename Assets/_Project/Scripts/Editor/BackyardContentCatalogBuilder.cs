@@ -58,11 +58,11 @@ namespace MiaMax.EditorTools
             });
 
             AddRecipe(catalog, ProductionService.CarrotSoup, "Carrot Soup", "crop_carrot", 3,
-                "product_carrot_soup", ref added);
+                "product_carrot_soup", 180, ref added);
             AddRecipe(catalog, ProductionService.StrawberryJuice, "Strawberry Juice", "crop_strawberry", 3,
-                "product_strawberry_juice", ref added);
+                "product_strawberry_juice", 240, ref added);
             AddRecipe(catalog, ProductionService.WoodenToy, "Wooden Toy", "wood", 2,
-                "product_wooden_toy", ref added);
+                "product_wooden_toy", 300, ref added);
 
             AddOrder(catalog, "order_soup_01", "Soup Delivery", "product_carrot_soup", 12, 10, ref added);
             AddOrder(catalog, "order_juice_01", "Juice Delivery", "product_strawberry_juice", 16, 12, ref added);
@@ -115,13 +115,13 @@ namespace MiaMax.EditorTools
         }
 
         private static int AddRecipe(BackyardContentCatalog catalog, string id, string title,
-            string input, int quantity, string output, ref int added)
+            string input, int quantity, string output, int durationSeconds, ref int added)
         {
             int result = Add(catalog, new BackyardContentEntry
             {
                 Id = id, Kind = BackyardContentKind.Recipe, DisplayName = title,
                 AreaId = "backyard", RequiredItemId = input, RequiredQuantity = quantity,
-                RewardItemId = output, RewardQuantity = 1, RewardExperience = 5
+                DurationSeconds = durationSeconds, RewardItemId = output, RewardQuantity = 1, RewardExperience = 5
             });
             added += result;
             return result;
