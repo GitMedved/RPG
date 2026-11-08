@@ -404,3 +404,10 @@ The authoring catalog now has indexed ID lookup, case-insensitive duplicate prot
 - Mobile journal upgrade actions visually reflect whether the player can currently afford the purchase.
 - Smoke coverage now checks crop growth progress/countdown and normalized production progress within the existing 16 scenarios. Integration audit covers the new runtime/presentation contracts.
 - No save schema change. Static source review only; Unity compile, smoke execution, Play Mode and device QA remain pending. See M121_M130_GARDEN_WORKSHOP_FEEDBACK.md.
+
+
+## M131–M140 — Garden/workshop interaction feedback (implemented in source)
+- Added low-cost, one-shot particle feedback for planting, harvest and workshop state changes.
+- Added restrained crop idle sway with Reduced Motion support.
+- Extended static integration audit to verify VFX wiring.
+- Unity compilation, editor checks, Play Mode and device validation remain manual gates.
