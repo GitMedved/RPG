@@ -894,3 +894,13 @@ Connected story quest presentation and reward values to the authored BackyardCon
 - Strengthened Gameplay & Character Integration Audit to check both VFX namespace imports and the required built-in module declaration.
 - The supplied local log showed 16/16 deterministic smoke scenarios passing; save-recovery warnings were emitted by deliberate corruption/recovery scenarios that also passed.
 - Source/manifest updates committed only. Unity package resolution, compilation, audit rerun and Play Mode still require local confirmation.
+
+
+## 2026-11-08 — M151–M160 backyard production material integration
+
+- Connected the existing 40-surface generated material library to the backyard environment dressing for plaster, white trim, warm timber, garden soil, foliage and flower petals.
+- Preserved deterministic color fallbacks when generated materials have not yet been created; glass, brass, terracotta and yellow blooms retain purpose-matched fallback materials.
+- Added a duplicate-build guard and a final built-in shader fallback for the environment dressing.
+- Extended Gameplay & Character Integration Audit to verify material-library lookups, runtime bootstrap integration and safe shader fallback.
+- Added M151_M160_BACKYARD_MATERIAL_INTEGRATION.md with local generation and visual acceptance steps.
+- Source-level review only. Unity compilation, local texture generation/import, audit execution, Play Mode visual review and mobile profiling remain pending.
