@@ -20,6 +20,7 @@ namespace MiaMax.Gameplay
         private Transform cropRoot;
         private string lastCropId;
         private int lastStage = -1;
+        private float nextRefreshTime;
         private Material leafMaterial;
         private Material leafLightMaterial;
         private Material carrotMaterial;
@@ -60,7 +61,11 @@ namespace MiaMax.Gameplay
         {
             if (farming == null && GameSessionBootstrap.Current != null)
                 farming = new FarmingService(GameSessionBootstrap.Current);
-            Refresh();
+            if (Time.unscaledTime >= nextRefreshTime)
+            {
+                nextRefreshTime = Time.unscaledTime + 0.25f;
+                Refresh();
+            }
         }
 
         private void OnDestroy()
@@ -99,6 +104,7 @@ namespace MiaMax.Gameplay
 
             FarmPlotData plot = farming.GetPlot(plotId);
             int stage = farming.GrowthStage(plot);
+            float progress = farming.GrowthProgress01(plot);
             string cropId = plot.IsPlanted ? plot.CropId : null;
 
             if (cropId != lastCropId)
@@ -111,16 +117,23 @@ namespace MiaMax.Gameplay
             if (stage != lastStage)
             {
                 cropRoot.gameObject.SetActive(stage > 0);
-                float growth = stage <= 0 ? 0f : stage == 1 ? 0.48f : stage == 2 ? 0.76f : 1f;
-                cropRoot.localScale = Vector3.one * growth;
                 lastStage = stage;
+            }
 
-                if (interactable != null)
-                {
-                    string action = !plot.IsPlanted ? "Plant a seed" :
-                        stage >= 3 ? "Harvest crop" : "Crop growing";
-                    interactable.Configure("Garden plot", action);
-                }
+            if (plot.IsPlanted)
+            {
+                float growth = stage <= 1 ? Mathf.Lerp(0.42f, 0.60f, progress * 2f) :
+                    stage == 2 ? Mathf.Lerp(0.60f, 0.82f, (progress - 0.5f) * 2f) : 1f;
+                cropRoot.localScale = Vector3.one * growth;
+            }
+            else cropRoot.localScale = Vector3.zero;
+
+            if (interactable != null)
+            {
+                string action = !plot.IsPlanted ? "Plant a seed" :
+                    stage >= 3 ? "Harvest crop" :
+                    "Growing · " + farming.SecondsUntilHarvest(plot) + "s";
+                interactable.Configure("Garden plot", action);
             }
         }
 
