@@ -20,8 +20,11 @@ namespace MiaMax.EditorTools
     public static class EditorSmokeChecks
     {
         [MenuItem("Tools/Mia & Max/Run Core Smoke Checks")]
+        private const string SmokeCheckSessionKey = "MiaMax.CoreSmokeChecks.Passed";
+
         public static void Run()
         {
+            SessionState.SetBool(SmokeCheckSessionKey, false);
             int passed = 0;
             try
             {
@@ -42,7 +45,10 @@ namespace MiaMax.EditorTools
                 RunCheck("Shared level cap and atomic progression rewards", TestSharedProgressionTransactions, ref passed);
                 RunCheck("Central economy balance and atomic harvest", TestEconomyAndHarvest, ref passed);
 
+                SessionState.SetBool(SmokeCheckSessionKey, passed == 16);
                 string message = "Core smoke checks passed: " + passed + "/16.\n\n" +
+                    "The Release Readiness Audit can now record this pass for the current Editor session. " +
+                    "Run that audit again before closing Unity.\n\n" +
                     "This verifies deterministic domain/save paths only. Play Mode, scene interaction, " +
                     "UI layout, FBX import and Android/iOS builds still require separate validation.";
                 Debug.Log("[Mia & Max] " + message);
@@ -50,6 +56,7 @@ namespace MiaMax.EditorTools
             }
             catch (Exception exception)
             {
+                SessionState.SetBool(SmokeCheckSessionKey, false);
                 Debug.LogError("[Mia & Max] Core smoke checks failed after " + passed + " check(s).");
                 Debug.LogException(exception);
                 EditorUtility.DisplayDialog("Mia & Max — Smoke Checks Failed",
