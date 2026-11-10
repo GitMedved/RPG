@@ -322,7 +322,7 @@ namespace MiaMax.Gameplay
             switch (action)
             {
                 case 0:
-                    string questTitle;
+                    string questTitle = string.Empty;
                     bool questClaimed = questService != null && questService.TryClaimNext(out questTitle);
                     journalNotice = questClaimed ? "Quest reward claimed: " + questTitle + "!" : "No quest reward is ready yet.";
                     if (questClaimed)
@@ -335,8 +335,8 @@ namespace MiaMax.Gameplay
                     bool collectionClaimed = collectionService != null &&
                         !collectionService.IsCompletionRewardClaimed && collectionService.TryClaimCompletionReward();
                     journalNotice = collectionService == null ? "Collection unavailable." :
-                        collectionService.IsCompletionRewardClaimed ? "Collection reward was already claimed." :
                         collectionClaimed ? "Collection reward claimed: +25 coins, +30 XP!" :
+                        collectionService.IsCompletionRewardClaimed ? "Collection reward was already claimed." :
                         "Find all 5 keepsakes to unlock this reward.";
                     if (collectionClaimed) GameAudioService.Instance?.Play(GameAudioCue.Reward, 0.9f);
                     break;
@@ -368,8 +368,8 @@ namespace MiaMax.Gameplay
                     if (dailyRewardClaimed) GameAudioService.Instance?.Play(GameAudioCue.Reward, 0.9f);
                     break;
                 case 10:
-                    string title;
-                    int coins, experience;
+                    string title = string.Empty;
+                    int coins = 0, experience = 0;
                     bool achievementClaimed = achievementService != null &&
                         achievementService.TryClaimNext(out title, out coins, out experience);
                     journalNotice = achievementClaimed
