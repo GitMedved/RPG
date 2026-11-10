@@ -17,6 +17,7 @@ namespace MiaMax.EditorTools
     /// </summary>
     public static class ReleaseReadinessAudit
     {
+        private const string ExpectedApplicationId = "com.aleksdevelop.miamax";
         private sealed class Result
         {
             public string Name;
@@ -53,8 +54,8 @@ namespace MiaMax.EditorTools
 
             string androidId = PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.Android);
             string iosId = PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.iOS);
-            Add(results, "Android application ID", IsConfiguredId(androidId), Display(androidId), true);
-            Add(results, "iOS bundle ID", IsConfiguredId(iosId), Display(iosId), true);
+            Add(results, "Android application ID", androidId == ExpectedApplicationId, Display(androidId) + " (expected " + ExpectedApplicationId + ")", true);
+            Add(results, "iOS bundle ID", iosId == ExpectedApplicationId, Display(iosId) + " (expected " + ExpectedApplicationId + ")", true);
             Add(results, "Company and product identity",
                 !string.IsNullOrWhiteSpace(PlayerSettings.companyName) &&
                 !string.IsNullOrWhiteSpace(PlayerSettings.productName) &&
@@ -200,15 +201,6 @@ namespace MiaMax.EditorTools
                 " / " + qualityNames.Length +
                 ". Quality levels without an override inherit the Graphics asset.";
             return ready;
-        }
-
-        private static bool IsConfiguredId(string value)
-        {
-            return !string.IsNullOrWhiteSpace(value) &&
-                value.Contains(".") &&
-                !value.StartsWith("com.DefaultCompany") &&
-                !value.Contains("yourcompany") &&
-                !value.Contains("placeholder");
         }
 
         private static string Display(string value)
