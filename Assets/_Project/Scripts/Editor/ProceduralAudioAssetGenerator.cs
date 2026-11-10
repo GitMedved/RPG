@@ -82,8 +82,8 @@ namespace MiaMax.EditorTools
                 {
                     importer.forceToMono = true;
                     importer.loadInBackground = true;
-                    importer.preloadAudioData = true;
                     AudioImporterSampleSettings settings = importer.defaultSampleSettings;
+                    settings.preloadAudioData = true;
                     settings.compressionFormat = AudioCompressionFormat.Vorbis;
                     settings.quality = 0.72f;
                     importer.defaultSampleSettings = settings;
