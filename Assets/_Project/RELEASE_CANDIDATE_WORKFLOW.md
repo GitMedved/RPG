@@ -8,7 +8,7 @@ Run:
 
 **Tools → Mia & Max → Release → Apply Mobile App Identity**
 
-This sets company `AleksDevelop`, product `Mia & Max Adventures`, version `1.0`, and the same approved identifier `com.aleksdevelop.miamax` for Android and iOS. The release audit now requires this exact identifier rather than accepting any syntactically plausible bundle ID.
+This sets company `AleksDevelop`, product `Mia & Max Adventures`, version `1.0`, and the same approved identifier `com.aleksdevelop.miamax` for Android and iOS. The release audit now requires this exact identifier rather than accepting any syntactically plausible bundle ID. It also checks whether Android/iOS build-support modules are installed, whether Android is configured for IL2CPP with ARM64 included, and whether iOS uses IL2CPP. These are configuration checks only; they do not prove that either platform can produce a successful signed build.
 
 ## 2. Generate the production asset packs
 
