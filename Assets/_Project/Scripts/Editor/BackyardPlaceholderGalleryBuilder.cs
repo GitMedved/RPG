@@ -127,7 +127,7 @@ namespace MiaMax.EditorTools
         private static void EnsureFolder(string path)
         {
             if (AssetDatabase.IsValidFolder(path)) return;
-            string parent = Path.GetDirectoryName(path).Replace('\\\\', '/');
+            string parent = Path.GetDirectoryName(path).Replace('\\', '/');
             string folder = Path.GetFileName(path);
             if (!AssetDatabase.IsValidFolder(parent)) EnsureFolder(parent);
             AssetDatabase.CreateFolder(parent, folder);
