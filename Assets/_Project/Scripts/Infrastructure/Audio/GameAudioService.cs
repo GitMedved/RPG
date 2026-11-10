@@ -37,6 +37,13 @@ namespace MiaMax.Infrastructure.Audio
         [SerializeField] private AudioClip miniGameWin;
         [SerializeField] private AudioClip miniGameMiss;
 
+        private float effectsMix = 1f;
+        private float musicMix = 1f;
+        private float voiceMix = 1f;
+        private float musicBaseVolume = 0.22f;
+        private float ambientWindBaseVolume = 0.13f;
+        private float ambientBirdsBaseVolume = 0.10f;
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void EnsureExists()
         {
@@ -103,7 +110,7 @@ namespace MiaMax.Infrastructure.Audio
             if (voiceSource == null || clip == null) return;
             voiceSource.Stop();
             voiceSource.clip = clip;
-            voiceSource.volume = Mathf.Clamp01(volume);
+            voiceSource.volume = Mathf.Clamp01(volume * voiceMix);
             voiceSource.loop = false;
             voiceSource.Play();
         }
@@ -143,11 +150,13 @@ namespace MiaMax.Infrastructure.Audio
         public void SetAdventureAmbience(string windId, string birdsId,
             float windVolume = 0.13f, float birdsVolume = 0.10f)
         {
-            ConfigureLoop(ambientWindSource, windId, windVolume);
-            ConfigureLoop(ambientBirdsSource, birdsId, birdsVolume);
+            ambientWindBaseVolume = Mathf.Clamp01(windVolume);
+            ambientBirdsBaseVolume = Mathf.Clamp01(birdsVolume);
+            ConfigureLoop(ambientWindSource, windId, ambientWindBaseVolume * effectsMix);
+            ConfigureLoop(ambientBirdsSource, birdsId, ambientBirdsBaseVolume * effectsMix);
         }
 
-        private static void ConfigureLoop(AudioSource source, string resourceId, float volume)
+        private void ConfigureLoop(AudioSource source, string resourceId, float volume)
         {
             if (source == null) return;
             AudioClip clip = string.IsNullOrEmpty(resourceId)
@@ -167,22 +176,28 @@ namespace MiaMax.Infrastructure.Audio
         public void SetMusic(AudioClip clip, float volume = 0.35f)
         {
             if (musicSource == null) return;
+            musicBaseVolume = Mathf.Clamp01(volume);
             if (musicSource.clip == clip && musicSource.isPlaying)
             {
-                musicSource.volume = Mathf.Clamp01(volume);
+                musicSource.volume = musicBaseVolume * musicMix;
                 return;
             }
             musicSource.Stop();
             musicSource.clip = clip;
-            musicSource.volume = Mathf.Clamp01(volume);
+            musicSource.volume = musicBaseVolume * musicMix;
             if (clip != null) musicSource.Play();
         }
 
         public void SetMix(float effects, float music, float voice)
         {
-            if (effectsSource != null) effectsSource.volume = Mathf.Clamp01(effects);
-            if (musicSource != null) musicSource.volume = Mathf.Clamp01(music);
-            if (voiceSource != null) voiceSource.volume = Mathf.Clamp01(voice);
+            effectsMix = Mathf.Clamp01(effects);
+            musicMix = Mathf.Clamp01(music);
+            voiceMix = Mathf.Clamp01(voice);
+            if (effectsSource != null) effectsSource.volume = effectsMix;
+            if (musicSource != null) musicSource.volume = musicBaseVolume * musicMix;
+            if (voiceSource != null && voiceSource.isPlaying) voiceSource.volume = voiceMix;
+            if (ambientWindSource != null) ambientWindSource.volume = ambientWindBaseVolume * effectsMix;
+            if (ambientBirdsSource != null) ambientBirdsSource.volume = ambientBirdsBaseVolume * effectsMix;
         }
 
         public void StopVoice() { if (voiceSource != null) voiceSource.Stop(); }
