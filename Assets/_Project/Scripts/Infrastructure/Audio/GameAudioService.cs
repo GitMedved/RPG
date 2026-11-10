@@ -167,7 +167,11 @@ namespace MiaMax.Infrastructure.Audio
         public void SetMusic(AudioClip clip, float volume = 0.35f)
         {
             if (musicSource == null) return;
-            if (musicSource.clip == clip && musicSource.isPlaying) return;
+            if (musicSource.clip == clip && musicSource.isPlaying)
+            {
+                musicSource.volume = Mathf.Clamp01(volume);
+                return;
+            }
             musicSource.Stop();
             musicSource.clip = clip;
             musicSource.volume = Mathf.Clamp01(volume);
