@@ -29,9 +29,7 @@ Run:
 
 **Tools → Mia & Max → Release → Run All Read-Only Release Audits**
 
-This invokes the backyard production prefab audit, surface asset audit, audio audit, voice audit, character runtime validation, missing-script audit and release readiness audit.
-
-The sequence produces individual Console reports and does not build the game or approve visual quality, device behaviour, licensing, privacy/child-safety compliance or store submission.
+This schedules the backyard production prefab audit, surface asset audit, audio audit, voice audit, character runtime validation, missing-script audit and release readiness audit for the next Unity Editor update. The deferred sequence refreshes the AssetDatabase first, allowing WAV/FBX imports to settle before checking imported clips. Review the individual Console reports and does not build the game or approve visual quality, device behaviour, licensing, privacy/child-safety compliance or store submission.
 
 ## 4. Character animation pipeline
 
@@ -47,4 +45,4 @@ The current repository contains Mia and Max reference images, but no production 
 
 After assets are ready, visual likeness, rig deformation, animation, UI scaling, sound quality, gameplay in Play Mode, Android/iOS builds and real-device performance must be reviewed. Legal/privacy/child-safety and store requirements also need human sign-off.
 
-The assistant cannot run Unity Editor or physical-device tests on the developer's computer. The workflow is designed to reduce final verification to two menu commands plus the required human/device reviews.
+The assistant cannot run Unity Editor or physical-device tests on the developer's computer. The editor workflow automates generation and static audits, but it cannot replace the character-art handoff, human visual/audio review, Play Mode verification, platform builds, physical-device testing or legal/store sign-off.
