@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -133,6 +134,145 @@ namespace MiaMax.EditorTools
             for (int i = 0; i < parameters.Length; i++)
                 if (parameters[i].nameHash == id && parameters[i].type == expectedType) return true;
             return false;
+        }
+
+        [MenuItem("Tools/Mia & Max/Build Production Animator Controllers From Clips")]
+        public static void BuildProductionAnimatorControllers()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                EditorUtility.DisplayDialog("Mia & Max Characters",
+                    "Exit Play Mode before building Animator Controllers.", "OK");
+                return;
+            }
+
+            EnsureFolder(ControllerFolder);
+            bool miaBuilt = BuildProductionController("Mia", MiaFolder, ControllerFolder + "/Mia_Production.controller");
+            bool maxBuilt = BuildProductionController("Max", MaxFolder, ControllerFolder + "/Max_Production.controller");
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            Debug.Log("[Mia & Max] Production Animator Controllers: Mia " + (miaBuilt ? "created" : "pending") +
+                "; Max " + (maxBuilt ? "created" : "pending") +
+                ". Controllers are separate from the contract scaffolds and are not assigned to runtime prefabs automatically.");
+            EditorUtility.DisplayDialog("Mia & Max Characters",
+                "Mia controller: " + (miaBuilt ? "created" : "pending clips") +
+                "\nMax controller: " + (maxBuilt ? "created" : "pending clips") +
+                "\n\nThe command requires uniquely identifiable Idle, Walk, Run, Interact, Celebrate, Garden, Reaction, Jump, Sleep and Play clips for each character. Existing runtime prefabs are not modified.",
+                "OK");
+        }
+
+        private static bool BuildProductionController(string characterName, string clipsFolder, string controllerPath)
+        {
+            string[] required =
+            {
+                "Idle", "Walk", "Run", "Interact", "Celebrate",
+                "Garden", "Reaction", "Jump", "Sleep", "Play"
+            };
+            string[] guids = AssetDatabase.FindAssets("t:AnimationClip", new[] { clipsFolder });
+            var clips = new System.Collections.Generic.Dictionary<string, AnimationClip>();
+            var used = new System.Collections.Generic.HashSet<int>();
+            var missing = new System.Collections.Generic.List<string>();
+
+            foreach (string action in required)
+            {
+                AnimationClip match = null;
+                bool ambiguous = false;
+                foreach (string guid in guids)
+                {
+                    string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                    AnimationClip[] candidates = AssetDatabase.LoadAllAssetsAtPath(assetPath)
+                        .OfType<AnimationClip>().ToArray();
+                    foreach (AnimationClip candidate in candidates)
+                    {
+                        if (candidate == null || candidate.name.IndexOf(action, System.StringComparison.OrdinalIgnoreCase) < 0)
+                            continue;
+                        if (used.Contains(candidate.GetInstanceID())) continue;
+                        if (match != null)
+                        {
+                            ambiguous = true;
+                            break;
+                        }
+                        match = candidate;
+                    }
+                    if (ambiguous) break;
+                }
+
+                if (match == null || ambiguous) missing.Add(action);
+                else
+                {
+                    clips.Add(action, match);
+                    used.Add(match.GetInstanceID());
+                }
+            }
+
+            if (missing.Count > 0)
+            {
+                Debug.LogWarning(characterName + " production Animator Controller not created. Missing or ambiguous clips: " +
+                    string.Join(", ", missing) + ". Expected one uniquely named clip per action in " + clipsFolder);
+                return false;
+            }
+
+            if (AssetDatabase.LoadAssetAtPath<AnimatorController>(controllerPath) != null)
+            {
+                Debug.LogWarning(characterName + " production controller already exists and was preserved: " + controllerPath);
+                return false;
+            }
+
+            AnimatorController controller = AnimatorController.CreateAnimatorControllerAtPath(controllerPath);
+            controller.AddParameter("Speed", AnimatorControllerParameterType.Float);
+            controller.AddParameter("Grounded", AnimatorControllerParameterType.Bool);
+            controller.AddParameter("Interact", AnimatorControllerParameterType.Trigger);
+            controller.AddParameter("Celebrate", AnimatorControllerParameterType.Trigger);
+            controller.AddParameter("Garden", AnimatorControllerParameterType.Trigger);
+            controller.AddParameter("Reaction", AnimatorControllerParameterType.Trigger);
+            controller.AddParameter("Jump", AnimatorControllerParameterType.Trigger);
+            controller.AddParameter("Sleep", AnimatorControllerParameterType.Trigger);
+            controller.AddParameter("Play", AnimatorControllerParameterType.Trigger);
+
+            AnimatorStateMachine machine = controller.layers[0].stateMachine;
+            AnimatorState idle = machine.AddState("Idle");
+            idle.motion = clips["Idle"];
+            machine.defaultState = idle;
+            AnimatorState walk = machine.AddState("Walk");
+            walk.motion = clips["Walk"];
+            AnimatorState run = machine.AddState("Run");
+            run.motion = clips["Run"];
+
+            AddFloatTransition(idle, walk, "Speed", AnimatorConditionMode.Greater, 0.1f);
+            AddFloatTransition(walk, idle, "Speed", AnimatorConditionMode.Less, 0.1f);
+            AddFloatTransition(walk, run, "Speed", AnimatorConditionMode.Greater, 2.5f);
+            AddFloatTransition(run, walk, "Speed", AnimatorConditionMode.Less, 2.5f);
+
+            string[] triggers = { "Interact", "Celebrate", "Garden", "Reaction", "Jump", "Sleep", "Play" };
+            foreach (string trigger in triggers)
+            {
+                AnimatorState state = machine.AddState(trigger);
+                state.motion = clips[trigger];
+                AnimatorStateTransition enter = machine.AddAnyStateTransition(state);
+                enter.AddCondition(AnimatorConditionMode.If, 0f, trigger);
+                enter.hasExitTime = false;
+                enter.duration = 0.08f;
+                enter.canTransitionToSelf = false;
+
+                AnimatorStateTransition exit = state.AddTransition(idle);
+                exit.hasExitTime = true;
+                exit.exitTime = 0.9f;
+                exit.duration = 0.1f;
+            }
+
+            EditorUtility.SetDirty(controller);
+            Debug.Log(characterName + " production Animator Controller created: " + controllerPath);
+            return true;
+        }
+
+        private static void AddFloatTransition(AnimatorState from, AnimatorState to,
+            string parameter, AnimatorConditionMode mode, float threshold)
+        {
+            AnimatorStateTransition transition = from.AddTransition(to);
+            transition.hasExitTime = false;
+            transition.duration = 0.12f;
+            transition.AddCondition(mode, threshold, parameter);
         }
 
         [MenuItem("Tools/Mia & Max/Apply Character FBX Import Profiles")]
