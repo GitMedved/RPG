@@ -100,16 +100,16 @@ namespace MiaMax.EditorTools
             ground.name = "Preview_Ground";
             ground.transform.position = new Vector3(0f, -0.15f, 0f);
             ground.transform.localScale = new Vector3(3.8f, 1f, 3.2f);
-            ground.GetComponent<Renderer>().sharedMaterial = MakeMaterial("Preview_Lawn", new Color(0.32f, 0.55f, 0.25f));
+            ground.GetComponent<Renderer>().sharedMaterial = MakeMaterial("Preview_Lawn", new Color(0.23f, 0.39f, 0.19f));
         }
 
         private static void BuildHouseAndPatio()
         {
-            Place("HouseExterior", new Vector3(0f, 0f, 10.0f), Quaternion.identity);
-            Place("PatioDeck", new Vector3(0f, 0f, 6.0f), Quaternion.identity);
-            Place("Workshop", new Vector3(5.4f, 0f, 6.0f), Quaternion.identity);
-            Place("FlowerPot", new Vector3(-5.4f, 0f, 7.2f), Quaternion.identity, 0.85f);
-            Place("FlowerPot", new Vector3(5.3f, 0f, 8.1f), Quaternion.identity, 0.85f);
+            Place("HouseExterior", new Vector3(-6.0f, 0f, 10.0f), Quaternion.identity);
+            Place("PatioDeck", new Vector3(-6.0f, 0f, 6.0f), Quaternion.identity);
+            Place("Workshop", new Vector3(0.0f, 0f, 6.0f), Quaternion.identity);
+            Place("FlowerPot", new Vector3(-11.4f, 0f, 7.2f), Quaternion.identity, 0.85f);
+            Place("FlowerPot", new Vector3(-0.7f, 0f, 8.1f), Quaternion.identity, 0.85f);
         }
 
         private static void BuildPerimeter()
@@ -141,12 +141,12 @@ namespace MiaMax.EditorTools
 
         private static void BuildLandmarks()
         {
-            Place("MainTree", new Vector3(-8.5f, 0f, 1.5f), Quaternion.identity);
+            Place("MainTree", new Vector3(-1.5f, 0f, 1.5f), Quaternion.identity);
             Place("SwingSet", new Vector3(-12f, 0f, -5f), Quaternion.identity);
             Place("Sandbox", new Vector3(9f, 0f, -7f), Quaternion.identity);
             Place("AdventureGate", new Vector3(14.2f, 0f, 8.2f), Quaternion.Euler(0f, 90f, 0f));
-            Place("PathSegment", new Vector3(0f, 0f, 2.5f), Quaternion.identity, 1.2f);
-            Place("PathSegment", new Vector3(0f, 0f, -1.0f), Quaternion.identity, 1.2f);
+            Place("PathSegment", new Vector3(-2.0f, 0f, 2.5f), Quaternion.identity, 1.2f);
+            Place("PathSegment", new Vector3(-2.0f, 0f, -1.0f), Quaternion.identity, 1.2f);
         }
 
         private static void BuildGardenDetails()
@@ -167,12 +167,12 @@ namespace MiaMax.EditorTools
             GameObject sunObject = new GameObject("Preview_Sun");
             Light sun = sunObject.AddComponent<Light>();
             sun.type = LightType.Directional;
-            sun.intensity = 1.15f;
+            sun.intensity = 0.95f;
             sun.shadows = LightShadows.Soft;
             sunObject.transform.rotation = Quaternion.Euler(48f, -30f, 0f);
 
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
-            RenderSettings.ambientLight = new Color(0.72f, 0.75f, 0.80f);
+            RenderSettings.ambientLight = new Color(0.62f, 0.65f, 0.68f);
 
             GameObject cameraObject = new GameObject("Preview_Camera");
             Camera camera = cameraObject.AddComponent<Camera>();
