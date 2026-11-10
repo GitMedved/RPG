@@ -57,10 +57,7 @@ namespace MiaMax.EditorTools
             foreach (Check check in checks)
             {
                 bool folderExists = AssetDatabase.IsValidFolder(check.Folder);
-                string[] assets = folderExists
-                    ? AssetDatabase.FindAssets(check.SearchFilter, new[] { check.Folder })
-                    : new string[0];
-                int assetCount = assets == null ? 0 : assets.Length;
+                int assetCount = folderExists ? CountAssets(check.SearchFilter, check.Folder) : 0;
                 bool found = folderExists && assetCount >= check.MinimumCount;
                 if (found) ready++;
                 else pending++;
@@ -81,6 +78,26 @@ namespace MiaMax.EditorTools
                 "Asset audit complete. Ready: " + ready + " / " + checks.Count +
                 "\nPending: " + pending + " / " + checks.Count +
                 "\n\nFull report is in the Console.", "OK");
+        }
+
+        private static int CountAssets(string filter, string folder)
+        {
+            string[] guids = AssetDatabase.FindAssets(filter, new[] { folder });
+            if (guids == null || guids.Length == 0) return 0;
+            if (filter != "t:AnimationClip") return guids.Length;
+
+            var uniqueClips = new HashSet<string>();
+            foreach (string guid in guids)
+            {
+                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                UnityEngine.Object[] assets = AssetDatabase.LoadAllAssetsAtPath(assetPath);
+                foreach (UnityEngine.Object asset in assets)
+                {
+                    AnimationClip clip = asset as AnimationClip;
+                    if (clip != null) uniqueClips.Add(assetPath + "|" + clip.name);
+                }
+            }
+            return uniqueClips.Count;
         }
     }
 }
