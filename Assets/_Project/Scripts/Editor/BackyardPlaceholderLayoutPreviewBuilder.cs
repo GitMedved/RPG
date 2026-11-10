@@ -17,6 +17,7 @@ namespace MiaMax.EditorTools
     {
         private const string PrefabFolder = "Assets/_Project/Art/Environment/Runtime/Prefabs";
         private const string SceneFolder = "Assets/_Project/Art/Environment/Runtime/Scenes";
+        private const string MaterialFolder = "Assets/_Project/Art/Environment/Runtime/Materials";
         private const string ScenePath = SceneFolder + "/BackyardPlaceholderLayoutPreview.unity";
 
         private static readonly List<string> MissingAssets = new List<string>();
@@ -39,6 +40,7 @@ namespace MiaMax.EditorTools
 
             EnsureFolder("Assets/_Project/Art/Environment/Runtime");
             EnsureFolder(SceneFolder);
+            EnsureFolder(MaterialFolder);
 
             MissingAssets.Clear();
             placed = 0;
@@ -208,9 +210,15 @@ namespace MiaMax.EditorTools
 
         private static Material MakeMaterial(string name, Color color)
         {
+            string path = MaterialFolder + "/" + name + ".mat";
+            Material material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (material != null) return material;
+
             Shader shader = Shader.Find("Universal Render Pipeline/Lit");
             if (shader == null) shader = Shader.Find("Standard");
-            return new Material(shader) { name = name, color = color };
+            material = new Material(shader) { name = name, color = color };
+            AssetDatabase.CreateAsset(material, path);
+            return material;
         }
 
         private static void EnsureFolder(string path)
