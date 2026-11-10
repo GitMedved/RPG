@@ -58,7 +58,12 @@ namespace MiaMax.Infrastructure.Audio
             effectsSource.playOnAwake = false;
             voiceSource.playOnAwake = false;
             musicSource.playOnAwake = false;
+            ambientWindSource.playOnAwake = false;
+            ambientBirdsSource.playOnAwake = false;
+            ambientWindSource.loop = true;
+            ambientBirdsSource.loop = true;
             LoadResourceClips();
+            SetMusicById("backyard_theme", 0.22f);
         }
 
         private void LoadResourceClips()
@@ -127,7 +132,7 @@ namespace MiaMax.Infrastructure.Audio
 
         public bool SetMusicById(string musicId, float volume = 0.22f)
         {
-            if (string.IsNullOrEmpty(musicId) || musicId.Contains("/") || musicId.Contains("\\\\") || musicId.Contains(".."))
+            if (string.IsNullOrEmpty(musicId) || musicId.Contains("/") || musicId.Contains("\\") || musicId.Contains(".."))
                 return false;
             AudioClip clip = Resources.Load<AudioClip>("MiaMax/Audio/Music/" + musicId);
             if (clip == null) return false;
