@@ -353,12 +353,16 @@ namespace MiaMax.Gameplay
                     if (orderDelivered) GameAudioService.Instance?.Play(GameAudioCue.Reward, 0.9f);
                     break;
                 case 7:
-                    journalNotice = upgradeService != null && upgradeService.TryUpgradeGarden()
+                    bool gardenUpgraded = upgradeService != null && upgradeService.TryUpgradeGarden();
+                    journalNotice = gardenUpgraded
                         ? "Garden upgraded! Future harvests give more crops." : "Need more coins or garden is max level.";
+                    if (gardenUpgraded) GameAudioService.Instance?.Play(GameAudioCue.Reward, 0.8f);
                     break;
                 case 8:
-                    journalNotice = upgradeService != null && upgradeService.TryUpgradeWorkshop()
+                    bool workshopUpgraded = upgradeService != null && upgradeService.TryUpgradeWorkshop();
+                    journalNotice = workshopUpgraded
                         ? "Workshop upgraded! New crafts finish faster." : "Need more coins or workshop is max level.";
+                    if (workshopUpgraded) GameAudioService.Instance?.Play(GameAudioCue.Reward, 0.8f);
                     break;
                 case 9:
                     bool dailyRewardClaimed = dailyTaskService != null && dailyTaskService.TryClaimReward();
