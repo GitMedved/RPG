@@ -32,6 +32,15 @@ namespace MiaMax.EditorTools
                 return;
             }
 
+            Scene alreadyOpen = SceneManager.GetSceneByPath(ScenePath);
+            if (alreadyOpen.IsValid() && alreadyOpen.isLoaded)
+            {
+                EditorUtility.DisplayDialog("Mia & Max",
+                    "This preview scene is already open. Close it in the Hierarchy/Scene tabs, then run the preview command again.",
+                    "OK");
+                return;
+            }
+
             if (File.Exists(ScenePath) &&
                 !EditorUtility.DisplayDialog("Mia & Max",
                     "The composed yard preview already exists. Replace this generated preview scene?",
