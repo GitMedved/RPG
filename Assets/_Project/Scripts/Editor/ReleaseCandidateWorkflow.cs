@@ -22,9 +22,9 @@ namespace MiaMax.EditorTools
             }
 
             Debug.Log("[Mia & Max Release] Starting production asset generation.");
-            BackyardProductionModelGenerator.GenerateAll();
-            ProceduralAudioAssetGenerator.GenerateAll();
-            ProceduralUiArtGenerator.GenerateAll();
+            RunGeneration("Backyard production models", BackyardProductionModelGenerator.GenerateAll);
+            RunGeneration("Original audio pack", ProceduralAudioAssetGenerator.GenerateAll);
+            RunGeneration("Original UI sprite pack", ProceduralUiArtGenerator.GenerateAll);
 
             Debug.Log("[Mia & Max Release] All production asset generators have completed their own reports. " +
                 "Review each report for errors before running the read-only audit sequence.");
@@ -58,6 +58,20 @@ namespace MiaMax.EditorTools
                 "All read-only audit commands have been invoked. Review each Console report and its blockers. " +
                 "No build, device test, legal review or store approval is inferred.",
                 "OK");
+        }
+
+        private static void RunGeneration(string label, Action generation)
+        {
+            try
+            {
+                Debug.Log("[Mia & Max Release] Generating: " + label);
+                generation();
+            }
+            catch (Exception exception)
+            {
+                Debug.LogError("[Mia & Max Release] Generation failed: " + label);
+                Debug.LogException(exception);
+            }
         }
 
         private static void RunAudit(string label, Action audit)
