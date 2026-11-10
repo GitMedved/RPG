@@ -73,8 +73,10 @@ namespace MiaMax.EditorTools
                 bool durationValid = clip.length >= minDuration && clip.length <= maxDuration;
                 bool rateValid = clip.frequency >= 22050;
                 AudioImporter importer = AssetImporter.GetAtPath(path) as AudioImporter;
+                AudioImporterSampleSettings sampleSettings = importer != null
+                    ? importer.defaultSampleSettings : default(AudioImporterSampleSettings);
                 bool importSettingsValid = importer != null && importer.forceToMono &&
-                    importer.preloadAudioData && importer.loadInBackground;
+                    sampleSettings.preloadAudioData && importer.loadInBackground;
 
                 if (!durationValid || !rateValid || !importSettingsValid) warnings++;
                 report.AppendLine((durationValid && rateValid && importSettingsValid ? "[READY] " : "[WARNING] ") +
