@@ -91,6 +91,8 @@ namespace MiaMax.EditorTools
                     else if (uvReadyMeshes != validMeshes)
                         issues.Add("UV0 missing or incomplete on " +
                             (validMeshes - uvReadyMeshes) + " mesh(es)");
+                    if (triangles > 12000)
+                        issues.Add("mobile triangle budget exceeded: " + triangles + " (target <= 12000 per prefab)");
 
                     int materialSlots = 0;
                     int missingMaterials = 0;
