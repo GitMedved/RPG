@@ -69,22 +69,28 @@ namespace MiaMax.EditorTools
                     Collider[] colliders = contents.GetComponentsInChildren<Collider>(true);
 
                     int validMeshes = 0;
+                    int uvReadyMeshes = 0;
                     int triangles = 0;
                     foreach (MeshFilter filter in meshFilters)
                     {
                         if (filter.sharedMesh == null) continue;
                         validMeshes++;
                         triangles += CountTriangles(filter.sharedMesh);
+                        if (HasUsableUv0(filter.sharedMesh)) uvReadyMeshes++;
                     }
                     foreach (SkinnedMeshRenderer skinnedRenderer in skinned)
                     {
                         if (skinnedRenderer.sharedMesh == null) continue;
                         validMeshes++;
                         triangles += CountTriangles(skinnedRenderer.sharedMesh);
+                        if (HasUsableUv0(skinnedRenderer.sharedMesh)) uvReadyMeshes++;
                     }
 
                     if (validMeshes == 0)
                         issues.Add("no valid mesh assigned");
+                    else if (uvReadyMeshes != validMeshes)
+                        issues.Add("UV0 missing or incomplete on " +
+                            (validMeshes - uvReadyMeshes) + " mesh(es)");
 
                     int materialSlots = 0;
                     int missingMaterials = 0;
@@ -121,6 +127,11 @@ namespace MiaMax.EditorTools
                             textureCount++;
 
                     LODGroup[] lodGroups = contents.GetComponentsInChildren<LODGroup>(true);
+                    if (textureCount == 0)
+                        issues.Add("no referenced texture files; production textures are required");
+                    if ((prefabName == "HouseExterior" || prefabName == "MainTree") &&
+                        lodGroups.Length == 0)
+                        issues.Add("LODGroup missing on mobile hero asset");
                     totalTriangles += triangles;
                     totalTextures += textureCount;
 
@@ -131,6 +142,7 @@ namespace MiaMax.EditorTools
                             " — meshes: " + validMeshes +
                             ", renderers: " + renderers.Length +
                             ", material slots: " + materialSlots +
+                            ", UV-ready meshes: " + uvReadyMeshes + " / " + validMeshes +
                             ", triangles: " + triangles +
                             ", textures: " + textureCount +
                             ", LOD groups: " + lodGroups.Length);
@@ -141,8 +153,10 @@ namespace MiaMax.EditorTools
                         report.AppendLine("[BLOCKED] " + prefabName + " — " +
                             string.Join("; ", issues.ToArray()) +
                             " | meshes: " + validMeshes +
+                            ", UV-ready meshes: " + uvReadyMeshes + " / " + validMeshes +
                             ", triangles: " + triangles +
-                            ", textures: " + textureCount);
+                            ", textures: " + textureCount +
+                            ", LOD groups: " + lodGroups.Length);
                     }
                 }
                 finally
@@ -171,6 +185,13 @@ namespace MiaMax.EditorTools
                 "\nMissing: " + missing +
                 "\n\nSee Console for per-asset details. This audit does not approve visual quality.",
                 "OK");
+        }
+
+        private static bool HasUsableUv0(Mesh mesh)
+        {
+            if (mesh == null || mesh.vertexCount == 0) return false;
+            Vector2[] uv = mesh.uv;
+            return uv != null && uv.Length == mesh.vertexCount;
         }
 
         private static int CountTriangles(Mesh mesh)
