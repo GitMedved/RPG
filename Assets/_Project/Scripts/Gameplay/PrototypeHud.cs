@@ -93,9 +93,7 @@ namespace MiaMax.Gameplay
                 {
                     GameAudioService.Instance?.Play(GameAudioCue.Reward, 0.85f);
                     GameVoiceDirector.PlayMia("mia_success_01");
-                    GameAudioService.Instance?.Play(GameAudioCue.Reward, 0.85f);
-                GameVoiceDirector.PlayMia("mia_success_01");
-                interactionFeedback = "Daily gift claimed: +" + dailyVisitService.CoinsToday +
+                    interactionFeedback = "Daily gift claimed: +" + dailyVisitService.CoinsToday +
                         " coins, +" + dailyVisitService.ExperienceToday + " XP!";
                     interactionFeedbackUntil = Time.unscaledTime + 3f;
                 }
@@ -441,6 +439,8 @@ namespace MiaMax.Gameplay
         {
             if (dailyVisitService != null && dailyVisitService.TryClaimReward())
             {
+                GameAudioService.Instance?.Play(GameAudioCue.Reward, 0.85f);
+                GameVoiceDirector.PlayMia("mia_success_01");
                 interactionFeedback = "Daily gift claimed: +" + dailyVisitService.CoinsToday +
                     " coins, +" + dailyVisitService.ExperienceToday + " XP!";
                 interactionFeedbackUntil = Time.unscaledTime + 3f;
