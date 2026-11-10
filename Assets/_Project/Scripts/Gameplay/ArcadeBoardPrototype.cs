@@ -1,6 +1,7 @@
 using System;
 using MiaMax.Domain.MiniGames;
 using MiaMax.Infrastructure.Save;
+using MiaMax.Infrastructure.Audio;
 using UnityEngine;
 
 namespace MiaMax.Gameplay
@@ -46,6 +47,7 @@ namespace MiaMax.Gameplay
                     if (runner.Lane == nextObstacleLane)
                     {
                         runner.HitObstacle(nextObstacleLane);
+                        GameAudioService.Instance?.Play(GameAudioCue.MiniGameMiss, 0.75f);
                         status = "Max hit an obstacle! Run over.";
                     }
                     else
@@ -89,6 +91,7 @@ namespace MiaMax.Gameplay
                 nextCoinLane = UnityEngine.Random.Range(0, MaxRunSession.LaneCount);
                 coinAvailable = true;
             }
+            GameAudioService.Instance?.Play(GameAudioCue.MiniGameStart, 0.8f);
             status = "New run started.";
         }
 
@@ -99,6 +102,7 @@ namespace MiaMax.Gameplay
             if (rewards.TryClaim(runId, activeGame, score, out coins, out xp))
             {
                 rewardClaimed = true;
+                GameAudioService.Instance?.Play(GameAudioCue.MiniGameWin, 0.9f);
                 status = "Reward: +" + coins + " coins, +" + xp + " XP";
             }
             else status = rewards.CanClaimRewardToday
@@ -186,6 +190,7 @@ namespace MiaMax.Gameplay
             {
                 bool caught = fishing.TryFinish(fishingAim);
                 status = caught ? "Catch! Quality " + fishing.Quality : "The fish got away. Try another cast.";
+                if (!caught) GameAudioService.Instance?.Play(GameAudioCue.MiniGameMiss, 0.75f);
                 if (caught) ClaimReward(fishing.Quality * 100);
             }
             else if (!fishing.IsActive && !fishing.IsCaught && GUI.Button(new Rect(28, 205, 285, 38), "Try another cast"))
