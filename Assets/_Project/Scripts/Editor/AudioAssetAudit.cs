@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System.Text;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -28,6 +29,7 @@ namespace MiaMax.EditorTools
             var report = new StringBuilder();
             int ready = 0;
             int missing = 0;
+            int pendingImport = 0;
             int warnings = 0;
             report.AppendLine("MIA & MAX — AUDIO ASSET AUDIT");
             report.AppendLine("Read-only. Does not generate or modify audio assets.");
@@ -42,6 +44,7 @@ namespace MiaMax.EditorTools
 
             report.AppendLine();
             report.AppendLine("Available: " + ready + " / " + (Sfx.Length + Ambience.Length + Music.Length));
+            report.AppendLine("Pending import: " + pendingImport);
             report.AppendLine("Missing: " + missing);
             report.AppendLine("Warnings: " + warnings);
             report.AppendLine("Structural presence is not an artistic mix, loudness, loop-seam or device playback approval.");
@@ -49,7 +52,7 @@ namespace MiaMax.EditorTools
 
             Debug.Log(report.ToString());
             EditorUtility.DisplayDialog("Mia & Max Audio Audit",
-                "Available: " + ready + " / 18\nMissing: " + missing +
+                "Available: " + ready + " / 18\nPending import: " + pendingImport + "\nMissing: " + missing +
                 "\nWarnings: " + warnings + "\n\nFull report is in Console.", "OK");
         }
 
@@ -64,8 +67,17 @@ namespace MiaMax.EditorTools
                 AudioClip clip = AssetDatabase.LoadAssetAtPath<AudioClip>(path);
                 if (clip == null)
                 {
-                    missing++;
-                    report.AppendLine("[MISSING] " + id + " — " + path);
+                    if (File.Exists(path))
+                    {
+                        pendingImport++;
+                        warnings++;
+                        report.AppendLine("[PENDING IMPORT] " + id + " — WAV exists on disk but Unity has not exposed an AudioClip yet: " + path);
+                    }
+                    else
+                    {
+                        missing++;
+                        report.AppendLine("[MISSING] " + id + " — " + path);
+                    }
                     continue;
                 }
 
