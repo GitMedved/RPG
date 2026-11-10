@@ -87,6 +87,7 @@ namespace MiaMax.EditorTools
                 ? animator.avatar.isHuman
                 : !animator.avatar.isHuman);
             bool controllerAssigned = animator.runtimeAnimatorController != null;
+            bool controllerHasProductionMotions = HasProductionMotions(animator.runtimeAnimatorController);
             bool rootMotionOff = !animator.applyRootMotion;
             bool contract = HasParameter(animator, "Speed", AnimatorControllerParameterType.Float) &&
                 HasParameter(animator, "Grounded", AnimatorControllerParameterType.Bool) &&
@@ -100,7 +101,7 @@ namespace MiaMax.EditorTools
             bool hasGeometry = prefab.GetComponentInChildren<SkinnedMeshRenderer>(true) != null ||
                 prefab.GetComponentInChildren<MeshRenderer>(true) != null;
 
-            if (avatarValid && rigTypeValid && controllerAssigned && rootMotionOff && contract && hasGeometry)
+            if (avatarValid && rigTypeValid && controllerAssigned && controllerHasProductionMotions && rootMotionOff && contract && hasGeometry)
             {
                 ready++;
                 report.AppendLine("[READY] " + characterName + " prefab, Avatar, Animator contract and root-motion setting.");
@@ -112,6 +113,7 @@ namespace MiaMax.EditorTools
                     " — Avatar valid: " + avatarValid +
                     "; Expected rig type: " + rigTypeValid +
                     "; Controller assigned: " + controllerAssigned +
+                    "; Production states/motions complete: " + controllerHasProductionMotions +
                     "; Root Motion disabled: " + rootMotionOff +
                     "; Parameters complete: " + contract +
                     "; Render geometry present: " + hasGeometry);
@@ -123,6 +125,34 @@ namespace MiaMax.EditorTools
                 report.AppendLine("         Avatar: " + animator.avatar.name +
                     " (Humanoid: " + animator.avatar.isHuman + "; expected " +
                     (characterName == "Mia" ? "Humanoid" : "Generic") + ")");
+        }
+
+        private static bool HasProductionMotions(RuntimeAnimatorController runtimeController)
+        {
+            AnimatorController controller = runtimeController as AnimatorController;
+            if (controller == null || controller.layers == null || controller.layers.Length == 0)
+                return false;
+
+            string[] required =
+            {
+                "Idle", "Walk", "Run", "Interact", "Celebrate",
+                "Garden", "Reaction", "Jump", "Sleep", "Play"
+            };
+            ChildAnimatorState[] states = controller.layers[0].stateMachine.states;
+            foreach (string action in required)
+            {
+                bool found = false;
+                foreach (ChildAnimatorState child in states)
+                {
+                    if (child.state != null && child.state.name == action && child.state.motion != null)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) return false;
+            }
+            return true;
         }
 
         private static bool HasParameter(Animator animator, string parameterName,
