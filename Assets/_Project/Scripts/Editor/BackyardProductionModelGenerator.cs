@@ -28,7 +28,6 @@ namespace MiaMax.EditorTools
         };
 
         private static readonly Dictionary<string, Material> Materials = new Dictionary<string, Material>();
-        private static int meshIndex;
 
         [MenuItem("Tools/Mia & Max/Backyard/Generate All 15 Production Models")]
         public static void GenerateAll()
@@ -46,7 +45,6 @@ namespace MiaMax.EditorTools
             ResetGeneratedFolder(MaterialFolder);
             ResetGeneratedFolder(TextureFolder);
             Materials.Clear();
-            meshIndex = 0;
             CreateMaterials();
 
             int created = 0;
@@ -128,6 +126,11 @@ namespace MiaMax.EditorTools
             string matPath = MaterialFolder + "/" + name + ".mat";
             Shader shader = Shader.Find("Universal Render Pipeline/Lit");
             if (shader == null) shader = Shader.Find("Standard");
+            if (shader == null)
+                throw new System.InvalidOperationException("No compatible URP/Lit or Standard shader is available for generated material " + name + ".");
+            if (imported == null)
+                throw new System.InvalidOperationException("Generated albedo texture could not be imported: " + texturePath);
+
             Material mat = new Material(shader);
             mat.name = name;
             mat.color = Color.white;
@@ -269,7 +272,8 @@ namespace MiaMax.EditorTools
                 if (material == null) continue;
 
                 int lodIndex = rendererLod.TryGetValue(renderer, out int mappedLod) ? mappedLod : 0;
-                string key = lodIndex + "_" + material.GetInstanceID();
+                // Stable material names keep generated mesh asset paths deterministic between editor sessions.
+                string key = lodIndex + "_" + Safe(material.name);
                 if (!groupedMeshes.ContainsKey(key))
                 {
                     groupedMeshes[key] = new List<CombineInstance>();
@@ -302,8 +306,7 @@ namespace MiaMax.EditorTools
                 combined.CombineMeshes(instances.ToArray(), true, true, false);
                 combined.RecalculateBounds();
 
-                string meshPath = MeshFolder + "/Combined_" + assetName + "_" +
-                    entry.Key + "_" + Safe(groupedMaterials[entry.Key].name) + ".asset";
+                string meshPath = MeshFolder + "/Combined_" + assetName + "_" + entry.Key + ".asset";
                 AssetDatabase.CreateAsset(combined, meshPath);
 
                 GameObject combinedObject = new GameObject("Combined_LOD" +
@@ -483,9 +486,8 @@ namespace MiaMax.EditorTools
             mesh.uv = uv;
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
-            string meshPath = MeshFolder + "/" + (++meshIndex).ToString("D4") + "_" + Safe(name) + ".asset";
-            AssetDatabase.CreateAsset(mesh, meshPath);
-
+            // Source meshes exist only during generation. The optimized combined meshes
+            // are the persistent assets, avoiding hundreds of unused intermediate files.
             MeshFilter filter = go.AddComponent<MeshFilter>();
             filter.sharedMesh = mesh;
             MeshRenderer renderer = go.AddComponent<MeshRenderer>();
