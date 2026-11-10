@@ -98,24 +98,24 @@ namespace MiaMax.Gameplay
                 new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(16f, -202f),
                 new Vector2(352f, 74f), new Vector2(0f, 1f));
             giftButton = MakeButton("Daily Gift", giftPanel.transform, MobileUiTheme.Honey, "DAILY GIFT",
-                Vector2.zero, Vector2.one, out giftButtonText, 23);
+                Vector2.zero, Vector2.one, out giftButtonText, 23, "icon_star");
             giftButton.onClick.AddListener(() => hud?.ClaimDailyGift());
 
             journalButton = MakeTopButton("Journal Button", "ADVENTURE JOURNAL", safeRoot,
-                new Vector2(1f, 1f), new Vector2(-16f, -16f), MobileUiTheme.Forest, out journalButtonText);
+                new Vector2(1f, 1f), new Vector2(-16f, -16f), MobileUiTheme.Forest, out journalButtonText, "icon_journal");
             journalButton.onClick.AddListener(() => hud?.ToggleJournal());
             settingsButton = MakeTopButton("Settings Button", "SETTINGS", safeRoot,
                 new Vector2(1f, 1f), new Vector2(-16f, -94f), new Color(0.30f, 0.39f, 0.39f, 0.98f), out settingsButtonText);
             settingsButton.onClick.AddListener(() => hud?.ToggleSettings());
             mapButton = MakeTopButton("World Map Button", "WORLD MAP", safeRoot,
-                new Vector2(1f, 1f), new Vector2(-16f, -172f), new Color(0.34f, 0.46f, 0.34f, 0.98f), out mapButtonText);
+                new Vector2(1f, 1f), new Vector2(-16f, -172f), new Color(0.34f, 0.46f, 0.34f, 0.98f), out mapButtonText, "icon_map");
             mapButton.onClick.AddListener(() => hud?.ToggleMap());
 
             Image dock = MakePanel("Bottom Action Dock", safeRoot, new Color(0.13f, 0.20f, 0.18f, 0.96f),
                 new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 18f),
                 new Vector2(680f, 142f), new Vector2(0.5f, 0f));
             backpackButton = MakeButton("Backpack Button", dock.transform, MobileUiTheme.Leaf, "BACKPACK",
-                Vector2.zero, Vector2.one, out backpackButtonText, 25);
+                Vector2.zero, Vector2.one, out backpackButtonText, 25, "icon_coin");
             RectTransform backpackRect = (RectTransform)backpackButton.transform;
             backpackRect.anchorMin = new Vector2(0f, 0f);
             backpackRect.anchorMax = new Vector2(0.5f, 1f);
@@ -124,7 +124,7 @@ namespace MiaMax.Gameplay
             backpackButton.onClick.AddListener(() => hud?.ToggleInventory());
 
             interactButton = MakeButton("Interact Button", dock.transform, MobileUiTheme.Honey, "EXPLORE",
-                Vector2.zero, Vector2.one, out interactButtonText, 25);
+                Vector2.zero, Vector2.one, out interactButtonText, 25, "icon_harvest");
             RectTransform interactRect = (RectTransform)interactButton.transform;
             interactRect.anchorMin = new Vector2(0.5f, 0f);
             interactRect.anchorMax = new Vector2(1f, 1f);
@@ -471,7 +471,7 @@ namespace MiaMax.Gameplay
         }
 
         private Button MakeTopButton(string name, string label, Transform parent, Vector2 anchor,
-            Vector2 position, Color color, out Text labelText)
+            Vector2 position, Color color, out Text labelText, string iconId = null)
         {
             Button button = MakeButton(name, parent, color, label,
                 new Vector2(0f, 1f), new Vector2(0f, 1f), out labelText, 21);
@@ -485,7 +485,7 @@ namespace MiaMax.Gameplay
         }
 
         private static Button MakeButton(string name, Transform parent, Color color, string label,
-            Vector2 anchorMin, Vector2 anchorMax, out Text labelText, int fontSize)
+            Vector2 anchorMin, Vector2 anchorMax, out Text labelText, int fontSize, string iconId = null)
         {
             GameObject go = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button));
             go.transform.SetParent(parent, false);
@@ -496,12 +496,39 @@ namespace MiaMax.Gameplay
             rect.offsetMax = Vector2.zero;
             Image image = go.GetComponent<Image>();
             image.color = color;
+            Sprite buttonSprite = Resources.Load<Sprite>("MiaMax/UI/rounded_button");
+            if (buttonSprite != null)
+            {
+                image.sprite = buttonSprite;
+                image.type = Image.Type.Sliced;
+            }
             Button button = go.GetComponent<Button>();
             MobileUiTheme.ApplyButton(button, image, color);
             labelText = MakeText(name + " Label", go.transform, label, fontSize,
                 TextAnchor.MiddleCenter, MobileUiTheme.Cream, new Vector2(8f, 4f), new Vector2(-8f, -4f));
             labelText.fontStyle = FontStyle.Bold;
             labelText.color = MobileUiTheme.GetReadableButtonText(color);
+            if (!string.IsNullOrEmpty(iconId))
+            {
+                Sprite iconSprite = Resources.Load<Sprite>("MiaMax/UI/" + iconId);
+                if (iconSprite != null)
+                {
+                    GameObject iconObject = new GameObject(name + " Icon", typeof(RectTransform), typeof(Image));
+                    iconObject.transform.SetParent(go.transform, false);
+                    RectTransform iconRect = (RectTransform)iconObject.transform;
+                    iconRect.anchorMin = new Vector2(0f, 0.5f);
+                    iconRect.anchorMax = new Vector2(0f, 0.5f);
+                    iconRect.pivot = new Vector2(0f, 0.5f);
+                    iconRect.anchoredPosition = new Vector2(14f, 0f);
+                    iconRect.sizeDelta = new Vector2(28f, 28f);
+                    Image iconImage = iconObject.GetComponent<Image>();
+                    iconImage.sprite = iconSprite;
+                    iconImage.preserveAspect = true;
+                    iconImage.color = labelText.color;
+                    iconImage.raycastTarget = false;
+                    labelText.rectTransform.offsetMin = new Vector2(48f, 4f);
+                }
+            }
             labelText.resizeTextForBestFit = true;
             labelText.resizeTextMinSize = Mathf.Max(MobileUiTheme.MinimumButtonFontSize, fontSize - MobileUiTheme.ButtonFontShrink);
             labelText.resizeTextMaxSize = fontSize;
@@ -522,6 +549,12 @@ namespace MiaMax.Gameplay
             rect.sizeDelta = size;
             Image image = go.GetComponent<Image>();
             image.color = color;
+            Sprite panelSprite = Resources.Load<Sprite>("MiaMax/UI/rounded_panel");
+            if (panelSprite != null)
+            {
+                image.sprite = panelSprite;
+                image.type = Image.Type.Sliced;
+            }
             image.raycastTarget = false;
             return image;
         }
