@@ -96,6 +96,7 @@ namespace MiaMax.Gameplay
                     if (!farming.TryPlant(plotId, crop)) continue;
                     new TutorialService(GameSessionBootstrap.Current).TryAdvance(TutorialService.Plant);
                     GameVoiceDirector.PlayMia("mia_plant_01");
+                    GameAudioService.Instance?.Play(GameAudioCue.Plant, 0.8f);
                     BackyardFeedbackVfx.PlayPlant(transform.position + Vector3.up * 0.62f);
                     break;
                 }
@@ -104,6 +105,7 @@ namespace MiaMax.Gameplay
             {
                 new TutorialService(GameSessionBootstrap.Current).TryAdvance(TutorialService.Harvest);
                 GameVoiceDirector.PlayMia("mia_harvest_01");
+                GameAudioService.Instance?.Play(GameAudioCue.Harvest, 0.9f);
                 BackyardFeedbackVfx.PlayHarvest(transform.position + Vector3.up * 0.78f);
             }
 
