@@ -94,8 +94,11 @@ namespace MiaMax.EditorTools
                 AssetCount("t:AudioClip", "Assets/Resources/MiaMax/Audio/Voice") + " / 16 expected takes.", true);
             Add(results, "Sound effects", AssetCount("t:AudioClip", "Assets/Resources/MiaMax/Audio/SFX") >= 8,
                 AssetCount("t:AudioClip", "Assets/Resources/MiaMax/Audio/SFX") + " clip(s) found; gameplay feedback set required.", true);
-            Add(results, "Music and ambience", AssetCount("t:AudioClip", "Assets/_Project/Audio") >= 3,
-                AssetCount("t:AudioClip", "Assets/_Project/Audio") + " clip(s) found. Check music, backyard and woodland loops.", true);
+            int musicClips = AssetCount("t:AudioClip", "Assets/Resources/MiaMax/Audio/Music");
+            int ambienceClips = AssetCount("t:AudioClip", "Assets/Resources/MiaMax/Audio/Ambience");
+            Add(results, "Music and ambience", musicClips >= 3 && ambienceClips >= 4,
+                musicClips + " music track(s) / 3 expected; " + ambienceClips +
+                " ambience loop(s) / 4 expected. Verify seamless looping and mix on target devices.", true);
 
             bool smokeChecksPassed = SessionState.GetBool("MiaMax.CoreSmokeChecks.Passed", false);
             Add(results, "Core automated smoke checks", smokeChecksPassed,
