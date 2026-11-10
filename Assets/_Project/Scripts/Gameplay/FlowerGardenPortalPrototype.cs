@@ -1,6 +1,7 @@
 using MiaMax.Domain;
 using MiaMax.Domain.Progression;
 using MiaMax.Infrastructure.Save;
+using MiaMax.Infrastructure.Audio;
 using UnityEngine;
 
 namespace MiaMax.Gameplay
@@ -52,6 +53,24 @@ namespace MiaMax.Gameplay
             if (controller != null) controller.enabled = false;
             player.position = destination;
             if (controller != null) controller.enabled = true;
+            if (GameAudioService.Instance != null)
+            {
+                if (isExit)
+                {
+                    GameAudioService.Instance.SetMusicById("backyard_theme", 0.22f);
+                    GameAudioService.Instance.SetAdventureAmbience(null, null);
+                }
+                else if (requiredAreaId == "woodland_trail")
+                {
+                    GameAudioService.Instance.SetMusicById("woodland_theme", 0.20f);
+                    GameAudioService.Instance.SetAdventureAmbience("woodland_wind", "woodland_birds", 0.12f, 0.10f);
+                }
+                else
+                {
+                    GameAudioService.Instance.SetMusicById("flower_garden_theme", 0.20f);
+                    GameAudioService.Instance.SetAdventureAmbience(null, null);
+                }
+            }
             Debug.Log(isExit ? "Back in the backyard!" : "Welcome to " + areaDisplayName + "!");
         }
     }
