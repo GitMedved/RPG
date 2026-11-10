@@ -38,7 +38,7 @@ The importer does not alter scenes, existing placeholder prefabs, runtime bootst
 - Unity menu: Tools > Mia & Max > Assets > Kenney > Download Building Kit (CC0)
 - Destination: Assets/_Project/Art/Environment/Runtime/Models/Kenney/BuildingKit/
 
-The Kenney importer downloads archives to Library, checks that a ZIP can be opened, rejects path traversal, and refuses to overwrite a non-empty destination. The furniture/building download actions use Kenney's official per-pack download endpoint. If Kenney changes its endpoint, the download will fail visibly rather than silently importing an HTML page.
+The Kenney importer downloads archives to Library, checks that a ZIP can be opened, rejects path traversal, and refuses to overwrite a non-empty destination. The furniture/building download actions use Kenney's official per-pack download endpoint. If Kenney changes its endpoint, the download will fail visibly rather than silently importing an HTML page. The project manifest now includes Unity glTFast 6.20.0 so Unity can import GLB/glTF source files; Unity Package Manager must finish resolving it before GLB import can be assessed.
 
 **Poly Haven — models**
 - https://polyhaven.com/models
@@ -62,4 +62,4 @@ The Kenney importer downloads archives to Library, checks that a ZIP can be open
 
 ## 4. Current limitations
 
-The importers retrieve source archives into the Unity project when the user runs their menu commands. No third-party binary assets are committed by the code change itself. No existing scene or prefab is replaced. Imported models still need inventory, visual review, URP material setup, collision/LOD preparation and mobile profiling before they can replace placeholders.
+The importers retrieve source archives into the Unity project when the user runs their menu commands. No third-party binary assets are committed by the code change itself. No existing scene or prefab is replaced. After downloading, run Tools > Mia & Max > Assets > Run Free Environment Asset Inventory. Imported models still need visual review, URP material setup, collision/LOD preparation and mobile profiling before they can replace placeholders.
