@@ -62,6 +62,7 @@ namespace MiaMax.EditorTools
                         try
                         {
                             BuildAsset(assetName, root.transform);
+                            CombineVisualMeshes(root.transform, assetName);
                             GameObject existing = AssetDatabase.LoadAssetAtPath<GameObject>(path);
                             if (existing != null) PrefabUtility.SaveAsPrefabAsset(root, path);
                             else PrefabUtility.SaveAsPrefabAsset(root, path);
@@ -238,6 +239,94 @@ namespace MiaMax.EditorTools
                     }
                     break;
             }
+        }
+
+        /// <summary>
+        /// Combines generated visual parts by material and LOD level. This reduces
+        /// renderer count while keeping separate materials and the existing LODGroup.
+        /// Gameplay colliders/scripts are deliberately not touched.
+        /// </summary>
+        private static void CombineVisualMeshes(Transform root, string assetName)
+        {
+            LODGroup lodGroup = root.GetComponent<LODGroup>();
+            LOD[] sourceLods = lodGroup != null ? lodGroup.GetLODs() : new LOD[0];
+            var rendererLod = new Dictionary<Renderer, int>();
+            for (int lodIndex = 0; lodIndex < sourceLods.Length; lodIndex++)
+                foreach (Renderer renderer in sourceLods[lodIndex].renderers)
+                    if (renderer != null) rendererLod[renderer] = lodIndex;
+
+            var groupedMeshes = new Dictionary<string, List<CombineInstance>>();
+            var groupedMaterials = new Dictionary<string, Material>();
+            var groupedLods = new Dictionary<string, int>();
+            var sourceRenderers = new List<Renderer>();
+            MeshRenderer[] renderers = root.GetComponentsInChildren<MeshRenderer>(true);
+
+            foreach (MeshRenderer renderer in renderers)
+            {
+                MeshFilter filter = renderer.GetComponent<MeshFilter>();
+                if (filter == null || filter.sharedMesh == null) continue;
+                Material material = renderer.sharedMaterial;
+                if (material == null) continue;
+
+                int lodIndex = rendererLod.TryGetValue(renderer, out int mappedLod) ? mappedLod : 0;
+                string key = lodIndex + "_" + material.GetInstanceID();
+                if (!groupedMeshes.ContainsKey(key))
+                {
+                    groupedMeshes[key] = new List<CombineInstance>();
+                    groupedMaterials[key] = material;
+                    groupedLods[key] = lodIndex;
+                }
+
+                groupedMeshes[key].Add(new CombineInstance
+                {
+                    mesh = filter.sharedMesh,
+                    transform = root.worldToLocalMatrix * filter.transform.localToWorldMatrix
+                });
+                sourceRenderers.Add(renderer);
+            }
+
+            int lodCount = lodGroup != null ? sourceLods.Length : 1;
+            var combinedByLod = new List<Renderer>[Mathf.Max(1, lodCount)];
+            for (int i = 0; i < combinedByLod.Length; i++)
+                combinedByLod[i] = new List<Renderer>();
+
+            foreach (KeyValuePair<string, List<CombineInstance>> entry in groupedMeshes)
+            {
+                List<CombineInstance> instances = entry.Value;
+                int vertexCount = 0;
+                foreach (CombineInstance instance in instances) vertexCount += instance.mesh.vertexCount;
+
+                Mesh combined = new Mesh();
+                combined.name = assetName + "_Combined_" + entry.Key;
+                if (vertexCount > 65535) combined.indexFormat = IndexFormat.UInt32;
+                combined.CombineMeshes(instances.ToArray(), true, true, false);
+                combined.RecalculateBounds();
+
+                string meshPath = MeshFolder + "/Combined_" + assetName + "_" +
+                    entry.Key + "_" + Safe(groupedMaterials[entry.Key].name) + ".asset";
+                AssetDatabase.CreateAsset(combined, meshPath);
+
+                GameObject combinedObject = new GameObject("Combined_LOD" +
+                    groupedLods[entry.Key] + "_" + Safe(groupedMaterials[entry.Key].name));
+                combinedObject.transform.SetParent(root, false);
+                MeshFilter combinedFilter = combinedObject.AddComponent<MeshFilter>();
+                combinedFilter.sharedMesh = combined;
+                MeshRenderer combinedRenderer = combinedObject.AddComponent<MeshRenderer>();
+                combinedRenderer.sharedMaterial = groupedMaterials[entry.Key];
+                combinedByLod[groupedLods[entry.Key]].Add(combinedRenderer);
+            }
+
+            if (lodGroup != null)
+            {
+                LOD[] optimizedLods = new LOD[sourceLods.Length];
+                for (int i = 0; i < sourceLods.Length; i++)
+                    optimizedLods[i] = new LOD(sourceLods[i].transitionHeight, combinedByLod[i].ToArray());
+                lodGroup.SetLODs(optimizedLods);
+                lodGroup.RecalculateBounds();
+            }
+
+            foreach (Renderer renderer in sourceRenderers)
+                if (renderer != null) UnityEngine.Object.DestroyImmediate(renderer.gameObject);
         }
 
         private static void AddHeroLod(Transform root, string type, string material)
