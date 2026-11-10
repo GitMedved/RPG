@@ -329,7 +329,14 @@ namespace MiaMax.EditorTools
             }
 
             foreach (Renderer renderer in sourceRenderers)
-                if (renderer != null) UnityEngine.Object.DestroyImmediate(renderer.gameObject);
+            {
+                if (renderer == null) continue;
+                MeshFilter sourceFilter = renderer.GetComponent<MeshFilter>();
+                Mesh sourceMesh = sourceFilter != null ? sourceFilter.sharedMesh : null;
+                UnityEngine.Object.DestroyImmediate(renderer.gameObject);
+                if (sourceMesh != null && !AssetDatabase.Contains(sourceMesh))
+                    UnityEngine.Object.DestroyImmediate(sourceMesh);
+            }
         }
 
         private static void AddHeroLod(Transform root, string type, string material)
