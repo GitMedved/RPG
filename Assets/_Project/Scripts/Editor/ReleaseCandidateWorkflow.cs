@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using System;
 using UnityEditor;
+using UnityEditor.Build;
 using UnityEngine;
 
 namespace MiaMax.EditorTools
