@@ -474,7 +474,7 @@ namespace MiaMax.Gameplay
             Vector2 position, Color color, out Text labelText, string iconId = null)
         {
             Button button = MakeButton(name, parent, color, label,
-                new Vector2(0f, 1f), new Vector2(0f, 1f), out labelText, 21);
+                new Vector2(0f, 1f), new Vector2(0f, 1f), out labelText, 21, iconId);
             RectTransform rect = (RectTransform)button.transform;
             rect.anchorMin = anchor;
             rect.anchorMax = anchor;
