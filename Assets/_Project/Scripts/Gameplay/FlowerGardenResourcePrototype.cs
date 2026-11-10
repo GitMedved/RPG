@@ -1,5 +1,6 @@
 using MiaMax.Domain;
 using MiaMax.Infrastructure.Save;
+using MiaMax.Infrastructure.Audio;
 using UnityEngine;
 
 namespace MiaMax.Gameplay
@@ -51,6 +52,8 @@ namespace MiaMax.Gameplay
             session.NotifyExternalStateChanged();
             new MiaMax.Domain.Progression.AchievementService(session).GetSummary();
             collected = true;
+            GameAudioService.Instance?.Play(GameAudioCue.Collectible, 0.85f);
+            GameVoiceDirector.PlayMax("max_meow_happy_01");
             Debug.Log("Collected " + displayTitle + "! +1 " + itemId + ", +3 XP, +2 coins.");
             gameObject.SetActive(false);
         }
