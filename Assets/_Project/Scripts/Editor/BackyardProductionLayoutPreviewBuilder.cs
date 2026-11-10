@@ -32,9 +32,18 @@ namespace MiaMax.EditorTools
                 return;
             }
 
+            Scene alreadyOpen = SceneManager.GetSceneByPath(ScenePath);
+            if (alreadyOpen.IsValid() && alreadyOpen.isLoaded)
+            {
+                EditorUtility.DisplayDialog("Mia & Max",
+                    "This preview scene is already open. Close it in the Hierarchy/Scene tabs, then run the preview command again.",
+                    "OK");
+                return;
+            }
+
             if (File.Exists(ScenePath) &&
                 !EditorUtility.DisplayDialog("Mia & Max",
-                    "The composed yard preview already exists. Replace this generated preview scene?",
+                    "The production yard preview already exists. Replace this generated preview scene?",
                     "Replace", "Cancel"))
                 return;
 
@@ -68,12 +77,12 @@ namespace MiaMax.EditorTools
                     (MissingAssets.Count == 0 ? "All requested production prefabs were found." :
                         string.Join("\n", MissingAssets.ToArray())) +
                     "\nScene: " + ScenePath +
-                    "\nPreview only. Placeholder geometry is not production art; gameplay scenes and build settings were not changed.";
+                    "\nPreview only. Procedural production models are not yet visually approved or connected to gameplay; gameplay scenes and build settings were not changed.";
                 if (MissingAssets.Count == 0) Debug.LogWarning(report);
                 else Debug.LogError(report);
 
                 EditorUtility.DisplayDialog("Mia & Max — Production Yard Preview",
-                    "Scene saved. Prefab instances: " + placed +
+                    "Production preview scene saved. Prefab instances: " + placed +
                     "\nMissing prefabs: " + MissingAssets.Count +
                     "\n\nOpen from Project:\n" + ScenePath +
                     "\n\nThis is a visual layout preview only. It does not replace the playable backyard or modify Build Settings.",
