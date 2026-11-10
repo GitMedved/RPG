@@ -91,6 +91,13 @@ namespace MiaMax.EditorTools
                 "Assets/Resources/MiaMax/Characters/Max.prefab") != null;
             Add(results, "Runtime character prefabs", miaRuntimePrefab && maxRuntimePrefab,
                 "Mia: " + miaRuntimePrefab + "; Max: " + maxRuntimePrefab + ".", true);
+            bool miaProductionController = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(
+                "Assets/_Project/Art/Characters/Runtime/Controllers/Mia_Production.controller") != null;
+            bool maxProductionController = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(
+                "Assets/_Project/Art/Characters/Runtime/Controllers/Max_Production.controller") != null;
+            Add(results, "Production Animator Controllers", miaProductionController && maxProductionController,
+                "Mia: " + miaProductionController + "; Max: " + maxProductionController +
+                ". Parameter-only contract scaffolds do not satisfy this gate.", true);
             string miaClipDetail = CharacterAnimationSetDetail("Assets/_Project/Art/Characters/Runtime/Mia", out int miaClips);
             string maxClipDetail = CharacterAnimationSetDetail("Assets/_Project/Art/Characters/Runtime/Max", out int maxClips);
             Add(results, "Character animation clips", miaClips == 10 && maxClips == 10,
