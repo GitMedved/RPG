@@ -104,7 +104,7 @@ namespace MiaMax.EditorTools
             if (avatarValid && rigTypeValid && controllerAssigned && controllerHasProductionMotions && rootMotionOff && contract && hasGeometry)
             {
                 ready++;
-                report.AppendLine("[READY] " + characterName + " prefab, Avatar, Animator contract and root-motion setting.");
+                report.AppendLine("[READY] " + characterName + " prefab, Avatar, production animation states/motions and root-motion setting.");
             }
             else
             {
