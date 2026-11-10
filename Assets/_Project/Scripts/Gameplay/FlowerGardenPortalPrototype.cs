@@ -70,6 +70,7 @@ namespace MiaMax.Gameplay
                     GameAudioService.Instance.SetMusicById("flower_garden_theme", 0.20f);
                     GameAudioService.Instance.SetAdventureAmbience(null, null);
                 }
+                BackyardAmbientPrototype.SetBackyardAudioEnabled(isExit || requiredAreaId != "woodland_trail");
             }
             Debug.Log(isExit ? "Back in the backyard!" : "Welcome to " + areaDisplayName + "!");
         }
