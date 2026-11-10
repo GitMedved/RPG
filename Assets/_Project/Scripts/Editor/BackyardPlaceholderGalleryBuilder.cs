@@ -43,8 +43,8 @@ namespace MiaMax.EditorTools
             EnsureFolder("Assets/_Project/Art/Environment/Runtime");
             EnsureFolder(SceneFolder);
 
-            Scene gallery = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
             Scene previousActive = SceneManager.GetActiveScene();
+            Scene gallery = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
             SceneManager.SetActiveScene(gallery);
 
             try
