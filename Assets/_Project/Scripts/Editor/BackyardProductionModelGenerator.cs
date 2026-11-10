@@ -430,7 +430,8 @@ namespace MiaMax.EditorTools
 
         private static Renderer Ellipsoid(Transform parent, string name, Vector3 position, Vector3 scale, string mat)
         {
-            const int rings = 10, segments = 16;
+            // Deliberately low-poly: the foliage, flower petals and paving stones are repeated many times on mobile.
+            const int rings = 6, segments = 10;
             var v = new List<Vector3>(); var uv = new List<Vector2>(); var tri = new List<int>();
             for (int y = 0; y <= rings; y++)
             {
