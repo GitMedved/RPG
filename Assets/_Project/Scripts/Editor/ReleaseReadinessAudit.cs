@@ -66,6 +66,19 @@ namespace MiaMax.EditorTools
 
             bool urpAssignmentsReady = CheckUrpAssignments(out string urpDetail);
             Add(results, "URP pipeline asset and assignments", urpAssignmentsReady, urpDetail, true);
+            int backyardPrefabs = AssetCount("t:Prefab", "Assets/_Project/Art/Environment/Runtime/ProductionPrefabs");
+            int backyardMeshes = AssetCount("t:Mesh", "Assets/_Project/Art/Environment/Runtime/ProductionMeshes");
+            int backyardMaterials = AssetCount("t:Material", "Assets/_Project/Art/Environment/Runtime/ProductionMaterials");
+            int backyardTextures = AssetCount("t:Texture2D", "Assets/_Project/Art/Environment/Runtime/ProductionTextures");
+            Add(results, "Backyard production prefabs", backyardPrefabs >= 15,
+                backyardPrefabs + " / 15 expected generated visual prefabs.", true);
+            Add(results, "Backyard production meshes", backyardMeshes >= 15,
+                backyardMeshes + " mesh asset(s) in the optimized production mesh folder.", true);
+            Add(results, "Backyard production materials", backyardMaterials >= 14,
+                backyardMaterials + " / 14 expected generated materials.", true);
+            Add(results, "Backyard production textures", backyardTextures >= 14,
+                backyardTextures + " / 14 expected generated albedo textures.", true);
+
             Add(results, "Production Mia model", AssetCount("Mia t:Model", "Assets/_Project/Art/Characters/Runtime") > 0,
                 "FBX/model presence only; rig and likeness need visual review.", true);
             Add(results, "Production Max model", AssetCount("Max t:Model", "Assets/_Project/Art/Characters/Runtime") > 0,
