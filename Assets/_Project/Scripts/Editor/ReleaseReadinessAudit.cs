@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
+using System;
 using System.IO;
 using System.Text;
 using UnityEditor;
@@ -90,10 +91,10 @@ namespace MiaMax.EditorTools
                 "Assets/Resources/MiaMax/Characters/Max.prefab") != null;
             Add(results, "Runtime character prefabs", miaRuntimePrefab && maxRuntimePrefab,
                 "Mia: " + miaRuntimePrefab + "; Max: " + maxRuntimePrefab + ".", true);
-            int miaClips = AssetCount("t:AnimationClip", "Assets/_Project/Art/Characters/Runtime/Mia");
-            int maxClips = AssetCount("t:AnimationClip", "Assets/_Project/Art/Characters/Runtime/Max");
-            Add(results, "Character animation clips", miaClips >= 10 && maxClips >= 10,
-                "Mia: " + miaClips + " / 10 expected; Max: " + maxClips + " / 10 expected. Both characters need the full action set.", true);
+            string miaClipDetail = CharacterAnimationSetDetail("Assets/_Project/Art/Characters/Runtime/Mia", out int miaClips);
+            string maxClipDetail = CharacterAnimationSetDetail("Assets/_Project/Art/Characters/Runtime/Max", out int maxClips);
+            Add(results, "Character animation clips", miaClips == 10 && maxClips == 10,
+                "Mia: " + miaClipDetail + "; Max: " + maxClipDetail + ". Both characters need the complete named action set.", true);
 
             Add(results, "Generated surface materials",
                 AssetCount("t:Material", "Assets/Resources/MiaMax/Materials") >= 40,
@@ -153,6 +154,44 @@ namespace MiaMax.EditorTools
                 "Static checks ready: " + ready + " / " + results.Count +
                 "\nOpen release blockers: " + blockers +
                 "\n\nFull report is in the Console. This tool does not build or certify the game.", "OK");
+        }
+
+        private static string CharacterAnimationSetDetail(string folder, out int readyCount)
+        {
+            string[] required =
+            {
+                "Idle", "Walk", "Run", "Interact", "Celebrate",
+                "Garden", "Reaction", "Jump", "Sleep", "Play"
+            };
+            readyCount = 0;
+            var issues = new List<string>();
+            if (!AssetDatabase.IsValidFolder(folder))
+            {
+                return "0 / 10; folder missing";
+            }
+
+            string[] guids = AssetDatabase.FindAssets("t:AnimationClip", new[] { folder });
+            foreach (string action in required)
+            {
+                int matches = 0;
+                foreach (string guid in guids)
+                {
+                    string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                    UnityEngine.Object[] assets = AssetDatabase.LoadAllAssetsAtPath(assetPath);
+                    foreach (UnityEngine.Object asset in assets)
+                    {
+                        AnimationClip clip = asset as AnimationClip;
+                        if (clip != null && clip.name.IndexOf(action, StringComparison.OrdinalIgnoreCase) >= 0)
+                            matches++;
+                    }
+                }
+
+                if (matches == 1) readyCount++;
+                else issues.Add(action + (matches == 0 ? " missing" : " ambiguous (" + matches + ")"));
+            }
+
+            return readyCount + " / 10; " +
+                (issues.Count == 0 ? "all actions uniquely identified" : string.Join(", ", issues));
         }
 
         private static void Add(List<Result> results, string name, bool ready, string detail, bool blocker)
