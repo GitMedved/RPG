@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using MiaMax.Domain;
 using MiaMax.Infrastructure.Save;
+using MiaMax.Infrastructure.Audio;
 using UnityEngine;
 
 namespace MiaMax.Gameplay
@@ -56,6 +57,8 @@ namespace MiaMax.Gameplay
             new MiaMax.Domain.Progression.DailyTaskService(session).RecordExploration();
             session.NotifyExternalStateChanged();
             collected = true;
+            GameAudioService.Instance?.Play(GameAudioCue.Collectible, 0.85f);
+            GameVoiceDirector.PlayMax("max_meow_curious_01");
             Debug.Log("Trail discovery: " + displayTitle + ". +1 " + itemId + ", +5 XP, +3 coins.");
             gameObject.SetActive(false);
         }
