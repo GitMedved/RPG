@@ -39,7 +39,7 @@ After importing the approved Mia and Max FBX models and their ten named clips pe
 
 **Tools → Mia & Max → Build Production Animator Controllers From Clips**
 
-The builder requires one uniquely identifiable clip for each action: `Idle`, `Walk`, `Run`, `Interact`, `Celebrate`, `Garden`, `Reaction`, `Jump`, `Sleep` and `Play`. It creates separate `Mia_Production.controller` and `Max_Production.controller` assets, with locomotion speed transitions and action triggers. It does not overwrite an existing production controller or modify existing runtime prefabs. When a new runtime prefab is created, the pipeline prefers the production controller if present.
+The builder requires one uniquely identifiable clip for each action: `Idle`, `Walk`, `Run`, `Interact`, `Celebrate`, `Garden`, `Reaction`, `Jump`, `Sleep` and `Play`. It creates separate `Mia_Production.controller` and `Max_Production.controller` assets, with locomotion speed transitions and action triggers. It does not overwrite an existing production controller or modify existing runtime prefabs. The FBX import-profile command only creates runtime prefabs after the matching production controller exists; it will not create a release prefab that uses the empty parameter-only scaffold. After the controllers are built, run **Tools → Mia & Max → Apply Character FBX Import Profiles** to create missing runtime prefabs.
 
 ## 5. Remaining manual gates
 
