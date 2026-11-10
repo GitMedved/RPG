@@ -83,11 +83,16 @@ namespace MiaMax.EditorTools
                 "FBX/model presence only; rig and likeness need visual review.", true);
             Add(results, "Production Max model", AssetCount("Max t:Model", "Assets/_Project/Art/Characters/Runtime") > 0,
                 "FBX/model presence only; rig and likeness need visual review.", true);
-            Add(results, "Runtime character prefabs", AssetCount("t:Prefab", "Assets/Resources/MiaMax/Characters") >= 2,
-                AssetCount("t:Prefab", "Assets/Resources/MiaMax/Characters") + " prefab(s) found; both Mia and Max are required.", true);
-            Add(results, "Character animation clips", 
-                AssetCount("t:AnimationClip", "Assets/_Project/Art/Characters/Runtime") >= 10,
-                AssetCount("t:AnimationClip", "Assets/_Project/Art/Characters/Runtime") + " clip(s) found across character runtime folders. Review required actions for both characters.", true);
+            bool miaRuntimePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(
+                "Assets/Resources/MiaMax/Characters/Mia.prefab") != null;
+            bool maxRuntimePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(
+                "Assets/Resources/MiaMax/Characters/Max.prefab") != null;
+            Add(results, "Runtime character prefabs", miaRuntimePrefab && maxRuntimePrefab,
+                "Mia: " + miaRuntimePrefab + "; Max: " + maxRuntimePrefab + ".", true);
+            int miaClips = AssetCount("t:AnimationClip", "Assets/_Project/Art/Characters/Runtime/Mia");
+            int maxClips = AssetCount("t:AnimationClip", "Assets/_Project/Art/Characters/Runtime/Max");
+            Add(results, "Character animation clips", miaClips >= 10 && maxClips >= 10,
+                "Mia: " + miaClips + " / 10 expected; Max: " + maxClips + " / 10 expected. Both characters need the full action set.", true);
 
             Add(results, "Generated surface materials",
                 AssetCount("t:Material", "Assets/Resources/MiaMax/Materials") >= 40,
