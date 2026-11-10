@@ -72,8 +72,8 @@ namespace MiaMax.EditorTools
                 max.transform.position = new Vector3(1.2f, 0f, 0f);
                 max.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
 
-                AddLabel("MIA", new Vector3(-1.2f, 0.04f, 1.15f));
-                AddLabel("MAX", new Vector3(1.2f, 0.04f, 1.15f));
+                AddLabel("MIA", new Vector3(-1.2f, 0.04f, -1.35f));
+                AddLabel("MAX", new Vector3(1.2f, 0.04f, -1.35f));
 
                 EditorSceneManager.MarkSceneDirty(preview);
                 if (!EditorSceneManager.SaveScene(preview, ScenePath))
@@ -108,15 +108,21 @@ namespace MiaMax.EditorTools
             floor.name = "Review_Floor";
             floor.transform.localScale = new Vector3(0.7f, 1f, 0.5f);
             Renderer floorRenderer = floor.GetComponent<Renderer>();
-            Shader shader = Shader.Find("Universal Render Pipeline/Lit");
-            if (shader == null) shader = Shader.Find("Standard");
-            if (shader != null)
+            const string floorMaterialPath = SceneFolder + "/CharacterReview_Floor.mat";
+            Material floorMaterial = AssetDatabase.LoadAssetAtPath<Material>(floorMaterialPath);
+            if (floorMaterial == null)
             {
-                Material floorMaterial = new Material(shader);
-                floorMaterial.name = "CharacterReview_Floor";
-                floorMaterial.color = new Color(0.72f, 0.70f, 0.62f);
-                floorRenderer.sharedMaterial = floorMaterial;
+                Shader shader = Shader.Find("Universal Render Pipeline/Lit");
+                if (shader == null) shader = Shader.Find("Standard");
+                if (shader != null)
+                {
+                    floorMaterial = new Material(shader);
+                    floorMaterial.name = "CharacterReview_Floor";
+                    floorMaterial.color = new Color(0.72f, 0.70f, 0.62f);
+                    AssetDatabase.CreateAsset(floorMaterial, floorMaterialPath);
+                }
             }
+            if (floorMaterial != null) floorRenderer.sharedMaterial = floorMaterial;
 
             GameObject lightObject = new GameObject("Review_Key_Light");
             Light light = lightObject.AddComponent<Light>();
@@ -149,6 +155,7 @@ namespace MiaMax.EditorTools
         {
             GameObject labelObject = new GameObject(value + "_Label");
             labelObject.transform.position = position;
+            labelObject.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
             TextMesh label = labelObject.AddComponent<TextMesh>();
             label.text = value;
             label.anchor = TextAnchor.MiddleCenter;
