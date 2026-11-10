@@ -19,6 +19,14 @@ namespace MiaMax.Gameplay
         private AudioSource birdsSource;
         private bool reducedMotion;
 
+        public static void SetBackyardAudioEnabled(bool enabled)
+        {
+            BackyardAmbientPrototype instance = FindFirstObjectByType<BackyardAmbientPrototype>();
+            if (instance == null) return;
+            if (enabled) instance.PlayAmbientAudio();
+            else instance.StopAmbientAudio();
+        }
+
         public static void Attach()
         {
             if (FindFirstObjectByType<BackyardAmbientPrototype>() != null) return;
@@ -116,16 +124,19 @@ namespace MiaMax.Gameplay
             }
         }
 
-        private void OnDisable()
+        private void StopAmbientAudio()
         {
             if (windSource != null) windSource.Stop();
             if (birdsSource != null) birdsSource.Stop();
         }
 
-        private void OnEnable()
+        private void PlayAmbientAudio()
         {
-            if (windSource != null && windSource.clip != null) windSource.Play();
-            if (birdsSource != null && birdsSource.clip != null) birdsSource.Play();
+            if (windSource != null && windSource.clip != null && !windSource.isPlaying) windSource.Play();
+            if (birdsSource != null && birdsSource.clip != null && !birdsSource.isPlaying) birdsSource.Play();
         }
+
+        private void OnDisable() { StopAmbientAudio(); }
+        private void OnEnable() { PlayAmbientAudio(); }
     }
 }
