@@ -36,11 +36,11 @@ namespace MiaMax.EditorTools
             report.AppendLine();
 
             AuditGroup("Sound effects", "Assets/Resources/MiaMax/Audio/SFX", Sfx,
-                0.06f, 1.8f, ref ready, ref missing, ref warnings, report);
+                0.06f, 1.8f, ref ready, ref missing, ref pendingImport, ref warnings, report);
             AuditGroup("Ambience", "Assets/Resources/MiaMax/Audio/Ambience", Ambience,
-                5f, 30f, ref ready, ref missing, ref warnings, report);
+                5f, 30f, ref ready, ref missing, ref pendingImport, ref warnings, report);
             AuditGroup("Music", "Assets/Resources/MiaMax/Audio/Music", Music,
-                4f, 30f, ref ready, ref missing, ref warnings, report);
+                4f, 30f, ref ready, ref missing, ref pendingImport, ref warnings, report);
 
             report.AppendLine();
             report.AppendLine("Available: " + ready + " / " + (Sfx.Length + Ambience.Length + Music.Length));
@@ -58,7 +58,7 @@ namespace MiaMax.EditorTools
 
         private static void AuditGroup(string label, string folder, string[] ids,
             float minDuration, float maxDuration, ref int ready, ref int missing,
-            ref int warnings, StringBuilder report)
+            ref int pendingImport, ref int warnings, StringBuilder report)
         {
             report.AppendLine("[" + label + "]");
             foreach (string id in ids)
