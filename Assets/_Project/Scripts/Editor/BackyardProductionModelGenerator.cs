@@ -311,7 +311,7 @@ namespace MiaMax.EditorTools
                 new Vector3(-h.x,-h.y,h.z), new Vector3(h.x,-h.y,h.z), new Vector3(h.x,-h.y,-h.z), new Vector3(-h.x,-h.y,-h.z)
             };
             int[] t = new int[36];
-            for (int f = 0; f < 6; f++) { int o = f * 4, k = f * 6; t[k]=o; t[k+1]=o+1; t[k+2]=o+2; t[k+3]=o; t[k+4]=o+2; t[k+5]=o+3; }
+            for (int f = 0; f < 6; f++) { int o = f * 4, k = f * 6; t[k]=o; t[k+1]=o+2; t[k+2]=o+1; t[k+3]=o; t[k+4]=o+3; t[k+5]=o+2; }
             Vector2[] uv = new Vector2[24];
             for (int f = 0; f < 6; f++) { uv[f*4]=new Vector2(0,0); uv[f*4+1]=new Vector2(1,0); uv[f*4+2]=new Vector2(1,1); uv[f*4+3]=new Vector2(0,1); }
             return CreateMeshObject(parent, name, position, rotation, v, t, uv, mat);
@@ -326,7 +326,16 @@ namespace MiaMax.EditorTools
                 v.Add(new Vector3(Mathf.Cos(a) * 0.5f, y - 0.5f, Mathf.Sin(a) * 0.5f));
                 uv.Add(new Vector2((float)i / sides, y));
             }
-            for (int i = 0; i < sides; i++) { int a=i, b=i+1, c=sides+2+i, d=sides+1+i; tri.AddRange(new[]{a,b,c,a,c,d}); }
+            for (int i = 0; i < sides; i++) { int a=i, b=i+1, c=sides+2+i, d=sides+1+i; tri.AddRange(new[]{a,c,b,a,d,c}); }
+            int bottomCenter = v.Count;
+            v.Add(new Vector3(0, -0.5f, 0)); uv.Add(new Vector2(0.5f, 0.5f));
+            int topCenter = v.Count;
+            v.Add(new Vector3(0, 0.5f, 0)); uv.Add(new Vector2(0.5f, 0.5f));
+            for (int i = 0; i < sides; i++)
+            {
+                tri.AddRange(new[]{bottomCenter, i + 1, i});
+                tri.AddRange(new[]{topCenter, sides + 1 + i, sides + 2 + i});
+            }
             return CreateMeshObject(parent, name, position, rotation, v.ToArray(), tri.ToArray(), uv.ToArray(), mat, scale);
         }
 
@@ -347,7 +356,7 @@ namespace MiaMax.EditorTools
             for (int y = 0; y < rings; y++) for (int x = 0; x < segments; x++)
             {
                 int a=y*(segments+1)+x, b=a+segments+1;
-                tri.AddRange(new[]{a,b,a+1,a+1,b,b+1});
+                tri.AddRange(new[]{a,a+1,b,a+1,b+1,b});
             }
             return CreateMeshObject(parent, name, position, Quaternion.identity, v.ToArray(), tri.ToArray(), uv.ToArray(), mat, scale);
         }
