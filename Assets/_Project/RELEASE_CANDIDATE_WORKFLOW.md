@@ -21,7 +21,7 @@ It invokes the environment, original audio and UI sprite generators. Each genera
 Generated asset groups:
 - 15 optimized backyard environment prefabs, meshes, materials and textures
 - 11 gameplay SFX, 4 ambience loops and 3 original music themes
-- 10 UI sprites used by the mobile HUD and reusable cards
+- 10 UI sprites generated for mobile HUD and reusable cards; visual integration still requires review
 
 ## 3. Run the read-only audit sequence
 
@@ -33,7 +33,15 @@ This invokes the backyard production prefab audit, surface asset audit, audio au
 
 The sequence produces individual Console reports and does not build the game or approve visual quality, device behaviour, licensing, privacy/child-safety compliance or store submission.
 
-## 4. Remaining manual gates
+## 4. Character animation pipeline
+
+After importing the approved Mia and Max FBX models and their ten named clips per character, run:
+
+**Tools → Mia & Max → Build Production Animator Controllers From Clips**
+
+The builder requires one uniquely identifiable clip for each action: `Idle`, `Walk`, `Run`, `Interact`, `Celebrate`, `Garden`, `Reaction`, `Jump`, `Sleep` and `Play`. It creates separate `Mia_Production.controller` and `Max_Production.controller` assets, with locomotion speed transitions and action triggers. It does not overwrite an existing production controller or modify existing runtime prefabs. When a new runtime prefab is created, the pipeline prefers the production controller if present.
+
+## 5. Remaining manual gates
 
 The current repository contains Mia and Max reference images, but no production FBX character models or voice recordings. Those are explicit release blockers. The draft voice lines and character production brief are provided for the next art/audio handoff.
 
