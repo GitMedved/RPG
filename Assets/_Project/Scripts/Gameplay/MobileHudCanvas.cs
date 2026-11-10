@@ -116,7 +116,7 @@ namespace MiaMax.Gameplay
                 new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 18f),
                 new Vector2(680f, 142f), new Vector2(0.5f, 0f));
             backpackButton = MakeButton("Backpack Button", dock.transform, MobileUiTheme.Leaf, "BACKPACK",
-                Vector2.zero, Vector2.one, out backpackButtonText, 25, "icon_coin");
+                Vector2.zero, Vector2.one, out backpackButtonText, 25, "icon_seed");
             RectTransform backpackRect = (RectTransform)backpackButton.transform;
             backpackRect.anchorMin = new Vector2(0f, 0f);
             backpackRect.anchorMax = new Vector2(0.5f, 1f);
