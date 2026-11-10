@@ -44,6 +44,7 @@ namespace MiaMax.Gameplay
                 if (service.RemainingSeconds == 0 && service.TryCollect())
                 {
                     GameVoiceDirector.PlayMia("mia_success_01");
+                    GameAudioService.Instance?.Play(GameAudioCue.CraftReady, 0.9f);
                     BackyardFeedbackVfx.PlayWorkshopComplete(transform.position + Vector3.up * 1.25f);
                 }
             }
@@ -55,6 +56,7 @@ namespace MiaMax.Gameplay
                 if (started)
                 {
                     GameVoiceDirector.PlayMia("mia_interact_01");
+                    GameAudioService.Instance?.Play(GameAudioCue.CraftStart, 0.75f);
                     lastProgressStep = 0;
                     BackyardFeedbackVfx.PlayWorkshopStart(transform.position + Vector3.up * 1.2f);
                 }
