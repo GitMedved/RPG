@@ -57,6 +57,7 @@ namespace MiaMax.EditorTools
                 BuildGardenDetails();
                 BuildLightingAndCamera();
 
+                AssetDatabase.SaveAssets();
                 EditorSceneManager.MarkSceneDirty(preview);
                 if (!EditorSceneManager.SaveScene(preview, ScenePath))
                     throw new IOException("Unity did not confirm saving the composed yard preview.");
