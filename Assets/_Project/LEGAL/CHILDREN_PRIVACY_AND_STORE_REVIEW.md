@@ -4,8 +4,10 @@
 Product: Mia & Max Adventures. Studio label: AleksDevelop (do not represent as incorporated entity without evidence). Platforms: Android/iOS. Audience: family-friendly; child users are foreseeable.
 Review date: 2026-11-10.
 
+**Launch scope decision: United States + European Union/EEA simultaneously.** Treat this as a multi-jurisdiction launch. The EU/EEA review must identify each actual launch Member State (including Poland only if it is in the distribution plan); do not assume one GDPR child-consent age or one national rule applies across all Member States.
+
 ## 1. Decisions required before public distribution
-Owner and qualified counsel must confirm launch territories/languages; intended age bands and child-directed/mixed/general classification; all accounts, cloud saves, analytics, crash reporting, ads, attribution, push notifications, purchases, external links, UGC, microphone/camera/location/device identifiers; every SDK, provider, recipient, hosting region, retention period and international transfer; legal publisher identity and privacy contact; required age screen, parental consent/verification and parental gates; and third-party voice-generation vendor terms and commercial rights.
+Owner and qualified counsel must confirm the United States and each intended EU/EEA launch Member State/language; intended age bands and child-directed/mixed/general classification; all accounts, cloud saves, analytics, crash reporting, ads, attribution, push notifications, purchases, external links, UGC, microphone/camera/location/device identifiers; every SDK, provider, recipient, hosting region, retention period and international transfer; legal publisher identity and privacy contact; required age screen, parental consent/verification and parental gates; and third-party voice-generation vendor terms and commercial rights.
 
 Do not publish until these questions have written answers and counsel signs off.
 
@@ -37,9 +39,13 @@ These are risk-reduction recommendations, not legal advice.
 | Voice generation assets | Static authored dialogue | Vendor terms, commercial rights; no child recordings |
 
 ## 4. EU / EEA
+
+**Applies to the EU/EEA part of the simultaneous launch.** Do not treat 'EU' as a single national consent-age rule: document the applicable Article 8 threshold for every Member State where the service is offered, and review relevant national child-protection, consumer, marketing and digital-service requirements. Assess international data transfers where US-based vendors or infrastructure receive EU/EEA personal data.
 Identify a lawful basis for each processing purpose. If relying on consent for an online service offered directly to a child, verify the Member State's GDPR Article 8 age threshold (13–16) and implement reasonable, effective parental authorisation below it. Use child-accessible plain language. Assess minimisation, storage limitation, security, processor contracts, transfers, rights and whether a DPIA is required. Check national consumer and advertising-to-children rules in each launch market.
 
 ## 5. United States
+
+**Applies to the US part of the simultaneous launch.** Assess federal COPPA and relevant state privacy/children's-design laws separately; do not assume COPPA is the only applicable US requirement. Review transfers and disclosures to service providers, including voice-generation and crash/analytics vendors.
 Determine whether COPPA applies based on child-directed status or actual knowledge of users under 13 and the shipped app/SDK data practices. If applicable, assess verifiable parental consent, direct notice, parental rights, minimisation, security, retention/deletion and disclosure restrictions. Review the 2025 COPPA Rule amendments and compliance timetable with counsel. Check applicable state privacy and children's-design laws.
 
 ## 6. Apple App Store
@@ -65,6 +71,8 @@ Determine whether COPPA applies based on child-directed status or actual knowled
 For every shipped asset retain creator/source, creation date, source files, licence/contract, commercial-use permission, territory, duration and attribution requirements. Cover character likenesses, reference images, 3D models, rigs, animations, textures, UI, fonts, music, SFX and voice performances. For generated voices retain provider, voice ID, terms at generation, commercial-use rights and exact audio. No voice cloning without documented permission.
 
 ## 9. Evidence required for sign-off
+- Territory matrix covering the United States and each EU/EEA Member State actually enabled for distribution, with applicable child-consent ages, age-rating/target-audience rules and counsel notes.
+- Separate US and EU/EEA privacy-policy/legal review, with consistent descriptions of the same shipped data flows.
 - Final SDK/dependency inventory and versions.
 - Android manifest and iOS privacy manifest/permission declarations.
 - Network capture from clean install and representative play.
