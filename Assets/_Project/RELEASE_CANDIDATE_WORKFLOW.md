@@ -2,7 +2,15 @@
 
 This project now has a consolidated Unity Editor entry point.
 
-## 1. Generate the production asset packs
+## 1. Apply the mobile application identity
+
+Run:
+
+**Tools → Mia & Max → Release → Apply Mobile App Identity**
+
+This sets company `AleksDevelop`, product `Mia & Max Adventures`, version `1.0`, and the same approved identifier `com.aleksdevelop.miamax` for Android and iOS. The release audit now requires this exact identifier rather than accepting any syntactically plausible bundle ID.
+
+## 2. Generate the production asset packs
 
 Run:
 
@@ -15,7 +23,7 @@ Generated asset groups:
 - 11 gameplay SFX, 4 ambience loops and 3 original music themes
 - 10 UI sprites used by the mobile HUD and reusable cards
 
-## 2. Run the read-only audit sequence
+## 3. Run the read-only audit sequence
 
 Run:
 
@@ -25,7 +33,7 @@ This invokes the backyard production prefab audit, surface asset audit, audio au
 
 The sequence produces individual Console reports and does not build the game or approve visual quality, device behaviour, licensing, privacy/child-safety compliance or store submission.
 
-## 3. Remaining manual gates
+## 4. Remaining manual gates
 
 The current repository contains Mia and Max reference images, but no production FBX character models or voice recordings. Those are explicit release blockers. The draft voice lines and character production brief are provided for the next art/audio handoff.
 
