@@ -66,6 +66,28 @@ namespace MiaMax.EditorTools
                 PlayerSettings.bundleVersion != "0.1",
                 "Version: " + Display(PlayerSettings.bundleVersion), true);
 
+            bool androidModuleAvailable = BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Android, BuildTarget.Android);
+            bool iosModuleAvailable = BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.iOS, BuildTarget.iOS);
+            Add(results, "Android build support module", androidModuleAvailable,
+                androidModuleAvailable ? "Unity reports Android build support installed." :
+                    "Install Android Build Support, Android SDK & NDK Tools and OpenJDK in Unity Hub.", true);
+            Add(results, "iOS build support module", iosModuleAvailable,
+                iosModuleAvailable ? "Unity reports iOS build support installed." :
+                    "Install iOS Build Support in Unity Hub; Xcode on macOS is also required to produce and sign the final app.", true);
+
+            var androidBackend = PlayerSettings.GetScriptingBackend(NamedBuildTarget.Android);
+            bool androidIl2Cpp = androidBackend == ScriptingImplementation.IL2CPP;
+            Add(results, "Android IL2CPP scripting backend", androidIl2Cpp,
+                "Configured backend: " + androidBackend + "; expected IL2CPP for release.", true);
+            AndroidArchitecture androidArchitectures = PlayerSettings.Android.targetArchitectures;
+            bool androidArm64 = (androidArchitectures & AndroidArchitecture.ARM64) != 0;
+            Add(results, "Android ARM64 architecture", androidArm64,
+                "Configured architectures: " + androidArchitectures + "; ARM64 must be included.", true);
+            var iosBackend = PlayerSettings.GetScriptingBackend(NamedBuildTarget.iOS);
+            bool iosIl2Cpp = iosBackend == ScriptingImplementation.IL2CPP;
+            Add(results, "iOS IL2CPP scripting backend", iosIl2Cpp,
+                "Configured backend: " + iosBackend + "; expected IL2CPP for release.", true);
+
             bool urpAssignmentsReady = CheckUrpAssignments(out string urpDetail);
             Add(results, "URP pipeline asset and assignments", urpAssignmentsReady, urpDetail, true);
             int backyardPrefabs = AssetCount("t:Prefab", "Assets/_Project/Art/Environment/Runtime/ProductionPrefabs");
