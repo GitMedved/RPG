@@ -68,6 +68,25 @@ namespace MiaMax.EditorTools
                 return;
             }
 
+            // Asset generators and FBX importers may finish through Unity's import callbacks.
+            // Defer audits until the current editor update has completed, then refresh once.
+            EditorApplication.delayCall += RunDeferredReadOnlyAudits;
+            Debug.Log("[Mia & Max Release] Read-only audits scheduled after the current asset-import cycle.");
+            EditorUtility.DisplayDialog("Mia & Max Release",
+                "The read-only audit sequence has been scheduled for the next Editor update so pending asset imports can settle. " +
+                "Review the Console reports after the sequence finishes. No build, device test, legal review or store approval is inferred.",
+                "OK");
+        }
+
+        private static void RunDeferredReadOnlyAudits()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                Debug.LogWarning("[Mia & Max Release] Deferred audits cancelled because Play Mode is starting.");
+                return;
+            }
+
+            AssetDatabase.Refresh();
             RunAudit("Backyard production prefab audit", BackyardProductionPrefabAudit.Run);
             RunAudit("Production surface asset audit", ProductionAssetAudit.Run);
             RunAudit("Audio asset audit", AudioAssetAudit.Run);
@@ -76,12 +95,8 @@ namespace MiaMax.EditorTools
             RunAudit("Missing script references audit", MissingScriptReferenceAudit.RunAll);
             RunAudit("Release readiness audit", ReleaseReadinessAudit.Run);
 
-            Debug.Log("[Mia & Max Release] Read-only audit sequence finished. Review all individual Console reports; " +
+            Debug.Log("[Mia & Max Release] Deferred read-only audit sequence finished. Review all individual Console reports; " +
                 "this sequence does not certify visual quality, builds, devices, legal compliance or store approval.");
-            EditorUtility.DisplayDialog("Mia & Max Release",
-                "All read-only audit commands have been invoked. Review each Console report and its blockers. " +
-                "No build, device test, legal review or store approval is inferred.",
-                "OK");
         }
 
         private static void RunGeneration(string label, Action generation)
