@@ -19,6 +19,12 @@ namespace MiaMax.Gameplay
 
             Image image = card.GetComponent<Image>();
             image.color = background;
+            Sprite panelSprite = Resources.Load<Sprite>("MiaMax/UI/rounded_panel");
+            if (panelSprite != null)
+            {
+                image.sprite = panelSprite;
+                image.type = Image.Type.Sliced;
+            }
             image.raycastTarget = false;
 
             VerticalLayoutGroup layout = card.GetComponent<VerticalLayoutGroup>();
