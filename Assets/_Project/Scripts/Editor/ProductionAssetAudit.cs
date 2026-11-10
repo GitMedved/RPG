@@ -34,8 +34,8 @@ namespace MiaMax.EditorTools
                 new Check { Label = "Max runtime prefab", SearchFilter = "Max t:Prefab", Folder = "Assets/Resources/MiaMax/Characters", RequiredForRelease = true },
                 new Check { Label = "Mia animation clips", SearchFilter = "t:AnimationClip", Folder = "Assets/_Project/Art/Characters/Runtime/Mia", RequiredForRelease = true, MinimumCount = 10 },
                 new Check { Label = "Max animation clips", SearchFilter = "t:AnimationClip", Folder = "Assets/_Project/Art/Characters/Runtime/Max", RequiredForRelease = true, MinimumCount = 10 },
-                new Check { Label = "Mia Animator Controller contract scaffold", SearchFilter = "Mia_AnimatorContract t:AnimatorController", Folder = "Assets/_Project/Art/Characters/Runtime", RequiredForRelease = true },
-                new Check { Label = "Max Animator Controller contract scaffold", SearchFilter = "Max_AnimatorContract t:AnimatorController", Folder = "Assets/_Project/Art/Characters/Runtime", RequiredForRelease = true },
+                new Check { Label = "Mia production Animator Controller", SearchFilter = "Mia_Production t:AnimatorController", Folder = "Assets/_Project/Art/Characters/Runtime/Controllers", RequiredForRelease = true },
+                new Check { Label = "Max production Animator Controller", SearchFilter = "Max_Production t:AnimatorController", Folder = "Assets/_Project/Art/Characters/Runtime/Controllers", RequiredForRelease = true },
                 new Check { Label = "Generated world materials", SearchFilter = "t:Material", Folder = "Assets/Resources/MiaMax/Materials", RequiredForRelease = true },
                 new Check { Label = "Generated albedo textures", SearchFilter = "t:Texture2D", Folder = "Assets/_Project/Art/Textures/Generated/Albedo", RequiredForRelease = true },
                 new Check { Label = "Generated normal maps", SearchFilter = "t:Texture2D", Folder = "Assets/_Project/Art/Textures/Generated/Normal", RequiredForRelease = true },
@@ -73,7 +73,7 @@ namespace MiaMax.EditorTools
             report.AppendLine();
             report.AppendLine("Ready: " + ready + " / " + checks.Count);
             report.AppendLine("Pending: " + pending + " / " + checks.Count);
-            report.AppendLine("Animator Controller contract scaffolds contain parameters only; they are not final animation controllers.");
+            report.AppendLine("Production Animator Controllers are required; parameter-only contract scaffolds do not satisfy this check.");
             report.AppendLine("This audit checks asset presence only; rig quality, clip content, licences, import settings and device performance require manual review.");
 
             Debug.Log(report.ToString());
