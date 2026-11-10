@@ -13,7 +13,7 @@ namespace MiaMax.EditorTools
     /// </summary>
     public static class BackyardProductionPrefabAudit
     {
-        private const string PrefabFolder = "Assets/_Project/Art/Environment/Runtime/Prefabs";
+        private const string PrefabFolder = "Assets/_Project/Art/Environment/Runtime/ProductionPrefabs";
 
         private static readonly string[] RequiredPrefabs =
         {
