@@ -11,6 +11,30 @@ namespace MiaMax.EditorTools
     /// </summary>
     public static class ReleaseCandidateWorkflow
     {
+        [MenuItem("Tools/Mia & Max/Release/Apply Mobile App Identity")]
+        public static void ApplyMobileAppIdentity()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                EditorUtility.DisplayDialog("Mia & Max Release",
+                    "Exit Play Mode before changing application identity.", "OK");
+                return;
+            }
+
+            const string applicationId = "com.aleksdevelop.miamax";
+            PlayerSettings.companyName = "AleksDevelop";
+            PlayerSettings.productName = "Mia & Max Adventures";
+            PlayerSettings.bundleVersion = "1.0";
+            PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, applicationId);
+            PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.iOS, applicationId);
+            AssetDatabase.SaveAssets();
+
+            Debug.Log("[Mia & Max Release] Applied company/product identity and shared Android/iOS ID: " + applicationId);
+            EditorUtility.DisplayDialog("Mia & Max Release",
+                "Company: AleksDevelop\nProduct: Mia & Max Adventures\nAndroid and iOS ID: " + applicationId +
+                "\nVersion: 1.0\n\nRun the Release Readiness Audit to verify.", "OK");
+        }
+
         [MenuItem("Tools/Mia & Max/Release/Generate All Production Asset Packs")]
         public static void GenerateAllProductionAssets()
         {
