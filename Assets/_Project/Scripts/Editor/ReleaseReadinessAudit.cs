@@ -93,8 +93,9 @@ namespace MiaMax.EditorTools
                 uiSprites + " / 10 generated sprite(s) in Resources/MiaMax/UI. Review contrast, scaling and visual quality.", true);
             Add(results, "Voice recordings", AssetCount("t:AudioClip", "Assets/Resources/MiaMax/Audio/Voice") >= 16,
                 AssetCount("t:AudioClip", "Assets/Resources/MiaMax/Audio/Voice") + " / 16 expected takes.", true);
-            Add(results, "Sound effects", AssetCount("t:AudioClip", "Assets/Resources/MiaMax/Audio/SFX") >= 8,
-                AssetCount("t:AudioClip", "Assets/Resources/MiaMax/Audio/SFX") + " clip(s) found; gameplay feedback set required.", true);
+            int soundEffects = AssetCount("t:AudioClip", "Assets/Resources/MiaMax/Audio/SFX");
+            Add(results, "Sound effects", soundEffects >= 11,
+                soundEffects + " / 11 expected gameplay sound effect(s). Review event coverage and mix.", true);
             int musicClips = AssetCount("t:AudioClip", "Assets/Resources/MiaMax/Audio/Music");
             int ambienceClips = AssetCount("t:AudioClip", "Assets/Resources/MiaMax/Audio/Ambience");
             Add(results, "Music and ambience", musicClips >= 3 && ambienceClips >= 4,
