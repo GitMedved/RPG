@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using MiaMax.Infrastructure.Audio;
 
 namespace MiaMax.Gameplay
 {
@@ -504,6 +505,7 @@ namespace MiaMax.Gameplay
             }
             Button button = go.GetComponent<Button>();
             MobileUiTheme.ApplyButton(button, image, color);
+            button.onClick.AddListener(() => GameAudioService.Instance?.Play(GameAudioCue.UiTap, 0.45f));
             labelText = MakeText(name + " Label", go.transform, label, fontSize,
                 TextAnchor.MiddleCenter, MobileUiTheme.Cream, new Vector2(8f, 4f), new Vector2(-8f, -4f));
             labelText.fontStyle = FontStyle.Bold;
