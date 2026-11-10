@@ -53,6 +53,7 @@ Max-specific performance should retain feline gait and body posture; do not reta
 - Run `Tools → Mia & Max → Build Character Animator State Machines`.
 - Build runtime prefabs only after model/Avatar review; never silently overwrite a reviewed prefab.
 - Run `Tools → Mia & Max → Validate Character Runtime Prefabs`.
+- Run `Tools → Mia & Max → Characters → Create Character Production Review Scene` to create an isolated side-by-side visual review scene.
 
 ## Acceptance gates
 
