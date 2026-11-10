@@ -62,7 +62,7 @@ namespace MiaMax.EditorTools
             {
                 Color[] pixels = new Color[Size * Size];
                 draw(pixels);
-                Texture2D texture = new Texture2D(Size, Size, TextureFormat.RGBA32, false, true);
+                Texture2D texture = new Texture2D(Size, Size, TextureFormat.RGBA32, false, false);
                 texture.name = id;
                 texture.SetPixels(pixels);
                 texture.Apply(false, false);
