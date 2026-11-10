@@ -333,8 +333,8 @@ namespace MiaMax.EditorTools
             v.Add(new Vector3(0, 0.5f, 0)); uv.Add(new Vector2(0.5f, 0.5f));
             for (int i = 0; i < sides; i++)
             {
-                tri.AddRange(new[]{bottomCenter, i + 1, i});
-                tri.AddRange(new[]{topCenter, sides + 1 + i, sides + 2 + i});
+                tri.AddRange(new[]{bottomCenter, i, i + 1});
+                tri.AddRange(new[]{topCenter, sides + 2 + i, sides + 1 + i});
             }
             return CreateMeshObject(parent, name, position, rotation, v.ToArray(), tri.ToArray(), uv.ToArray(), mat, scale);
         }
@@ -373,7 +373,7 @@ namespace MiaMax.EditorTools
         private static Renderer Quad(Transform root, string name, Vector3[] vertices, string mat)
         {
             return CreateMeshObject(root, name, Vector3.zero, Quaternion.identity, vertices,
-                new[]{0,1,2,0,2,3}, new[]{Vector2.zero, Vector2.right, Vector2.one, Vector2.up}, mat);
+                new[]{0,2,1,0,3,2}, new[]{Vector2.zero, Vector2.right, Vector2.one, Vector2.up}, mat);
         }
 
         private static Renderer CreateMeshObject(Transform parent, string name, Vector3 position, Quaternion rotation,
