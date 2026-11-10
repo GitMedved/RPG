@@ -88,8 +88,9 @@ namespace MiaMax.EditorTools
             Add(results, "Generated height maps",
                 AssetCount("t:Texture2D", "Assets/_Project/Art/Textures/Generated/Height") >= 40,
                 AssetCount("t:Texture2D", "Assets/_Project/Art/Textures/Generated/Height") + " / 40 expected maps.", true);
-            Add(results, "UI production sprites", AssetCount("t:Sprite", "Assets/_Project/Art/UI") >= 10,
-                AssetCount("t:Sprite", "Assets/_Project/Art/UI") + " sprite(s). Prototype UI is not release art.", true);
+            int uiSprites = AssetCount("t:Sprite", "Assets/Resources/MiaMax/UI");
+            Add(results, "UI production sprites", uiSprites >= 10,
+                uiSprites + " / 10 generated sprite(s) in Resources/MiaMax/UI. Review contrast, scaling and visual quality.", true);
             Add(results, "Voice recordings", AssetCount("t:AudioClip", "Assets/Resources/MiaMax/Audio/Voice") >= 16,
                 AssetCount("t:AudioClip", "Assets/Resources/MiaMax/Audio/Voice") + " / 16 expected takes.", true);
             Add(results, "Sound effects", AssetCount("t:AudioClip", "Assets/Resources/MiaMax/Audio/SFX") >= 8,
