@@ -1,5 +1,6 @@
 using MiaMax.Domain;
 using MiaMax.Infrastructure.Save;
+using MiaMax.Infrastructure.Audio;
 using UnityEngine;
 namespace MiaMax.Gameplay
 {
@@ -17,7 +18,11 @@ namespace MiaMax.Gameplay
         {
             if (service == null) return;
             string available = service.FirstAvailableOrder();
-            if (available != null) service.TryComplete(available);
+            if (available != null && service.TryComplete(available))
+            {
+                GameAudioService.Instance?.Play(GameAudioCue.Reward, 0.9f);
+                GameVoiceDirector.PlayMia("mia_success_01");
+            }
             UpdateLabel();
         }
         private void UpdateLabel()
