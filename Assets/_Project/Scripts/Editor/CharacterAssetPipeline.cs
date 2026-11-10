@@ -390,7 +390,10 @@ namespace MiaMax.EditorTools
             if (bridge == null) bridge = wrapper.AddComponent<CharacterAnimationBridge>();
             bridge.Configure(animator);
 
-            AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(controllerPath);
+            string productionControllerPath = ControllerFolder + "/" + characterName + "_Production.controller";
+            AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(productionControllerPath);
+            if (controller == null)
+                controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(controllerPath);
             if (controller != null) animator.runtimeAnimatorController = controller;
 
             Avatar importedAvatar = null;
