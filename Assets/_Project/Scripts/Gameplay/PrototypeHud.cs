@@ -1,5 +1,6 @@
 using MiaMax.Domain;
 using MiaMax.Domain.Collections;
+using MiaMax.Infrastructure.Audio;
 using MiaMax.Domain.Progression;
 using MiaMax.Infrastructure.Save;
 using MiaMax.Infrastructure.Settings;
@@ -90,7 +91,11 @@ namespace MiaMax.Gameplay
             {
                 if (dailyVisitService.TryClaimReward())
                 {
-                    interactionFeedback = "Daily gift claimed: +" + dailyVisitService.CoinsToday +
+                    GameAudioService.Instance?.Play(GameAudioCue.Reward, 0.85f);
+                    GameVoiceDirector.PlayMia("mia_success_01");
+                    GameAudioService.Instance?.Play(GameAudioCue.Reward, 0.85f);
+                GameVoiceDirector.PlayMia("mia_success_01");
+                interactionFeedback = "Daily gift claimed: +" + dailyVisitService.CoinsToday +
                         " coins, +" + dailyVisitService.ExperienceToday + " XP!";
                     interactionFeedbackUntil = Time.unscaledTime + 3f;
                 }
@@ -318,26 +323,36 @@ namespace MiaMax.Gameplay
             {
                 case 0:
                     string questTitle;
-                    journalNotice = questService != null && questService.TryClaimNext(out questTitle)
-                        ? "Quest reward claimed: " + questTitle + "!" : "No quest reward is ready yet.";
+                    bool questClaimed = questService != null && questService.TryClaimNext(out questTitle);
+                    journalNotice = questClaimed ? "Quest reward claimed: " + questTitle + "!" : "No quest reward is ready yet.";
+                    if (questClaimed)
+                    {
+                        GameAudioService.Instance?.Play(GameAudioCue.Reward, 0.9f);
+                        GameVoiceDirector.PlayMia("mia_quest_01");
+                    }
                     break;
                 case 1:
+                    bool collectionClaimed = collectionService != null &&
+                        !collectionService.IsCompletionRewardClaimed && collectionService.TryClaimCompletionReward();
                     journalNotice = collectionService == null ? "Collection unavailable." :
                         collectionService.IsCompletionRewardClaimed ? "Collection reward was already claimed." :
-                        collectionService.TryClaimCompletionReward() ? "Collection reward claimed: +25 coins, +30 XP!" :
+                        collectionClaimed ? "Collection reward claimed: +25 coins, +30 XP!" :
                         "Find all 5 keepsakes to unlock this reward.";
+                    if (collectionClaimed) GameAudioService.Instance?.Play(GameAudioCue.Reward, 0.9f);
                     break;
                 case 2: journalNotice = StartRecipe(ProductionService.CarrotSoup); break;
                 case 3: journalNotice = StartRecipe(ProductionService.StrawberryJuice); break;
                 case 4: journalNotice = StartRecipe(ProductionService.WoodenToy); break;
                 case 5:
-                    journalNotice = productionService != null && productionService.TryCollect()
-                        ? "Product collected and +5 XP earned!" : "No finished product is ready yet.";
+                    bool productCollected = productionService != null && productionService.TryCollect();
+                    journalNotice = productCollected ? "Product collected and +5 XP earned!" : "No finished product is ready yet.";
+                    if (productCollected) GameAudioService.Instance?.Play(GameAudioCue.CraftReady, 0.85f);
                     break;
                 case 6:
                     string orderId = orderService != null ? orderService.FirstAvailableOrder() : null;
-                    journalNotice = orderId != null && orderService.TryComplete(orderId)
-                        ? "Order delivered! Coins and XP received." : "No order is ready. Make a product first.";
+                    bool orderDelivered = orderId != null && orderService.TryComplete(orderId);
+                    journalNotice = orderDelivered ? "Order delivered! Coins and XP received." : "No order is ready. Make a product first.";
+                    if (orderDelivered) GameAudioService.Instance?.Play(GameAudioCue.Reward, 0.9f);
                     break;
                 case 7:
                     journalNotice = upgradeService != null && upgradeService.TryUpgradeGarden()
@@ -348,16 +363,19 @@ namespace MiaMax.Gameplay
                         ? "Workshop upgraded! New crafts finish faster." : "Need more coins or workshop is max level.";
                     break;
                 case 9:
-                    journalNotice = dailyTaskService != null && dailyTaskService.TryClaimReward()
-                        ? "Daily reward claimed: +20 coins, +15 XP!" : "Complete all daily goals before claiming.";
+                    bool dailyRewardClaimed = dailyTaskService != null && dailyTaskService.TryClaimReward();
+                    journalNotice = dailyRewardClaimed ? "Daily reward claimed: +20 coins, +15 XP!" : "Complete all daily goals before claiming.";
+                    if (dailyRewardClaimed) GameAudioService.Instance?.Play(GameAudioCue.Reward, 0.9f);
                     break;
                 case 10:
                     string title;
                     int coins, experience;
-                    journalNotice = achievementService != null &&
-                        achievementService.TryClaimNext(out title, out coins, out experience)
+                    bool achievementClaimed = achievementService != null &&
+                        achievementService.TryClaimNext(out title, out coins, out experience);
+                    journalNotice = achievementClaimed
                         ? title + " claimed! +" + coins + " coins, +" + experience + " XP."
                         : "No achievement reward is ready yet.";
+                    if (achievementClaimed) GameAudioService.Instance?.Play(GameAudioCue.Reward, 0.9f);
                     break;
             }
         }
@@ -673,7 +691,11 @@ namespace MiaMax.Gameplay
             var activeJob = productionService.ActiveJob;
             if (activeJob != null && activeJob.IsActive)
                 return "Workshop busy. Collect the current product first.";
-            if (productionService.TryStart(recipeId)) return "Started: " + RecipeName(recipeId) + ".";
+            if (productionService.TryStart(recipeId))
+            {
+                GameAudioService.Instance?.Play(GameAudioCue.CraftStart, 0.75f);
+                return "Started: " + RecipeName(recipeId) + ".";
+            }
             return "Not enough ingredients or workshop is busy.";
         }
 
