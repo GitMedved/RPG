@@ -21,6 +21,8 @@ namespace MiaMax.Infrastructure.Audio
         [SerializeField] private AudioSource effectsSource;
         [SerializeField] private AudioSource musicSource;
         [SerializeField] private AudioSource voiceSource;
+        [SerializeField] private AudioSource ambientWindSource;
+        [SerializeField] private AudioSource ambientBirdsSource;
 
         [Header("Sound effects")]
         [SerializeField] private AudioClip uiTap;
@@ -50,6 +52,8 @@ namespace MiaMax.Infrastructure.Audio
             if (effectsSource == null) effectsSource = gameObject.AddComponent<AudioSource>();
             if (musicSource == null) musicSource = gameObject.AddComponent<AudioSource>();
             if (voiceSource == null) voiceSource = gameObject.AddComponent<AudioSource>();
+            if (ambientWindSource == null) ambientWindSource = gameObject.AddComponent<AudioSource>();
+            if (ambientBirdsSource == null) ambientBirdsSource = gameObject.AddComponent<AudioSource>();
             musicSource.loop = true;
             effectsSource.playOnAwake = false;
             voiceSource.playOnAwake = false;
@@ -119,6 +123,40 @@ namespace MiaMax.Infrastructure.Audio
 
             PlayVoiceLine(clip, volume);
             return true;
+        }
+
+        public bool SetMusicById(string musicId, float volume = 0.22f)
+        {
+            if (string.IsNullOrEmpty(musicId) || musicId.Contains("/") || musicId.Contains("\\\\") || musicId.Contains(".."))
+                return false;
+            AudioClip clip = Resources.Load<AudioClip>("MiaMax/Audio/Music/" + musicId);
+            if (clip == null) return false;
+            SetMusic(clip, volume);
+            return true;
+        }
+
+        public void SetAdventureAmbience(string windId, string birdsId,
+            float windVolume = 0.13f, float birdsVolume = 0.10f)
+        {
+            ConfigureLoop(ambientWindSource, windId, windVolume);
+            ConfigureLoop(ambientBirdsSource, birdsId, birdsVolume);
+        }
+
+        private static void ConfigureLoop(AudioSource source, string resourceId, float volume)
+        {
+            if (source == null) return;
+            AudioClip clip = string.IsNullOrEmpty(resourceId)
+                ? null
+                : Resources.Load<AudioClip>("MiaMax/Audio/Ambience/" + resourceId);
+            if (source.clip == clip && clip != null && source.isPlaying)
+            {
+                source.volume = Mathf.Clamp01(volume);
+                return;
+            }
+            source.Stop();
+            source.clip = clip;
+            source.volume = Mathf.Clamp01(volume);
+            if (clip != null) source.Play();
         }
 
         public void SetMusic(AudioClip clip, float volume = 0.35f)
