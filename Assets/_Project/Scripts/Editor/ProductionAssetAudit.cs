@@ -17,6 +17,7 @@ namespace MiaMax.EditorTools
             public string SearchFilter;
             public string Folder;
             public bool RequiredForRelease;
+            public int MinimumCount = 1;
         }
 
         [MenuItem("Tools/Mia & Max/Production Asset Audit")]
@@ -31,18 +32,19 @@ namespace MiaMax.EditorTools
                 new Check { Label = "Max production model (FBX)", SearchFilter = "Max t:Model", Folder = "Assets/_Project/Art/Characters/Runtime", RequiredForRelease = true },
                 new Check { Label = "Mia runtime prefab", SearchFilter = "Mia t:Prefab", Folder = "Assets/Resources/MiaMax/Characters", RequiredForRelease = true },
                 new Check { Label = "Max runtime prefab", SearchFilter = "Max t:Prefab", Folder = "Assets/Resources/MiaMax/Characters", RequiredForRelease = true },
-                new Check { Label = "Mia animation clips", SearchFilter = "t:AnimationClip", Folder = "Assets/_Project/Art/Characters/Runtime/Mia", RequiredForRelease = true },
-                new Check { Label = "Max animation clips", SearchFilter = "t:AnimationClip", Folder = "Assets/_Project/Art/Characters/Runtime/Max", RequiredForRelease = true },
+                new Check { Label = "Mia animation clips", SearchFilter = "t:AnimationClip", Folder = "Assets/_Project/Art/Characters/Runtime/Mia", RequiredForRelease = true, MinimumCount = 10 },
+                new Check { Label = "Max animation clips", SearchFilter = "t:AnimationClip", Folder = "Assets/_Project/Art/Characters/Runtime/Max", RequiredForRelease = true, MinimumCount = 10 },
                 new Check { Label = "Mia Animator Controller contract scaffold", SearchFilter = "Mia_AnimatorContract t:AnimatorController", Folder = "Assets/_Project/Art/Characters/Runtime", RequiredForRelease = true },
                 new Check { Label = "Max Animator Controller contract scaffold", SearchFilter = "Max_AnimatorContract t:AnimatorController", Folder = "Assets/_Project/Art/Characters/Runtime", RequiredForRelease = true },
                 new Check { Label = "Generated world materials", SearchFilter = "t:Material", Folder = "Assets/Resources/MiaMax/Materials", RequiredForRelease = true },
                 new Check { Label = "Generated albedo textures", SearchFilter = "t:Texture2D", Folder = "Assets/_Project/Art/Textures/Generated/Albedo", RequiredForRelease = true },
                 new Check { Label = "Generated normal maps", SearchFilter = "t:Texture2D", Folder = "Assets/_Project/Art/Textures/Generated/Normal", RequiredForRelease = true },
                 new Check { Label = "Generated height maps", SearchFilter = "t:Texture2D", Folder = "Assets/_Project/Art/Textures/Generated/Height", RequiredForRelease = true },
-                new Check { Label = "UI sprite assets", SearchFilter = "t:Sprite", Folder = "Assets/_Project/Art/UI", RequiredForRelease = true },
-                new Check { Label = "Audio effects", SearchFilter = "t:AudioClip", Folder = "Assets/Resources/MiaMax/Audio/SFX", RequiredForRelease = true },
-                new Check { Label = "Voice recordings", SearchFilter = "t:AudioClip", Folder = "Assets/Resources/MiaMax/Audio/Voice", RequiredForRelease = true },
-                new Check { Label = "Music", SearchFilter = "t:AudioClip", Folder = "Assets/_Project/Audio/Music", RequiredForRelease = true }
+                new Check { Label = "UI sprite assets", SearchFilter = "t:Sprite", Folder = "Assets/Resources/MiaMax/UI", RequiredForRelease = true, MinimumCount = 10 },
+                new Check { Label = "Audio effects", SearchFilter = "t:AudioClip", Folder = "Assets/Resources/MiaMax/Audio/SFX", RequiredForRelease = true, MinimumCount = 11 },
+                new Check { Label = "Voice recordings", SearchFilter = "t:AudioClip", Folder = "Assets/Resources/MiaMax/Audio/Voice", RequiredForRelease = true, MinimumCount = 16 },
+                new Check { Label = "Music", SearchFilter = "t:AudioClip", Folder = "Assets/Resources/MiaMax/Audio/Music", RequiredForRelease = true, MinimumCount = 3 },
+                new Check { Label = "Ambient loops", SearchFilter = "t:AudioClip", Folder = "Assets/Resources/MiaMax/Audio/Ambience", RequiredForRelease = true, MinimumCount = 4 }
             };
 
             int ready = 0;
@@ -58,12 +60,13 @@ namespace MiaMax.EditorTools
                 string[] assets = folderExists
                     ? AssetDatabase.FindAssets(check.SearchFilter, new[] { check.Folder })
                     : new string[0];
-                bool found = folderExists && assets != null && assets.Length > 0;
+                int assetCount = assets == null ? 0 : assets.Length;
+                bool found = folderExists && assetCount >= check.MinimumCount;
                 if (found) ready++;
                 else pending++;
 
                 report.Append(found ? "[READY] " : "[PENDING] ");
-                report.AppendLine(check.Label + " — " + check.Folder +
+                report.AppendLine(check.Label + " — " + assetCount + " / " + check.MinimumCount + " required; " + check.Folder +
                     (folderExists ? string.Empty : " (folder not created yet)"));
             }
 
