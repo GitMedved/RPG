@@ -156,8 +156,13 @@ namespace MiaMax.EditorTools
                 smokeChecksPassed
                     ? "16 / 16 deterministic domain/save checks passed in this Unity Editor session. Play Mode, scene interaction, UI, import and device checks remain separate."
                     : "Not passed in this Editor session. Run Tools → Mia & Max → Run Core Smoke Checks, then run this audit again. The result is session-scoped and is not portable evidence.", true);
+            bool usEuMarketMatrixExists = File.Exists("Assets/_Project/LEGAL/EU_US_LAUNCH_MARKET_MATRIX.md");
+            Add(results, "US + EU/EEA launch market matrix", usEuMarketMatrixExists,
+                usEuMarketMatrixExists
+                    ? "Planning matrix exists. Each enabled Member State, US state-law scope and local counsel review remain to be completed."
+                    : "Create the US + EU/EEA launch market matrix and identify each enabled market.", true);
             Add(results, "Privacy / child safety / store review", false,
-                "Manual legal and platform-policy sign-off is required; no approval is inferred from project files.", true);
+                "BLOCKED pending verified data/SDK inventory, US federal and state review, EU/EEA Member State review, privacy notices, consent/gate decisions and written qualified-counsel/platform-policy sign-off. A planning matrix is not legal approval.", true);
             Add(results, "Physical device validation", false,
                 "Android and iOS builds must be installed and tested on real devices.", true);
 
