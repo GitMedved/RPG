@@ -45,6 +45,7 @@ namespace MiaMax.Gameplay
             new AchievementService(GameSessionBootstrap.Current).GetSummary();
             collected = true;
             GameVoiceDirector.PlayMax("max_meow_curious_01");
+            GameAudioService.Instance?.Play(GameAudioCue.Collectible, 0.85f);
             Debug.Log("Keepsake found: " + displayTitle);
             gameObject.SetActive(false);
         }
