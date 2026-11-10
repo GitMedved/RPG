@@ -40,10 +40,11 @@ namespace MiaMax.EditorTools
             }
 
             EnsureFolder(Root);
-            EnsureFolder(Root + "/ProductionPrefabs");
-            EnsureFolder(Root + "/ProductionMeshes");
-            EnsureFolder(Root + "/ProductionMaterials");
-            EnsureFolder(Root + "/ProductionTextures");
+            // These dedicated output folders contain generated files only; rebuild them deterministically.
+            ResetGeneratedFolder(PrefabFolder);
+            ResetGeneratedFolder(MeshFolder);
+            ResetGeneratedFolder(MaterialFolder);
+            ResetGeneratedFolder(TextureFolder);
             Materials.Clear();
             meshIndex = 0;
             CreateMaterials();
@@ -252,7 +253,7 @@ namespace MiaMax.EditorTools
             }
             foreach (Transform child in root)
                 if (child.gameObject != low) child.gameObject.SetActive(true);
-            low.SetActive(false);
+            low.SetActive(true);
             var highRenderers = new List<Renderer>();
             foreach (Transform child in root)
                 if (child.gameObject != low) highRenderers.AddRange(child.GetComponentsInChildren<Renderer>());
@@ -397,6 +398,12 @@ namespace MiaMax.EditorTools
         {
             foreach (char c in Path.GetInvalidFileNameChars()) value = value.Replace(c, '_');
             return value.Replace(' ', '_');
+        }
+
+        private static void ResetGeneratedFolder(string path)
+        {
+            if (AssetDatabase.IsValidFolder(path)) AssetDatabase.DeleteAsset(path);
+            EnsureFolder(path);
         }
 
         private static void EnsureFolder(string path)
