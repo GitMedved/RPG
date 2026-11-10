@@ -280,8 +280,8 @@ namespace MiaMax.EditorTools
         {
             int miaCount = ApplyProfile(MiaFolder, "Mia", ModelImporterAnimationType.Human);
             int maxCount = ApplyProfile(MaxFolder, "Max", ModelImporterAnimationType.Generic);
-            bool miaPrefab = BuildRuntimePrefab("Mia", MiaFolder, ControllerFolder + "/Mia_AnimatorContract.controller");
-            bool maxPrefab = BuildRuntimePrefab("Max", MaxFolder, ControllerFolder + "/Max_AnimatorContract.controller");
+            bool miaPrefab = BuildRuntimePrefab("Mia", MiaFolder);
+            bool maxPrefab = BuildRuntimePrefab("Max", MaxFolder);
             AssetDatabase.SaveAssets();
 
             Debug.Log("Mia & Max FBX import profiles applied. Mia Humanoid models: " + miaCount +
@@ -360,7 +360,7 @@ namespace MiaMax.EditorTools
             return modelPaths.Count == 1 ? modelPaths[0] : null;
         }
 
-        private static bool BuildRuntimePrefab(string characterName, string modelFolder, string controllerPath)
+        private static bool BuildRuntimePrefab(string characterName, string modelFolder)
         {
             string selectedModelPath = FindBaseModelPath(modelFolder, characterName);
             if (string.IsNullOrEmpty(selectedModelPath))
@@ -393,8 +393,13 @@ namespace MiaMax.EditorTools
             string productionControllerPath = ControllerFolder + "/" + characterName + "_Production.controller";
             AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(productionControllerPath);
             if (controller == null)
-                controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(controllerPath);
-            if (controller != null) animator.runtimeAnimatorController = controller;
+            {
+                Debug.LogWarning(characterName + " runtime prefab was not created because its production Animator Controller is missing. " +
+                    "Import the complete action clip set and run Build Production Animator Controllers From Clips first.");
+                Object.DestroyImmediate(wrapper);
+                return false;
+            }
+            animator.runtimeAnimatorController = controller;
 
             Avatar importedAvatar = null;
             Object[] subAssets = AssetDatabase.LoadAllAssetsAtPath(selectedModelPath);
