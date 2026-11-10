@@ -5,7 +5,7 @@ namespace MiaMax.Gameplay
 {
     /// <summary>
     /// Shared visual tokens and interaction states for the runtime mobile Canvas UI.
-    /// Keep this palette intentionally asset-free until approved production UI art is available.
+    /// Sprite surfaces are loaded from the generated MiaMax/UI resource pack when available.
     /// </summary>
     public static class MobileUiTheme
     {
