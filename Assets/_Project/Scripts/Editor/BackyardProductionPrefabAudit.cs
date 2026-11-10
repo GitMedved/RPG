@@ -111,6 +111,8 @@ namespace MiaMax.EditorTools
 
                     if (renderers.Length == 0)
                         issues.Add("no renderers found");
+                    else if (renderers.Length > 8)
+                        issues.Add("renderer budget exceeded: " + renderers.Length + " (target <= 8 per prefab)");
                     if (missingMaterials > 0)
                         issues.Add("missing material slots: " + missingMaterials);
                     if (colliders.Length > 0)
