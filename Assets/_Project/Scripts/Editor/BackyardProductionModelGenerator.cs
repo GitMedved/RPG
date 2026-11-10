@@ -323,7 +323,7 @@ namespace MiaMax.EditorTools
             {
                 LOD[] optimizedLods = new LOD[sourceLods.Length];
                 for (int i = 0; i < sourceLods.Length; i++)
-                    optimizedLods[i] = new LOD(sourceLods[i].transitionHeight, combinedByLod[i].ToArray());
+                    optimizedLods[i] = new LOD(sourceLods[i].screenRelativeTransitionHeight, combinedByLod[i].ToArray());
                 lodGroup.SetLODs(optimizedLods);
                 lodGroup.RecalculateBounds();
             }
