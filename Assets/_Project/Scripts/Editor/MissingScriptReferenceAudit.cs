@@ -229,24 +229,52 @@ namespace MiaMax.EditorTools
             ref int prefabsScanned,
             ref int prefabCount)
         {
-            // Enumerate the Assets directory directly so discovery does not depend on
-            // AssetDatabase search-index/type-token results.
+            // Discover prefabs through both the filesystem and Unity's asset database.
+            // The union avoids relying on a single discovery mechanism.
             string assetsRoot = Application.dataPath;
-            string[] prefabFiles = Directory.GetFiles(
-                assetsRoot, "*.prefab", SearchOption.AllDirectories);
-            var projectPrefabPaths = new List<string>(prefabFiles.Length);
-            for (int i = 0; i < prefabFiles.Length; i++)
+            if (!Directory.Exists(assetsRoot))
             {
-                string absolutePath = prefabFiles[i].Replace('\\', '/');
-                string normalizedRoot = assetsRoot.Replace('\\', '/');
+                scanErrors.Add("Unity Assets directory does not exist: " + assetsRoot);
+                return;
+            }
+
+            var projectPrefabPathSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            string[] allAssetFiles = Directory.GetFiles(
+                assetsRoot, "*", SearchOption.AllDirectories);
+            string normalizedRoot = assetsRoot.Replace('\\', '/').TrimEnd('/');
+            for (int i = 0; i < allAssetFiles.Length; i++)
+            {
+                string absolutePath = allAssetFiles[i].Replace('\\', '/');
+                if (!absolutePath.EndsWith(".prefab", StringComparison.OrdinalIgnoreCase))
+                    continue;
                 if (!absolutePath.StartsWith(normalizedRoot + "/", StringComparison.OrdinalIgnoreCase))
                     continue;
 
                 string assetPath = "Assets" + absolutePath.Substring(normalizedRoot.Length);
-                projectPrefabPaths.Add(assetPath);
+                projectPrefabPathSet.Add(assetPath);
             }
+
+            string[] prefabGuids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets" });
+            for (int i = 0; i < prefabGuids.Length; i++)
+            {
+                string assetPath = AssetDatabase.GUIDToAssetPath(prefabGuids[i]);
+                if (!string.IsNullOrEmpty(assetPath) &&
+                    assetPath.EndsWith(".prefab", StringComparison.OrdinalIgnoreCase))
+                    projectPrefabPathSet.Add(assetPath);
+            }
+
+            var projectPrefabPaths = new List<string>(projectPrefabPathSet);
             projectPrefabPaths.Sort(StringComparer.OrdinalIgnoreCase);
             prefabCount = projectPrefabPaths.Count;
+
+            if (prefabCount == 0)
+            {
+                scanErrors.Add(
+                    "No .prefab files were discovered. Assets path: '" + assetsRoot +
+                    "'; directory files found: " + allAssetFiles.Length +
+                    "; AssetDatabase prefab GUIDs found: " + prefabGuids.Length +
+                    ". Check that the Unity project is fully imported and that prefabs are inside Assets.");
+            }
 
             for (int i = 0; i < projectPrefabPaths.Count; i++)
             {
