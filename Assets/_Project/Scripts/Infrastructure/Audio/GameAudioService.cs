@@ -40,6 +40,7 @@ namespace MiaMax.Infrastructure.Audio
         private float effectsMix = 1f;
         private float musicMix = 1f;
         private float voiceMix = 1f;
+        private float voiceBaseVolume = 1f;
         private float musicBaseVolume = 0.22f;
         private float ambientWindBaseVolume = 0.13f;
         private float ambientBirdsBaseVolume = 0.10f;
@@ -110,7 +111,8 @@ namespace MiaMax.Infrastructure.Audio
             if (voiceSource == null || clip == null) return;
             voiceSource.Stop();
             voiceSource.clip = clip;
-            voiceSource.volume = Mathf.Clamp01(volume * voiceMix);
+            voiceBaseVolume = Mathf.Clamp01(volume);
+            voiceSource.volume = voiceBaseVolume * voiceMix;
             voiceSource.loop = false;
             voiceSource.Play();
         }
@@ -195,7 +197,7 @@ namespace MiaMax.Infrastructure.Audio
             voiceMix = Mathf.Clamp01(voice);
             if (effectsSource != null) effectsSource.volume = effectsMix;
             if (musicSource != null) musicSource.volume = musicBaseVolume * musicMix;
-            if (voiceSource != null && voiceSource.isPlaying) voiceSource.volume = voiceMix;
+            if (voiceSource != null && voiceSource.isPlaying) voiceSource.volume = voiceBaseVolume * voiceMix;
             if (ambientWindSource != null) ambientWindSource.volume = ambientWindBaseVolume * effectsMix;
             if (ambientBirdsSource != null) ambientBirdsSource.volume = ambientBirdsBaseVolume * effectsMix;
         }
