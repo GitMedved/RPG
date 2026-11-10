@@ -19,7 +19,7 @@ The original placeholder prefabs remain in `Runtime/Prefabs/`. The production ge
 2. Wait for Unity to finish compiling.
 3. Run `Tools > Mia & Max > Backyard > Generate All 15 Production Models`.
 4. Read the generation report in Console. Stop and report any compilation or generation errors.
-5. Run `Tools > Mia & Max > Backyard > Audit Production Prefabs (Read Only)`. The audit now also enforces a target of no more than 8 renderers per prefab.
+5. Run `Tools > Mia & Max > Backyard > Audit Production Prefabs (Read Only)`. The audit now also enforces targets of no more than 8 renderers and 12,000 triangles per prefab. Repeated ellipsoid details use a deliberately low-poly mesh to reduce foliage, flower and path costs.
 6. Run `Tools > Mia & Max > Backyard > Create Production Yard Preview`.
 7. Open `Runtime/Scenes/BackyardProductionLayoutPreview.unity` from the Project window and inspect it in Scene/Game view.
 
@@ -31,4 +31,4 @@ HouseExterior, PatioDeck, FenceStraight, FenceCorner, FenceGate, MainTree, Swing
 
 These are procedural stylized starting models with custom geometry and generated surface patterns. They are not hand-sculpted final art and have not been visually approved, profiled on target mobile devices, or validated against the reference image in Unity. The procedural textures are generated albedo patterns, not authored PBR texture sets. LODs are supplied for the house and main tree as simple distant representations.
 
-All prefabs are visual-only: no gameplay scripts or gameplay colliders are added. The optimization target is at most 8 renderers per prefab; this is a structural budget, not a substitute for Unity Frame Debugger or target-device profiling. The gameplay bootstrap, gameplay roots, interactions, save data and Build Settings are not modified. Do not connect these prefabs to the playable scene until the owner reviews the preview and mobile performance is checked.
+All prefabs are visual-only: no gameplay scripts or gameplay colliders are added. The optimization targets are at most 8 renderers and 12,000 triangles per prefab; these are structural budgets, not substitutes for Unity Frame Debugger or target-device profiling. The gameplay bootstrap, gameplay roots, interactions, save data and Build Settings are not modified. Do not connect these prefabs to the playable scene until the owner reviews the preview and mobile performance is checked.
