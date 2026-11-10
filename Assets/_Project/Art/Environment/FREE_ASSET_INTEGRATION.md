@@ -17,12 +17,28 @@ Status: curated sources selected; one pack has a one-click Unity Editor download
 
 The importer does not alter scenes, existing placeholder prefabs, runtime bootstrap code, or production approval flags. Unity must finish importing before assets can be inspected. Prefabs, URP materials, colliders, LODs, lightmap/static settings, atlasing and mobile profiling still need a separate art-integration pass.
 
-## 2. Additional compatible sources
+## 2. Additional compatible sources and Unity importers
 
 **Kenney — Nature Kit**
-- https://kenney.nl/assets/nature-kit
+- Official page: https://kenney.nl/assets/nature-kit
 - 330 3D files; CC0; trees, rocks and foliage.
-- Use as a secondary source only where it fills gaps without creating a visibly inconsistent art style.
+- Official archive URL used by importer: https://kenney.nl/media/pages/assets/nature-kit/37ac38a37b-1677698939/kenney_nature-kit.zip
+- Unity menu: Tools > Mia & Max > Assets > Kenney > Download Nature Kit (CC0)
+- Destination: Assets/_Project/Art/Environment/Runtime/Models/Kenney/NatureKit/
+
+**Kenney — Furniture Kit**
+- Official page: https://kenney.nl/assets/furniture-kit
+- 140 3D files; CC0. Primarily interior furniture; use selectively for indoor rooms and workshop interiors, not as the default patio set.
+- Unity menu: Tools > Mia & Max > Assets > Kenney > Download Furniture Kit (CC0)
+- Destination: Assets/_Project/Art/Environment/Runtime/Models/Kenney/FurnitureKit/
+
+**Kenney — Building Kit**
+- Official page: https://kenney.nl/assets/building-kit
+- 80 3D files; CC0; modular building pieces suitable for testing house/workshop construction.
+- Unity menu: Tools > Mia & Max > Assets > Kenney > Download Building Kit (CC0)
+- Destination: Assets/_Project/Art/Environment/Runtime/Models/Kenney/BuildingKit/
+
+The Kenney importer downloads archives to Library, checks that a ZIP can be opened, rejects path traversal, and refuses to overwrite a non-empty destination. The furniture/building download actions use Kenney's official per-pack download endpoint. If Kenney changes its endpoint, the download will fail visibly rather than silently importing an HTML page.
 
 **Poly Haven — models**
 - https://polyhaven.com/models
@@ -46,4 +62,4 @@ The importer does not alter scenes, existing placeholder prefabs, runtime bootst
 
 ## 4. Current limitations
 
-The first importer retrieves the Quaternius nature archive only. The other sources above are curated candidates, not yet downloaded into the repository. No third-party binary assets are committed by this change, and no existing scene or prefab is replaced.
+The importers retrieve source archives into the Unity project when the user runs their menu commands. No third-party binary assets are committed by the code change itself. No existing scene or prefab is replaced. Imported models still need inventory, visual review, URP material setup, collision/LOD preparation and mobile profiling before they can replace placeholders.
