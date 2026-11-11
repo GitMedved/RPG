@@ -18,7 +18,6 @@ namespace MiaMax.EditorTools
     {
         private const string ModelRoot = "Assets/_Project/Art/Environment/Runtime/Models";
         private const string SceneDirectory = "Assets/_Project/Scenes/ArtReview";
-        private const string ScenePath = SceneDirectory + "/FreeEnvironmentPreview.unity";
         private const float CellSpacing = 3.2f;
         private const float TargetModelSize = 1.65f;
         private const int Columns = 6;
@@ -34,14 +33,7 @@ namespace MiaMax.EditorTools
                 return;
             }
 
-            if (File.Exists(ScenePath))
-            {
-                EditorUtility.DisplayDialog("Mia & Max Asset Review",
-                    "The review scene already exists, so it was not overwritten:\n" + ScenePath +
-                    "\n\nMove or rename it manually if you want to generate a fresh review scene.",
-                    "OK");
-                return;
-            }
+            string scenePath = GetNextScenePath();
 
             List<string> modelPaths = FindModelAssets();
             if (modelPaths.Count == 0)
@@ -97,7 +89,7 @@ namespace MiaMax.EditorTools
 
             CreateCamera(shown);
             EditorSceneManager.MarkSceneDirty(scene);
-            bool saved = EditorSceneManager.SaveScene(scene, ScenePath);
+            bool saved = EditorSceneManager.SaveScene(scene, scenePath);
             if (previousActiveScene.IsValid() && previousActiveScene.isLoaded)
                 SceneManager.SetActiveScene(previousActiveScene);
             AssetDatabase.Refresh();
@@ -105,15 +97,33 @@ namespace MiaMax.EditorTools
             if (saved)
             {
                 EditorUtility.DisplayDialog("Mia & Max Asset Review",
-                    "Created a separate review scene with " + shown + " model previews:\n" + ScenePath +
+                    "Created a separate review scene with " + shown + " model previews:\n" + scenePath +
                     "\n\nThis scene is for visual inspection only. No production scene, prefab, source model or approval flag was changed.",
                     "OK");
-                Debug.Log("[Mia & Max] Free environment review scene created. Preview models: " + shown + ". Scene: " + ScenePath);
+                Debug.Log("[Mia & Max] Free environment review scene created. Preview models: " + shown + ". Scene: " + scenePath);
             }
             else
             {
-                Debug.LogError("[Mia & Max] Failed to save free environment review scene: " + ScenePath);
+                Debug.LogError("[Mia & Max] Failed to save free environment review scene: " + scenePath);
             }
+        }
+
+        private static string GetNextScenePath()
+        {
+            string firstPath = SceneDirectory + "/FreeEnvironmentPreview.unity";
+            if (!File.Exists(firstPath))
+                return firstPath;
+
+            int version = 2;
+            string candidate;
+            do
+            {
+                candidate = SceneDirectory + "/FreeEnvironmentPreview_" + version.ToString("D2") + ".unity";
+                version++;
+            }
+            while (File.Exists(candidate));
+
+            return candidate;
         }
 
         private static List<string> FindModelAssets()
