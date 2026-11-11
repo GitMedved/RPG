@@ -53,8 +53,10 @@ namespace MiaMax.EditorTools
             }
 
             Directory.CreateDirectory(SceneDirectory);
-            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            Scene previousActiveScene = SceneManager.GetActiveScene();
+            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
             scene.name = "FreeEnvironmentPreview";
+            SceneManager.SetActiveScene(scene);
 
             CreateLighting();
             CreateGround();
@@ -84,7 +86,9 @@ namespace MiaMax.EditorTools
 
             if (shown == 0)
             {
-                EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+                EditorSceneManager.CloseScene(scene, true);
+                if (previousActiveScene.IsValid() && previousActiveScene.isLoaded)
+                    SceneManager.SetActiveScene(previousActiveScene);
                 EditorUtility.DisplayDialog("Mia & Max Asset Review",
                     "Model files were found, but Unity could not load them as GameObjects. Check the Console and model importer settings.",
                     "OK");
@@ -94,6 +98,8 @@ namespace MiaMax.EditorTools
             CreateCamera(shown);
             EditorSceneManager.MarkSceneDirty(scene);
             bool saved = EditorSceneManager.SaveScene(scene, ScenePath);
+            if (previousActiveScene.IsValid() && previousActiveScene.isLoaded)
+                SceneManager.SetActiveScene(previousActiveScene);
             AssetDatabase.Refresh();
 
             if (saved)
