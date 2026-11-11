@@ -51,6 +51,28 @@ namespace MiaMax.EditorTools
                 "BuildingKit");
         }
 
+        [MenuItem("Tools/Mia & Max/Assets/Kenney/Remove Building Kit GLB Import Folder")]
+        public static void RemoveBuildingKitGltfFolder()
+        {
+            const string glbFolder = AssetRoot + "/BuildingKit/Models/GLB format";
+            if (!AssetDatabase.IsValidFolder(glbFolder))
+            {
+                EditorUtility.DisplayDialog("Mia & Max Assets", "No Building Kit GLB format folder was found. Nothing to remove.", "OK");
+                return;
+            }
+
+            bool confirmed = EditorUtility.DisplayDialog(
+                "Mia & Max Assets",
+                "Remove only the optional GLB-format source folder from Building Kit? The FBX-format models and all other assets will be kept.",
+                "Remove GLB folder",
+                "Cancel");
+            if (!confirmed) return;
+
+            AssetDatabase.DeleteAsset(glbFolder);
+            AssetDatabase.Refresh();
+            Debug.Log("[Mia & Max Assets] Removed optional Building Kit GLB format folder. FBX assets were preserved.");
+        }
+
         private static void StartDownload(string packName, string url, string folderName)
         {
             if (activeRequest != null)
@@ -126,7 +148,7 @@ namespace MiaMax.EditorTools
 
             try
             {
-                ExtractSafely(activeArchivePath, activeDestination);
+                ExtractSafely(activeArchivePath, activeDestination, activePackName == "Building Kit");
                 File.Delete(activeArchivePath);
                 AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
                 Debug.Log("[Mia & Max Assets] Kenney " + activePackName + " extracted to " + activeDestination);
@@ -177,7 +199,7 @@ namespace MiaMax.EditorTools
                 }
             }
         }
-        private static void ExtractSafely(string archivePath, string destination)
+        private static void ExtractSafely(string archivePath, string destination, bool skipBuildingGltfFolder)
         {
             string fullRoot = Path.GetFullPath(destination);
             Directory.CreateDirectory(fullRoot);
@@ -193,6 +215,12 @@ namespace MiaMax.EditorTools
                 {
                     if (string.IsNullOrEmpty(entry.FullName)) continue;
                     string normalized = entry.FullName.Replace('\\', '/');
+                    // Building Kit also ships a GLB variant. In this Unity 6 project,
+                    // use its parallel FBX models to avoid noisy GLTFast importer failures.
+                    if (skipBuildingGltfFolder &&
+                        normalized.IndexOf("/Models/GLB format/", StringComparison.OrdinalIgnoreCase) >= 0)
+                        continue;
+
                     if (normalized.StartsWith("/", StringComparison.Ordinal) ||
                         Path.IsPathRooted(normalized) ||
                         normalized.Contains("../") ||
