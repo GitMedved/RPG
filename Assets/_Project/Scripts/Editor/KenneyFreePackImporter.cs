@@ -29,7 +29,7 @@ namespace MiaMax.EditorTools
         {
             StartDownload(
                 "Nature Kit",
-                "https://kenney.nl/media/pages/assets/nature-kit/37ac38a37b-1677698939/kenney_nature-kit.zip",
+                "https://opengameart.org/sites/default/files/Nature%20Kit%20%282.1%29.zip",
                 "NatureKit");
         }
 
@@ -38,7 +38,7 @@ namespace MiaMax.EditorTools
         {
             StartDownload(
                 "Furniture Kit",
-                "https://kenney.nl/media/pages/assets/furniture-kit/download",
+                "https://opengameart.org/sites/default/files/kenney_furniturePack.zip",
                 "FurnitureKit");
         }
 
@@ -47,7 +47,7 @@ namespace MiaMax.EditorTools
         {
             StartDownload(
                 "Building Kit",
-                "https://kenney.nl/media/pages/assets/building-kit/download",
+                "https://opengameart.org/sites/default/files/kenney_building-kit.zip",
                 "BuildingKit");
         }
 
@@ -105,6 +105,16 @@ namespace MiaMax.EditorTools
             activeRequest = null;
             activeOperation = null;
 
+            if (downloaded)
+            {
+                try { ValidateZipArchive(activeArchivePath); }
+                catch (Exception validationException)
+                {
+                    downloaded = false;
+                    error = "Invalid ZIP response: " + validationException.Message;
+                }
+            }
+
             if (!downloaded)
             {
                 CleanupArchive();
@@ -130,6 +140,9 @@ namespace MiaMax.EditorTools
             catch (Exception exception)
             {
                 CleanupArchive();
+                if (Directory.Exists(activeDestination) &&
+                    Directory.GetFiles(activeDestination, "*", SearchOption.AllDirectories).Length == 0)
+                    Directory.Delete(activeDestination, true);
                 Debug.LogException(exception);
                 EditorUtility.DisplayDialog(
                     "Mia & Max Assets",
@@ -140,6 +153,30 @@ namespace MiaMax.EditorTools
             ResetState();
         }
 
+        private static void ValidateZipArchive(string archivePath)
+        {
+            using (FileStream file = File.OpenRead(archivePath))
+            {
+                if (file.Length < 4) throw new InvalidDataException("Archive is too small.");
+                int a = file.ReadByte(), b = file.ReadByte(), c = file.ReadByte(), d = file.ReadByte();
+                bool valid = a == 0x50 && b == 0x4B &&
+                    ((c == 0x03 && d == 0x04) || (c == 0x05 && d == 0x06) || (c == 0x07 && d == 0x08));
+                if (!valid) throw new InvalidDataException("Server response is not a ZIP file (missing PK signature).");
+                file.Position = 0;
+                using (ZipArchive archive = new ZipArchive(file, ZipArchiveMode.Read))
+                {
+                    if (archive.Entries.Count == 0) throw new InvalidDataException("ZIP archive is empty.");
+                    foreach (ZipArchiveEntry entry in archive.Entries)
+                    {
+                        using (Stream input = entry.Open())
+                        {
+                            byte[] buffer = new byte[81920];
+                            while (input.Read(buffer, 0, buffer.Length) > 0) { }
+                        }
+                    }
+                }
+            }
+        }
         private static void ExtractSafely(string archivePath, string destination)
         {
             string fullRoot = Path.GetFullPath(destination);
