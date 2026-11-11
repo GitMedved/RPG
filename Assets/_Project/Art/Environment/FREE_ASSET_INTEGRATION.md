@@ -63,3 +63,15 @@ The Kenney importer downloads archives to Library, checks that a ZIP can be open
 ## 4. Current limitations
 
 The importers retrieve source archives into the Unity project when the user runs their menu commands. No third-party binary assets are committed by the code change itself. No existing scene or prefab is replaced. After downloading, run Tools > Mia & Max > Assets > Run Free Environment Asset Inventory. Imported models still need visual review, URP material setup, collision/LOD preparation and mobile profiling before they can replace placeholders.
+
+
+## 5. Safe visual review scene
+
+After downloading one or more packs and waiting for Unity to finish importing, run:
+
+- Unity menu: **Tools > Mia & Max > Assets > Build Free Environment Review Scene**
+- Output: `Assets/_Project/Scenes/ArtReview/FreeEnvironmentPreview.unity`
+
+The editor utility scans the environment model source folder for FBX, OBJ, GLB and glTF files, then places loadable models on a neutral review grid with a camera, lights and labels. It normalizes preview instances for side-by-side inspection. It creates a separate additive review scene and restores the previously active scene; it does not edit or replace the backyard scene, source models, prefabs, or production approval flags. If the review scene already exists, it refuses to overwrite it. Delete or rename that review scene manually only when you intentionally want to regenerate it.
+
+This is a visual inspection aid, not an automated art-quality or mobile-performance approval. Some imported formats may not load as GameObjects until their importer/package is configured. Review silhouettes, scale, style consistency, materials, texture resolution, geometry and performance before selecting assets for production integration.
