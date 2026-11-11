@@ -59,7 +59,7 @@ namespace MiaMax.EditorTools
             SceneManager.SetActiveScene(scene);
 
             CreateLighting();
-            CreateGround();
+            CreateGround(modelPaths.Count);
 
             int shown = 0;
             for (int i = 0; i < modelPaths.Count; i++)
@@ -157,12 +157,14 @@ namespace MiaMax.EditorTools
             instance.transform.position += cellCenter - new Vector3(bounds.center.x, bounds.min.y, bounds.center.z);
         }
 
-        private static void CreateGround()
+        private static void CreateGround(int modelCount)
         {
+            int rows = Mathf.Max(1, Mathf.CeilToInt(modelCount / (float)Columns));
+            float centerZ = -Mathf.Max(0, rows - 1) * CellSpacing * 0.5f;
             GameObject ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
             ground.name = "REVIEW_ONLY_Ground";
-            ground.transform.position = new Vector3(0f, -0.03f, -((Mathf.CeilToInt(1f) - 1) * CellSpacing) * 0.5f);
-            ground.transform.localScale = new Vector3(Columns * 1.15f, 1f, 8f);
+            ground.transform.position = new Vector3(0f, -0.03f, centerZ);
+            ground.transform.localScale = new Vector3(Columns * 1.15f, 1f, Mathf.Max(8f, rows * 0.42f));
             ground.GetComponent<Renderer>().sharedMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard"))
             {
                 name = "REVIEW_ONLY_GroundMaterial",
@@ -212,7 +214,7 @@ namespace MiaMax.EditorTools
             cameraObject.transform.position = new Vector3(0f, 13f, centerZ - 15f);
             cameraObject.transform.rotation = Quaternion.Euler(32f, 0f, 0f);
             camera.nearClipPlane = 0.1f;
-            camera.farClipPlane = 100f;
+            camera.farClipPlane = Mathf.Max(100f, rows * CellSpacing + 40f);
             camera.tag = "MainCamera";
         }
     }
