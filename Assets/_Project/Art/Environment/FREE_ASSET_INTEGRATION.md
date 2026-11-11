@@ -22,7 +22,7 @@ The importer does not alter scenes, existing placeholder prefabs, runtime bootst
 **Kenney — Nature Kit**
 - Official page: https://kenney.nl/assets/nature-kit
 - 330 3D files; CC0; trees, rocks and foliage.
-- Official archive URL used by importer: https://kenney.nl/media/pages/assets/nature-kit/37ac38a37b-1677698939/kenney_nature-kit.zip
+- Official archive URL used by importer: https://opengameart.org/sites/default/files/Nature%20Kit%20%282.1%29.zip
 - Unity menu: Tools > Mia & Max > Assets > Kenney > Download Nature Kit (CC0)
 - Destination: Assets/_Project/Art/Environment/Runtime/Models/Kenney/NatureKit/
 
@@ -38,7 +38,7 @@ The importer does not alter scenes, existing placeholder prefabs, runtime bootst
 - Unity menu: Tools > Mia & Max > Assets > Kenney > Download Building Kit (CC0)
 - Destination: Assets/_Project/Art/Environment/Runtime/Models/Kenney/BuildingKit/
 
-The Kenney importer downloads archives to Library, checks that a ZIP can be opened, rejects path traversal, and refuses to overwrite a non-empty destination. The furniture/building download actions use Kenney's official per-pack download endpoint. If Kenney changes its endpoint, the download will fail visibly rather than silently importing an HTML page. The project manifest now includes Unity glTFast 6.20.0 so Unity can import GLB/glTF source files; Unity Package Manager must finish resolving it before GLB import can be assessed.
+The Kenney importer downloads archives to Library, checks the ZIP signature and opens/reads the archive before extraction, rejects path traversal, and refuses to overwrite a non-empty destination. The archive URLs above point to the Kenney-authored CC0 pack files listed on OpenGameArt; verify the included License file after import. The furniture/building download actions use Kenney's official per-pack download endpoint. If Kenney changes its endpoint, the download will fail visibly rather than silently importing an HTML page. The project manifest now includes Unity glTFast 6.20.0 so Unity can import GLB/glTF source files; Unity Package Manager must finish resolving it before GLB import can be assessed.
 
 **Poly Haven — models**
 - https://polyhaven.com/models
