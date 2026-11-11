@@ -47,7 +47,7 @@ namespace MiaMax.EditorTools
             if (modelPaths.Count == 0)
             {
                 EditorUtility.DisplayDialog("Mia & Max Asset Review",
-                    "No importable FBX, OBJ, GLB or glTF model assets were found. Download a pack, wait for import, then run the inventory and try again.",
+                    "No importable FBX, OBJ, DAE, GLB or glTF model assets were found. Download a pack, wait for import, then run the inventory and try again.",
                     "OK");
                 return;
             }
@@ -123,7 +123,7 @@ namespace MiaMax.EditorTools
                 .Where(path =>
                 {
                     string extension = Path.GetExtension(path).ToLowerInvariant();
-                    return extension == ".fbx" || extension == ".obj" ||
+                    return extension == ".fbx" || extension == ".obj" || extension == ".dae" ||
                            extension == ".glb" || extension == ".gltf";
                 })
                 .Select(path => path.Replace('\\', '/'))
