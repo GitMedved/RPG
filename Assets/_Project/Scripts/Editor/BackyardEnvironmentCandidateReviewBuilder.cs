@@ -162,7 +162,7 @@ namespace MiaMax.EditorTools
                 instance.transform.localScale *= scale;
 
                 float x = (i - (MaxPerCategory - 1) * 0.5f) * CellWidth;
-                instance.transform.position += new Vector3(x, -bounds.min.y * scale + 0.12f, z);
+                instance.transform.position += new Vector3(x, bounds.extents.y * scale + 0.12f, z);
 
                 foreach (Renderer renderer in renderers)
                 {
@@ -302,9 +302,15 @@ namespace MiaMax.EditorTools
             ground.name = "REVIEW_ONLY_BackyardCandidateGround";
             ground.transform.position = new Vector3(0f, -0.08f, -(rows - 1) * RowDepth * 0.5f);
             ground.transform.localScale = new Vector3(2.8f, 1f, Mathf.Max(1f, rows * 0.75f));
-            Material material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-            material.name = "REVIEW_ONLY_BackyardCandidateGroundMaterial";
-            material.SetColor("_BaseColor", new Color(0.25f, 0.38f, 0.24f));
+            const string groundMaterialPath = PreviewMaterialsRoot + "/CandidateGround.mat";
+            Material material = AssetDatabase.LoadAssetAtPath<Material>(groundMaterialPath);
+            if (material == null)
+            {
+                material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+                material.name = "REVIEW_ONLY_BackyardCandidateGroundMaterial";
+                material.SetColor("_BaseColor", new Color(0.25f, 0.38f, 0.24f));
+                AssetDatabase.CreateAsset(material, groundMaterialPath);
+            }
             ground.GetComponent<Renderer>().sharedMaterial = material;
         }
 
