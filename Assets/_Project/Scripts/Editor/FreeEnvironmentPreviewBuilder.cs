@@ -176,7 +176,7 @@ namespace MiaMax.EditorTools
                     if (!converted.TryGetValue(sourceId, out Material replacement))
                     {
                         string safeName = string.Join("_", source.name.Split(System.IO.Path.GetInvalidFileNameChars()));
-                        string assetPath = reviewMaterialDirectory + "/" + safeName + "_" + sourceId + ".mat";
+                        string assetPath = reviewMaterialDirectory + "/" + safeName + "_" + GetStableMaterialKey(source) + ".mat";
                         replacement = AssetDatabase.LoadAssetAtPath<Material>(assetPath);
                         if (replacement == null)
                         {
@@ -216,6 +216,17 @@ namespace MiaMax.EditorTools
             if (convertedCount > 0)
                 Debug.Log("[Mia & Max] Review-only Standard to URP/Lit material conversions: " +
                     convertedCount + ". Generated materials: " + reviewMaterialDirectory);
+        }
+        private static string GetStableMaterialKey(Material source)
+        {
+            string key = AssetDatabase.GetAssetPath(source) + "|" + source.name;
+            unchecked
+            {
+                uint hash = 2166136261;
+                for (int i = 0; i < key.Length; i++)
+                    hash = (hash ^ key[i]) * 16777619;
+                return hash.ToString("X8");
+            }
         }
         private static void NormalizeAndPlace(GameObject instance, Vector3 cellCenter)
         {
