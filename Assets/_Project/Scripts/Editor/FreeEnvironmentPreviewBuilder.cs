@@ -71,6 +71,7 @@ namespace MiaMax.EditorTools
                     instance = UnityEngine.Object.Instantiate(source);
 
                 instance.name = "REVIEW_ONLY_" + Path.GetFileNameWithoutExtension(modelPaths[i]);
+                ConvertLegacyMaterialsForReview(instance);
                 NormalizeAndPlace(instance, cellCenter);
                 CreateLabel(Path.GetFileNameWithoutExtension(modelPaths[i]), cellCenter + new Vector3(0f, 0.08f, -1.15f));
                 shown++;
@@ -142,6 +143,80 @@ namespace MiaMax.EditorTools
                 .ToList();
         }
 
+        // Converts only legacy Standard materials on review-scene instances.
+        // Source FBX/OBJ/DAE assets and production prefabs are never modified.
+        private static void ConvertLegacyMaterialsForReview(GameObject instance)
+        {
+            const string reviewMaterialDirectory = "Assets/_Project/Art/Environment/Runtime/ReviewMaterials/URP";
+            Shader urpLit = Shader.Find("Universal Render Pipeline/Lit");
+            if (urpLit == null)
+            {
+                Debug.LogWarning("[Mia & Max] URP/Lit shader was not found. Legacy review materials were left unchanged.");
+                return;
+            }
+
+            if (!AssetDatabase.IsValidFolder("Assets/_Project/Art/Environment/Runtime/ReviewMaterials"))
+                AssetDatabase.CreateFolder("Assets/_Project/Art/Environment/Runtime", "ReviewMaterials");
+            if (!AssetDatabase.IsValidFolder(reviewMaterialDirectory))
+                AssetDatabase.CreateFolder("Assets/_Project/Art/Environment/Runtime/ReviewMaterials", "URP");
+
+            var converted = new Dictionary<int, Material>();
+            int convertedCount = 0;
+            foreach (Renderer renderer in instance.GetComponentsInChildren<Renderer>(true))
+            {
+                Material[] slots = renderer.sharedMaterials;
+                bool changed = false;
+                for (int i = 0; i < slots.Length; i++)
+                {
+                    Material source = slots[i];
+                    if (source == null || source.shader == null || source.shader.name != "Standard")
+                        continue;
+
+                    int sourceId = source.GetInstanceID();
+                    if (!converted.TryGetValue(sourceId, out Material replacement))
+                    {
+                        string safeName = string.Join("_", source.name.Split(System.IO.Path.GetInvalidFileNameChars()));
+                        string assetPath = reviewMaterialDirectory + "/" + safeName + "_" + sourceId + ".mat";
+                        replacement = AssetDatabase.LoadAssetAtPath<Material>(assetPath);
+                        if (replacement == null)
+                        {
+                            replacement = new Material(urpLit);
+                            replacement.name = source.name + "_Review_URP";
+                            Color baseColor = source.HasProperty("_Color") ? source.GetColor("_Color") : Color.white;
+                            replacement.SetColor("_BaseColor", baseColor);
+                            if (source.HasProperty("_MainTex"))
+                            {
+                                Texture mainTexture = source.GetTexture("_MainTex");
+                                if (mainTexture != null) replacement.SetTexture("_BaseMap", mainTexture);
+                            }
+                            if (source.HasProperty("_Glossiness") && replacement.HasProperty("_Smoothness"))
+                                replacement.SetFloat("_Smoothness", source.GetFloat("_Glossiness"));
+                            if (source.HasProperty("_Metallic") && replacement.HasProperty("_Metallic"))
+                                replacement.SetFloat("_Metallic", source.GetFloat("_Metallic"));
+                            bool transparent = baseColor.a < 0.999f ||
+                                (source.HasProperty("_Mode") && source.GetFloat("_Mode") >= 2f);
+                            if (transparent && replacement.HasProperty("_Surface"))
+                            {
+                                replacement.SetFloat("_Surface", 1f);
+                                replacement.SetFloat("_Blend", 0f);
+                                replacement.SetFloat("_ZWrite", 0f);
+                                replacement.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+                                replacement.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+                            }
+                            AssetDatabase.CreateAsset(replacement, assetPath);
+                        }
+                        converted[sourceId] = replacement;
+                        convertedCount++;
+                    }
+                    slots[i] = replacement;
+                    changed = true;
+                }
+                if (changed) renderer.sharedMaterials = slots;
+            }
+            if (convertedCount > 0)
+                Debug.Log("[Mia & Max] Review-only Standard to URP/Lit material conversions: " +
+                    convertedCount + ". Generated materials: " + reviewMaterialDirectory);
+        }
         private static void NormalizeAndPlace(GameObject instance, Vector3 cellCenter)
         {
             Renderer[] renderers = instance.GetComponentsInChildren<Renderer>(true);
