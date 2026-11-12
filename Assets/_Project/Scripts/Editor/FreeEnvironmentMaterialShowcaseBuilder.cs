@@ -132,7 +132,7 @@ namespace MiaMax.EditorTools
 
         private static void AddMaterial(Dictionary<string, MaterialSample> unique, Material material, string path)
         {
-            string key = path + "::" + material.name;
+            string key = BuildVisualSignature(material);
             if (unique.ContainsKey(key)) return;
 
             bool hasAlbedo = false;
@@ -167,7 +167,7 @@ namespace MiaMax.EditorTools
             if (samples.Count == 0) return 0;
 
             float z = -category * RowSpacing;
-            CreateLabel(title, new Vector3(-6.1f, 2.15f, z + 0.2f), 0.22f);
+            CreateLabel(title, new Vector3(-6.1f, 2.85f, z + 0.2f), 0.22f);
 
             for (int i = 0; i < samples.Count; i++)
             {
@@ -185,8 +185,8 @@ namespace MiaMax.EditorTools
 
                 string shortName = samples[i].Source.name;
                 if (shortName.Length > 22) shortName = shortName.Substring(0, 22);
-                CreateLabel(shortName, position + new Vector3(0f, -0.95f, 0f), 0.12f);
-                CreateLabel(Path.GetFileName(samples[i].AssetPath), position + new Vector3(0f, -1.2f, 0f), 0.075f);
+                CreateLabel(shortName, position + new Vector3(0f, 1.05f, 0f), 0.12f);
+                CreateLabel(Path.GetFileName(samples[i].AssetPath), position + new Vector3(0f, 1.28f, 0f), 0.075f);
             }
 
             return samples.Count;
@@ -223,7 +223,8 @@ namespace MiaMax.EditorTools
             if (source.HasProperty("_OcclusionStrength") && result.HasProperty("_OcclusionStrength"))
                 result.SetFloat("_OcclusionStrength", source.GetFloat("_OcclusionStrength"));
 
-            if (source.IsKeywordEnabled("_EMISSION") || source.GetTexture("_EmissionMap") != null)
+            if (source.IsKeywordEnabled("_EMISSION") ||
+                (source.HasProperty("_EmissionMap") && source.GetTexture("_EmissionMap") != null))
             {
                 result.EnableKeyword("_EMISSION");
                 if (source.HasProperty("_EmissionColor") && result.HasProperty("_EmissionColor"))
@@ -272,6 +273,28 @@ namespace MiaMax.EditorTools
             return Color.white;
         }
 
+        private static string BuildVisualSignature(Material material)
+        {
+            Color color = GetMaterialColor(material);
+            var parts = new List<string>
+            {
+                material.shader != null ? material.shader.name : "<missing>",
+                ColorUtility.ToHtmlStringRGBA(color)
+            };
+            try
+            {
+                foreach (string property in material.GetTexturePropertyNames().OrderBy(x => x, StringComparer.Ordinal))
+                {
+                    Texture texture = material.GetTexture(property);
+                    if (texture == null) continue;
+                    parts.Add(property + "=" + AssetDatabase.GetAssetPath(texture) +
+                        "@" + material.GetTextureScale(property) + ":" + material.GetTextureOffset(property));
+                }
+            }
+            catch (Exception) { }
+            return string.Join("|", parts);
+        }
+
         private static void EnsureFolders()
         {
             if (!AssetDatabase.IsValidFolder("Assets/_Project/Art/Environment/Runtime/ReviewMaterials"))
@@ -318,9 +341,15 @@ namespace MiaMax.EditorTools
             ground.name = "REVIEW_ONLY_ShowcaseGround";
             ground.transform.position = new Vector3(0f, -0.04f, -RowSpacing);
             ground.transform.localScale = new Vector3(2.2f, 1f, 1.35f);
-            Material material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-            material.name = "REVIEW_ONLY_ShowcaseGroundMaterial";
-            material.SetColor("_BaseColor", new Color(0.27f, 0.32f, 0.28f));
+            const string groundMaterialPath = MaterialDirectory + "/ShowcaseGround.mat";
+            Material material = AssetDatabase.LoadAssetAtPath<Material>(groundMaterialPath);
+            if (material == null)
+            {
+                material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+                material.name = "REVIEW_ONLY_ShowcaseGroundMaterial";
+                material.SetColor("_BaseColor", new Color(0.27f, 0.32f, 0.28f));
+                AssetDatabase.CreateAsset(material, groundMaterialPath);
+            }
             ground.GetComponent<Renderer>().sharedMaterial = material;
         }
 
@@ -359,7 +388,7 @@ namespace MiaMax.EditorTools
             camera.clearFlags = CameraClearFlags.SolidColor;
             camera.backgroundColor = new Color(0.13f, 0.16f, 0.19f);
             camera.orthographic = true;
-            camera.orthographicSize = 7.4f;
+            camera.orthographicSize = 8.1f;
             cameraObject.transform.position = new Vector3(0f, 13f, -15f);
             cameraObject.transform.LookAt(new Vector3(0f, 0.5f, -RowSpacing));
             camera.nearClipPlane = 0.1f;
