@@ -105,7 +105,7 @@ namespace MiaMax.EditorTools
                 if (hasTexture) materialsWithTextures++;
                 Color color = material.HasProperty("_BaseColor") ? material.GetColor("_BaseColor") :
                     material.HasProperty("_Color") ? material.GetColor("_Color") : Color.white;
-                if ((color - Color.white).sqrMagnitude > 0.0001f)
+                if (Mathf.Abs(color.r - 1f) > 0.001f || Mathf.Abs(color.g - 1f) > 0.001f || Mathf.Abs(color.b - 1f) > 0.001f || Mathf.Abs(color.a - 1f) > 0.001f)
                     materialsWithNonWhiteColor++;
 
                 if (sampleLines.Count < MaxSamples)
