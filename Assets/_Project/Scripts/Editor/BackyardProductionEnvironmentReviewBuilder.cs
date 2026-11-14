@@ -218,7 +218,7 @@ namespace MiaMax.EditorTools
             GameObject ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
             ground.name = "REVIEW_ONLY_NeutralGround";
             ground.transform.position = new Vector3(0f, -0.04f, 0f);
-            ground.transform.localScale = new Vector3(1.75f, 1f, Mathf.Max(1f, rows * 0.95f));
+            ground.transform.localScale = new Vector3(3.2f, 1f, Mathf.Max(1.8f, rows * 0.8f));
             Collider collider = ground.GetComponent<Collider>();
             if (collider != null) UnityEngine.Object.DestroyImmediate(collider);
             SetMaterial(ground.GetComponent<Renderer>(), "REVIEW_ONLY_Ground", new Color(0.42f, 0.48f, 0.39f));
@@ -272,10 +272,11 @@ namespace MiaMax.EditorTools
             camera.fieldOfView = 48f;
             camera.nearClipPlane = 0.1f;
             camera.farClipPlane = 300f;
-            float width = 6f * 4.6f;
             float depth = Mathf.Max(1, rows) * 5.2f;
-            cameraObject.transform.position = new Vector3(0f, Mathf.Max(15f, depth * 0.95f), depth * 1.05f);
-            cameraObject.transform.LookAt(new Vector3(0f, 1.2f, 0f));
+            camera.orthographic = true;
+            camera.orthographicSize = Mathf.Max(10f, rows * 4.8f);
+            cameraObject.transform.position = new Vector3(0f, Mathf.Max(18f, depth * 1.1f), Mathf.Max(22f, depth * 1.35f));
+            cameraObject.transform.LookAt(new Vector3(0f, 1.0f, 0f));
         }
 
         private static void SetMaterial(Renderer renderer, string name, Color color)
