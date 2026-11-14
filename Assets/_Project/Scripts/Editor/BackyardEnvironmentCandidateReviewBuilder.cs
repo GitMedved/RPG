@@ -127,6 +127,64 @@ namespace MiaMax.EditorTools
             else Debug.LogError("[Mia & Max] Could not save candidate review scene: " + scenePath);
         }
 
+        [MenuItem("Tools/Mia & Max/Assets/Print Backyard Candidate Catalog")]
+        public static void PrintCandidateCatalog()
+        {
+            var categories = new[]
+            {
+                new { Title = "TREES & LARGE GREENERY", Tokens = new[] { "tree", "willow", "pine", "oak", "palm", "bush", "shrub", "hedge" } },
+                new { Title = "FLOWERS & SMALL PLANTS", Tokens = new[] { "flower", "plant", "grass", "fern", "mushroom", "cattail", "reed" } },
+                new { Title = "FENCES & GARDEN STRUCTURES", Tokens = new[] { "fence", "gate", "arch", "pergola", "shed", "birdhouse", "well", "trellis" } },
+                new { Title = "PATHS, ROCKS & GROUND", Tokens = new[] { "path", "tile", "stone", "rock", "pebble", "gravel", "stump", "log" } },
+                new { Title = "GARDEN FURNITURE & PLAY", Tokens = new[] { "bench", "chair", "table", "swing", "sandbox", "slide", "basket", "wheelbarrow" } }
+            };
+
+            string[] guids = AssetDatabase.FindAssets("t:Model", new[] { ModelRoot });
+            var paths = guids.Select(AssetDatabase.GUIDToAssetPath)
+                .Where(p => !string.IsNullOrEmpty(p) && !p.Contains("/GLB format/"))
+                .OrderBy(p => FormatPriority(p))
+                .ThenBy(p => p, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            var lines = new List<string> { "[Mia & Max] BACKYARD CANDIDATE CATALOG" };
+            int total = 0;
+            foreach (var category in categories)
+            {
+                var selected = new List<string>();
+                foreach (string path in paths)
+                {
+                    string file = Path.GetFileNameWithoutExtension(path).ToLowerInvariant();
+                    if (!category.Tokens.Any(token => file.Contains(token))) continue;
+                    GameObject model = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                    if (model == null || model.GetComponentsInChildren<Renderer>(true).Length == 0) continue;
+                    if (selected.Any(existing => Path.GetFileNameWithoutExtension(existing)
+                        .Equals(file, StringComparison.OrdinalIgnoreCase))) continue;
+                    selected.Add(path);
+                    if (selected.Count >= MaxPerCategory) break;
+                }
+
+                lines.Add("");
+                lines.Add(category.Title + " (" + selected.Count + ")");
+                for (int i = 0; i < selected.Count; i++)
+                {
+                    string path = selected[i];
+                    GameObject model = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                    Renderer[] renderers = model.GetComponentsInChildren<Renderer>(true);
+                    int materialSlots = renderers.Sum(x => x.sharedMaterials.Length);
+                    lines.Add("  " + (i + 1) + ". " + Path.GetFileNameWithoutExtension(path));
+                    lines.Add("     " + path + " | renderers: " + renderers.Length + " | material slots: " + materialSlots);
+                    total++;
+                }
+            }
+
+            lines.Insert(1, "Total: " + total + " | Review scene: Assets/_Project/Scenes/ArtReview/BackyardEnvironmentCandidates.unity");
+            Debug.Log(string.Join("\\n", lines));
+            EditorUtility.DisplayDialog("Backyard Candidate Catalog",
+                "Printed " + total + " candidate names and asset paths to the Unity Console.\n\n" +
+                "Use the Console search field with 'BACKYARD CANDIDATE CATALOG' to find the report.",
+                "OK");
+        }
+
         private static int FormatPriority(string path)
         {
             string lower = path.ToLowerInvariant();
