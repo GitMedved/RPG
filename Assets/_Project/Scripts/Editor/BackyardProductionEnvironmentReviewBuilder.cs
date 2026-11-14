@@ -142,10 +142,14 @@ namespace MiaMax.EditorTools
                 if (root.GetComponentsInChildren<MonoBehaviour>(true).Length > 0)
                     issues.Add("visual prefab contains MonoBehaviour");
 
-                Bounds bounds = CalculateBounds(renderers);
+                // Renderer.bounds is a world-space cache and can be stale or misleading
+                // while prefab contents are loaded outside a normal scene. Rebuild bounds from
+                // each mesh's local AABB transformed into the prefab root's local space. This
+                // mirrors the production builder's source-space grounding calculation.
+                Bounds bounds = CalculateGeometryBoundsInRootSpace(renderers, root.transform);
                 if (bounds.size.sqrMagnitude < 0.0001f) issues.Add("bounds are empty");
                 else if (Mathf.Abs(bounds.min.y) > 0.08f)
-                    issues.Add("grounding offset is " + bounds.min.y.ToString("0.000") + " m");
+                    issues.Add("geometry grounding offset is " + bounds.min.y.ToString("0.000") + " m");
 
                 row.Valid = issues.Count == 0;
                 row.Detail = row.Valid
@@ -292,12 +296,49 @@ namespace MiaMax.EditorTools
             renderer.sharedMaterial = material;
         }
 
-        private static Bounds CalculateBounds(Renderer[] renderers)
+        private static Bounds CalculateGeometryBoundsInRootSpace(Renderer[] renderers, Transform root)
         {
-            if (renderers == null || renderers.Length == 0) return new Bounds(Vector3.zero, Vector3.zero);
-            Bounds bounds = renderers[0].bounds;
-            for (int i = 1; i < renderers.Length; i++) bounds.Encapsulate(renderers[i].bounds);
-            return bounds;
+            if (renderers == null || renderers.Length == 0)
+                return new Bounds(Vector3.zero, Vector3.zero);
+
+            bool hasPoint = false;
+            Bounds bounds = new Bounds(Vector3.zero, Vector3.zero);
+            foreach (Renderer renderer in renderers)
+            {
+                Mesh mesh = null;
+                SkinnedMeshRenderer skinned = renderer as SkinnedMeshRenderer;
+                if (skinned != null) mesh = skinned.sharedMesh;
+
+                if (mesh == null)
+                {
+                    MeshFilter filter = renderer.GetComponent<MeshFilter>();
+                    if (filter != null) mesh = filter.sharedMesh;
+                }
+
+                Bounds localBounds = mesh != null ? mesh.bounds : renderer.localBounds;
+                Matrix4x4 toRoot = root.worldToLocalMatrix * renderer.transform.localToWorldMatrix;
+                Vector3 min = localBounds.min;
+                Vector3 max = localBounds.max;
+
+                for (int x = 0; x < 2; x++)
+                for (int y = 0; y < 2; y++)
+                for (int z = 0; z < 2; z++)
+                {
+                    Vector3 corner = new Vector3(
+                        x == 0 ? min.x : max.x,
+                        y == 0 ? min.y : max.y,
+                        z == 0 ? min.z : max.z);
+                    Vector3 point = toRoot.MultiplyPoint3x4(corner);
+                    if (!hasPoint)
+                    {
+                        bounds = new Bounds(point, Vector3.zero);
+                        hasPoint = true;
+                    }
+                    else bounds.Encapsulate(point);
+                }
+            }
+
+            return hasPoint ? bounds : new Bounds(Vector3.zero, Vector3.zero);
         }
 
         private static int CountTriangles(Mesh mesh)
