@@ -6,7 +6,7 @@ Cross-platform 3D family adventure game for Android and iOS, built with Unity an
 
 ## Project status
 
-Pre-production Unity prototype; not yet a verified playable vertical slice. The current startup path is tap-led, but the audited `Backyard.unity` scene has no serialized scene roots and the tap-world bootstrap expects a runtime background texture that is not present at its Resources path. Production environment prefabs and rigged Mia/Max models are also not present at their runtime paths. See [Prototype Foundation Audit](PROTOTYPE_FOUNDATION_AUDIT.md) for the verified blockers and recommended integration strategy. Do not treat earlier greybox systems or asset-importer scripts as proof that the current startup scene is visually complete.
+Pre-production Unity prototype; not yet a verified playable vertical slice. The serialized `Backyard.unity` scene is empty, so the startup bootstrap creates the tap-led 3D backyard at runtime. The runtime builder now creates the world geometry, uses the authored URP materials in `Resources/MiaMax/Materials`, frames it with a fixed angled portrait camera and selects interactables by collider raycasts. This is still a temporary primitive-based greybox: production environment prefabs and rigged Mia/Max models are not yet present at their runtime paths, and Unity Play Mode/device validation has not been run. See [Prototype Foundation Audit](PROTOTYPE_FOUNDATION_AUDIT.md) for the current blockers and integration strategy.
 
 ## Approved direction
 
@@ -51,7 +51,7 @@ Unity baseline currently recorded as 6000.3.0f1 with URP package 17.3.0. Confirm
 
 ## Current limitations
 
-Approved 2D reference images and an empty `Backyard.unity` scene are committed, but the required runtime backyard illustration, production environment prefab outputs, rigged character FBX files, authored animation clips and final audio are not yet present at the paths used by the startup/runtime systems. Runtime procedural character and environment proxies are temporary greybox art only. Unity compilation, Play Mode, save/reload and Android/iOS device validation remain outstanding.
+Approved 2D reference images, authored URP material assets and generated texture maps are committed. The empty serialized `Backyard.unity` scene is populated at runtime by the tap-adventure bootstrap, but its environment geometry is still temporary primitive-based greybox art. Production environment prefab outputs, rigged character FBX files, authored animation clips and final audio are not yet present at the paths used by the runtime systems. Unity compilation, Play Mode, save/reload and Android/iOS device validation remain outstanding.
 
 ## Development workflow
 
