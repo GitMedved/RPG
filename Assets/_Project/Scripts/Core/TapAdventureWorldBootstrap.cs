@@ -20,6 +20,7 @@ namespace MiaMax.Gameplay
         private string toast = "Welcome! Let's make a little birdhouse.";
         private int twigs, feathers, flowers, stars;
         private bool birdhouseBuilt, flowersWatered, forestUnlocked, treeGathered;
+        private bool twigsGathered, featherGathered, miniGameClaimed, gardenstoneDiscovered;
         private DateTime flowersReadyUtc;
         private bool miniGameOpen;
         private int miniGameStep;
@@ -66,6 +67,10 @@ namespace MiaMax.Gameplay
             flowersWatered = PlayerPrefs.GetInt(SavePrefix + "watered", 0) == 1;
             forestUnlocked = PlayerPrefs.GetInt(SavePrefix + "forest", 0) == 1;
             treeGathered = PlayerPrefs.GetInt(SavePrefix + "treeGathered", 0) == 1;
+            twigsGathered = PlayerPrefs.GetInt(SavePrefix + "twigsGathered", 0) == 1;
+            featherGathered = PlayerPrefs.GetInt(SavePrefix + "featherGathered", 0) == 1;
+            miniGameClaimed = PlayerPrefs.GetInt(SavePrefix + "miniGameClaimed", 0) == 1;
+            gardenstoneDiscovered = PlayerPrefs.GetInt(SavePrefix + "gardenstoneDiscovered", 0) == 1;
             string savedTicks = PlayerPrefs.GetString(SavePrefix + "flowersReady", "0");
             if (long.TryParse(savedTicks, out long ticks) && ticks > 0 &&
                 ticks <= DateTime.MaxValue.Ticks)
@@ -84,6 +89,10 @@ namespace MiaMax.Gameplay
             PlayerPrefs.SetInt(SavePrefix + "watered", flowersWatered ? 1 : 0);
             PlayerPrefs.SetInt(SavePrefix + "forest", forestUnlocked ? 1 : 0);
             PlayerPrefs.SetInt(SavePrefix + "treeGathered", treeGathered ? 1 : 0);
+            PlayerPrefs.SetInt(SavePrefix + "twigsGathered", twigsGathered ? 1 : 0);
+            PlayerPrefs.SetInt(SavePrefix + "featherGathered", featherGathered ? 1 : 0);
+            PlayerPrefs.SetInt(SavePrefix + "miniGameClaimed", miniGameClaimed ? 1 : 0);
+            PlayerPrefs.SetInt(SavePrefix + "gardenstoneDiscovered", gardenstoneDiscovered ? 1 : 0);
             PlayerPrefs.SetString(SavePrefix + "flowersReady", flowersReadyUtc == DateTime.MinValue ? "0" : flowersReadyUtc.Ticks.ToString());
             PlayerPrefs.Save();
         }
@@ -310,7 +319,7 @@ namespace MiaMax.Gameplay
             // placed at ground level and looked horizontally, making the whole yard
             // appear edge-on and effectively invisible.
             worldCamera.orthographic = true;
-            worldCamera.orthographicSize = 10.5f;
+            worldCamera.orthographicSize = 12.5f;
             worldCamera.transform.position = new Vector3(0f, 13.5f, -18f);
             worldCamera.transform.LookAt(new Vector3(0f, 1.0f, 0.5f));
             worldCamera.nearClipPlane = 0.1f;
@@ -539,19 +548,18 @@ namespace MiaMax.Gameplay
             switch (id)
             {
                 case "twigs":
-                    if (twigs == 0)
+                    if (!twigsGathered)
                     {
-                        twigs += 3; stars += 1; toast = "You found a bundle of 3 useful twigs!";
-                        
+                        twigs += 3; stars += 1; twigsGathered = true; toast = "You found a bundle of 3 useful twigs!";
                     }
-                    else toast = "You already gathered the fallen twigs.";
+                    else toast = "You already gathered these fallen twigs.";
                     break;
                 case "feather":
-                    if (feathers == 0) { feathers++; stars++; toast = "A beautiful feather for your collection!";   }
+                    if (!featherGathered) { feathers++; stars++; featherGathered = true; toast = "A beautiful feather for your collection!"; }
                     else toast = "You already collected this feather.";
                     break;
                 case "birdhouse":
-                    if (birdhouseBuilt) { toast = "A little bird has made this its home!"; stars++; }
+                    if (birdhouseBuilt) { toast = "A little bird has made this its home!"; }
                     else if (twigs >= 3 && feathers >= 1)
                     {
                         twigs -= 3; feathers -= 1; birdhouseBuilt = true; stars += 5;
@@ -582,19 +590,25 @@ namespace MiaMax.Gameplay
                     if (!forestUnlocked && twigs >= 1 && flowers >= 1)
                     {
                         twigs--; flowers--; forestUnlocked = true; stars += 8;
+                        BuildSecretGarden();
                         toast = "You crafted a garden keepsake! The Secret Garden Gate is open.";
-                        toast += " The illustrated garden gate is now unlocked.";
+                        toast += " A new garden clearing has appeared beyond the gate.";
                     }
                     else if (forestUnlocked) toast = "Your garden keepsake opened a new adventure!";
                     else toast = "Recipe: 1 twig + 1 flower. Gather twigs beneath the tree and grow flowers.";
                     break;
                 case "minigame":
-                    miniGameOpen = true; miniGameStep = 0; miniGameScore = 0; miniGameMessage = "Tap the treasures in this order: feather, shell, leaf."; break;
+                    if (miniGameClaimed) toast = "Max has already sorted this basket. Come back for another adventure!";
+                    else { miniGameOpen = true; miniGameStep = 0; miniGameScore = 0; miniGameMessage = "Tap the treasures in this order: feather, shell, leaf."; }
+                    break;
                 case "gate":
                     toast = forestUnlocked ? "Welcome to the Secret Garden! Explore the new discoveries." : "Craft a garden keepsake at the workbench to unlock this gate.";
                     if (forestUnlocked) toast += " The Secret Garden chapter is unlocked.";
                     break;
-                case "gardenstone": toast = "The Secret Garden's story has only just begun!"; stars++; break;
+                case "gardenstone":
+                    toast = gardenstoneDiscovered ? "The golden stone glows softly." : "The Secret Garden's story has only just begun!";
+                    if (!gardenstoneDiscovered) { gardenstoneDiscovered = true; stars++; }
+                    break;
                 case "tree":
                     if (!treeGathered) { twigs += 2; treeGathered = true; stars++; toast = "You gathered 2 more twigs beneath the tree."; }
                     else toast = "The tree is peaceful in the afternoon light.";
@@ -628,7 +642,11 @@ namespace MiaMax.Gameplay
                         miniGameStep++; miniGameScore++;
                         if (miniGameStep >= 3)
                         {
-                            miniGameOpen = false; stars += 5; feathers++; toast = "Max did it! You earned 5 stars and a bonus feather."; SaveProgress();
+                            miniGameOpen = false;
+                            miniGameClaimed = true;
+                            stars += 5; feathers++;
+                            toast = "Max did it! You earned 5 stars and a bonus feather.";
+                            SaveProgress();
                         }
                         else miniGameMessage = "Great! Now find the next treasure.";
                     }
