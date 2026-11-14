@@ -106,7 +106,10 @@ namespace MiaMax.EditorTools
                         // Capture source-space bounds before changing any transforms. Unity may
                         // return cached renderer world bounds for imported models during an Editor
                         // asset build, so grounding must not depend on a post-scale bounds refresh.
-                        Bounds sourceBounds = GetBoundsInRootSpace(renderers, wrapper.transform);
+                        // Measure geometry relative to the imported model root, not the wrapper. Imported FBX roots
+                        // can carry authoring offsets (notably plant pivots); including that root
+                        // offset and then replacing it with the grounding offset applies it twice.
+                        Bounds sourceBounds = GetBoundsInRootSpace(renderers, visual.transform);
                         if (sourceBounds.size.y <= 0.001f)
                             throw new InvalidOperationException("Source model has zero height.");
 
