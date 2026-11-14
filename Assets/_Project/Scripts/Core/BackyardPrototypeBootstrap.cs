@@ -163,7 +163,8 @@ namespace MiaMax.Gameplay
 
             // A small red toy truck recalls the reference board's sandbox detail.
             Cube("Toy_Truck_Placeholder", new Vector3(7f, 0.35f, -4f), new Vector3(1.1f, 0.45f, 0.7f), Mat(new Color(0.85f, 0.12f, 0.08f)));
-            Debug.Log("Mia & Max Backyard blockout created. All primitives are temporary placeholders.");
+            BackyardProductionEnvironmentRuntime.Apply();
+            Debug.Log("Mia & Max Backyard blockout created. Production environment visuals are layered over preserved gameplay placeholders.");
         }
 
 
