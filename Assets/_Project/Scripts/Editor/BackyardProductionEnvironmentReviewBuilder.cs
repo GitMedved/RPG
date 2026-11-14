@@ -19,7 +19,7 @@ namespace MiaMax.EditorTools
     {
         private const string PrefabRoot = "Assets/_Project/Art/Environment/Runtime/ProductionPrefabs/Environment";
         private const string SceneRoot = "Assets/_Project/Scenes/ArtReview";
-        private const string[] AssetNames =
+        private static readonly string[] AssetNames =
         {
             "FencePlanks", "FenceGate", "FenceCorner", "TreeBlocks", "TreeCone",
             "Bench", "ChairRounded", "ChairCushion",
