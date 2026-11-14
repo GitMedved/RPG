@@ -323,9 +323,9 @@ namespace MiaMax.Gameplay
             // placed at ground level and looked horizontally, making the whole yard
             // appear edge-on and effectively invisible.
             worldCamera.orthographic = true;
-            worldCamera.orthographicSize = 12.5f;
-            worldCamera.transform.position = new Vector3(0f, 13.5f, -18f);
-            worldCamera.transform.LookAt(new Vector3(0f, 1.0f, 0.5f));
+            worldCamera.orthographicSize = 13.5f;
+            worldCamera.transform.position = new Vector3(1.0f, 13.5f, -18f);
+            worldCamera.transform.LookAt(new Vector3(1.0f, 1.0f, 0.5f));
             worldCamera.nearClipPlane = 0.1f;
             worldCamera.farClipPlane = 100f;
             worldCamera.allowHDR = true;
@@ -370,7 +370,7 @@ namespace MiaMax.Gameplay
             target.DisplayName = displayName;
         }
 
-        private void Update()
+        private void HandleWorldSelection()
         {
             if (miniGameOpen || worldCamera == null) return;
 
@@ -579,6 +579,7 @@ namespace MiaMax.Gameplay
                     if (!flowersWatered)
                     {
                         flowersWatered = true; flowersReadyUtc = DateTime.UtcNow.AddMinutes(1);
+                        UpdateFlowerVisuals();
                         toast = "Watered! The flowers will bloom in a little while.";
                     }
                     else if (DateTime.UtcNow >= flowersReadyUtc)
@@ -586,7 +587,7 @@ namespace MiaMax.Gameplay
                         flowers += 3; stars += 4; flowersWatered = false; flowersReadyUtc = DateTime.MinValue;
                         toast = "Beautiful blooms! You collected 3 flowers.";
                         if (birdhouseBuilt) toast += " Visit the workbench to craft a keepsake.";
-                        RebuildFlowerBlooms();
+                        UpdateFlowerVisuals();
                     }
                     else toast = "The flowers are still growing. Come back soon.";
                     break;
@@ -622,10 +623,21 @@ namespace MiaMax.Gameplay
             SaveProgress();
         }
 
-        private void RebuildFlowerBlooms()
+        private void UpdateFlowerVisuals()
         {
+            bool readyToBloom = flowersWatered && DateTime.UtcNow >= flowersReadyUtc;
+            float bloomScale = readyToBloom ? 0.36f : 0.12f;
             foreach (Transform child in transform)
-                if (child.name == "Flower Bloom") child.localScale = Vector3.one * 0.36f;
+                if (child.name == "Flower Bloom")
+                    child.localScale = Vector3.one * bloomScale;
+        }
+
+        private void Update()
+        {
+            if (flowersWatered && DateTime.UtcNow >= flowersReadyUtc)
+                UpdateFlowerVisuals();
+
+            HandleWorldSelection();
         }
 
         private void DrawMiniGame(float scale)
