@@ -14,7 +14,8 @@ namespace MiaMax.Gameplay
         private const string SavePrefix = "MiaMax.TapAdventure.";
         private static TapAdventureWorldBootstrap instance;
         private Camera worldCamera;
-        private GUIStyle titleStyle, bodyStyle, buttonStyle, mutedStyle;
+        private GUIStyle titleStyle, bodyStyle, buttonStyle, mutedStyle, cardStyle;
+        private Texture2D cardTexture, buttonTexture, buttonPressedTexture;
         private string selectedId = "";
         private string toast = "Welcome! Let's make a little birdhouse.";
         private int twigs, feathers, flowers, stars;
@@ -86,15 +87,15 @@ namespace MiaMax.Gameplay
         private Texture2D backyardArtwork;
         private readonly Vector2[] hotspotPositions =
         {
-            new Vector2(0.17f, 0.22f), // tree
-            new Vector2(0.22f, 0.29f), // birdhouse
-            new Vector2(0.50f, 0.31f), // gate
-            new Vector2(0.70f, 0.43f), // workshop
-            new Vector2(0.84f, 0.57f), // flowers
-            new Vector2(0.23f, 0.83f), // pond
-            new Vector2(0.51f, 0.55f), // twigs
-            new Vector2(0.46f, 0.72f), // feather
-            new Vector2(0.68f, 0.66f)  // mini-game
+            new Vector2(0.08f, 0.35f), // tree trunk
+            new Vector2(0.16f, 0.29f), // birdhouse
+            new Vector2(0.50f, 0.37f), // gate in the fence
+            new Vector2(0.84f, 0.53f), // workshop
+            new Vector2(0.80f, 0.70f), // flowers
+            new Vector2(0.17f, 0.77f), // pond edge above bottom panel
+            new Vector2(0.18f, 0.51f), // twigs at tree roots
+            new Vector2(0.48f, 0.68f), // feather discovery
+            new Vector2(0.53f, 0.57f)  // Max mini-game
         };
         private readonly string[] hotspotIds = { "tree", "birdhouse", "gate", "workshop", "flowers", "pond", "twigs", "feather", "minigame" };
 
@@ -345,16 +346,41 @@ namespace MiaMax.Gameplay
             }
         }
 
+        private Texture2D MakeUiTexture(Color color)
+        {
+            Texture2D texture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
+            texture.hideFlags = HideFlags.HideAndDontSave;
+            texture.SetPixel(0, 0, color);
+            texture.Apply();
+            return texture;
+        }
+
         private void EnsureStyles()
         {
             if (titleStyle != null) return;
-            titleStyle = new GUIStyle(GUI.skin.label) { fontSize = Mathf.Max(22, Screen.width / 24), fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleLeft };
-            titleStyle.normal.textColor = new Color(0.24f, 0.18f, 0.13f);
-            bodyStyle = new GUIStyle(GUI.skin.label) { fontSize = Mathf.Max(15, Screen.width / 43), wordWrap = true };
-            bodyStyle.normal.textColor = new Color(0.30f, 0.25f, 0.20f);
-            mutedStyle = new GUIStyle(bodyStyle); mutedStyle.normal.textColor = new Color(0.48f, 0.42f, 0.34f);
-            buttonStyle = new GUIStyle(GUI.skin.button) { fontSize = Mathf.Max(16, Screen.width / 38), fontStyle = FontStyle.Bold, wordWrap = true };
-            buttonStyle.normal.textColor = new Color(0.22f, 0.18f, 0.13f);
+            cardTexture = MakeUiTexture(new Color(1f, 0.965f, 0.88f, 0.94f));
+            buttonTexture = MakeUiTexture(new Color(0.30f, 0.55f, 0.34f, 1f));
+            buttonPressedTexture = MakeUiTexture(new Color(0.22f, 0.42f, 0.27f, 1f));
+            cardStyle = new GUIStyle(GUI.skin.box);
+            cardStyle.normal.background = cardTexture;
+            cardStyle.border = new RectOffset(14, 14, 14, 14);
+            cardStyle.padding = new RectOffset(12, 12, 8, 8);
+            titleStyle = new GUIStyle(GUI.skin.label) { fontSize = Mathf.Max(20, Screen.width / 25), fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleLeft };
+            titleStyle.normal.textColor = new Color(0.25f, 0.19f, 0.13f);
+            bodyStyle = new GUIStyle(GUI.skin.label) { fontSize = Mathf.Max(14, Screen.width / 42), wordWrap = true };
+            bodyStyle.normal.textColor = new Color(0.28f, 0.24f, 0.19f);
+            mutedStyle = new GUIStyle(bodyStyle);
+            mutedStyle.fontSize = Mathf.Max(12, Screen.width / 48);
+            mutedStyle.normal.textColor = new Color(0.43f, 0.35f, 0.25f);
+            buttonStyle = new GUIStyle(GUI.skin.button) { fontSize = Mathf.Max(15, Screen.width / 38), fontStyle = FontStyle.Bold, wordWrap = true, alignment = TextAnchor.MiddleCenter };
+            buttonStyle.normal.background = buttonTexture;
+            buttonStyle.hover.background = buttonTexture;
+            buttonStyle.active.background = buttonPressedTexture;
+            buttonStyle.focused.background = buttonTexture;
+            buttonStyle.normal.textColor = Color.white;
+            buttonStyle.hover.textColor = Color.white;
+            buttonStyle.active.textColor = Color.white;
+            buttonStyle.padding = new RectOffset(12, 12, 8, 8);
         }
 
         private void OnGUI()
@@ -365,13 +391,13 @@ namespace MiaMax.Gameplay
             float scale = Mathf.Clamp(Screen.width / 430f, 0.78f, 1.5f);
             float margin = 16f * scale;
             float topH = 92f * scale;
-            GUI.Box(new Rect(margin, margin, Screen.width - margin * 2f, topH), GUIContent.none);
+            GUI.Box(new Rect(margin, margin, Screen.width - margin * 2f, topH), GUIContent.none, cardStyle);
             GUI.Label(new Rect(margin + 16f, margin + 7f, Screen.width - margin * 2f - 32f, 34f * scale), "MIA & MAX  •  LITTLE MOMENTS, BIG ADVENTURES", titleStyle);
             GUI.Label(new Rect(margin + 16f, margin + 43f * scale, Screen.width - margin * 2f - 32f, 34f * scale),
                 "✦ " + stars + "   •   Twigs " + twigs + "   •   Feathers " + feathers + "   •   Flowers " + flowers, bodyStyle);
 
             float questY = margin + topH + 10f * scale;
-            GUI.Box(new Rect(margin, questY, Screen.width - margin * 2f, 76f * scale), GUIContent.none);
+            GUI.Box(new Rect(margin, questY, Screen.width - margin * 2f, 76f * scale), GUIContent.none, cardStyle);
             GUI.Label(new Rect(margin + 14f, questY + 5f, Screen.width - margin * 2f - 28f, 30f * scale), "TODAY'S LITTLE ADVENTURE", mutedStyle);
             string quest = !birdhouseBuilt ? "Build a birdhouse: gather 3 twigs and 1 feather." :
                 !flowersWatered ? "Water the flower bed and wait for the blooms." :
@@ -382,7 +408,7 @@ namespace MiaMax.Gameplay
 
             float panelH = selectedId == "" ? 72f : 226f * scale;
             Rect panel = new Rect(margin, Screen.height - panelH - margin, Screen.width - margin * 2f, panelH);
-            GUI.Box(panel, GUIContent.none);
+            GUI.Box(panel, GUIContent.none, cardStyle);
             if (selectedId == "")
             {
                 GUI.Label(new Rect(panel.x + 14f, panel.y + 12f, panel.width - 28f, 48f), "Tap the tree, fallen twigs, flower bed, workshop or Max's basket to explore.", bodyStyle);
@@ -542,7 +568,7 @@ namespace MiaMax.Gameplay
         private void DrawMiniGame(float scale)
         {
             Rect r = new Rect(20f, Screen.height * 0.27f, Screen.width - 40f, Screen.height * 0.42f);
-            GUI.Box(r, GUIContent.none);
+            GUI.Box(r, GUIContent.none, cardStyle);
             GUI.Label(new Rect(r.x + 18f, r.y + 16f, r.width - 36f, 44f), "MAX'S TREASURE SORT", titleStyle);
             GUI.Label(new Rect(r.x + 18f, r.y + 65f, r.width - 36f, 62f), miniGameMessage, bodyStyle);
             string[] labels = { "🪶 Feather", "🐚 Shell", "🍃 Leaf" };
