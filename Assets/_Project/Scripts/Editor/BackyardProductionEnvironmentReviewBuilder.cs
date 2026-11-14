@@ -167,6 +167,7 @@ namespace MiaMax.EditorTools
             Scene previous = SceneManager.GetActiveScene();
             Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
             scene.name = "ProductionEnvironmentPrefabReview";
+            SceneManager.SetActiveScene(scene);
 
             CreateLighting();
             CreateGround(validNames.Count);
