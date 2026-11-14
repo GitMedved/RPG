@@ -18,7 +18,8 @@ namespace MiaMax.Gameplay
 
         private void Start()
         {
-            BuildBackyard();
+            // Legacy free-roam blockout is intentionally bypassed. The new game is tap-led.
+            TapAdventureWorldBootstrap.Build();
         }
 
         private static void BuildBackyard()
