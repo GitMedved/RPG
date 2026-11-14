@@ -44,11 +44,11 @@ namespace MiaMax.EditorTools
 
             var categories = new List<Category>
             {
-                new Category { Title = "TREES & LARGE GREENERY", Tokens = new[] { "tree", "willow", "pine", "oak", "palm", "bush", "shrub", "hedge" } },
-                new Category { Title = "FLOWERS & SMALL PLANTS", Tokens = new[] { "flower", "plant", "grass", "fern", "mushroom", "cattail", "reed" } },
-                new Category { Title = "FENCES & GARDEN STRUCTURES", Tokens = new[] { "fence", "gate", "arch", "pergola", "shed", "birdhouse", "well", "trellis" } },
-                new Category { Title = "PATHS, ROCKS & GROUND", Tokens = new[] { "path", "tile", "stone", "rock", "pebble", "gravel", "stump", "log" } },
-                new Category { Title = "GARDEN FURNITURE & PLAY", Tokens = new[] { "bench", "chair", "table", "swing", "sandbox", "slide", "basket", "wheelbarrow" } }
+                new Category { Title = "TREES & LARGE GREENERY", Tokens = new[] { "tree", "pine", "willow", "palm", "oak", "birch", "maple", "bush", "shrub", "hedge" } },
+                new Category { Title = "FLOWERS & SMALL PLANTS", Tokens = new[] { "flower", "fern", "grass", "cattail", "reed", "mushroom", "plant", "planter" } },
+                new Category { Title = "FENCES & GARDEN STRUCTURES", Tokens = new[] { "fence", "gate", "arch", "pergola", "shed", "birdhouse", "well", "trellis", "garden" } },
+                new Category { Title = "PATHS, ROCKS & GROUND", Tokens = new[] { "path", "stepping", "paving", "tile", "rock", "pebble", "gravel", "stone", "stump", "log", "bridge" } },
+                new Category { Title = "GARDEN FURNITURE & PLAY", Tokens = new[] { "swing", "sandbox", "slide", "wheelbarrow", "bench", "birdhouse", "basket", "outdoor", "garden", "chair", "table" } }
             };
 
             string[] guids = AssetDatabase.FindAssets("t:Model", new[] { ModelRoot });
@@ -65,7 +65,7 @@ namespace MiaMax.EditorTools
                 foreach (string assetPath in allPaths)
                 {
                     string file = Path.GetFileNameWithoutExtension(assetPath).ToLowerInvariant();
-                    if (!category.Tokens.Any(token => file.Contains(token))) continue;
+                    if (!IsSuitableCandidate(category.Title, file)) continue;
 
                     GameObject model = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
                     if (model == null || model.GetComponentsInChildren<Renderer>(true).Length == 0) continue;
@@ -132,11 +132,11 @@ namespace MiaMax.EditorTools
         {
             var categories = new[]
             {
-                new { Title = "TREES & LARGE GREENERY", Tokens = new[] { "tree", "willow", "pine", "oak", "palm", "bush", "shrub", "hedge" } },
-                new { Title = "FLOWERS & SMALL PLANTS", Tokens = new[] { "flower", "plant", "grass", "fern", "mushroom", "cattail", "reed" } },
-                new { Title = "FENCES & GARDEN STRUCTURES", Tokens = new[] { "fence", "gate", "arch", "pergola", "shed", "birdhouse", "well", "trellis" } },
-                new { Title = "PATHS, ROCKS & GROUND", Tokens = new[] { "path", "tile", "stone", "rock", "pebble", "gravel", "stump", "log" } },
-                new { Title = "GARDEN FURNITURE & PLAY", Tokens = new[] { "bench", "chair", "table", "swing", "sandbox", "slide", "basket", "wheelbarrow" } }
+                new { Title = "TREES & LARGE GREENERY", Tokens = new[] { "tree", "pine", "willow", "palm", "oak", "birch", "maple", "bush", "shrub", "hedge" } },
+                new { Title = "FLOWERS & SMALL PLANTS", Tokens = new[] { "flower", "fern", "grass", "cattail", "reed", "mushroom", "plant", "planter" } },
+                new { Title = "FENCES & GARDEN STRUCTURES", Tokens = new[] { "fence", "gate", "arch", "pergola", "shed", "birdhouse", "well", "trellis", "garden" } },
+                new { Title = "PATHS, ROCKS & GROUND", Tokens = new[] { "path", "stepping", "paving", "tile", "rock", "pebble", "gravel", "stone", "stump", "log", "bridge" } },
+                new { Title = "GARDEN FURNITURE & PLAY", Tokens = new[] { "swing", "sandbox", "slide", "wheelbarrow", "bench", "birdhouse", "basket", "outdoor", "garden", "chair", "table" } }
             };
 
             string[] guids = AssetDatabase.FindAssets("t:Model", new[] { ModelRoot });
@@ -154,7 +154,7 @@ namespace MiaMax.EditorTools
                 foreach (string path in paths)
                 {
                     string file = Path.GetFileNameWithoutExtension(path).ToLowerInvariant();
-                    if (!category.Tokens.Any(token => file.Contains(token))) continue;
+                    if (!IsSuitableCandidate(category.Title, file)) continue;
                     GameObject model = AssetDatabase.LoadAssetAtPath<GameObject>(path);
                     if (model == null || model.GetComponentsInChildren<Renderer>(true).Length == 0) continue;
                     if (selected.Any(existing => Path.GetFileNameWithoutExtension(existing)
@@ -183,6 +183,41 @@ namespace MiaMax.EditorTools
                 "Printed " + total + " candidate names and asset paths to the Unity Console.\n\n" +
                 "Use the Console search field with 'BACKYARD CANDIDATE CATALOG' to find the report.",
                 "OK");
+        }
+
+        private static bool IsSuitableCandidate(string category, string file)
+        {
+            bool hasAny(params string[] tokens) => tokens.Any(token => file.Contains(token));
+
+            if (category == "TREES & LARGE GREENERY")
+            {
+                if (hasAny("bush", "shrub", "hedge")) return false;
+                return hasAny("tree", "pine", "willow", "palm", "oak", "birch", "maple");
+            }
+
+            if (category == "FLOWERS & SMALL PLANTS")
+            {
+                if (hasAny("potted", "pot", "furniture", "cabinet")) return false;
+                return hasAny("flower", "fern", "grass", "cattail", "reed", "mushroom", "plant", "planter");
+            }
+
+            if (category == "FENCES & GARDEN STRUCTURES")
+                return hasAny("fence", "gate", "arch", "pergola", "shed", "birdhouse", "well", "trellis", "garden");
+
+            if (category == "PATHS, ROCKS & GROUND")
+            {
+                if (hasAny("bridge")) return false;
+                return hasAny("path", "stepping", "paving", "tile", "rock", "pebble", "gravel", "stone", "stump", "log");
+            }
+
+            if (category == "GARDEN FURNITURE & PLAY")
+            {
+                if (hasAny("cabinet", "bed", "drawer", "wardrobe", "shelf", "desk", "sofa", "couch", "indoor"))
+                    return false;
+                return hasAny("swing", "sandbox", "slide", "wheelbarrow", "bench", "birdhouse", "basket", "outdoor", "garden", "chair", "table");
+            }
+
+            return false;
         }
 
         private static int FormatPriority(string path)
