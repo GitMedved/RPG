@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace MiaMax.Infrastructure.Audio
@@ -36,6 +37,8 @@ namespace MiaMax.Infrastructure.Audio
         [SerializeField] private AudioClip miniGameStart;
         [SerializeField] private AudioClip miniGameWin;
         [SerializeField] private AudioClip miniGameMiss;
+
+        private readonly HashSet<string> missingVoiceLineWarnings = new HashSet<string>();
 
         private float effectsMix = 1f;
         private float musicMix = 1f;
@@ -130,8 +133,11 @@ namespace MiaMax.Infrastructure.Audio
             AudioClip clip = Resources.Load<AudioClip>("MiaMax/Audio/Voice/" + safeId);
             if (clip == null)
             {
-                Debug.LogWarning("[MiaMax Audio] Voice line not found: " + safeId +
-                    ". Expected Resources/MiaMax/Audio/Voice/" + safeId + ".wav");
+                // Voice takes are optional during prototype development. Report each
+                // missing take once instead of flooding the Console on repeated actions.
+                if (missingVoiceLineWarnings.Add(safeId))
+                    Debug.LogWarning("[MiaMax Audio] Optional voice line is not installed: " + safeId +
+                        ". Expected Resources/MiaMax/Audio/Voice/" + safeId + ".wav");
                 return false;
             }
 
