@@ -97,7 +97,6 @@ namespace MiaMax.Gameplay
             PlayerPrefs.Save();
         }
 
-        private Texture2D backyardArtwork;
         private readonly Vector2[] hotspotPositions =
         {
             new Vector2(0.08f, 0.35f), // tree trunk
@@ -114,9 +113,6 @@ namespace MiaMax.Gameplay
 
         private void BuildWorld()
         {
-            backyardArtwork = Resources.Load<Texture2D>("MiaMax/Art/BackyardScene");
-            if (backyardArtwork == null)
-                Debug.LogWarning("[Mia & Max Art] BackyardScene.png is not installed yet. Add it at Assets/Resources/MiaMax/Art/BackyardScene.png to display the illustrated world.");
             CreateMaterials();
             BuildGroundAndPaths();
             BuildHouse();
@@ -140,15 +136,23 @@ namespace MiaMax.Gameplay
 
         private void CreateMaterials()
         {
-            Texture2D atlas = Resources.Load<Texture2D>("MiaMax/Art/WorldMaterialAtlas");
-            grassMat = MakeMaterial("Meadow Grass", atlas, new Vector2(0f, 0f), new Color(0.88f, 1f, 0.82f));
-            woodMat = MakeMaterial("Honey Wood", atlas, new Vector2(0f, 0.5f), Color.white);
-            plasterMat = MakeMaterial("Warm Cream Plaster", atlas, new Vector2(0.5f, 0.5f), Color.white);
-            stoneMat = MakeMaterial("Garden Stone", atlas, new Vector2(0.5f, 0f), Color.white);
-            leafMat = MakeMaterial("Leaf Green", null, Vector2.zero, new Color(0.25f, 0.55f, 0.20f));
-            flowerMat = MakeMaterial("Petal Coral", null, Vector2.zero, new Color(1f, 0.54f, 0.48f));
-            roofMat = MakeMaterial("Terracotta Roof", null, Vector2.zero, new Color(0.48f, 0.22f, 0.16f));
-            waterMat = MakeMaterial("Pond Water", null, Vector2.zero, new Color(0.25f, 0.68f, 0.78f));
+            // These authored URP materials and their albedo/normal maps already exist
+            // under Resources/MiaMax/Materials. Use them instead of the missing atlas.
+            grassMat = LoadMaterialOrCreate("Grass_Lawn", "Meadow Grass", new Color(0.35f, 0.62f, 0.25f));
+            woodMat = LoadMaterialOrCreate("Wood_Warm", "Honey Wood", new Color(0.48f, 0.29f, 0.14f));
+            plasterMat = LoadMaterialOrCreate("Plaster_Cream", "Warm Cream Plaster", new Color(0.82f, 0.73f, 0.58f));
+            stoneMat = LoadMaterialOrCreate("Stone_Patio", "Garden Stone", new Color(0.62f, 0.58f, 0.48f));
+            leafMat = LoadMaterialOrCreate("Leaf_Green", "Leaf Green", new Color(0.25f, 0.55f, 0.20f));
+            flowerMat = LoadMaterialOrCreate("Flower_Petal", "Petal Coral", new Color(1f, 0.54f, 0.48f));
+            roofMat = LoadMaterialOrCreate("Roof_Shingle", "Terracotta Roof", new Color(0.48f, 0.22f, 0.16f));
+            waterMat = LoadMaterialOrCreate("Water_Pond", "Pond Water", new Color(0.25f, 0.68f, 0.78f));
+        }
+
+        private Material LoadMaterialOrCreate(string resourceName, string displayName, Color fallback)
+        {
+            Material authored = Resources.Load<Material>("MiaMax/Materials/" + resourceName);
+            if (authored != null) return authored;
+            return MakeMaterial(displayName, null, Vector2.zero, fallback);
         }
 
         private Material MakeMaterial(string materialName, Texture2D atlas, Vector2 offset, Color tint)
