@@ -99,8 +99,9 @@ namespace MiaMax.EditorTools
             var p = new List<Placement>();
 
             // Back boundary: modular fence sections and a gate, kept separate from gameplay collision.
-            for (int i = 0; i < 7; i++)
-                p.Add(new Placement { Asset = "fence_planks", Position = new Vector3(-9f + i * 3f, 0f, -8f), TargetWidth = 2.9f, TargetHeight = 1.45f });
+            float[] fenceX = { -9f, -6f, -3f, 3f, 6f, 9f };
+            foreach (float x in fenceX)
+                p.Add(new Placement { Asset = "fence_planks", Position = new Vector3(x, 0f, -8f), TargetWidth = 2.9f, TargetHeight = 1.45f });
             p.Add(new Placement { Asset = "fence_gate", Position = new Vector3(0f, 0f, -8f), TargetWidth = 2.1f, TargetHeight = 1.8f });
 
             // Side accents.
