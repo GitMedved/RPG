@@ -29,7 +29,7 @@ The current blocker is not a missing quest system. It is the absence of a functi
 - The hotspot input is screen-space and uses hard-coded normalized positions. It is not a 3D scene raycast interaction system.
 - The legacy `BackyardPrototypeBootstrap` still contains a large primitive blockout builder, but its startup path no longer invokes that builder.
 
-**Conclusion:** the currently selected startup path is an illustrated-screen prototype with a missing required background texture, not a populated 3D backyard scene. This directly explains why the game can launch while showing no meaningful world.
+**Conclusion at audit time:** the game launched without meaningful world visuals because the builder never called its own world-geometry methods, the camera was at ground height looking horizontally, and the only optional image backdrop was missing. The follow-up implementation now calls the 3D world builders, uses the existing authored URP materials, creates a fixed angled portrait camera and selects objects by collider raycasts. The world is now a runtime primitive-based greybox, not final art; Unity Play Mode still needs to confirm the rendered result.
 
 ### Art and prefab availability
 - Approved reference images are committed: `Assets/_Project/Art/Characters/Mia.jpg`, `Max.png`, and `Assets/_Project/Art/Environment/backyard_collage.png` plus the night-room collage.
@@ -122,12 +122,12 @@ For Mia and Max, the next genuine production milestone is approved rigged FBX mo
 
 ## 6. Immediate work order
 
-1. Repair the startup scene so it cannot silently launch into a blank background.
-2. Create a real scene-owned fixed camera, lighting and environment root; remove the hidden ambiguity between an empty serialized scene and runtime-created content.
-3. Establish one validated visual source for the backyard. Do not use the entire reference collage as if it were a finished game background.
-4. Import and inspect the free Unity Adventure Game sample in isolation; document which interaction/inventory patterns are worth porting.
-5. Replace screen-space hard-coded hotspots with world-object raycast selection and explicit contextual actions.
-6. Connect one story chain end-to-end to the existing save, inventory and progression services.
+1. **Completed in the follow-up code change:** call the world geometry builders during startup, use authored URP material assets, use a fixed angled portrait camera and replace screen-space hard-coded hotspots with world-object collider raycasts.
+2. **Completed in the follow-up code change:** persist one-time resource collection and one-time mini-game/garden-stone rewards to prevent repeatable reward exploits; safely parse the saved flower-growth timestamp.
+3. Replace temporary primitive greybox objects with reviewed environment prefabs from one coherent CC0 pack.
+4. Add Mia and Max as approved rigged production models and wire their authored short reaction animations.
+5. Connect the current birdhouse/flower/secret-garden chain to the canonical inventory/save/progression services rather than leaving it isolated in PlayerPrefs.
+6. Import and inspect the free Unity Adventure Game sample in isolation; port only interaction/inventory patterns that fit the tap-only contract.
 7. Run Unity compile, Play Mode, save/reload and portrait safe-area checks. Then build Android and iOS separately.
 
 ## 7. Release gate
