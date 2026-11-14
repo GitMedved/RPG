@@ -1,10 +1,24 @@
-# Generated world material atlas
+# Mia & Max runtime artwork
 
-Import the generated image file as:
+## Backyard scene image
 
-`Assets/Resources/MiaMax/Art/WorldMaterialAtlas.jpg`
+The tap-first prototype loads the illustrated backyard as a full-screen image:
 
-Unity runtime loads it as `Resources.Load<Texture2D>("MiaMax/Art/WorldMaterialAtlas")`.
-The atlas is a 2×2 sheet: honey wood (upper-left), warm cream plaster (upper-right), meadow grass (lower-left), garden stone (lower-right).
+`Assets/Resources/MiaMax/Art/BackyardScene.png`
 
-Use Texture Type = Default, sRGB = On, Wrap Mode = Repeat, Filter Mode = Bilinear. Keep the source image in the project; do not crop or re-export the quadrants independently.
+Unity runtime key:
+
+`Resources.Load<Texture2D>("MiaMax/Art/BackyardScene")`
+
+Use the generated portrait 9:16 backyard illustration from the project conversation. Import settings:
+- Texture Type: Default
+- sRGB: On
+- Alpha Source: None
+- Max Size: 2048
+- Compression: Normal or High Quality
+
+The runtime draws this image as the world backdrop and uses screen-space tap hotspots. Do not add the old procedural cube/sphere blockout back into the startup flow.
+
+## Important asset status
+
+The generated illustration is not stored in Git by this README. It must be added as the PNG file above. The repository currently contains Mia and Max reference images, but not production 3D FBX character models or animation clips. Do not treat reference images or primitive proxies as final character assets.
