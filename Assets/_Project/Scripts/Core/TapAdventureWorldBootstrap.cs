@@ -428,9 +428,16 @@ namespace MiaMax.Gameplay
             switch (id)
             {
                 case "twigs":
-                    twigs += 1; stars += 1; toast = "You found a useful twig!"; break;
+                    if (twigs == 0)
+                    {
+                        twigs += 3; stars += 1; toast = "You found a bundle of 3 useful twigs!";
+                        GameObject bundle = GameObject.Find("Fallen Twigs");
+                        if (bundle != null) bundle.SetActive(false);
+                    }
+                    else toast = "You already gathered the fallen twigs.";
+                    break;
                 case "feather":
-                    if (feathers == 0) { feathers++; stars++; toast = "A beautiful feather for your collection!"; }
+                    if (feathers == 0) { feathers++; stars++; toast = "A beautiful feather for your collection!"; GameObject feather = GameObject.Find("Blue Feather"); if (feather != null) feather.SetActive(false); }
                     else toast = "You already collected this feather.";
                     break;
                 case "birdhouse":
