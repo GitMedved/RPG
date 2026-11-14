@@ -18,7 +18,7 @@ namespace MiaMax.Gameplay
         private string selectedId = "";
         private string toast = "Welcome! Let's make a little birdhouse.";
         private int twigs, feathers, flowers, stars;
-        private bool birdhouseBuilt, flowersWatered, forestUnlocked;
+        private bool birdhouseBuilt, flowersWatered, forestUnlocked, treeGathered;
         private DateTime flowersReadyUtc;
         private bool miniGameOpen;
         private int miniGameStep;
@@ -64,6 +64,7 @@ namespace MiaMax.Gameplay
             birdhouseBuilt = PlayerPrefs.GetInt(SavePrefix + "birdhouse", 0) == 1;
             flowersWatered = PlayerPrefs.GetInt(SavePrefix + "watered", 0) == 1;
             forestUnlocked = PlayerPrefs.GetInt(SavePrefix + "forest", 0) == 1;
+            treeGathered = PlayerPrefs.GetInt(SavePrefix + "treeGathered", 0) == 1;
             long ticks = long.Parse(PlayerPrefs.GetString(SavePrefix + "flowersReady", "0"));
             flowersReadyUtc = ticks > 0 ? new DateTime(ticks, DateTimeKind.Utc) : DateTime.MinValue;
         }
@@ -77,6 +78,7 @@ namespace MiaMax.Gameplay
             PlayerPrefs.SetInt(SavePrefix + "birdhouse", birdhouseBuilt ? 1 : 0);
             PlayerPrefs.SetInt(SavePrefix + "watered", flowersWatered ? 1 : 0);
             PlayerPrefs.SetInt(SavePrefix + "forest", forestUnlocked ? 1 : 0);
+            PlayerPrefs.SetInt(SavePrefix + "treeGathered", treeGathered ? 1 : 0);
             PlayerPrefs.SetString(SavePrefix + "flowersReady", flowersReadyUtc == DateTime.MinValue ? "0" : flowersReadyUtc.Ticks.ToString());
             PlayerPrefs.Save();
         }
@@ -246,6 +248,28 @@ namespace MiaMax.Gameplay
             Create("Gate Post Right", PrimitiveType.Cylinder, new Vector3(9.0f, 1.2f, 0.2f), new Vector3(0.22f, 1.2f, 0.22f), woodMat, false);
         }
 
+
+        private void BuildSecretGarden()
+        {
+            if (transform.Find("Secret Garden Clearing") != null) return;
+            Material magicLeaf = MakeMaterial("Secret Garden Leaves", null, Vector2.zero, new Color(0.22f, 0.42f, 0.28f));
+            Material glow = MakeMaterial("Secret Garden Glow", null, Vector2.zero, new Color(0.95f, 0.78f, 0.40f));
+            Create("Secret Garden Clearing", PrimitiveType.Cylinder, new Vector3(12.5f, -0.02f, -1.0f),
+                new Vector3(8.0f, 0.08f, 9.0f), grassMat, false);
+            for (int i = 0; i < 7; i++)
+            {
+                float x = 9.2f + (i % 4) * 2.1f;
+                float z = -4.2f + (i / 4) * 3.0f;
+                Create("Secret Garden Tree Trunk", PrimitiveType.Cylinder, new Vector3(x, 1.4f, z),
+                    new Vector3(0.32f, 1.4f, 0.32f), woodMat, false);
+                Create("Secret Garden Canopy", PrimitiveType.Sphere, new Vector3(x, 3.3f, z),
+                    new Vector3(2.1f, 2.2f, 2.0f), magicLeaf, false);
+            }
+            GameObject crystal = Create("Golden Garden Stone", PrimitiveType.Sphere, new Vector3(12.4f, 0.75f, -1.1f),
+                Vector3.one * 0.8f, glow, false);
+            AddTarget(crystal, "gardenstone", "Golden Garden Stone");
+        }
+
         private void BuildCamera()
         {
             GameObject cameraObject = new GameObject("Tap Adventure Fixed Camera");
@@ -393,7 +417,7 @@ namespace MiaMax.Gameplay
         {
             switch (id)
             {
-                case "tree": return "A lovely old tree. It would be the perfect place for a new bird family.";
+                case "tree": return treeGathered ? "You have already gathered the loose twigs from this tree." : "A few loose twigs have fallen near the roots. They may be useful.";
                 case "twigs": return "Some sturdy twigs have fallen nearby. They could be useful for a small building project.";
                 case "feather": return "A bright blue feather. Perhaps a bird left it here.";
                 case "birdhouse": return birdhouseBuilt ? "A new home! Perhaps its little visitors will arrive soon." : "A cozy birdhouse needs 3 twigs and 1 feather.";
@@ -417,7 +441,7 @@ namespace MiaMax.Gameplay
                 case "workshop": return "Make a little keepsake";
                 case "minigame": return "Play treasure sorting";
                 case "gate": return forestUnlocked ? "Enter Secret Garden" : "Check the gate";
-                case "tree": return "Look around the tree";
+                case "tree": return treeGathered ? "Look at the tree" : "Gather fallen twigs";
                 case "pond": return "Watch the pond";
                 default: return "Explore";
             }
@@ -469,14 +493,26 @@ namespace MiaMax.Gameplay
                     else toast = "The flowers are still growing. Come back soon.";
                     break;
                 case "workshop":
-                    if (twigs >= 1 && flowers >= 1) { twigs--; flowers--; stars += 2; toast = "You made a lovely garden keepsake!"; }
-                    else toast = "Find a twig and collect a flower to make a keepsake.";
+                    if (!forestUnlocked && twigs >= 1 && flowers >= 1)
+                    {
+                        twigs--; flowers--; forestUnlocked = true; stars += 8;
+                        toast = "You crafted a garden keepsake! The Secret Garden Gate is open.";
+                        BuildSecretGarden();
+                        GameObject gateObject = GameObject.Find("Adventure Gate");
+                        if (gateObject != null) gateObject.GetComponent<Renderer>().sharedMaterial = leafMat;
+                    }
+                    else if (forestUnlocked) toast = "Your garden keepsake opened a new adventure!";
+                    else toast = "Recipe: 1 twig + 1 flower. Gather twigs beneath the tree and grow flowers.";
                     break;
                 case "minigame":
                     miniGameOpen = true; miniGameStep = 0; miniGameScore = 0; miniGameMessage = "Tap the treasures in this order: feather, shell, leaf."; break;
                 case "gate":
-                    toast = forestUnlocked ? "The Secret Garden chapter is unlocked! (New location content is coming in the next production stage.)" : "Complete the birdhouse and flower tasks to unlock this gate."; break;
-                case "tree": toast = "Mia and Max would love to build something here."; break;
+                    toast = forestUnlocked ? "Welcome to the Secret Garden! Explore the new discoveries." : "Craft a garden keepsake at the workbench to unlock this gate.";
+                    break;
+                case "tree":
+                    if (!treeGathered) { twigs += 2; treeGathered = true; stars++; toast = "You gathered 2 more twigs beneath the tree."; }
+                    else toast = "The tree is peaceful in the afternoon light.";
+                    break;
                 case "pond": toast = "The water shimmers in the afternoon sun."; break;
             }
             SaveProgress();
