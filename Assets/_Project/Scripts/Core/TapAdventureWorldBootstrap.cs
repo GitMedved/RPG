@@ -91,10 +91,10 @@ namespace MiaMax.Gameplay
             new Vector2(0.16f, 0.29f), // birdhouse
             new Vector2(0.50f, 0.37f), // gate in the fence
             new Vector2(0.84f, 0.53f), // workshop
-            new Vector2(0.80f, 0.70f), // flowers
-            new Vector2(0.17f, 0.77f), // pond edge above bottom panel
-            new Vector2(0.18f, 0.51f), // twigs at tree roots
-            new Vector2(0.48f, 0.68f), // feather discovery
+            new Vector2(0.80f, 0.63f), // flowers
+            new Vector2(0.17f, 0.65f), // pond edge above bottom panel
+            new Vector2(0.18f, 0.49f), // twigs at tree roots
+            new Vector2(0.48f, 0.60f), // feather discovery
             new Vector2(0.53f, 0.57f)  // Max mini-game
         };
         private readonly string[] hotspotIds = { "tree", "birdhouse", "gate", "workshop", "flowers", "pond", "twigs", "feather", "minigame" };
@@ -103,7 +103,7 @@ namespace MiaMax.Gameplay
         {
             backyardArtwork = Resources.Load<Texture2D>("MiaMax/Art/BackyardScene");
             if (backyardArtwork == null)
-                Debug.LogError("[Mia & Max Art] Missing Assets/Resources/MiaMax/Art/BackyardScene.png. Add the generated backyard artwork at this exact path.");
+                Debug.LogWarning("[Mia & Max Art] BackyardScene.png is not installed yet. Add it at Assets/Resources/MiaMax/Art/BackyardScene.png to display the illustrated world.");
             BuildCamera();
             RenderSettings.ambientMode = AmbientMode.Trilight;
             RenderSettings.ambientSkyColor = new Color(0.70f, 0.82f, 0.96f);
@@ -336,6 +336,8 @@ namespace MiaMax.Gameplay
             }
             if (!pressed || Screen.width <= 0 || Screen.height <= 0) return;
             Vector2 normalized = new Vector2(screen.x / Screen.width, 1f - screen.y / Screen.height);
+            // Keep the top HUD and bottom action card reserved for UI controls.
+            if (normalized.y < 0.25f || normalized.y > 0.68f) return;
             for (int i = 0; i < hotspotPositions.Length; i++)
             {
                 if (Vector2.Distance(normalized, hotspotPositions[i]) <= 0.085f)
