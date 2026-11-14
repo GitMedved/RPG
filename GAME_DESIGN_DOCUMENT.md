@@ -1,89 +1,144 @@
 # Mia & Max Adventures — Game Design Document
 
 **Tagline:** Little Moments, Big Adventures!  
-**Status:** Pre-production / MVP definition  
-**Platforms:** Android + iOS · **Engine:** Unity · **View:** Portrait · **Mode:** Solo, offline-first  
+**Status:** New direction — touch-led adventure prototype  
+**Platforms:** Android + iOS · **Engine:** Unity 6 / URP · **View:** Portrait · **Mode:** Solo, offline-first  
 **Audience:** Family-friendly, English-first international audience
 
 ## 1. Product promise
-A warm, playful 3D world where players spend time with Mia and her ginger-cat companion Max, grow a backyard, craft useful items, explore nearby places and play short arcade activities. The emotional centre is the friendship between Mia and Max—not timers, monetisation or grind.
 
-## 2. Pillars
-1. **Cozy creation:** garden, harvest, craft, decorate and see the yard visibly improve.
-2. **Gentle adventure:** explore, solve environmental puzzles, help friendly characters and uncover keepsakes; no combat.
-3. **Playful variety:** short mini-games feed useful rewards into the shared world.
-4. **Character warmth:** expressive reactions and companion moments make Mia and Max memorable.
-5. **Respectful progression:** meaningful unlocks, no punishment for absence, no forced ads or pay-to-win pressure.
+Mia & Max is a cozy, story-driven interactive world. The player does not directly steer Mia or Max around the map. Instead, the player explores the world by tapping places and objects, choosing contextual actions, gathering materials, making things, caring for the environment, waiting for meaningful results, playing short mini-games and unlocking new story chapters.
+
+The emotional centre is the friendship between Mia and her ginger-cat companion Max. Their presence is expressed through approved character art, short animations, reactions, gestures and story moments—not joystick-controlled locomotion.
+
+This is **not a farming game**. Growing plants may be one activity among many, but the game is about little projects, discoveries and adventures.
+
+## 2. Core pillars
+
+1. **Tap-led interaction:** every meaningful world object can present a small, clear set of contextual actions.
+2. **Visible world change:** completed actions build, repair, decorate, restore or reveal something in the world.
+3. **Connected projects:** collect resources, combine them into useful objects, and use those objects to unlock new activities or story scenarios.
+4. **Gentle time-based outcomes:** some actions resolve immediately; others take a short time and produce a visible result. No punitive timers or energy walls.
+5. **Mia & Max personality:** expressive animation, reactions, gestures, short scenes and character-led story prompts.
+6. **Playful variety:** short mini-games provide resources, keepsakes and story items.
+7. **Respectful progression:** clear goals, offline-friendly saves, no forced ads, combat, gambling or paid randomized rewards.
 
 ## 3. Fixed product decisions
+
 - One Unity/C# project for Android and iOS.
-- Stylized full 3D, mobile-optimized; URP is the recommended rendering pipeline.
-- Portrait-first touch UX.
+- Stylized, high-quality 3D world with a fixed, composed camera; portrait-first touch UX.
+- No direct character movement, virtual joystick, free-roam controller or character-follow camera in the core game.
 - Single-player, primarily offline, local versioned saves.
 - English player-facing content; localization-ready strings.
+- Mia and Max use approved character references and production rigs. Do not invent final character designs or use primitive stand-ins as release art.
 - Free-to-play concept with optional cosmetics/premium content only; parent gate for purchases/external links.
 - No multiplayer in MVP, no combat, gambling, paid randomized loot boxes, forced advertising or punitive energy.
 
-## 4. Core session loop
-Enter backyard → collect ready goods → plant/harvest → fulfil an order or quest → play a mini-game or explore → earn coins/XP/items → unlock and decorate → see a new story/activity become available.
+## 4. Core gameplay loop
 
-**Session shapes:** 2–5 minutes (collect, plant, quick mini-game); 8–15 minutes (orders, quest chain, exploration); longer relaxed sessions (yard layout, collections, multiple activities).
+Discover an object or story hint → tap it → read a concise contextual prompt → choose an action → confirm or play a short interaction → show a character/world animation → receive materials, progress or a visible world change → unlock the next action or story beat.
 
-## 5. World and content
-### MVP location: Mia's Backyard
-House, garden plots, fruit/flower area, Max's play area, workshop, pond and adventure gate. Start with a small readable area; expand through gates and visible construction milestones.
+Longer progression loop:
 
-### First expansion: Magic Forest
-A compact, separate exploration space unlocked through a short backyard quest chain. Focus on finding objects, helping a lost animal, repairing a simple bridge and discovering a treasure. No combat.
+**Explore → collect → craft/combine → build/restore → wait or solve → receive result → unlock a new scenario/location.**
 
-### Later locations (not MVP)
-Sunny Beach, Flower Meadow, Fishing Lake, Cozy Village, Mountain Adventure and Treasure Island. Each should reuse world/quest/collection systems and add a small set of distinctive resources and activities.
+The player should always have another useful action available while a timed result is pending.
 
-## 6. MVP feature definition
+## 5. World and story structure
+
+### Opening location: Mia's Backyard
+
+A polished, readable, compact story space based on the approved backyard reference: beige two-storey house, lawn, white fence, mature tree, swings, sandbox/play area, patio, shrubs and flower beds. These are scene landmarks, not a farm-management grid.
+
+The first playable story is **The Little Birdhouse**:
+1. Find a bundle of fallen twigs and a blue feather.
+2. Use the crafting bench to prepare the pieces.
+3. Build a birdhouse.
+4. Choose a place for it and watch a short construction animation.
+5. Wait for birds to discover it.
+6. Care for nearby flowers and collect the blooms.
+7. Use the new keepsake/material reward to open the next story space.
+
+The first chapter teaches tap selection, contextual actions, inventory, crafting, short timers, rewards and progression without requiring character locomotion.
+
+### First expansion: Secret Garden / Magic Forest
+
+Unlocked by completing the opening chain and assembling a story item. Introduces new resources, a friendly animal that needs help, a small repair/building project, environmental puzzles and a discovery/treasure mini-game. No combat.
+
+### Later story spaces
+
+Sunny Beach, Flower Meadow, Fishing Lake, Cozy Village, Mountain Adventure and Treasure Island are future content candidates, not MVP commitments. Each should reuse the same world-action, resource, crafting, quest and mini-game systems while introducing a small number of distinct mechanics.
+
+## 6. Object interaction contract
+
+Every interactable world object should have:
+- stable ID independent of display text;
+- display name and concise description;
+- available actions and their prerequisites;
+- action duration (zero for instant actions);
+- resource costs and rewards;
+- resulting state/visual change;
+- optional quest/progression events;
+- save-safe state.
+
+Tap targets must be generous for fingers. Context UI must be readable, safe-area-aware and never depend on floating debug labels in the 3D world. Confirm/cancel states must be obvious.
+
+## 7. MVP systems and acceptance
+
 | System | MVP acceptance target |
 |---|---|
-| Main world | One navigable 3D backyard scene with touch-friendly camera and interactables |
-| Characters | Temporary Mia/Max stand-ins; move, idle, basic interaction; references govern final art |
-| Farming | 3 crops, plots, plant/grow/harvest, inventory and XP integration |
-| Inventory/economy | Item stack model, validated coin wallet, reward transaction path |
-| Progression | XP, levels, gated unlocks and clear feedback |
-| Production | 3 recipes, one production station/queue, collect completed output |
-| Orders | Board with item requirements and validated rewards |
-| Quests | Main/daily quest data model, objective progress, rewards |
-| Mini-games | Match-3, fishing timing loop and Max endless-run prototype; all return validated rewards |
-| Adventure | Map/gate UI and one small unlockable forest location |
-| Decoration | Place, rotate, move/store a small starter set; placement validation |
-| Collection | Discovery book with category, found state and completion reward |
+| Main world | One beautiful, fixed-camera backyard scene; no character locomotion |
+| Touch interaction | Tap world objects and choose contextual actions |
+| First story | Complete Little Birdhouse chain from gathering to visible result |
+| Inventory | Stable item IDs, stacks and clear rewards |
+| Crafting | One workshop with recipes, prerequisites and timed output |
+| World state | Built/restored objects visibly change and persist |
+| Time actions | Safe offline completion; no lost progress or punitive expiry |
+| Progression | Quest chain, stars/XP, unlockable story gate |
+| Mini-games | At least two short, touch-first mini-games returning validated rewards |
+| Characters | Mia and Max appear through approved models/rigs, animation and reactions; no joystick |
 | Save | Local versioned save, autosave checkpoints, load validation |
-| UI | Main menu, HUD, quest/map/arcade/collection/settings navigation |
-| Shop | Mock shop behind parent gate; no real billing in MVP |
+| UI | Portrait HUD, context panel, inventory, quest/story, mini-game transitions and settings |
+| Mobile | Large touch targets, safe area, pause/resume safety, performance budgets |
+| Shop | Non-purchasable mock only, behind parent gate |
 
-**MVP completion definition:** a fresh player can start, complete the introductory quest chain, plant and harvest crops, fulfil an order, complete one activity in each mini-game, unlock the forest, save, close and restore progress. All core flows work without network access.
+**MVP completion definition:** a fresh player can start in the backyard, learn tap interactions, collect materials, craft and build the birdhouse, complete a second care/repair project, play at least two mini-games, unlock the first new story space, save, close and restore progress. All core flows work offline.
 
-## 7. First-time user experience
-1. Short, skippable welcome in the backyard.
-2. Introduce Mia and Max using approved character assets or clearly labelled greybox stand-ins.
-3. Guide the player through planting one crop and collecting it.
-4. Explain inventory and fulfil a simple order.
-5. Introduce Max's pond activity or a short arcade activity.
-6. Present the first meaningful backyard improvement and forest unlock goal.
+## 8. Art direction
 
-Avoid long exposition. Teach one interaction at a time.
+Warm, bright, tactile stylized 3D with carefully authored silhouettes, rounded forms, rich but controlled colour, readable materials, soft natural lighting and polished composition. Materials should use coherent albedo/roughness treatment and appropriate scale; avoid flat default primitives, overexposure, missing textures, floating labels and unrelated asset packs.
 
-## 8. Content data
-Crops, recipes, quests, orders, rewards, locations, collectibles and decorations should be data-authored (ScriptableObjects after the Unity baseline is opened and validated). Stable string IDs must be used for saves; never use display names as identifiers.
+The generated World Material Atlas is a starter material reference for grass, honey wood, cream plaster and garden stone. It must be imported at `Assets/Resources/MiaMax/Art/WorldMaterialAtlas.jpg` so runtime materials can load it. It is not a substitute for bespoke environment models, UVs, character meshes or final material authoring.
 
-## 9. UX and accessibility
-Large touch targets, safe-area-aware portrait layouts, readable contrast, clear selection states, optional reduced motion, adjustable audio, pause/resume safety and no critical information communicated by colour alone. Use plain English and localization keys.
+Preserve the supplied Mia and Max reference designs exactly. Production character meshes, facial rigs, fur/hair, UVs and animation clips must be reviewed against those references before release. Never claim generated placeholder geometry is final art.
 
-## 10. Monetisation guardrails
+## 9. Content and technical architecture
+
+Use data-authored definitions for objects, actions, items, recipes, quests, rewards, locations and mini-games. Stable string IDs must be used in saves; never use display names as identifiers.
+
+Keep the following systems separate:
+- world presentation and fixed camera;
+- tap selection and contextual action UI;
+- object state and action execution;
+- inventory/economy transactions;
+- crafting queues and offline-safe timers;
+- quest/story progression;
+- mini-game adapters and reward validation;
+- character animation/reaction presentation;
+- versioned local save/migration.
+
+## 10. UX and accessibility
+
+Large touch targets, safe-area-aware portrait layouts, readable contrast, clear selection states, optional reduced motion, adjustable audio, pause/resume safety and no critical information communicated by colour alone. Teach one interaction at a time. Do not require precision dragging for core progression.
+
+## 11. Monetisation and safety
+
 MVP shop is a non-purchasable mock. Future options may include direct-purchase costumes, Max accessories, decoration packs and premium themed content. Any purchase, external link, ad/privacy preference or account/cloud action must sit behind a parent gate. Platform billing, child privacy, age-rating and regional compliance require specialist review before release.
 
-## 11. Art and audio direction
-Warm, bright, tactile stylized 3D; soft shapes, expressive silhouettes, rich but controlled colour, readable vegetation and friendly lighting. Preserve supplied Mia/Max designs exactly. Until reference assets are available, use neutral primitives and label them as placeholders. Do not invent clothing, facial features or proportions. Audio placeholders must be replaceable and must not imply final voice casting.
-
 ## 12. Out of scope for MVP
-Live events, cloud accounts, social features, multiplayer, analytics SDKs, real-money billing, ad SDKs, large open world, combat, full voice acting, full production-quality character rigs and the six later locations.
 
-## 13. Product risks
-Scope breadth; unknown source character assets; unverified editor/toolchain; mobile performance; save migration; mini-game scope; children's privacy and platform billing. See `MVP_ROADMAP.md` and `ASSET_REQUIREMENTS.md`.
+Joystick-controlled characters, free-roam movement, character-follow camera, farming as the central loop, multiplayer, live events, cloud accounts, social features, analytics SDKs, real-money billing, ad SDKs, large open world, combat, full voice acting and unreviewed production character rigs.
+
+## 13. Release risks
+
+Scope breadth; missing approved character models/rigs; production art availability; Unity editor/toolchain validation; mobile performance; save migration; mini-game scope; children's privacy/platform compliance. A code commit is not equivalent to a Unity compile, visual review or device release test.
