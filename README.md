@@ -19,6 +19,8 @@ Pre-production Unity prototype; not yet a verified playable vertical slice. The 
 ## Documentation
 
 - [Game Design Document](GAME_DESIGN_DOCUMENT.md)
+- [M42 Tap Adventure Runtime Repair](M42_TAP_ADVENTURE_RUNTIME_REPAIR.md)
+- [Prototype Foundation Audit](PROTOTYPE_FOUNDATION_AUDIT.md)
 - [Technical Architecture](TECHNICAL_ARCHITECTURE.md)
 - [Game Economy](GAME_ECONOMY.md)
 - [MVP Roadmap](MVP_ROADMAP.md)
