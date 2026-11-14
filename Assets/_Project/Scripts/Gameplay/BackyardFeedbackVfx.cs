@@ -47,10 +47,13 @@ namespace MiaMax.Gameplay
             GameObject effect = new GameObject(effectName);
             effect.transform.position = position;
             ParticleSystem particles = effect.AddComponent<ParticleSystem>();
+            // A newly added ParticleSystem may begin its default play-on-awake cycle
+            // before its modules are configured. Stop and clear it before changing duration.
             ParticleSystem.MainModule main = particles.main;
+            main.playOnAwake = false;
+            particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             main.duration = 0.32f;
             main.loop = false;
-            main.playOnAwake = false;
             main.startLifetime = new ParticleSystem.MinMaxCurve(0.45f, 0.82f);
             main.startSpeed = new ParticleSystem.MinMaxCurve(speed * 0.65f, speed);
             main.startSize = new ParticleSystem.MinMaxCurve(size * 0.07f, size * 0.12f);
