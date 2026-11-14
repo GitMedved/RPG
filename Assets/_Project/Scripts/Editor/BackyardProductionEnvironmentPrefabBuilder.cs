@@ -103,7 +103,7 @@ namespace MiaMax.EditorTools
                         if (renderers.Length == 0)
                             throw new InvalidOperationException("Source model has no renderers.");
 
-                        Bounds bounds = GetBounds(renderers);
+                        Bounds bounds = GetBoundsInRootSpace(renderers, wrapper.transform);
                         if (bounds.size.y <= 0.001f)
                             throw new InvalidOperationException("Source model has zero height.");
 
@@ -116,9 +116,9 @@ namespace MiaMax.EditorTools
                         scale = Mathf.Clamp(scale, 0.001f, 100f);
                         visual.transform.localScale = Vector3.one * scale;
 
-                        bounds = GetBounds(renderers);
+                        bounds = GetBoundsInRootSpace(renderers, wrapper.transform);
                         visual.transform.localPosition = Vector3.up * (-bounds.min.y);
-                        bounds = GetBounds(renderers);
+                        bounds = GetBoundsInRootSpace(renderers, wrapper.transform);
                         int triangles = CountTriangles(visual);
                         totalTriangles += triangles;
 
@@ -175,11 +175,47 @@ namespace MiaMax.EditorTools
                 UnityEngine.Object.DestroyImmediate(behaviour);
         }
 
-        private static Bounds GetBounds(Renderer[] renderers)
+        private static Bounds GetBoundsInRootSpace(Renderer[] renderers, Transform root)
         {
-            Bounds b = renderers[0].bounds;
-            for (int i = 1; i < renderers.Length; i++) b.Encapsulate(renderers[i].bounds);
-            return b;
+            bool hasPoint = false;
+            Bounds bounds = new Bounds(Vector3.zero, Vector3.zero);
+
+            foreach (Renderer renderer in renderers)
+            {
+                Mesh mesh = null;
+                SkinnedMeshRenderer skinned = renderer as SkinnedMeshRenderer;
+                if (skinned != null) mesh = skinned.sharedMesh;
+
+                if (mesh == null)
+                {
+                    MeshFilter filter = renderer.GetComponent<MeshFilter>();
+                    if (filter != null) mesh = filter.sharedMesh;
+                }
+
+                Bounds localBounds = mesh != null ? mesh.bounds : renderer.localBounds;
+                Matrix4x4 toRoot = root.worldToLocalMatrix * renderer.transform.localToWorldMatrix;
+                Vector3 min = localBounds.min;
+                Vector3 max = localBounds.max;
+
+                for (int x = 0; x < 2; x++)
+                for (int y = 0; y < 2; y++)
+                for (int z = 0; z < 2; z++)
+                {
+                    Vector3 corner = new Vector3(
+                        x == 0 ? min.x : max.x,
+                        y == 0 ? min.y : max.y,
+                        z == 0 ? min.z : max.z);
+                    Vector3 point = toRoot.MultiplyPoint3x4(corner);
+                    if (!hasPoint)
+                    {
+                        bounds = new Bounds(point, Vector3.zero);
+                        hasPoint = true;
+                    }
+                    else bounds.Encapsulate(point);
+                }
+            }
+
+            return bounds;
         }
 
         private static int CountTriangles(GameObject root)
