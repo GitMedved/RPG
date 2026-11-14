@@ -93,6 +93,7 @@ namespace MiaMax.Gameplay
             BuildWorkshop();
             BuildPondAndDecor();
             BuildAdventureGate();
+            if (forestUnlocked) BuildSecretGarden();
             BuildCamera();
             RenderSettings.ambientMode = AmbientMode.Trilight;
             RenderSettings.ambientSkyColor = new Color(0.70f, 0.82f, 0.96f);
@@ -363,7 +364,7 @@ namespace MiaMax.Gameplay
             string quest = !birdhouseBuilt ? "Build a birdhouse: gather 3 twigs and 1 feather." :
                 !flowersWatered ? "Water the flower bed and wait for the blooms." :
                 DateTime.UtcNow < flowersReadyUtc ? "The flowers are growing. Come back a little later!" :
-                !forestUnlocked ? "Collect the blooming flowers to open the Secret Garden Gate." :
+                !forestUnlocked ? "Craft a garden keepsake at the workbench to open the Secret Garden." :
                 "The Secret Garden is open. What will you discover next?";
             GUI.Label(new Rect(margin + 14f, questY + 31f * scale, Screen.width - margin * 2f - 28f, 38f * scale), quest, bodyStyle);
 
@@ -409,6 +410,7 @@ namespace MiaMax.Gameplay
                 case "pond": return "Little Pond";
                 case "minigame": return "Max's Treasure Basket";
                 case "gate": return "Secret Garden Gate";
+                case "gardenstone": return "Golden Garden Stone";
                 default: return "A little discovery";
             }
         }
@@ -425,7 +427,8 @@ namespace MiaMax.Gameplay
                 case "workshop": return "Make useful things from the treasures you find around the yard.";
                 case "pond": return "A quiet pond. Max loves watching the ripples and tiny fish.";
                 case "minigame": return "Max found a basket of mixed-up treasures. Help sort them for a reward!";
-                case "gate": return forestUnlocked ? "The Secret Garden is ready to explore!" : "Something wonderful is hidden beyond this gate. Finish the birdhouse and flower story first.";
+                case "gate": return forestUnlocked ? "The Secret Garden is ready to explore!" : "Craft a garden keepsake at the workbench to unlock this gate.";
+                case "gardenstone": return "A warm golden stone marks the beginning of a new chapter.";
                 default: return "Take a closer look and see what you can do.";
             }
         }
@@ -441,6 +444,7 @@ namespace MiaMax.Gameplay
                 case "workshop": return "Make a little keepsake";
                 case "minigame": return "Play treasure sorting";
                 case "gate": return forestUnlocked ? "Enter Secret Garden" : "Check the gate";
+                case "gardenstone": return "Touch the glowing stone";
                 case "tree": return treeGathered ? "Look at the tree" : "Gather fallen twigs";
                 case "pond": return "Watch the pond";
                 default: return "Explore";
@@ -508,7 +512,9 @@ namespace MiaMax.Gameplay
                     miniGameOpen = true; miniGameStep = 0; miniGameScore = 0; miniGameMessage = "Tap the treasures in this order: feather, shell, leaf."; break;
                 case "gate":
                     toast = forestUnlocked ? "Welcome to the Secret Garden! Explore the new discoveries." : "Craft a garden keepsake at the workbench to unlock this gate.";
+                    if (forestUnlocked && worldCamera != null) worldCamera.transform.position = new Vector3(12f, 18f, -19f);
                     break;
+                case "gardenstone": toast = "The Secret Garden's story has only just begun!"; stars++; break;
                 case "tree":
                     if (!treeGathered) { twigs += 2; treeGathered = true; stars++; toast = "You gathered 2 more twigs beneath the tree."; }
                     else toast = "The tree is peaceful in the afternoon light.";
