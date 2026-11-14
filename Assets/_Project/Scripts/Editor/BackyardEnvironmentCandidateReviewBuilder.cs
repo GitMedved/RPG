@@ -371,7 +371,7 @@ namespace MiaMax.EditorTools
                 .FirstOrDefault();
             return string.IsNullOrEmpty(latest)
                 ? "No review scene found yet"
-                : latest.Replace('\\\\', '/');
+                : latest.Replace('\\', '/');
         }
 
         private static string NextScenePath()
