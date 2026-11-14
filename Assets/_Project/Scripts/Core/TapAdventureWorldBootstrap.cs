@@ -83,33 +83,32 @@ namespace MiaMax.Gameplay
             PlayerPrefs.Save();
         }
 
+        private Texture2D backyardArtwork;
+        private readonly Vector2[] hotspotPositions =
+        {
+            new Vector2(0.17f, 0.22f), // tree
+            new Vector2(0.22f, 0.29f), // birdhouse
+            new Vector2(0.50f, 0.31f), // gate
+            new Vector2(0.70f, 0.43f), // workshop
+            new Vector2(0.84f, 0.57f), // flowers
+            new Vector2(0.23f, 0.83f), // pond
+            new Vector2(0.51f, 0.55f), // twigs
+            new Vector2(0.46f, 0.72f), // feather
+            new Vector2(0.68f, 0.66f)  // mini-game
+        };
+        private readonly string[] hotspotIds = { "tree", "birdhouse", "gate", "workshop", "flowers", "pond", "twigs", "feather", "minigame" };
+
         private void BuildWorld()
         {
-            CreateMaterials();
-            BuildGroundAndPaths();
-            BuildHouse();
-            BuildTreeAndBirdhouse();
-            BuildGarden();
-            BuildWorkshop();
-            BuildPondAndDecor();
-            BuildAdventureGate();
-            if (forestUnlocked) BuildSecretGarden();
+            backyardArtwork = Resources.Load<Texture2D>("MiaMax/Art/BackyardScene");
+            if (backyardArtwork == null)
+                Debug.LogError("[Mia & Max Art] Missing Assets/Resources/MiaMax/Art/BackyardScene.png. Add the generated backyard artwork at this exact path.");
             BuildCamera();
             RenderSettings.ambientMode = AmbientMode.Trilight;
             RenderSettings.ambientSkyColor = new Color(0.70f, 0.82f, 0.96f);
             RenderSettings.ambientEquatorColor = new Color(0.83f, 0.86f, 0.72f);
             RenderSettings.ambientGroundColor = new Color(0.38f, 0.32f, 0.24f);
-            RenderSettings.fog = true;
-            RenderSettings.fogColor = new Color(0.77f, 0.86f, 0.91f);
-            RenderSettings.fogMode = FogMode.Exponential;
-            RenderSettings.fogDensity = 0.008f;
-            Light sun = new GameObject("Warm Afternoon Sun").AddComponent<Light>();
-            sun.type = LightType.Directional;
-            sun.intensity = 1.25f;
-            sun.color = new Color(1f, 0.91f, 0.76f);
-            sun.shadows = LightShadows.Soft;
-            sun.transform.rotation = Quaternion.Euler(48f, -32f, 0f);
-            Debug.Log("[Mia & Max] Touch Adventure world created: fixed camera, tap interactions, contextual actions. Character movement is disabled.");
+            Debug.Log("[Mia & Max] Illustrated tap world created. Procedural blockout geometry is disabled; interactions use screen-space hotspots.");
         }
 
         private void CreateMaterials()
@@ -273,18 +272,26 @@ namespace MiaMax.Gameplay
 
         private void BuildCamera()
         {
-            GameObject cameraObject = new GameObject("Tap Adventure Fixed Camera");
-            worldCamera = cameraObject.AddComponent<Camera>();
-            cameraObject.AddComponent<AudioListener>();
-            worldCamera.tag = "MainCamera";
+            Camera existing = Camera.main;
+            if (existing != null)
+            {
+                worldCamera = existing;
+                worldCamera.clearFlags = CameraClearFlags.SolidColor;
+                worldCamera.backgroundColor = new Color(0.20f, 0.38f, 0.30f);
+            }
+            else
+            {
+                GameObject cameraObject = new GameObject("Tap Adventure Fixed Camera");
+                worldCamera = cameraObject.AddComponent<Camera>();
+                cameraObject.AddComponent<AudioListener>();
+                worldCamera.tag = "MainCamera";
+            }
             worldCamera.orthographic = true;
-            worldCamera.orthographicSize = 11.5f;
-            worldCamera.clearFlags = CameraClearFlags.SolidColor;
-            worldCamera.backgroundColor = new Color(0.72f, 0.84f, 0.94f);
-            cameraObject.transform.position = new Vector3(0f, 18f, -19f);
-            cameraObject.transform.rotation = Quaternion.Euler(42f, 0f, 0f);
+            worldCamera.orthographicSize = 5f;
+            worldCamera.transform.position = new Vector3(0f, 0f, -10f);
+            worldCamera.transform.rotation = Quaternion.identity;
             worldCamera.nearClipPlane = 0.1f;
-            worldCamera.farClipPlane = 100f;
+            worldCamera.farClipPlane = 30f;
         }
 
         private GameObject Create(string objectName, PrimitiveType primitive, Vector3 position, Vector3 scale, Material material, bool collider)
@@ -314,7 +321,7 @@ namespace MiaMax.Gameplay
         private void Update()
         {
             if (miniGameOpen) return;
-            Vector3 screen = Vector3.zero;
+            Vector2 screen = Vector2.zero;
             bool pressed = false;
             if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
             {
@@ -326,12 +333,15 @@ namespace MiaMax.Gameplay
                 screen = Input.mousePosition;
                 pressed = true;
             }
-            if (!pressed || worldCamera == null) return;
-            Ray ray = worldCamera.ScreenPointToRay(screen);
-            if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+            if (!pressed || Screen.width <= 0 || Screen.height <= 0) return;
+            Vector2 normalized = new Vector2(screen.x / Screen.width, 1f - screen.y / Screen.height);
+            for (int i = 0; i < hotspotPositions.Length; i++)
             {
-                TapAdventureTarget target = hit.collider.GetComponent<TapAdventureTarget>();
-                if (target != null) selectedId = target.Id;
+                if (Vector2.Distance(normalized, hotspotPositions[i]) <= 0.085f)
+                {
+                    selectedId = hotspotIds[i];
+                    return;
+                }
             }
         }
 
@@ -349,6 +359,8 @@ namespace MiaMax.Gameplay
 
         private void OnGUI()
         {
+            if (backyardArtwork != null)
+                GUI.DrawTexture(new Rect(0f, 0f, Screen.width, Screen.height), backyardArtwork, ScaleMode.ScaleAndCrop, true);
             EnsureStyles();
             float scale = Mathf.Clamp(Screen.width / 430f, 0.78f, 1.5f);
             float margin = 16f * scale;
@@ -459,13 +471,12 @@ namespace MiaMax.Gameplay
                     if (twigs == 0)
                     {
                         twigs += 3; stars += 1; toast = "You found a bundle of 3 useful twigs!";
-                        GameObject bundle = GameObject.Find("Fallen Twigs");
-                        if (bundle != null) bundle.SetActive(false);
+                        
                     }
                     else toast = "You already gathered the fallen twigs.";
                     break;
                 case "feather":
-                    if (feathers == 0) { feathers++; stars++; toast = "A beautiful feather for your collection!"; GameObject feather = GameObject.Find("Blue Feather"); if (feather != null) feather.SetActive(false); }
+                    if (feathers == 0) { feathers++; stars++; toast = "A beautiful feather for your collection!";   }
                     else toast = "You already collected this feather.";
                     break;
                 case "birdhouse":
@@ -491,7 +502,7 @@ namespace MiaMax.Gameplay
                     {
                         flowers += 3; stars += 4; flowersWatered = false; flowersReadyUtc = DateTime.MinValue;
                         toast = "Beautiful blooms! You collected 3 flowers.";
-                        if (birdhouseBuilt) { forestUnlocked = true; toast += " The Secret Garden Gate is open!"; }
+                        if (birdhouseBuilt) toast += " Visit the workbench to craft a keepsake.";
                         RebuildFlowerBlooms();
                     }
                     else toast = "The flowers are still growing. Come back soon.";
@@ -501,9 +512,7 @@ namespace MiaMax.Gameplay
                     {
                         twigs--; flowers--; forestUnlocked = true; stars += 8;
                         toast = "You crafted a garden keepsake! The Secret Garden Gate is open.";
-                        BuildSecretGarden();
-                        GameObject gateObject = GameObject.Find("Adventure Gate");
-                        if (gateObject != null) gateObject.GetComponent<Renderer>().sharedMaterial = leafMat;
+                        toast += " The illustrated garden gate is now unlocked.";
                     }
                     else if (forestUnlocked) toast = "Your garden keepsake opened a new adventure!";
                     else toast = "Recipe: 1 twig + 1 flower. Gather twigs beneath the tree and grow flowers.";
@@ -512,7 +521,7 @@ namespace MiaMax.Gameplay
                     miniGameOpen = true; miniGameStep = 0; miniGameScore = 0; miniGameMessage = "Tap the treasures in this order: feather, shell, leaf."; break;
                 case "gate":
                     toast = forestUnlocked ? "Welcome to the Secret Garden! Explore the new discoveries." : "Craft a garden keepsake at the workbench to unlock this gate.";
-                    if (forestUnlocked && worldCamera != null) worldCamera.transform.position = new Vector3(12f, 18f, -19f);
+                    if (forestUnlocked) toast += " The Secret Garden chapter is unlocked.";
                     break;
                 case "gardenstone": toast = "The Secret Garden's story has only just begun!"; stars++; break;
                 case "tree":
