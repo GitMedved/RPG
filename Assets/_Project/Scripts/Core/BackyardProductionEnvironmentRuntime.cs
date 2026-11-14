@@ -20,9 +20,12 @@ namespace MiaMax.Gameplay
 
             // Replace only the visible central-tree primitives. Their original objects
             // remain in place so existing interaction/collision behavior is preserved.
-            HideRenderers("Main_Tree_Trunk");
-            HideRenderers("Main_Tree_Canopy");
-            Place(root.transform, "ENV_TreeBlocks", "TreeBlocks_Main", new Vector3(-7f, 0f, 2f));
+            bool treePlaced = Place(root.transform, "ENV_TreeBlocks", "TreeBlocks_Main", new Vector3(-7f, 0f, 2f));
+            if (treePlaced)
+            {
+                HideRenderers("Main_Tree_Trunk");
+                HideRenderers("Main_Tree_Canopy");
+            }
 
             // Reviewed seating models enrich the patio without replacing gameplay objects.
             Place(root.transform, "ENV_Bench", "Patio_Bench", new Vector3(-2.7f, 0f, 6.0f),
@@ -43,7 +46,7 @@ namespace MiaMax.Gameplay
             Debug.Log("[Mia & Max] Production environment visuals applied. Gameplay placeholders and interaction colliders were preserved.");
         }
 
-        private static void Place(Transform parent, string resourceName, string instanceName,
+        private static bool Place(Transform parent, string resourceName, string instanceName,
             Vector3 position, Quaternion rotation = default)
         {
             GameObject prefab = Resources.Load<GameObject>(ResourceFolder + resourceName);
@@ -51,12 +54,13 @@ namespace MiaMax.Gameplay
             {
                 Debug.LogWarning("[Mia & Max] Production prefab not found in Resources: " + resourceName +
                     ". Run Tools > Mia & Max > Assets > Build Production Environment Prefabs.");
-                return;
+                return false;
             }
 
             GameObject instance = Object.Instantiate(prefab, position,
                 rotation == default ? Quaternion.identity : rotation, parent);
             instance.name = instanceName;
+            return true;
         }
 
         private static void HideRenderers(string objectName)
