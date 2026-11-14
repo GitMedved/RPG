@@ -103,22 +103,30 @@ namespace MiaMax.EditorTools
                         if (renderers.Length == 0)
                             throw new InvalidOperationException("Source model has no renderers.");
 
-                        Bounds bounds = GetBoundsInRootSpace(renderers, wrapper.transform);
-                        if (bounds.size.y <= 0.001f)
+                        // Capture source-space bounds before changing any transforms. Unity may
+                        // return cached renderer world bounds for imported models during an Editor
+                        // asset build, so grounding must not depend on a post-scale bounds refresh.
+                        Bounds sourceBounds = GetBoundsInRootSpace(renderers, wrapper.transform);
+                        if (sourceBounds.size.y <= 0.001f)
                             throw new InvalidOperationException("Source model has zero height.");
 
-                        float scale = spec.TargetHeight / bounds.size.y;
+                        float scale = spec.TargetHeight / sourceBounds.size.y;
                         if (spec.TargetWidth > 0f)
                         {
-                            float horizontal = Mathf.Max(bounds.size.x, bounds.size.z);
+                            float horizontal = Mathf.Max(sourceBounds.size.x, sourceBounds.size.z);
                             if (horizontal > 0.001f) scale = spec.TargetWidth / horizontal;
                         }
                         scale = Mathf.Clamp(scale, 0.001f, 100f);
                         visual.transform.localScale = Vector3.one * scale;
 
-                        bounds = GetBoundsInRootSpace(renderers, wrapper.transform);
-                        visual.transform.localPosition = Vector3.up * (-bounds.min.y);
-                        bounds = GetBoundsInRootSpace(renderers, wrapper.transform);
+                        // The source-space bottom is multiplied by the same uniform scale.
+                        // Offset the visual child by that exact amount to place its lowest point
+                        // at wrapper-local Y=0, without relying on stale Renderer.bounds values.
+                        visual.transform.localPosition = Vector3.up * (-sourceBounds.min.y * scale);
+
+                        Bounds bounds = sourceBounds;
+                        bounds.center = Vector3.Scale(bounds.center, Vector3.one * scale);
+                        bounds.size *= scale;
                         int triangles = CountTriangles(visual);
                         totalTriangles += triangles;
 
