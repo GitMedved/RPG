@@ -6,7 +6,7 @@ Cross-platform 3D family adventure game for Android and iOS, built with Unity an
 
 ## Project status
 
-Pre-production Unity prototype. The repository began as a README-only project; the current feature branch now contains the Unity scaffold, a generated-at-runtime backyard greybox, mobile input and interaction prototypes, plus temporary stylized character proxies.
+Pre-production Unity prototype; not yet a verified playable vertical slice. The current startup path is tap-led, but the audited `Backyard.unity` scene has no serialized scene roots and the tap-world bootstrap expects a runtime background texture that is not present at its Resources path. Production environment prefabs and rigged Mia/Max models are also not present at their runtime paths. See [Prototype Foundation Audit](PROTOTYPE_FOUNDATION_AUDIT.md) for the verified blockers and recommended integration strategy. Do not treat earlier greybox systems or asset-importer scripts as proof that the current startup scene is visually complete.
 
 ## Approved direction
 
@@ -51,7 +51,7 @@ Unity baseline currently recorded as 6000.3.0f1 with URP package 17.3.0. Confirm
 
 ## Current limitations
 
-Production character models, authored rigs, animation clips, final environment art, audio and committed scene assets are not present yet. Runtime procedural character and environment proxies are temporary greybox art only.
+Approved 2D reference images and an empty `Backyard.unity` scene are committed, but the required runtime backyard illustration, production environment prefab outputs, rigged character FBX files, authored animation clips and final audio are not yet present at the paths used by the startup/runtime systems. Runtime procedural character and environment proxies are temporary greybox art only. Unity compilation, Play Mode, save/reload and Android/iOS device validation remain outstanding.
 
 ## Development workflow
 
