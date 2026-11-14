@@ -149,7 +149,10 @@ namespace MiaMax.EditorTools
                 Bounds bounds = CalculateGeometryBoundsInRootSpace(renderers, root.transform);
                 if (bounds.size.sqrMagnitude < 0.0001f) issues.Add("bounds are empty");
                 else if (Mathf.Abs(bounds.min.y) > 0.08f)
+                {
                     issues.Add("geometry grounding offset is " + bounds.min.y.ToString("0.000") + " m");
+                    issues.Add(BuildTransformDiagnostics(renderers, root.transform, bounds));
+                }
 
                 row.Valid = issues.Count == 0;
                 row.Detail = row.Valid
@@ -294,6 +297,66 @@ namespace MiaMax.EditorTools
             if (material.HasProperty("_BaseColor")) material.SetColor("_BaseColor", color);
             if (material.HasProperty("_Color")) material.SetColor("_Color", color);
             renderer.sharedMaterial = material;
+        }
+
+        private static string BuildTransformDiagnostics(Renderer[] renderers, Transform root, Bounds totalBounds)
+        {
+            var details = new List<string>();
+            details.Add("root scale=" + FormatVector(root.localScale) +
+                ", root position=" + FormatVector(root.localPosition) +
+                ", total min=" + FormatVector(totalBounds.min));
+
+            foreach (Renderer renderer in renderers)
+            {
+                Mesh mesh = null;
+                SkinnedMeshRenderer skinned = renderer as SkinnedMeshRenderer;
+                if (skinned != null) mesh = skinned.sharedMesh;
+
+                if (mesh == null)
+                {
+                    MeshFilter filter = renderer.GetComponent<MeshFilter>();
+                    if (filter != null) mesh = filter.sharedMesh;
+                }
+
+                Matrix4x4 toRoot = root.worldToLocalMatrix * renderer.transform.localToWorldMatrix;
+                Vector3 meshMin = mesh != null ? mesh.bounds.min : renderer.localBounds.min;
+                Vector3 meshMax = mesh != null ? mesh.bounds.max : renderer.localBounds.max;
+                Vector3 rootOrigin = toRoot.MultiplyPoint3x4(Vector3.zero);
+                Vector3 rootMeshMin = toRoot.MultiplyPoint3x4(meshMin);
+                Vector3 rootMeshMax = toRoot.MultiplyPoint3x4(meshMax);
+
+                details.Add(renderer.name +
+                    " path=" + GetRelativePath(renderer.transform, root) +
+                    " localPos=" + FormatVector(renderer.transform.localPosition) +
+                    " localScale=" + FormatVector(renderer.transform.localScale) +
+                    " rootOrigin=" + FormatVector(rootOrigin) +
+                    " meshMin=" + FormatVector(meshMin) +
+                    " meshMax=" + FormatVector(meshMax) +
+                    " transformedMinCorner=" + FormatVector(rootMeshMin) +
+                    " transformedMaxCorner=" + FormatVector(rootMeshMax));
+            }
+
+            return "diagnostics: " + string.Join(" || ", details.ToArray());
+        }
+
+        private static string GetRelativePath(Transform value, Transform root)
+        {
+            var names = new List<string>();
+            Transform current = value;
+            while (current != null && current != root)
+            {
+                names.Add(current.name);
+                current = current.parent;
+            }
+            names.Reverse();
+            return string.Join("/", names.ToArray());
+        }
+
+        private static string FormatVector(Vector3 value)
+        {
+            return "(" + value.x.ToString("0.###") + "," +
+                value.y.ToString("0.###") + "," +
+                value.z.ToString("0.###") + ")";
         }
 
         private static Bounds CalculateGeometryBoundsInRootSpace(Renderer[] renderers, Transform root)
