@@ -17,7 +17,7 @@ namespace MiaMax.EditorTools
     /// </summary>
     public static class BackyardProductionEnvironmentReviewBuilder
     {
-        private const string PrefabRoot = "Assets/_Project/Art/Environment/Runtime/ProductionPrefabs/Environment";
+        private const string PrefabRoot = "Assets/_Project/Art/Environment/Runtime/Resources/Environment";
         private const string SceneRoot = "Assets/_Project/Scenes/ArtReview";
         private static readonly string[] AssetNames =
         {
