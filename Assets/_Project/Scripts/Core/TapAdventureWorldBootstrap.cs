@@ -66,8 +66,12 @@ namespace MiaMax.Gameplay
             flowersWatered = PlayerPrefs.GetInt(SavePrefix + "watered", 0) == 1;
             forestUnlocked = PlayerPrefs.GetInt(SavePrefix + "forest", 0) == 1;
             treeGathered = PlayerPrefs.GetInt(SavePrefix + "treeGathered", 0) == 1;
-            long ticks = long.Parse(PlayerPrefs.GetString(SavePrefix + "flowersReady", "0"));
-            flowersReadyUtc = ticks > 0 ? new DateTime(ticks, DateTimeKind.Utc) : DateTime.MinValue;
+            string savedTicks = PlayerPrefs.GetString(SavePrefix + "flowersReady", "0");
+            if (long.TryParse(savedTicks, out long ticks) && ticks > 0 &&
+                ticks <= DateTime.MaxValue.Ticks)
+                flowersReadyUtc = new DateTime(ticks, DateTimeKind.Utc);
+            else
+                flowersReadyUtc = DateTime.MinValue;
         }
 
         private void SaveProgress()
@@ -104,12 +108,25 @@ namespace MiaMax.Gameplay
             backyardArtwork = Resources.Load<Texture2D>("MiaMax/Art/BackyardScene");
             if (backyardArtwork == null)
                 Debug.LogWarning("[Mia & Max Art] BackyardScene.png is not installed yet. Add it at Assets/Resources/MiaMax/Art/BackyardScene.png to display the illustrated world.");
+            CreateMaterials();
+            BuildGroundAndPaths();
+            BuildHouse();
+            BuildTreeAndBirdhouse();
+            BuildGarden();
+            BuildWorkshop();
+            BuildPondAndDecor();
+            BuildAdventureGate();
+            if (forestUnlocked) BuildSecretGarden();
+
             BuildCamera();
+            BuildLighting();
+
             RenderSettings.ambientMode = AmbientMode.Trilight;
             RenderSettings.ambientSkyColor = new Color(0.70f, 0.82f, 0.96f);
             RenderSettings.ambientEquatorColor = new Color(0.83f, 0.86f, 0.72f);
             RenderSettings.ambientGroundColor = new Color(0.38f, 0.32f, 0.24f);
-            Debug.Log("[Mia & Max] Illustrated tap world created. Procedural blockout geometry is disabled; interactions use screen-space hotspots.");
+
+            Debug.Log("[Mia & Max] Tap Adventure 3D greybox created: fixed angled camera, visible environment, raycast object selection. Production art is still required.");
         }
 
         private void CreateMaterials()
@@ -278,21 +295,42 @@ namespace MiaMax.Gameplay
             {
                 worldCamera = existing;
                 worldCamera.clearFlags = CameraClearFlags.SolidColor;
-                worldCamera.backgroundColor = new Color(0.20f, 0.38f, 0.30f);
+                worldCamera.backgroundColor = new Color(0.68f, 0.82f, 0.94f);
             }
             else
             {
                 GameObject cameraObject = new GameObject("Tap Adventure Fixed Camera");
                 worldCamera = cameraObject.AddComponent<Camera>();
-                cameraObject.AddComponent<AudioListener>();
-                worldCamera.tag = "MainCamera";
+                if (FindFirstObjectByType<AudioListener>() == null)
+                    cameraObject.AddComponent<AudioListener>();
+                cameraObject.tag = "MainCamera";
             }
+
+            // Portrait-friendly, fixed three-quarter view. The previous camera was
+            // placed at ground level and looked horizontally, making the whole yard
+            // appear edge-on and effectively invisible.
             worldCamera.orthographic = true;
-            worldCamera.orthographicSize = 5f;
-            worldCamera.transform.position = new Vector3(0f, 0f, -10f);
-            worldCamera.transform.rotation = Quaternion.identity;
+            worldCamera.orthographicSize = 10.5f;
+            worldCamera.transform.position = new Vector3(0f, 13.5f, -18f);
+            worldCamera.transform.LookAt(new Vector3(0f, 1.0f, 0.5f));
             worldCamera.nearClipPlane = 0.1f;
-            worldCamera.farClipPlane = 30f;
+            worldCamera.farClipPlane = 100f;
+            worldCamera.allowHDR = true;
+            worldCamera.allowMSAA = true;
+        }
+
+        private void BuildLighting()
+        {
+            Light existing = FindFirstObjectByType<Light>();
+            if (existing != null) return;
+
+            GameObject sunObject = new GameObject("Tap Adventure Warm Sun");
+            Light sun = sunObject.AddComponent<Light>();
+            sun.type = LightType.Directional;
+            sun.color = new Color(1.0f, 0.88f, 0.70f);
+            sun.intensity = 1.25f;
+            sun.shadows = LightShadows.Soft;
+            sunObject.transform.rotation = Quaternion.Euler(48f, -32f, 0f);
         }
 
         private GameObject Create(string objectName, PrimitiveType primitive, Vector3 position, Vector3 scale, Material material, bool collider)
@@ -321,7 +359,8 @@ namespace MiaMax.Gameplay
 
         private void Update()
         {
-            if (miniGameOpen) return;
+            if (miniGameOpen || worldCamera == null) return;
+
             Vector2 screen = Vector2.zero;
             bool pressed = false;
             if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
@@ -334,18 +373,21 @@ namespace MiaMax.Gameplay
                 screen = Input.mousePosition;
                 pressed = true;
             }
+
             if (!pressed || Screen.width <= 0 || Screen.height <= 0) return;
-            Vector2 normalized = new Vector2(screen.x / Screen.width, 1f - screen.y / Screen.height);
-            // Keep the top HUD and bottom action card reserved for UI controls.
-            if (normalized.y < 0.25f || normalized.y > 0.68f) return;
-            for (int i = 0; i < hotspotPositions.Length; i++)
-            {
-                if (Vector2.Distance(normalized, hotspotPositions[i]) <= 0.085f)
-                {
-                    selectedId = hotspotIds[i];
-                    return;
-                }
-            }
+
+            // Ignore the HUD and action card; world selection is based on real colliders.
+            float normalizedY = screen.y / Screen.height;
+            if (normalizedY < 0.22f || normalizedY > 0.80f) return;
+
+            Ray ray = worldCamera.ScreenPointToRay(screen);
+            if (!Physics.Raycast(ray, out RaycastHit hit, 150f, Physics.DefaultRaycastLayers,
+                    QueryTriggerInteraction.Collide))
+                return;
+
+            TapAdventureTarget target = hit.collider.GetComponentInParent<TapAdventureTarget>();
+            if (target != null)
+                selectedId = target.Id;
         }
 
         private Texture2D MakeUiTexture(Color color)
@@ -387,8 +429,9 @@ namespace MiaMax.Gameplay
 
         private void OnGUI()
         {
-            if (backyardArtwork != null)
-                GUI.DrawTexture(new Rect(0f, 0f, Screen.width, Screen.height), backyardArtwork, ScaleMode.ScaleAndCrop, true);
+            // The world is rendered by the fixed 3D camera. Never stretch the
+            // optional concept-art texture over the live scene: it would hide all
+            // 3D colliders and make tap selection feel disconnected from the world.
             EnsureStyles();
             float scale = Mathf.Clamp(Screen.width / 430f, 0.78f, 1.5f);
             float margin = 16f * scale;
