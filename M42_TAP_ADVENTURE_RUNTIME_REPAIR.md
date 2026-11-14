@@ -33,16 +33,16 @@ The tree and fallen-twig pickups are separate discoveries; together they provide
 
 1. Pull the latest `codex/mia-max-foundation` branch.
 2. Open the project in Unity 6000.3.0f1 and wait for package import/compilation to finish.
-3. Open `Assets/_Project/Scenes/Backyard.unity` and press Play. The scene file is intentionally lightweight; the runtime bootstrap creates the tap world after scene load.
+3. Run **Mia & Max → Prototype → Validate Tap Adventure Materials** and confirm all 8 authored materials are found. If you need a clean first-time run, use **Mia & Max → Prototype → Reset Tap Adventure Progress** (it deletes only this prototype's PlayerPrefs keys).\n4. Open `Assets/_Project/Scenes/Backyard.unity` and press Play. The scene file is intentionally lightweight; the runtime bootstrap creates the tap world after scene load.
 4. Confirm the yard, house, tree, path, flower bed, workbench, pond and gate are visible from the fixed angled camera.
 5. Tap the tree, fallen twigs, feather, birdhouse, flower bed, workbench and treasure basket. Confirm each selection opens the matching contextual card.
-6. Complete the birdhouse recipe and confirm the resource counts decrease exactly once.
-7. Water the flower bed and wait 60 seconds. Confirm the blooms visibly enlarge and can then be collected.
-8. Complete the keepsake recipe and confirm the Secret Garden clearing appears.
-9. Finish the sorting mini-game, reopen it and confirm it no longer grants another reward.
-10. Stop Play Mode, press Play again and confirm inventory, crafted objects, unlocks and one-time rewards persist.
+7. Complete the birdhouse recipe and confirm the resource counts decrease exactly once.
+8. Water the flower bed and wait 60 seconds. Confirm the blooms visibly enlarge and can then be collected.
+9. Complete the keepsake recipe and confirm the Secret Garden clearing appears.
+10. Finish the sorting mini-game, reopen it and confirm it no longer grants another reward.
+11. Stop Play Mode, press Play again and confirm inventory, crafted objects, unlocks and one-time rewards persist.
 
-If the first run appears to have old saved progress, use Unity's PlayerPrefs reset for the Mia & Max tap-adventure keys before repeating the first-time sequence. Do not clear all application preferences indiscriminately.
+Use the prototype-specific reset menu above when you need to repeat the first-time sequence. It preserves all other application preferences.
 
 ## Known limitations — not release-ready
 
