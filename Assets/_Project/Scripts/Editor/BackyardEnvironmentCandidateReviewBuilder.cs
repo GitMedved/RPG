@@ -177,8 +177,8 @@ namespace MiaMax.EditorTools
                 }
             }
 
-            lines.Insert(1, "Total: " + total + " | Review scene: Assets/_Project/Scenes/ArtReview/BackyardEnvironmentCandidates.unity");
-            Debug.Log(string.Join("\\n", lines));
+            lines.Insert(1, "Total: " + total + " | Review scene: " + FindLatestScenePath());
+            Debug.Log(string.Join("\n", lines));
             EditorUtility.DisplayDialog("Backyard Candidate Catalog",
                 "Printed " + total + " candidate names and asset paths to the Unity Console.\n\n" +
                 "Use the Console search field with 'BACKYARD CANDIDATE CATALOG' to find the report.",
@@ -204,7 +204,7 @@ namespace MiaMax.EditorTools
             if (category == "FENCES & GARDEN STRUCTURES")
                 return hasAny("fence", "gate", "arch", "pergola", "shed", "birdhouse", "well", "trellis", "garden");
 
-            if (category == "PATHS, ROCKS & GROUND")
+            if (category == "NATURAL ROCKS & TERRAIN")
             {
                 if (hasAny("bridge", "campfire")) return false;
                 return hasAny("rock", "pebble", "gravel", "stone", "cliff", "stump", "log");
@@ -361,6 +361,17 @@ namespace MiaMax.EditorTools
                 AssetDatabase.CreateFolder("Assets/_Project/Art/Environment/Runtime/ReviewMaterials", "BackyardCandidates");
             if (!AssetDatabase.IsValidFolder(SceneRoot))
                 AssetDatabase.CreateFolder("Assets/_Project/Scenes", "ArtReview");
+        }
+
+        private static string FindLatestScenePath()
+        {
+            if (!Directory.Exists(SceneRoot)) return "No review scene found yet";
+            string latest = Directory.GetFiles(SceneRoot, "BackyardEnvironmentCandidates*.unity")
+                .OrderByDescending(File.GetLastWriteTimeUtc)
+                .FirstOrDefault();
+            return string.IsNullOrEmpty(latest)
+                ? "No review scene found yet"
+                : latest.Replace('\\\\', '/');
         }
 
         private static string NextScenePath()
