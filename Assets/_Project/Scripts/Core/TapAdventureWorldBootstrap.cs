@@ -97,20 +97,6 @@ namespace MiaMax.Gameplay
             PlayerPrefs.Save();
         }
 
-        private readonly Vector2[] hotspotPositions =
-        {
-            new Vector2(0.08f, 0.35f), // tree trunk
-            new Vector2(0.16f, 0.29f), // birdhouse
-            new Vector2(0.50f, 0.37f), // gate in the fence
-            new Vector2(0.84f, 0.53f), // workshop
-            new Vector2(0.80f, 0.63f), // flowers
-            new Vector2(0.17f, 0.65f), // pond edge above bottom panel
-            new Vector2(0.18f, 0.49f), // twigs at tree roots
-            new Vector2(0.48f, 0.60f), // feather discovery
-            new Vector2(0.53f, 0.57f)  // Max mini-game
-        };
-        private readonly string[] hotspotIds = { "tree", "birdhouse", "gate", "workshop", "flowers", "pond", "twigs", "feather", "minigame" };
-
         private void BuildWorld()
         {
             CreateMaterials();
