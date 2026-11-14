@@ -47,8 +47,8 @@ namespace MiaMax.EditorTools
                 new Category { Title = "TREES & LARGE GREENERY", Tokens = new[] { "tree", "pine", "willow", "palm", "oak", "birch", "maple", "bush", "shrub", "hedge" } },
                 new Category { Title = "FLOWERS & SMALL PLANTS", Tokens = new[] { "flower", "fern", "grass", "cattail", "reed", "mushroom", "plant", "planter" } },
                 new Category { Title = "FENCES & GARDEN STRUCTURES", Tokens = new[] { "fence", "gate", "arch", "pergola", "shed", "birdhouse", "well", "trellis", "garden" } },
-                new Category { Title = "PATHS, ROCKS & GROUND", Tokens = new[] { "path", "stepping", "paving", "tile", "rock", "pebble", "gravel", "stone", "stump", "log", "bridge" } },
-                new Category { Title = "GARDEN FURNITURE & PLAY", Tokens = new[] { "swing", "sandbox", "slide", "wheelbarrow", "bench", "birdhouse", "basket", "outdoor", "garden", "chair", "table" } }
+                new Category { Title = "NATURAL ROCKS & TERRAIN", Tokens = new[] { "rock", "pebble", "gravel", "stone", "cliff", "stump", "log" } },
+                new Category { Title = "OUTDOOR SEATING & DECOR", Tokens = new[] { "swing", "sandbox", "slide", "wheelbarrow", "bench", "birdhouse", "basket", "outdoor", "garden", "chair", "table" } }
             };
 
             string[] guids = AssetDatabase.FindAssets("t:Model", new[] { ModelRoot });
@@ -135,8 +135,8 @@ namespace MiaMax.EditorTools
                 new { Title = "TREES & LARGE GREENERY", Tokens = new[] { "tree", "pine", "willow", "palm", "oak", "birch", "maple", "bush", "shrub", "hedge" } },
                 new { Title = "FLOWERS & SMALL PLANTS", Tokens = new[] { "flower", "fern", "grass", "cattail", "reed", "mushroom", "plant", "planter" } },
                 new { Title = "FENCES & GARDEN STRUCTURES", Tokens = new[] { "fence", "gate", "arch", "pergola", "shed", "birdhouse", "well", "trellis", "garden" } },
-                new { Title = "PATHS, ROCKS & GROUND", Tokens = new[] { "path", "stepping", "paving", "tile", "rock", "pebble", "gravel", "stone", "stump", "log", "bridge" } },
-                new { Title = "GARDEN FURNITURE & PLAY", Tokens = new[] { "swing", "sandbox", "slide", "wheelbarrow", "bench", "birdhouse", "basket", "outdoor", "garden", "chair", "table" } }
+                new { Title = "NATURAL ROCKS & TERRAIN", Tokens = new[] { "rock", "pebble", "gravel", "stone", "cliff", "stump", "log" } },
+                new { Title = "OUTDOOR SEATING & DECOR", Tokens = new[] { "swing", "sandbox", "slide", "wheelbarrow", "bench", "birdhouse", "basket", "outdoor", "garden", "chair", "table" } }
             };
 
             string[] guids = AssetDatabase.FindAssets("t:Model", new[] { ModelRoot });
@@ -206,13 +206,13 @@ namespace MiaMax.EditorTools
 
             if (category == "PATHS, ROCKS & GROUND")
             {
-                if (hasAny("bridge")) return false;
-                return hasAny("path", "stepping", "paving", "tile", "rock", "pebble", "gravel", "stone", "stump", "log");
+                if (hasAny("bridge", "campfire")) return false;
+                return hasAny("rock", "pebble", "gravel", "stone", "cliff", "stump", "log");
             }
 
-            if (category == "GARDEN FURNITURE & PLAY")
+            if (category == "OUTDOOR SEATING & DECOR")
             {
-                if (hasAny("cabinet", "bed", "drawer", "wardrobe", "shelf", "desk", "sofa", "couch", "indoor"))
+                if (hasAny("cabinet", "bed", "drawer", "wardrobe", "shelf", "desk", "sofa", "couch", "indoor", "plantstand", "nightstand"))
                     return false;
                 return hasAny("swing", "sandbox", "slide", "wheelbarrow", "bench", "birdhouse", "basket", "outdoor", "garden", "chair", "table");
             }
