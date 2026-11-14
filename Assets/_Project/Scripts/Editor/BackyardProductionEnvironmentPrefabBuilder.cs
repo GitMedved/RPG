@@ -16,7 +16,7 @@ namespace MiaMax.EditorTools
     public static class BackyardProductionEnvironmentPrefabBuilder
     {
         private const string ModelRoot = "Assets/_Project/Art/Environment/Runtime/Models/Kenney";
-        private const string OutputRoot = "Assets/_Project/Art/Environment/Runtime/ProductionPrefabs/Environment";
+        private const string OutputRoot = "Assets/_Project/Art/Environment/Runtime/Resources/Environment";
         private const string ManifestPath = OutputRoot + "/ENVIRONMENT_ASSET_MANIFEST.md";
 
         private sealed class AssetSpec
