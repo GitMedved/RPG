@@ -105,6 +105,7 @@ namespace MiaMax.Gameplay
                 SaveProgress();
                 PlayFeedback(MiaMax.Infrastructure.Audio.GameAudioCue.MiniGameWin);
                 artWorld?.React("minigame_win", true);
+                MiaMax.Infrastructure.Audio.GameAudioService.Instance?.PlayMaxMeow();
             }
             else miniGameMessage = "Lovely! Now find the next treasure.";
         }
@@ -794,6 +795,8 @@ namespace MiaMax.Gameplay
             bool rewarded = stars > starsBefore;
             artWorld?.React(id, rewarded);
             TryVoice(id, rewarded);
+            if (id == "pond" || id == "minigame")
+                MiaMax.Infrastructure.Audio.GameAudioService.Instance?.PlayMaxMeow();
             PlayFeedback(rewarded
                 ? MiaMax.Infrastructure.Audio.GameAudioCue.Reward
                 : MiaMax.Infrastructure.Audio.GameAudioCue.UiTap);
