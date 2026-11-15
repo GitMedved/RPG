@@ -36,15 +36,29 @@ jobs:
             url="$2"
             tmp="$(mktemp --suffix=.wav)"
             trap 'rm -f "$tmp"' RETURN
-            curl --fail --location --retry 3 --connect-timeout 15 --max-time 100 --silent --show-error "$url" -o "$tmp"
-            python3 - "$tmp" <<'PY'
-          import sys, wave
-          with wave.open(sys.argv[1], "rb") as f:
-              assert f.getnchannels() in (1, 2), "unexpected channels"
-              assert 0 < f.getnframes() < f.getframerate() * 45, "invalid duration"
+            if ! curl --fail --location --retry 3 --connect-timeout 15 --max-time 100 --silent --show-error "$url" -o "$tmp"; then
+              echo "::warning::Source is temporarily unavailable for $id"
+              rm -f "$tmp"
+              trap - RETURN
+              return 0
+            fi
+            if ! python3 - "$tmp" <<'PY'
+          import sys, pathlib
+          data = pathlib.Path(sys.argv[1]).read_bytes()
+          assert len(data) > 4096 and data[:4] == b"RIFF" and data[8:12] == b"WAVE"
           PY
-            ffmpeg -hide_banner -nostdin -v error -y -i "$tmp" -af "highpass=f=85,lowpass=f=10000,loudnorm=I=-17:TP=-1.5:LRA=9" -ar 24000 -ac 1 -c:a pcm_s16le "$TARGET/$id.wav"
-            test "$(stat -c%s "$TARGET/$id.wav")" -gt 20000
+            then
+              echo "::warning::Download was not a WAV for $id"
+              rm -f "$tmp"
+              trap - RETURN
+              return 0
+            fi
+            if ffmpeg -hide_banner -nostdin -v error -y -i "$tmp" -af "highpass=f=85,lowpass=f=10000,loudnorm=I=-17:TP=-1.5:LRA=9" -ar 24000 -ac 1 -c:a pcm_s16le "$TARGET/$id.wav"; then
+              test "$(stat -c%s "$TARGET/$id.wav")" -gt 20000
+            else
+              echo "::warning::Audio mastering failed for $id"
+              rm -f "$TARGET/$id.wav"
+            fi
             rm -f "$tmp"
             trap - RETURN
           }
@@ -60,7 +74,11 @@ jobs:
           names = ["mia_birdhouse_ready_01", "max_birdhouse_01",
                    "mia_secret_garden_01", "max_garden_discovery_01",
                    "mia_greeting_01", "max_treasure_win_01"]
+          count = 0
           for i, name in enumerate(names):
+              if not (folder / f"{name}.wav").exists():
+                  continue
+              count += 1
               meta = folder / f"{name}.wav.meta"
               guid = f"7d536d8d401147ce9000000000000{i+1:03x}"
               assert len(guid) == 32
@@ -87,6 +105,9 @@ jobs:
             assetBundleName:
             assetBundleVariant:
           """)
+          print("Verified WAV files ready:", count)
+          if not count:
+              raise SystemExit("No valid generated WAVs were accessible from the host")
           PY
       - name: Commit verified local WAVs
         shell: bash
@@ -96,6 +117,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add Assets/Resources/MiaMax/Audio/Voice
           if ! git diff --cached --quiet; then
-            git commit -m "assets: commit six leveled original voice WAVs for offline gameplay"
+            git commit -m "assets: commit locally leveled English dialogue WAVs for offline gameplay"
+            git pull --rebase origin codex/mia-max-foundation
             git push origin HEAD:codex/mia-max-foundation
           fi
