@@ -27,11 +27,16 @@ All state changes call `SaveProgress()`. The MVP's reset command deletes *only* 
 
 The world builder creates the yard, house, tree, garden, crafting station, pond and gate. Visible action targets carry a `TapAdventureTarget` component and collider. A camera raycast selects objects after excluding HUD rectangles. The user chooses an action with the context panel. The gate changes between two fixed camera compositions; characters are not directly controlled.
 
-## Asset fallback and visuals
+## Current art / UX architecture
 
-The current 3D shapes remain temporary primitives, rendered with real committed URP materials. The original Mia/Max references are included as HUD portraits; they are not rigged animated 3D characters. Optional production SFX and music may be absent; short non-licensed, procedural interaction tones provide basic feedback.
+- `TapAdventureWorldBootstrap` creates the authoritative hidden gameplay collider blockout, camera, save state and adventure actions.
+- `TapAdventureArtWorld` disables the primitive renderers and builds an independent visible stage with sculpted rounded meshes, low-poly organic meshes, UVs/normals, shared URP materials, house/roof/window details, garden beds, an apple tree, water garden, fence and secret-garden assets. Its lightweight touch colliders preserve the gameplay interactions.
+- `TapAdventureCharacterRig` draws Mia and Max as animated stylized 3D **development proxies**. Breathing/idle sway, gestures, eyes, tail and approximate voice-timed talking are implemented; final models matching approved original references, skinning and animation clips remain future art work.
+- `TapAdventureHud` uses a scalable uGUI Canvas, nine-sliced rounded interface panels, adaptive safe-area layouts, original cropped character portraits, chapter hints, inventory counters, contextual actions, a voice toggle and the treasure sorting modal. IMGUI remains a fallback.
+- `GameAudioService` produces small feedback tones when production WAVs are absent; real English dialogue takes were generated via HeyGen, with their optional explicit Editor importer in `MiaMaxVoiceTakesImporter`. The download is only for local asset installation; the game itself is offline.
+- The original 40 URP surface materials remain reusable. The previous character movement/camera setup is not launched.
 
-The saved scene contains no produced character prefabs, environment meshes or animation clips. Development tools and legacy domain implementations are retained only as potential future source material.
+The C# procedural meshes are not production FBX assets and should not be described as final reference-matched characters. The voice binaries have not yet been installed into the Git repository.
 
 ## Validation
 
