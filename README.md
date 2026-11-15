@@ -36,7 +36,7 @@ The top HUD displays the original Mia/Max character reference portraits. These p
 5. Press **Play**; run **Mia & Max → MVP → 2. Inspect Running World** to confirm the camera and tap targets.
 6. Tap the target objects with the mouse (mobile builds use touch).
 
-To start fresh: **Mia & Max → Prototype → Reset Tap Adventure Progress**. This deletes only the standalone prototype's local PlayerPrefs progress; restart Play Mode afterwards. Do not use it if you want to keep the current local MVP save.
+To start fresh: **Mia & Max → MVP → 3. Reset Local Progress**. This deletes only the standalone prototype's local PlayerPrefs progress; restart Play Mode afterwards. Do not use it if you want to keep the current local MVP save.
 
 If your local Unity workspace already contains imported Kenney models, keep a backup before any clean reimport; the assets are not included in this Git branch.
 
