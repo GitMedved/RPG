@@ -749,6 +749,14 @@ namespace MiaMax.Gameplay
                     {
                         twigs--; flowers--; forestUnlocked = true; stars += 8;
                         BuildSecretGarden();
+                        // Legacy primitive meshes are invisible behind the illustrated scene;
+                        // keep their gameplay colliders for backward-compatible tap targets.
+                        if (artWorld != null)
+                            foreach (Transform item in transform)
+                            {
+                                Renderer oldRenderer = item.GetComponent<Renderer>();
+                                if (oldRenderer != null) oldRenderer.enabled = false;
+                            }
                         toast = "You crafted a garden keepsake! The Secret Garden Gate is open.";
                         toast += " A new garden clearing has appeared beyond the gate.";
                     }
@@ -800,7 +808,19 @@ namespace MiaMax.Gameplay
                 : actionId == "minigame" ? "max_treasure_win_01" : "";
             if (string.IsNullOrEmpty(voice)) return;
             if (Resources.Load<AudioClip>("MiaMax/Audio/Voice/" + voice) != null)
+            {
                 MiaMax.Infrastructure.Audio.GameAudioService.Instance?.PlayVoiceLine(voice);
+                if (actionId == "birdhouse")
+                    StartCoroutine(PlayMaxBirdhouseAfterMia());
+            }
+        }
+
+        private System.Collections.IEnumerator PlayMaxBirdhouseAfterMia()
+        {
+            yield return new WaitForSecondsRealtime(6.35f);
+            if (this == null) yield break;
+            if (Resources.Load<AudioClip>("MiaMax/Audio/Voice/max_birdhouse_01") != null)
+                MiaMax.Infrastructure.Audio.GameAudioService.Instance?.PlayVoiceLine("max_birdhouse_01");
         }
 
         private void HideCollectedTarget(string id)
