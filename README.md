@@ -19,7 +19,9 @@ The committed code creates an interactive backyard automatically at runtime from
 7. Play Max's three-step treasure sorting mini-game (one-time reward).
 8. Close and reopen the game; progress persists in the MVP's local PlayerPrefs save.
 
-The top HUD displays the original Mia/Max character reference portraits. These portraits are **not rigged 3D characters**. A few short procedural sound effects play when optional production WAV assets are absent.
+The rebuilt uGUI HUD displays the original character portraits, story objectives, inventory, a context card and the interactive mini-game. Two **animated, stylized 3D proxy characters** appear in the yard with blinking, gestures, idle motion, tail sway and limited speaking-mouth motion. These are NOT yet approved 3D likenesses of the reference images. The previously visible greybox is hidden behind custom-generated rounded/organic meshes for a cottage, roof, window frames, fence, apple tree, workbench, flowerbed, water garden, crafting props, secret-garden gate and clearing. The greybox colliders remain for reliable interaction.
+
+Basic interaction feedback is procedurally synthesized. Four original English spoken dialogue WAVs were generated with HeyGen; they are not tracked as binary assets yet. To install locally from the editor run **Mia & Max → MVP → 4. Install Generated English Voice Takes** while outside Play Mode. This operation requires internet access and will download the clips to `Assets/Resources/MiaMax/Audio/Voice/`. The gameplay remains offline afterward. Commit those WAVs before building/releasing from another machine. Generated source URLs may expire.
 
 ## Run it on Mac
 
@@ -33,8 +35,9 @@ The top HUD displays the original Mia/Max character reference portraits. These p
 2. In Unity Hub, open the repository root using Unity Editor **6000.3.0f1**. Wait for packages and script compilation.
 3. Open `Assets/_Project/Scenes/Backyard.unity`.
 4. Run **Mia & Max → MVP → 1. Preflight Assets & Scene**; inspect Console.
-5. Press **Play**; run **Mia & Max → MVP → 2. Inspect Running World** to confirm the camera and tap targets.
-6. Tap the target objects with the mouse (mobile builds use touch).
+5. If you want dialogue, use **Mia & Max → MVP → 4. Install Generated English Voice Takes** once outside Play Mode (internet required). This is optional and the game works without voices.
+6. Press **Play**; run **Mia & Max → MVP → 2. Inspect Running World** to confirm the camera, animated characters, Canvas HUD and tap targets.
+7. Tap the target objects with the mouse (mobile builds use touch).
 
 To start fresh: **Mia & Max → MVP → 3. Reset Local Progress**. This deletes only the standalone prototype's local PlayerPrefs progress; restart Play Mode afterwards. Do not use it if you want to keep the current local MVP save.
 
@@ -50,6 +53,8 @@ If your local Unity workspace already contains imported Kenney models, keep a ba
 - `Assets/Resources/MiaMax/Materials/`: 40 URP materials
 - `Assets/Resources/MiaMax/Art/MiaPortrait.jpg` and `MaxPortrait.png`: original reference portraits
 - `Assets/_Project/Art/Characters/`: original character source references
+
+The active renderer is `TapAdventureArtWorld.cs`, with `TapAdventureCharacterRig.cs` and `TapAdventureHud.cs`. These are authored C# procedural art, not model files exported from Blender. The original greybox renderer is disabled if the art pass installs successfully; its tap colliders stay in place. If art creation fails, the code re-enables the fallback world.
 
 The previous moving-character world has **no automatic startup**. The legacy domain, mini-game and content-tool scripts remain available for selective later reuse, but do **not** run as the current MVP. The legacy `GameSessionBootstrap` no longer creates a second save session automatically. This MVP intentionally uses one simple local `PlayerPrefs` save; a versioned save migration is future work.
 
