@@ -810,6 +810,9 @@ namespace MiaMax.Gameplay
             if (Resources.Load<AudioClip>("MiaMax/Audio/Voice/" + voice) != null)
             {
                 MiaMax.Infrastructure.Audio.GameAudioService.Instance?.PlayVoiceLine(voice);
+                if (voice.StartsWith("mia_", StringComparison.Ordinal))
+                    artWorld?.Mia?.Speak(actionId == "birdhouse" ? 6.3f : 6.2f);
+                else artWorld?.Max?.Speak(4.7f);
                 if (actionId == "birdhouse")
                     StartCoroutine(PlayMaxBirdhouseAfterMia());
             }
@@ -820,7 +823,10 @@ namespace MiaMax.Gameplay
             yield return new WaitForSecondsRealtime(6.35f);
             if (this == null) yield break;
             if (Resources.Load<AudioClip>("MiaMax/Audio/Voice/max_birdhouse_01") != null)
+            {
                 MiaMax.Infrastructure.Audio.GameAudioService.Instance?.PlayVoiceLine("max_birdhouse_01");
+                artWorld?.Max?.Speak(3.8f);
+            }
         }
 
         private void HideCollectedTarget(string id)
