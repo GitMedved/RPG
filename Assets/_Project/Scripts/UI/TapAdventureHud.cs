@@ -184,6 +184,9 @@ namespace MiaMax.Gameplay
             resourceText = Label("Inventory counters", header, "", 28, Ink, FontStyle.Bold,
                 TextAnchor.MiddleLeft, new Vector2(0, 0), new Vector2(1, 0),
                 new Vector2(-62, 51), new Vector2(0, 36));
+            // Keep the approved character reference portraits visible in the modern HUD.
+            RawImage portraitMia = AddPortrait("Mia", header, "MiaMax/Art/MiaPortrait", -315f);
+            RawImage portraitMax = AddPortrait("Max", header, "MiaMax/Art/MaxPortrait", -238f);
             backButton = Press("Return to yard", header, "Back", new Vector2(1, 1),
                 new Vector2(1, 1), new Vector2(145, 66),
                 new Vector2(-100, -44), Forest, Color.white, game.LeaveGarden);
@@ -235,6 +238,22 @@ namespace MiaMax.Gameplay
 
             BuildMiniGame();
             Refresh(true);
+        }
+
+        private RawImage AddPortrait(string name, Transform parent, string resource, float x)
+        {
+            Texture2D tex = Resources.Load<Texture2D>(resource);
+            if (tex == null) return null;
+            RectTransform rt = Element(name + " - original character portrait",
+                parent, Vector2.one, Vector2.one, new Vector2(66, 66), new Vector2(x, -45f));
+            RawImage image = rt.gameObject.AddComponent<RawImage>();
+            image.texture = tex;
+            image.color = Color.white;
+            image.raycastTarget = false;
+            AspectRatioFitter ratio = rt.gameObject.AddComponent<AspectRatioFitter>();
+            ratio.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
+            ratio.aspectRatio = 1f;
+            return image;
         }
 
         private void BuildMiniGame()
