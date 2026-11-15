@@ -403,7 +403,10 @@ namespace MiaMax.Gameplay
 
             TapAdventureTarget target = hit.collider.GetComponentInParent<TapAdventureTarget>();
             if (target != null)
+            {
                 selectedId = target.Id;
+                PlayFeedback(MiaMax.Infrastructure.Audio.GameAudioCue.Interact);
+            }
         }
 
         private Texture2D MakeUiTexture(Color color)
@@ -579,8 +582,15 @@ namespace MiaMax.Gameplay
             }
         }
 
+        private void PlayFeedback(MiaMax.Infrastructure.Audio.GameAudioCue cue)
+        {
+            var audio = MiaMax.Infrastructure.Audio.GameAudioService.Instance;
+            if (audio != null) audio.Play(cue, 0.7f);
+        }
+
         private void PerformAction(string id)
         {
+            int starsBefore = stars;
             switch (id)
             {
                 case "twigs":
@@ -666,6 +676,9 @@ namespace MiaMax.Gameplay
                 case "house": toast = "Home is where a great adventure begins."; break;
             }
             SaveProgress();
+            PlayFeedback(stars > starsBefore
+                ? MiaMax.Infrastructure.Audio.GameAudioCue.Reward
+                : MiaMax.Infrastructure.Audio.GameAudioCue.UiTap);
         }
 
         private void HideCollectedTarget(string id)
@@ -720,10 +733,15 @@ namespace MiaMax.Gameplay
                             stars += 5; feathers++;
                             toast = "Max did it! You earned 5 stars and a bonus feather.";
                             SaveProgress();
+                            PlayFeedback(MiaMax.Infrastructure.Audio.GameAudioCue.MiniGameWin);
                         }
                         else miniGameMessage = "Great! Now find the next treasure.";
                     }
-                    else miniGameMessage = "Not quite. Try the next item in the sequence.";
+                    else
+                    {
+                        miniGameMessage = "Not quite. Try the next item in the sequence.";
+                        PlayFeedback(MiaMax.Infrastructure.Audio.GameAudioCue.MiniGameMiss);
+                    }
                 }
             }
             if (GUI.Button(new Rect(r.x + 18f, r.yMax - 48f, r.width - 36f, 38f), "Leave mini-game", buttonStyle)) miniGameOpen = false;
