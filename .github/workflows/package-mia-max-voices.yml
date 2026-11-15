@@ -18,13 +18,15 @@ jobs:
         with:
           ref: codex/mia-max-foundation
           persist-credentials: true
-      - name: Download and professionally level four voice recordings
+      - name: Download and level six original English dialogue recordings
         shell: bash
         env:
           MIA_BIRDHOUSE_URL: "https://resource2.heygen.ai/text_to_speech/6a44461d68cc4a39ba6f4d5245aed20a/95d52e056b7b495dab8f090b44fa2ec4/id=771fc9b2099e4af69fae46d559bcfdd8.wav"
           MAX_BIRDHOUSE_URL: "https://resource2.heygen.ai/text_to_speech/6a44461d68cc4a39ba6f4d5245aed20a/e5f0084d0ddd4164a12a38a83457446c/id=8cf06089158e43dc9d95037519437a82.wav"
           MIA_GARDEN_URL: "https://resource2.heygen.ai/text_to_speech/6a44461d68cc4a39ba6f4d5245aed20a/95d52e056b7b495dab8f090b44fa2ec4/id=c6e53b2ba3744687aaadee2f2c090c75.wav"
           MAX_STONE_URL: "https://resource2.heygen.ai/text_to_speech/6a44461d68cc4a39ba6f4d5245aed20a/e5f0084d0ddd4164a12a38a83457446c/id=56823dc5d1fe4dd793c6017319dd29d2.wav"
+          MIA_GREETING_URL: "https://resource2.heygen.ai/text_to_speech/6a44461d68cc4a39ba6f4d5245aed20a/95d52e056b7b495dab8f090b44fa2ec4/id=90d14b30a3244a8780f8923a7ece2d8f.wav"
+          MAX_TREASURE_URL: "https://resource2.heygen.ai/text_to_speech/6a44461d68cc4a39ba6f4d5245aed20a/e5f0084d0ddd4164a12a38a83457446c/id=efdb25b8d002485f90c7e60cf97ad1f8.wav"
         run: |
           set -euo pipefail
           TARGET="Assets/Resources/MiaMax/Audio/Voice"
@@ -50,11 +52,14 @@ jobs:
           process max_birdhouse_01 "$MAX_BIRDHOUSE_URL"
           process mia_secret_garden_01 "$MIA_GARDEN_URL"
           process max_garden_discovery_01 "$MAX_STONE_URL"
+          process mia_greeting_01 "$MIA_GREETING_URL"
+          process max_treasure_win_01 "$MAX_TREASURE_URL"
           python3 - <<'PY'
           from pathlib import Path
           folder = Path("Assets/Resources/MiaMax/Audio/Voice")
           names = ["mia_birdhouse_ready_01", "max_birdhouse_01",
-                   "mia_secret_garden_01", "max_garden_discovery_01"]
+                   "mia_secret_garden_01", "max_garden_discovery_01",
+                   "mia_greeting_01", "max_treasure_win_01"]
           for i, name in enumerate(names):
               meta = folder / f"{name}.wav.meta"
               guid = f"7d536d8d401147ce9000000000000{i+1:03x}"
@@ -91,6 +96,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add Assets/Resources/MiaMax/Audio/Voice
           if ! git diff --cached --quiet; then
-            git commit -m "assets: commit four leveled original voice WAVs for offline gameplay"
+            git commit -m "assets: commit six leveled original voice WAVs for offline gameplay"
             git push origin HEAD:codex/mia-max-foundation
           fi
