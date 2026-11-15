@@ -6,7 +6,7 @@ namespace MiaMax.Infrastructure.Audio
     public enum GameAudioCue
     {
         UiTap, Plant, Harvest, CraftStart, CraftReady, Reward, Collectible,
-        Interact, MiniGameStart, MiniGameWin, MiniGameMiss
+        Interact, MiniGameStart, MiniGameWin, MiniGameMiss, MaxMeow
     }
 
     /// <summary>
@@ -37,6 +37,10 @@ namespace MiaMax.Infrastructure.Audio
         [SerializeField] private AudioClip miniGameStart;
         [SerializeField] private AudioClip miniGameWin;
         [SerializeField] private AudioClip miniGameMiss;
+        [SerializeField] private AudioClip maxMeow1;
+        [SerializeField] private AudioClip maxMeow2;
+        private float nextMaxMeowTime;
+        private bool alternateMeow;
 
         private readonly HashSet<string> missingVoiceLineWarnings = new HashSet<string>();
 
@@ -91,6 +95,8 @@ namespace MiaMax.Infrastructure.Audio
             miniGameStart = LoadIfMissing(miniGameStart, "MiaMax/Audio/SFX/minigame_start");
             miniGameWin = LoadIfMissing(miniGameWin, "MiaMax/Audio/SFX/minigame_win");
             miniGameMiss = LoadIfMissing(miniGameMiss, "MiaMax/Audio/SFX/minigame_miss");
+            maxMeow1 = LoadIfMissing(maxMeow1, "MiaMax/Audio/SFX/max_meow_01");
+            maxMeow2 = LoadIfMissing(maxMeow2, "MiaMax/Audio/SFX/max_meow_02");
         }
 
         // Self-contained fallback: small original feedback cues, only when the
@@ -144,6 +150,18 @@ namespace MiaMax.Infrastructure.Audio
             if (effectsSource == null) return;
             AudioClip clip = GetClip(cue);
             if (clip != null) effectsSource.PlayOneShot(clip, Mathf.Clamp01(volume));
+        }
+
+        public void PlayMaxMeow()
+        {
+            if (effectsSource == null || Time.unscaledTime < nextMaxMeowTime) return;
+            if (voiceSource != null && voiceSource.isPlaying) return;
+            AudioClip clip = alternateMeow ? maxMeow2 : maxMeow1;
+            if (clip == null) clip = maxMeow1 != null ? maxMeow1 : maxMeow2;
+            if (clip == null) return;
+            alternateMeow = !alternateMeow;
+            nextMaxMeowTime = Time.unscaledTime + 4.5f;
+            effectsSource.PlayOneShot(clip, 0.42f);
         }
 
         public void PlayVoiceLine(AudioClip clip, float volume = 1f)
@@ -262,6 +280,7 @@ namespace MiaMax.Infrastructure.Audio
                 case GameAudioCue.MiniGameStart: return miniGameStart;
                 case GameAudioCue.MiniGameWin: return miniGameWin;
                 case GameAudioCue.MiniGameMiss: return miniGameMiss;
+                case GameAudioCue.MaxMeow: return alternateMeow ? maxMeow2 : maxMeow1;
                 default: return null;
             }
         }
