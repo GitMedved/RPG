@@ -69,6 +69,14 @@ namespace MiaMax.EditorTools
                 Check(ids.Contains(id), "Interactable: " + id);
             Check(Object.FindFirstObjectByType<MiaMax.Infrastructure.Audio.GameAudioService>() != null,
                 "Audio service with procedural cue fallback");
+            Check(Object.FindFirstObjectByType<TapAdventureArtWorld>() != null,
+                "Illustrated procedural 3D world");
+            Check(Object.FindFirstObjectByType<TapAdventureHud>() != null,
+                "Portrait UGUI mobile HUD");
+            Check(Object.FindObjectsByType<TapAdventureCharacterRig>(
+                FindObjectsSortMode.None).Length == 2,
+                "Animated Mia and Max character proxies");
+            Check(ids.Contains("gardenstone"), "Secret Garden story marker");
             Finish("RUNNING WORLD");
         }
 
