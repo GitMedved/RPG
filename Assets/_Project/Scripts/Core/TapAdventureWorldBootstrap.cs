@@ -442,43 +442,60 @@ namespace MiaMax.Gameplay
 
         private void OnGUI()
         {
-            // The world is rendered by the fixed 3D camera. Never stretch the
-            // optional concept-art texture over the live scene: it would hide all
-            // 3D colliders and make tap selection feel disconnected from the world.
             EnsureStyles();
-            float scale = Mathf.Clamp(Screen.width / 430f, 0.78f, 1.5f);
-            float margin = 16f * scale;
-            float topH = 92f * scale;
-            GUI.Box(new Rect(margin, margin, Screen.width - margin * 2f, topH), GUIContent.none, cardStyle);
-            GUI.Label(new Rect(margin + 16f, margin + 7f, Screen.width - margin * 2f - 32f, 34f * scale), "MIA & MAX  •  LITTLE MOMENTS, BIG ADVENTURES", titleStyle);
-            GUI.Label(new Rect(margin + 16f, margin + 43f * scale, Screen.width - margin * 2f - 32f, 34f * scale),
-                "✦ " + stars + "   •   Twigs " + twigs + "   •   Feathers " + feathers + "   •   Flowers " + flowers, bodyStyle);
-
-            float questY = margin + topH + 10f * scale;
-            GUI.Box(new Rect(margin, questY, Screen.width - margin * 2f, 76f * scale), GUIContent.none, cardStyle);
-            GUI.Label(new Rect(margin + 14f, questY + 5f, Screen.width - margin * 2f - 28f, 30f * scale), "TODAY'S LITTLE ADVENTURE", mutedStyle);
-            string quest = !birdhouseBuilt ? "Build a birdhouse: gather 3 twigs and 1 feather." :
-                !flowersWatered ? "Water the flower bed and wait for the blooms." :
-                DateTime.UtcNow < flowersReadyUtc ? "The flowers are growing. Come back a little later!" :
-                !forestUnlocked ? "Craft a garden keepsake at the workbench to open the Secret Garden." :
-                "The Secret Garden is open. What will you discover next?";
-            GUI.Label(new Rect(margin + 14f, questY + 31f * scale, Screen.width - margin * 2f - 28f, 38f * scale), quest, bodyStyle);
-
-            float panelH = selectedId == "" ? 72f : 226f * scale;
-            Rect panel = new Rect(margin, Screen.height - panelH - margin, Screen.width - margin * 2f, panelH);
-            GUI.Box(panel, GUIContent.none, cardStyle);
-            if (selectedId == "")
+            Rect safe = Screen.safeArea;
+            float scale = Mathf.Clamp(safe.width / 430f, 0.75f, 1.4f);
+            float margin = 12f * scale;
+            float x = safe.xMin + margin;
+            float w = Mathf.Max(160f, safe.width - margin * 2f);
+            float top = Screen.height - safe.yMax + margin;
+            float headerH = 82f * scale;
+            headerRect = new Rect(x, top, w, headerH);
+            GUI.Box(headerRect, GUIContent.none, cardStyle);
+            float titleWidth = inSecretGarden ? w - 136f * scale : w - 26f * scale;
+            GUI.Label(new Rect(x + 13f * scale, top + 5f * scale, titleWidth, 35f * scale),
+                inSecretGarden ? "SECRET GARDEN" : "MIA & MAX ADVENTURES", titleStyle);
+            if (inSecretGarden && GUI.Button(new Rect(x + w - 119f * scale, top + 9f * scale,
+                    110f * scale, 36f * scale), "Back to yard", buttonStyle))
             {
-                GUI.Label(new Rect(panel.x + 14f, panel.y + 12f, panel.width - 28f, 48f), "Tap the tree, fallen twigs, flower bed, workshop or Max's basket to explore.", bodyStyle);
+                inSecretGarden = false;
+                selectedId = "";
+                FocusCameraOnArea(false);
+                toast = "Back in the cozy backyard.";
             }
-            else DrawSelectedPanel(panel, scale);
+            GUI.Label(new Rect(x + 13f * scale, top + 43f * scale, w - 26f * scale, 28f * scale),
+                "Stars " + stars + "   Twigs " + twigs + "   Feathers " + feathers + "   Flowers " + flowers, bodyStyle);
+
+            float questTop = top + headerH + 9f * scale;
+            questRect = new Rect(x, questTop, w, 80f * scale);
+            GUI.Box(questRect, GUIContent.none, cardStyle);
+            GUI.Label(new Rect(x + 13f * scale, questTop + 4f * scale, w - 26f * scale, 26f * scale),
+                "TODAY'S ADVENTURE", mutedStyle);
+            string quest = inSecretGarden
+                ? (gardenstoneDiscovered ? "Chapter complete! Return to the yard or explore more." : "Find and tap the glowing golden stone.")
+                : !birdhouseBuilt ? "Find 3 twigs and a blue feather. Build a birdhouse."
+                : !flowersWatered && flowers == 0 ? "Water the flowers. They bloom after one minute."
+                : flowersWatered && DateTime.UtcNow < flowersReadyUtc ? "The flowers are growing. Explore while you wait."
+                : flowersWatered ? "The blooms are ready! Collect the flowers."
+                : !forestUnlocked ? "Make a keepsake at the workbench, then open the gate."
+                : "Tap the Secret Garden gate to visit the new chapter.";
+            GUI.Label(new Rect(x + 13f * scale, questTop + 29f * scale, w - 26f * scale, 46f * scale), quest, bodyStyle);
+
+            float bottom = Screen.height - safe.yMin;
+            float panelH = selectedId == "" ? 63f * scale : 214f * scale;
+            actionRect = new Rect(x, bottom - panelH - margin, w, panelH);
+            GUI.Box(actionRect, GUIContent.none, cardStyle);
+            if (selectedId == "")
+                GUI.Label(new Rect(x + 13f * scale, actionRect.y + 9f * scale, w - 26f * scale, 47f * scale),
+                    inSecretGarden ? "Tap the golden stone to uncover the secret." :
+                    "Tap an object in the yard to discover an action.", bodyStyle);
+            else
+                DrawSelectedPanel(actionRect, scale);
 
             if (miniGameOpen) DrawMiniGame(scale);
             if (!string.IsNullOrEmpty(toast))
-            {
-                Rect toastRect = new Rect(margin, Screen.height - panelH - 62f * scale, Screen.width - margin * 2f, 44f * scale);
-                GUI.Label(toastRect, toast, mutedStyle);
-            }
+                GUI.Label(new Rect(x + 12f * scale, actionRect.y - 56f * scale,
+                    w - 24f * scale, 52f * scale), toast, mutedStyle);
         }
 
         private void DrawSelectedPanel(Rect panel, float scale)
@@ -487,9 +504,9 @@ namespace MiaMax.Gameplay
             GUI.Label(new Rect(panel.x + 14f, panel.y + 9f, panel.width - 28f, 34f * scale), name, titleStyle);
             string description = GetDescription(selectedId);
             GUI.Label(new Rect(panel.x + 14f, panel.y + 44f * scale, panel.width - 28f, 46f * scale), description, bodyStyle);
-            Rect button = new Rect(panel.x + 14f, panel.y + 98f * scale, panel.width - 28f, 48f * scale);
+            Rect button = new Rect(panel.x + 14f, panel.y + 94f * scale, panel.width - 28f, 46f * scale);
             if (GUI.Button(button, GetActionLabel(selectedId), buttonStyle)) PerformAction(selectedId);
-            if (GUI.Button(new Rect(panel.x + 14f, panel.y + 151f * scale, panel.width - 28f, 40f * scale), "Close", buttonStyle))
+            if (GUI.Button(new Rect(panel.x + 14f, panel.y + 147f * scale, panel.width - 28f, 38f * scale), "Close", buttonStyle))
                 selectedId = "";
         }
 
@@ -507,6 +524,7 @@ namespace MiaMax.Gameplay
                 case "minigame": return "Max's Treasure Basket";
                 case "gate": return "Secret Garden Gate";
                 case "gardenstone": return "Golden Garden Stone";
+                case "house": return "Mia's Cozy House";
                 default: return "A little discovery";
             }
         }
@@ -525,6 +543,7 @@ namespace MiaMax.Gameplay
                 case "minigame": return "Max found a basket of mixed-up treasures. Help sort them for a reward!";
                 case "gate": return forestUnlocked ? "The Secret Garden is ready to explore!" : "Craft a garden keepsake at the workbench to unlock this gate.";
                 case "gardenstone": return "A warm golden stone marks the beginning of a new chapter.";
+                case "house": return "Mia and Max's home. A perfect place for new adventures.";
                 default: return "Take a closer look and see what you can do.";
             }
         }
@@ -543,6 +562,7 @@ namespace MiaMax.Gameplay
                 case "gardenstone": return "Touch the glowing stone";
                 case "tree": return treeGathered ? "Look at the tree" : "Gather fallen twigs";
                 case "pond": return "Watch the pond";
+                case "house": return "Admire the house";
                 default: return "Explore";
             }
         }
@@ -631,6 +651,7 @@ namespace MiaMax.Gameplay
                     else toast = "The tree is peaceful in the afternoon light.";
                     break;
                 case "pond": toast = "The water shimmers in the afternoon sun."; break;
+                case "house": toast = "Home is where a great adventure begins."; break;
             }
             SaveProgress();
         }
