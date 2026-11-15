@@ -79,12 +79,9 @@ namespace MiaMax.Gameplay
             foreach (Renderer renderer in proxy.GetComponentsInChildren<Renderer>(true))
                 if (!renderer.transform.IsChildOf(real.transform)) renderer.enabled = false;
             // Animation clips are imported with glTF/FBX if supported; the Editor
-            // approval step creates a native AnimatorController in the prefab.
-            Animator animator = real.GetComponentInChildren<Animator>(true);
-            if (animator != null && animator.runtimeAnimatorController != null)
-                animator.Play("Idle",0,0);
-            Animation legacy = real.GetComponentInChildren<Animation>(true);
-            if (legacy != null && legacy.GetClipCount() > 0) legacy.Play();
+            // approval step creates a native AnimatorController on the prefab.
+            if (real.GetComponent<MiaMaxRigAnimator>() == null)
+                real.AddComponent<MiaMaxRigAnimator>();
             return true;
         }
 
