@@ -286,16 +286,16 @@ namespace MiaMax.Gameplay
                 lastBlink=time;
                 blinkAt=3f+(Mathf.Sin(time*12f)+1f)*1.25f;
             }
-            float eyeScale=time-lastBlink<blinkDuration?.12f:1f;
+            float eyeScale = time - lastBlink < blinkDuration ? 0.12f : 1f;
             if(leftEye!=null)
             {
                 Vector3 s=leftEye.localScale;
-                leftEye.localScale=new Vector3(s.x,cat?.21f*eyeScale:.145f*eyeScale,s.z);
+                leftEye.localScale=new Vector3(s.x,cat ? .21f * eyeScale : .145f * eyeScale,s.z);
             }
             if(rightEye!=null)
             {
                 Vector3 s=rightEye.localScale;
-                rightEye.localScale=new Vector3(s.x,cat?.21f*eyeScale:.145f*eyeScale,s.z);
+                rightEye.localScale=new Vector3(s.x,cat ? .21f * eyeScale : .145f * eyeScale,s.z);
             }
         }
 
