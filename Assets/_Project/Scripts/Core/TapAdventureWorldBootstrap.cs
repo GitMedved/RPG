@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.EventSystems;
 
 namespace MiaMax.Gameplay
 {
@@ -31,6 +32,82 @@ namespace MiaMax.Gameplay
         private string miniGameMessage = "Help Max sort the found treasures!";
         private Material grassMat, woodMat, plasterMat, stoneMat, leafMat, flowerMat, roofMat, waterMat;
         private Texture2D miaPortrait, maxPortrait;
+        private TapAdventureArtWorld artWorld;
+        private TapAdventureHud modernHud;
+
+        public bool BirdhouseBuilt => birdhouseBuilt;
+        public bool GardenUnlocked => forestUnlocked;
+        public bool FlowersBloomed => flowersWatered && DateTime.UtcNow >= flowersReadyUtc;
+        public bool TwigsGathered => twigsGathered;
+        public bool FeatherGathered => featherGathered;
+        public int Twigs => twigs;
+        public int Feathers => feathers;
+        public int Flowers => flowers;
+        public int Stars => stars;
+        public string SelectedId => selectedId ?? "";
+        public string ToastText => toast ?? "";
+        public bool IsGarden => inSecretGarden;
+        public bool IsMiniGameOpen => miniGameOpen;
+        public string MiniGameMessage => miniGameMessage ?? "";
+        public string SelectedTitle => GetDisplayName(SelectedId);
+        public string SelectedDescription => GetDescription(SelectedId);
+        public string SelectedActionText => GetActionLabel(SelectedId);
+        public string ObjectiveText
+        {
+            get
+            {
+                if (inSecretGarden)
+                    return gardenstoneDiscovered ? "A lovely discovery! Return to the yard." : "Find the golden stone.";
+                if (!birdhouseBuilt) return "Find twigs and a feather. Build the birdhouse.";
+                if (!forestUnlocked && flowers > 0) return "Make a keepsake at the crafting bench.";
+                if (!forestUnlocked && !flowersWatered) return "Water the flowers to make them bloom.";
+                if (!forestUnlocked && !FlowersBloomed) return "The flowers are growing. Explore while waiting.";
+                if (!forestUnlocked) return "Pick the flowers and make the keepsake.";
+                return "The Secret Garden is open. Tap its wooden gate.";
+            }
+        }
+
+        public void ExecuteSelectedAction()
+        {
+            if (!string.IsNullOrEmpty(selectedId)) PerformAction(selectedId);
+        }
+        public void CloseSelection() { selectedId = ""; }
+        public void LeaveGarden()
+        {
+            if (!inSecretGarden) return;
+            inSecretGarden = false;
+            selectedId = "";
+            FocusCameraOnArea(false);
+            toast = "Back in Mia and Max's cozy backyard.";
+        }
+        public void LeaveTreasureGame() { miniGameOpen = false; }
+        public void ChooseTreasure(int index)
+        {
+            if (!miniGameOpen || index < 0 || index > 2) return;
+            // Screen order: Shell, Leaf, Feather. Correct sequence: Feather, Shell, Leaf.
+            int[] order = { 1, 2, 0 };
+            if (order[index] != miniGameStep)
+            {
+                miniGameMessage = "Not quite! Try the next treasure in the sequence.";
+                PlayFeedback(MiaMax.Infrastructure.Audio.GameAudioCue.MiniGameMiss);
+                artWorld?.React("minigame_miss", false);
+                return;
+            }
+            miniGameStep++;
+            miniGameScore++;
+            if (miniGameStep == 3)
+            {
+                miniGameOpen = false;
+                miniGameClaimed = true;
+                stars += 5;
+                feathers++;
+                toast = "Max did it! You earned 5 stars and a bonus feather.";
+                SaveProgress();
+                PlayFeedback(MiaMax.Infrastructure.Audio.GameAudioCue.MiniGameWin);
+                artWorld?.React("minigame_win", true);
+            }
+            else miniGameMessage = "Lovely! Now find the next treasure.";
+        }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Install()
@@ -124,7 +201,20 @@ namespace MiaMax.Gameplay
             RenderSettings.ambientEquatorColor = new Color(0.83f, 0.86f, 0.72f);
             RenderSettings.ambientGroundColor = new Color(0.38f, 0.32f, 0.24f);
 
-            Debug.Log("[Mia & Max] Tap Adventure 3D greybox created: fixed angled camera, visible environment, raycast object selection. Production art is still required.");
+            try
+            {
+                artWorld = TapAdventureArtWorld.Install(this);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+                // If the optional art pass fails, keep the functional base world visible.
+                foreach (Renderer renderer in GetComponentsInChildren<Renderer>(true))
+                    renderer.enabled = true;
+            }
+            try { modernHud = TapAdventureHud.Install(this); }
+            catch (Exception ex) { Debug.LogException(ex); }
+            Debug.Log("[Mia & Max] Illustrated tap-adventure MVP created. Check materials, tap targets and characters in Play Mode.");
         }
 
         private void CreateMaterials()
@@ -395,9 +485,20 @@ namespace MiaMax.Gameplay
 
             if (!pressed || Screen.width <= 0 || Screen.height <= 0) return;
 
-            // GUI coordinates are top-left, while touch input is bottom-left.
-            Vector2 guiPoint = new Vector2(screen.x, Screen.height - screen.y);
-            if (headerRect.Contains(guiPoint) || questRect.Contains(guiPoint) || actionRect.Contains(guiPoint)) return;
+            // Do not interpret a UI button tap as a world selection.
+            if (modernHud != null && EventSystem.current != null)
+            {
+                if (Input.touchCount > 0)
+                {
+                    if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)) return;
+                }
+                else if (EventSystem.current.IsPointerOverGameObject()) return;
+            }
+            else
+            {
+                Vector2 guiPoint = new Vector2(screen.x, Screen.height - screen.y);
+                if (headerRect.Contains(guiPoint) || questRect.Contains(guiPoint) || actionRect.Contains(guiPoint)) return;
+            }
 
             Ray ray = worldCamera.ScreenPointToRay(screen);
             if (!Physics.Raycast(ray, out RaycastHit hit, 150f, Physics.DefaultRaycastLayers,
@@ -451,6 +552,7 @@ namespace MiaMax.Gameplay
 
         private void OnGUI()
         {
+            if (modernHud != null) return;
             EnsureStyles();
             Rect safe = Screen.safeArea;
             float scale = Mathf.Clamp(safe.width / 430f, 0.75f, 1.4f);
@@ -681,9 +783,24 @@ namespace MiaMax.Gameplay
                 case "house": toast = "Home is where a great adventure begins."; break;
             }
             SaveProgress();
-            PlayFeedback(stars > starsBefore
+            bool rewarded = stars > starsBefore;
+            artWorld?.React(id, rewarded);
+            TryVoice(id, rewarded);
+            PlayFeedback(rewarded
                 ? MiaMax.Infrastructure.Audio.GameAudioCue.Reward
                 : MiaMax.Infrastructure.Audio.GameAudioCue.UiTap);
+        }
+
+        private void TryVoice(string actionId, bool rewarded)
+        {
+            if (!rewarded) return;
+            string voice = actionId == "birdhouse" ? "mia_birdhouse_ready_01"
+                : actionId == "workshop" ? "mia_secret_garden_01"
+                : actionId == "gardenstone" ? "max_garden_discovery_01"
+                : actionId == "minigame" ? "max_treasure_win_01" : "";
+            if (string.IsNullOrEmpty(voice)) return;
+            if (Resources.Load<AudioClip>("MiaMax/Audio/Voice/" + voice) != null)
+                MiaMax.Infrastructure.Audio.GameAudioService.Instance?.PlayVoiceLine(voice);
         }
 
         private void HideCollectedTarget(string id)
@@ -718,7 +835,7 @@ namespace MiaMax.Gameplay
         {
             Rect safe = Screen.safeArea;
             float height = Mathf.Min(405f * scale, safe.height - 12f * scale);
-            float y = Screen.height - safe.yMax + (safe.height - height) * 0.5f;
+            float y = Screen.height - safe.yMax + (safe.height - height) * .5f;
             Rect r = new Rect(safe.xMin + 12f * scale, y,
                 safe.width - 24f * scale, height);
             GUI.Box(r, GUIContent.none, cardStyle);
@@ -727,36 +844,14 @@ namespace MiaMax.Gameplay
             GUI.Label(new Rect(r.x + 16f * scale, r.y + 53f * scale,
                 r.width - 32f * scale, 51f * scale), miniGameMessage, bodyStyle);
             string[] labels = { "Shell", "Leaf", "Feather" };
-            int[] order = { 1, 2, 0 }; // Tap Feather, Shell, then Leaf.
-            for (int i = 0; i < 3; i++)
-            {
-                int index = i;
-                if (GUI.Button(new Rect(r.x + 16f * scale, r.y + 113f * scale + i * 56f * scale,
-                    r.width - 32f * scale, 47f * scale), labels[index], buttonStyle))
-                {
-                    int expected = miniGameStep;
-                    if (order[index] == expected)
-                    {
-                        miniGameStep++; miniGameScore++;
-                        if (miniGameStep >= 3)
-                        {
-                            miniGameOpen = false;
-                            miniGameClaimed = true;
-                            stars += 5; feathers++;
-                            toast = "Max did it! You earned 5 stars and a bonus feather.";
-                            SaveProgress();
-                            PlayFeedback(MiaMax.Infrastructure.Audio.GameAudioCue.MiniGameWin);
-                        }
-                        else miniGameMessage = "Great! Now find the next treasure.";
-                    }
-                    else
-                    {
-                        miniGameMessage = "Not quite. Try the next item in the sequence.";
-                        PlayFeedback(MiaMax.Infrastructure.Audio.GameAudioCue.MiniGameMiss);
-                    }
-                }
-            }
-            if (GUI.Button(new Rect(r.x + 16f * scale, r.yMax - 50f * scale, r.width - 32f * scale, 38f * scale), "Leave mini-game", buttonStyle)) miniGameOpen = false;
+            for (int i = 0; i < labels.Length; i++)
+                if (GUI.Button(new Rect(r.x + 16f * scale,
+                        r.y + 113f * scale + i * 56f * scale,
+                        r.width - 32f * scale, 47f * scale), labels[i], buttonStyle))
+                    ChooseTreasure(i);
+            if (GUI.Button(new Rect(r.x + 16f * scale, r.yMax - 50f * scale,
+                r.width - 32f * scale, 38f * scale), "Leave mini-game", buttonStyle))
+                LeaveTreasureGame();
         }
     }
 
