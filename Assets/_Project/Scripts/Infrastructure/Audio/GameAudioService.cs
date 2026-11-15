@@ -74,6 +74,7 @@ namespace MiaMax.Infrastructure.Audio
             ambientWindSource.loop = true;
             ambientBirdsSource.loop = true;
             LoadResourceClips();
+            InstallPrototypeFeedbackSounds();
             SetMusicById("backyard_theme", 0.22f);
         }
 
@@ -90,6 +91,42 @@ namespace MiaMax.Infrastructure.Audio
             miniGameStart = LoadIfMissing(miniGameStart, "MiaMax/Audio/SFX/minigame_start");
             miniGameWin = LoadIfMissing(miniGameWin, "MiaMax/Audio/SFX/minigame_win");
             miniGameMiss = LoadIfMissing(miniGameMiss, "MiaMax/Audio/SFX/minigame_miss");
+        }
+
+        // Self-contained fallback: small original feedback cues, only when the
+        // optional production WAV assets have not yet been imported.
+        private void InstallPrototypeFeedbackSounds()
+        {
+            if (uiTap == null) uiTap = MakeTone("MVP Tap", 520f, 0.07f);
+            if (plant == null) plant = MakeTone("MVP Water", 390f, 0.18f);
+            if (harvest == null) harvest = MakeTone("MVP Harvest", 660f, 0.16f);
+            if (craftStart == null) craftStart = MakeTone("MVP Craft", 410f, 0.15f);
+            if (craftReady == null) craftReady = MakeTone("MVP Craft Ready", 740f, 0.22f);
+            if (reward == null) reward = MakeTone("MVP Reward", 880f, 0.23f);
+            if (collectible == null) collectible = MakeTone("MVP Collect", 710f, 0.11f);
+            if (interact == null) interact = MakeTone("MVP Interact", 460f, 0.09f);
+            if (miniGameStart == null) miniGameStart = MakeTone("MVP Mini-game", 550f, 0.16f);
+            if (miniGameWin == null) miniGameWin = MakeTone("MVP Success", 990f, 0.30f);
+            if (miniGameMiss == null) miniGameMiss = MakeTone("MVP Retry", 310f, 0.15f);
+        }
+
+        private static AudioClip MakeTone(string clipName, float frequency, float duration)
+        {
+            const int sampleRate = 22050;
+            int count = Mathf.Max(1, Mathf.CeilToInt(duration * sampleRate));
+            float[] samples = new float[count];
+            for (int i = 0; i < count; i++)
+            {
+                float time = (float)i / sampleRate;
+                float progress = (float)i / count;
+                float envelope = Mathf.Sin(progress * Mathf.PI);
+                envelope *= envelope;
+                float chirp = frequency * (1f + 0.12f * progress);
+                samples[i] = 0.13f * envelope * Mathf.Sin(2f * Mathf.PI * chirp * time);
+            }
+            AudioClip clip = AudioClip.Create(clipName, count, 1, sampleRate, false);
+            clip.SetData(samples, 0);
+            return clip;
         }
 
         private static AudioClip LoadIfMissing(AudioClip current, string resourcePath)
