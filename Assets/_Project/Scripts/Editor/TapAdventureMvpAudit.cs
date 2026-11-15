@@ -39,6 +39,30 @@ namespace MiaMax.EditorTools
                 Check(Resources.Load<Material>("MiaMax/Materials/" + name) != null, "URP material " + name);
             Check(Resources.Load<Texture2D>("MiaMax/Art/MiaPortrait") != null, "Original Mia reference portrait");
             Check(Resources.Load<Texture2D>("MiaMax/Art/MaxPortrait") != null, "Original Max reference portrait");
+            foreach (string filename in new[] { "TreeHigh001", "TreeLow003", "Bush001", "Bush002",
+                        "Rock001", "Rock002", "Grass001", "Reed001" })
+            {
+                string path = "Assets/Resources/MiaMax/External/Gobkit/" + filename + ".glb";
+                Check(AssetDatabase.LoadAssetAtPath<GameObject>(path) != null,
+                    "Imported native CC0 GLB: " + filename);
+            }
+            foreach (string candidate in new[] { "MiaSchoolkidCandidate", "MiaRogueCandidate" })
+            {
+                string path = "Assets/Resources/MiaMax/External/Candidates/" + candidate + ".glb";
+                Check(AssetDatabase.LoadAssetAtPath<GameObject>(path) != null,
+                    "Skinned animation candidate GLB: " + candidate);
+            }
+            int voices = 0;
+            foreach (string id in new[] { "mia_birdhouse_ready_01", "max_birdhouse_01",
+                "mia_secret_garden_01", "max_garden_discovery_01",
+                "mia_greeting_01", "max_treasure_win_01" })
+            {
+                if (Resources.Load<AudioClip>("MiaMax/Audio/Voice/" + id) != null) voices++;
+            }
+            if (voices < 6)
+                Debug.LogWarning("[Mia & Max MVP] Only " + voices + "/6 original English voice WAV clips imported. Run menu MVP/4 or verify GitHub Actions.");
+            Check(Resources.Load<AudioClip>("MiaMax/Audio/SFX/max_meow_01") != null,
+                "Authentic kitten voice SFX (CC0)");
             Finish("PREFLIGHT");
         }
 
@@ -77,6 +101,8 @@ namespace MiaMax.EditorTools
                 FindObjectsSortMode.None).Length == 2,
                 "Animated Mia and Max character proxies");
             Check(ids.Contains("gardenstone"), "Secret Garden story marker");
+            Check(GameObject.Find("Imported CC0 GLBs - Gobkit Nature") != null,
+                "Actual imported licensed GLB models are displayed in the yard");
             Finish("RUNNING WORLD");
         }
 
