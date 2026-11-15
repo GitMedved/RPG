@@ -1,0 +1,96 @@
+name: Package Mia and Max English voice takes
+on:
+  push:
+    branches: [codex/mia-max-foundation]
+    paths: ['.github/workflows/package-mia-max-voices.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  package-dialogue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: codex/mia-max-foundation
+          persist-credentials: true
+      - name: Download and professionally level four voice recordings
+        shell: bash
+        env:
+          MIA_BIRDHOUSE_URL: "https://resource2.heygen.ai/text_to_speech/6a44461d68cc4a39ba6f4d5245aed20a/95d52e056b7b495dab8f090b44fa2ec4/id=771fc9b2099e4af69fae46d559bcfdd8.wav"
+          MAX_BIRDHOUSE_URL: "https://resource2.heygen.ai/text_to_speech/6a44461d68cc4a39ba6f4d5245aed20a/e5f0084d0ddd4164a12a38a83457446c/id=8cf06089158e43dc9d95037519437a82.wav"
+          MIA_GARDEN_URL: "https://resource2.heygen.ai/text_to_speech/6a44461d68cc4a39ba6f4d5245aed20a/95d52e056b7b495dab8f090b44fa2ec4/id=c6e53b2ba3744687aaadee2f2c090c75.wav"
+          MAX_STONE_URL: "https://resource2.heygen.ai/text_to_speech/6a44461d68cc4a39ba6f4d5245aed20a/e5f0084d0ddd4164a12a38a83457446c/id=56823dc5d1fe4dd793c6017319dd29d2.wav"
+        run: |
+          set -euo pipefail
+          TARGET="Assets/Resources/MiaMax/Audio/Voice"
+          mkdir -p "$TARGET"
+          process() {
+            id="$1"
+            url="$2"
+            tmp="$(mktemp --suffix=.wav)"
+            trap 'rm -f "$tmp"' RETURN
+            curl --fail --location --retry 3 --connect-timeout 15 --max-time 100 --silent --show-error "$url" -o "$tmp"
+            python3 - "$tmp" <<'PY'
+          import sys, wave
+          with wave.open(sys.argv[1], "rb") as f:
+              assert f.getnchannels() in (1, 2), "unexpected channels"
+              assert 0 < f.getnframes() < f.getframerate() * 45, "invalid duration"
+          PY
+            ffmpeg -hide_banner -nostdin -v error -y -i "$tmp" -af "highpass=f=85,lowpass=f=10000,loudnorm=I=-17:TP=-1.5:LRA=9" -ar 24000 -ac 1 -c:a pcm_s16le "$TARGET/$id.wav"
+            test "$(stat -c%s "$TARGET/$id.wav")" -gt 20000
+            rm -f "$tmp"
+            trap - RETURN
+          }
+          process mia_birdhouse_ready_01 "$MIA_BIRDHOUSE_URL"
+          process max_birdhouse_01 "$MAX_BIRDHOUSE_URL"
+          process mia_secret_garden_01 "$MIA_GARDEN_URL"
+          process max_garden_discovery_01 "$MAX_STONE_URL"
+          python3 - <<'PY'
+          from pathlib import Path
+          folder = Path("Assets/Resources/MiaMax/Audio/Voice")
+          names = ["mia_birdhouse_ready_01", "max_birdhouse_01",
+                   "mia_secret_garden_01", "max_garden_discovery_01"]
+          for i, name in enumerate(names):
+              meta = folder / f"{name}.wav.meta"
+              guid = f"7d536d8d401147ce9000000000000{i+1:03x}"
+              assert len(guid) == 32
+              meta.write_text(f"""fileFormatVersion: 2
+          guid: {guid}
+          AudioImporter:
+            externalObjects: {{}}
+            serializedVersion: 7
+            defaultSettings:
+              loadType: 0
+              sampleRateSetting: 0
+              sampleRateOverride: 44100
+              compressionFormat: 1
+              quality: 1
+              conversionMode: 0
+            platformSettingOverrides: {{}}
+            forceToMono: 1
+            normalize: 0
+            preloadAudioData: 1
+            loadInBackground: 0
+            ambisonic: 0
+            3D: 0
+            userData:
+            assetBundleName:
+            assetBundleVariant:
+          """)
+          PY
+      - name: Commit verified local WAVs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Mia & Max Voice Pipeline"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Assets/Resources/MiaMax/Audio/Voice
+          if ! git diff --cached --quiet; then
+            git commit -m "assets: commit four leveled original voice WAVs for offline gameplay"
+            git push origin HEAD:codex/mia-max-foundation
+          fi
