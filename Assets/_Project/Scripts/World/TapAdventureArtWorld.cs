@@ -127,6 +127,7 @@ namespace MiaMax.Gameplay
             BuildWorkshop();
             BuildWater();
             BuildProps();
+            BuildAdventureGate();
             BuildSecretGarden();
             BuildCharacters();
             Sync(true);
@@ -418,6 +419,39 @@ namespace MiaMax.Gameplay
             }
         }
 
+        private void BuildAdventureGate()
+        {
+            Transform gate = Group("Whimsical gate to the Secret Garden");
+            Material timber = Resource("Wood_Warm",new Color(.57f,.38f,.21f));
+            Material ivory = Mat("Garden gate ivory paint",new Color(.94f,.93f,.80f));
+            Material copper = Mat("Garden gate copper hinges",new Color(.72f,.49f,.27f));
+            Material moss = Resource("Leaf_Green",new Color(.35f,.56f,.30f));
+            SoftBox("Left carved post",gate,new Vector3(5.82f,1.26f,.2f),
+                new Vector3(.29f,2.52f,.33f),ivory);
+            SoftBox("Right carved post",gate,new Vector3(7.78f,1.26f,.2f),
+                new Vector3(.29f,2.52f,.33f),ivory);
+            SoftBox("Curved entry header",gate,new Vector3(6.8f,2.56f,.2f),
+                new Vector3(2.27f,.30f,.38f),ivory);
+            for(int i=0;i<9;i++)
+            {
+                float x=5.92f+i*.22f;
+                float height=1.92f+.32f*Mathf.Sin(i*Mathf.PI/8f);
+                SoftBox("Cottage fence gate picket",gate,new Vector3(x,height*.5f,.2f),
+                    new Vector3(.16f,height,.17f),timber);
+            }
+            SoftBox("Gate horizontal rail",gate,new Vector3(6.80f,.65f,.02f),
+                new Vector3(1.90f,.16f,.16f),ivory);
+            SoftBox("Gate horizontal rail",gate,new Vector3(6.80f,1.29f,.02f),
+                new Vector3(1.90f,.16f,.16f),ivory);
+            Organic("Hand painted brass latch",gate,new Vector3(6.94f,1.05f,-.05f),
+                new Vector3(.17f,.12f,.09f),copper);
+            for(int i=0;i<4;i++)
+                Organic("Climbing ivy",gate,new Vector3(5.8f+.1f*Mathf.Sin(i*1.5f),
+                    1f+i*.42f,-.15f),
+                    new Vector3(.23f,.32f,.31f),moss,.08f,7+i);
+            AddHit("gate",gate,new Vector3(6.8f,1.24f,.15f),1.25f);
+        }
+
         private void BuildSecretGarden()
         {
             gardenArt=Group("Secret Garden story island");
@@ -460,7 +494,10 @@ namespace MiaMax.Gameplay
             naturalTime+=Time.deltaTime;
             Sync(false);
             if(stoneArt!=null && stoneArt.gameObject.activeSelf)
+            {
                 stoneArt.localRotation=Quaternion.Euler(0,naturalTime*14f,6f*Mathf.Sin(naturalTime*.9f));
+                stoneArt.localPosition=new Vector3(12.4f,.95f+.065f*Mathf.Sin(naturalTime*1.8f),-1.1f);
+            }
         }
 
         private void Sync(bool force)
@@ -566,8 +603,8 @@ namespace MiaMax.Gameplay
                 {
                     int a=j*(slices+1)+i;
                     int b=a+slices+1;
-                    tr.Add(a);tr.Add(b);tr.Add(a+1);
-                    tr.Add(a+1);tr.Add(b);tr.Add(b+1);
+                    tr.Add(a);tr.Add(a+1);tr.Add(b);
+                    tr.Add(a+1);tr.Add(b+1);tr.Add(b);
                 }
             return Finish("Organic sculpted mesh",v,uv,tr);
         }
@@ -603,8 +640,8 @@ namespace MiaMax.Gameplay
                     {
                         int a=first+j*(n+1)+i;
                         int b=a+n+1;
-                        tri.Add(a);tri.Add(b);tri.Add(a+1);
-                        tri.Add(a+1);tri.Add(b);tri.Add(b+1);
+                        tri.Add(a);tri.Add(a+1);tri.Add(b);
+                        tri.Add(a+1);tri.Add(b+1);tri.Add(b);
                     }
             }
             return Finish("Bevel-edged sculpted box",v,uv,tri);
@@ -627,8 +664,8 @@ namespace MiaMax.Gameplay
                 for(int i=0;i<sides;i++)
                 {
                     int a=j*(sides+1)+i,b=a+sides+1;
-                    tri.Add(a);tri.Add(a+1);tri.Add(b);
-                    tri.Add(a+1);tri.Add(b+1);tri.Add(b);
+                    tri.Add(a);tri.Add(b);tri.Add(a+1);
+                    tri.Add(a+1);tri.Add(b);tri.Add(b+1);
                 }
             return Finish("Turned organic profile",v,uv,tri);
         }
@@ -643,8 +680,8 @@ namespace MiaMax.Gameplay
             int[] faces={
                 0,3,1,1,3,4,
                 1,4,2,2,4,5,
-                0,1,2,0,2,0,
-                3,5,4,3,3,5
+                0,1,2,
+                3,5,4
             };
             List<Vector3> v=new List<Vector3>(p);
             List<Vector2> uv=new List<Vector2>{
