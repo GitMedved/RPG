@@ -199,6 +199,9 @@ namespace MiaMax.Gameplay
             Create("Tree Canopy A", PrimitiveType.Sphere, new Vector3(-5.2f, 4.8f, 0.7f), new Vector3(3.8f, 3.2f, 3.6f), leafMat, false);
             Create("Tree Canopy B", PrimitiveType.Sphere, new Vector3(-6.5f, 4.1f, 1.1f), new Vector3(2.5f, 2.4f, 2.6f), leafMat, false);
             Create("Tree Canopy C", PrimitiveType.Sphere, new Vector3(-3.9f, 4.2f, 0.9f), new Vector3(2.5f, 2.6f, 2.5f), leafMat, false);
+            // The unfinished birdhouse must have a visible build location; the tap collider is invisible.
+            Create("Birdhouse Mount", PrimitiveType.Cube, new Vector3(-4.5f, 2.98f, 0.45f),
+                new Vector3(0.95f, 0.10f, 0.82f), woodMat, false);
             GameObject birdhouse = Create("Birdhouse", PrimitiveType.Cube, new Vector3(-4.5f, 3.25f, 0.45f),
                 new Vector3(0.8f, 0.72f, 0.62f), birdhouseBuilt ? woodMat : plasterMat, false);
             Create("Birdhouse Roof", PrimitiveType.Cube, new Vector3(-4.5f, 3.67f, 0.45f), new Vector3(1.0f, 0.16f, 0.78f), roofMat, false);
