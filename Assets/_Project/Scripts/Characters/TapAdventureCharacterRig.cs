@@ -311,12 +311,16 @@ namespace MiaMax.Gameplay
         public void Speak(float seconds)
         {
             speakingUntil = Mathf.Max(speakingUntil, Time.time + Mathf.Max(0f, seconds));
+            MiaMaxRigAnimator rig = GetComponentInChildren<MiaMaxRigAnimator>(true);
+            if (rig != null) rig.Speak(seconds);
         }
 
         public void React(bool happy)
         {
-            happyReaction=happy;
-            moodUntil=Time.time+1.45f;
+            happyReaction = happy;
+            moodUntil = Time.time + 1.45f;
+            MiaMaxRigAnimator rig = GetComponentInChildren<MiaMaxRigAnimator>(true);
+            if (rig != null) rig.React();
         }
 
         private void OnDestroy()
