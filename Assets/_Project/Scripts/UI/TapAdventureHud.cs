@@ -250,9 +250,11 @@ namespace MiaMax.Gameplay
             image.texture = tex;
             image.color = Color.white;
             image.raycastTarget = false;
-            AspectRatioFitter ratio = rt.gameObject.AddComponent<AspectRatioFitter>();
-            ratio.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
-            ratio.aspectRatio = 1f;
+            // Crop to a square without stretching the original character artwork.
+            float aspect = (float)tex.width / Mathf.Max(1f, tex.height);
+            image.uvRect = aspect > 1f
+                ? new Rect((1f - 1f / aspect) * .5f, 0f, 1f / aspect, 1f)
+                : new Rect(0f, (1f - aspect) * .5f, 1f, aspect);
             return image;
         }
 
