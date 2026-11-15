@@ -11,6 +11,12 @@
 - [ ] Press Play and run **Mia & Max → MVP → 2. Inspect Running World** with no failed items.
 - [ ] Verify portraits, textures, HUD, scene camera and all tap targets on a portrait-sized Game view.
 - [ ] Verify illustrated models replace greybox renderers; inspect cottage roof, fence, garden, character lighting and gate from the fixed camera.
+- [ ] Confirm all 8 Gobkit CC0 GLBs are genuinely imported and rendered (not only present as source files).
+- [ ] Confirm both skinned human candidate GLBs import and expose animation clips; do not automatically declare either the finished Mia.
+- [ ] If selecting the Vuena cat, import its official FREE CC0 ZIP, build MaxRig prefab, inspect skinned mesh, facial/jaw movement, and 12 source animations.
+- [ ] Confirm authentic Max meow clips play at safe level without overlapping character dialogue.
+- [ ] Confirm all 6 original English dialogue WAVs exist and import locally, whether packaged by GitHub Actions or downloaded via Unity Editor.
+- [ ] Confirm native rig controller can return Idle after React/Talk without camera or character locomotion.
 - [ ] Verify animated Mia and Max are visible: blinking, body sway, Max tail and contextual gestures.
 - [ ] Confirm HUD chapter changes, touch hit areas, safe-area margins, portrait cropping and voice mute control on several screen aspect ratios.
 - [ ] Optional voice import: run **Mia & Max → MVP → 4. Install Generated English Voice Takes**, then replay birdhouse, keepsake and stone scenes for speech and talking-mouth checks.
