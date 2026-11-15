@@ -13,7 +13,8 @@ namespace MiaMax.Gameplay
     {
         private bool cat;
         private Transform torso, head, leftArm, rightArm, tailRoot;
-        private Transform leftEye, rightEye;
+        private Transform leftEye, rightEye, mouth;
+        private float speakingUntil;
         private readonly List<Material> created = new List<Material>();
         private float moodUntil, lastBlink, blinkAt = 2f, phase;
         private bool happyReaction;
@@ -151,7 +152,7 @@ namespace MiaMax.Gameplay
             }
             Part("Small button nose",head,new Vector3(0,-.12f,-.37f),
                 new Vector3(.12f,.11f,.12f),skin);
-            Part("Smile",head,new Vector3(0,-.30f,-.33f),
+            mouth = Part("Smile",head,new Vector3(0,-.30f,-.33f),
                 new Vector3(.20f,.035f,.038f),dark);
             leftArm=Root("Mia left arm pivot",torso,new Vector3(-.39f,.40f,0));
             rightArm=Root("Mia right arm pivot",torso,new Vector3(.39f,.40f,0));
@@ -237,7 +238,7 @@ namespace MiaMax.Gameplay
                 Part("Ginger brow stripe",head,new Vector3(side*.17f,.27f,-.32f),
                     new Vector3(.14f,.09f,.09f),gingerShade);
             }
-            Part("Tiny smile",head,new Vector3(0,-.33f,-.48f),
+            mouth = Part("Tiny smile",head,new Vector3(0,-.33f,-.48f),
                 new Vector3(.16f,.035f,.04f),dark);
             tailRoot=Root("Swaying ginger tail",torso,new Vector3(0,.10f,.48f));
             for(int i=0;i<5;i++)
@@ -287,6 +288,14 @@ namespace MiaMax.Gameplay
                 blinkAt=3f+(Mathf.Sin(time*12f)+1f)*1.25f;
             }
             float eyeScale = time - lastBlink < blinkDuration ? 0.12f : 1f;
+            if (mouth != null)
+            {
+                Vector3 scale = mouth.localScale;
+                float talking = Time.time < speakingUntil
+                    ? .045f + .07f * Mathf.Abs(Mathf.Sin(time * 12.5f))
+                    : .035f;
+                mouth.localScale = new Vector3(scale.x, talking, scale.z);
+            }
             if(leftEye!=null)
             {
                 Vector3 s=leftEye.localScale;
@@ -297,6 +306,11 @@ namespace MiaMax.Gameplay
                 Vector3 s=rightEye.localScale;
                 rightEye.localScale=new Vector3(s.x,cat ? .21f * eyeScale : .145f * eyeScale,s.z);
             }
+        }
+
+        public void Speak(float seconds)
+        {
+            speakingUntil = Mathf.Max(speakingUntil, Time.time + Mathf.Max(0f, seconds));
         }
 
         public void React(bool happy)
