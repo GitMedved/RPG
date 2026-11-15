@@ -140,6 +140,24 @@ namespace MiaMax.Infrastructure.Audio
             return current != null ? current : Resources.Load<AudioClip>(resourcePath);
         }
 
+        private void LateUpdate()
+        {
+            // Voice priority: lower the bed gently while Mia or Max talks,
+            // then restore it without abrupt volume jumps.
+            bool speaking = voiceSource != null && voiceSource.isPlaying;
+            float duck = speaking ? 0.34f : 1f;
+            float step = Mathf.Max(.01f, Time.unscaledDeltaTime) * (speaking ? 2.0f : 1.1f);
+            if (musicSource != null)
+                musicSource.volume = Mathf.MoveTowards(musicSource.volume,
+                    musicBaseVolume * musicMix * duck, step);
+            if (ambientWindSource != null)
+                ambientWindSource.volume = Mathf.MoveTowards(ambientWindSource.volume,
+                    ambientWindBaseVolume * effectsMix * duck, step);
+            if (ambientBirdsSource != null)
+                ambientBirdsSource.volume = Mathf.MoveTowards(ambientBirdsSource.volume,
+                    ambientBirdsBaseVolume * effectsMix * duck, step);
+        }
+
         private void OnDestroy()
         {
             if (Instance == this) Instance = null;
