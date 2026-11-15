@@ -21,7 +21,8 @@ namespace MiaMax.EditorTools
             "MiaMax.TapAdventure.featherGathered",
             "MiaMax.TapAdventure.miniGameClaimed",
             "MiaMax.TapAdventure.gardenstoneDiscovered",
-            "MiaMax.TapAdventure.flowersReady"
+            "MiaMax.TapAdventure.flowersReady",
+            "MiaMax.TapAdventure.welcomeHeard"
         };
 
         [MenuItem("Mia & Max/MVP/3. Reset Local Progress")]
