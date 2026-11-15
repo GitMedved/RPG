@@ -30,6 +30,7 @@ namespace MiaMax.Gameplay
         private int miniGameScore;
         private string miniGameMessage = "Help Max sort the found treasures!";
         private Material grassMat, woodMat, plasterMat, stoneMat, leafMat, flowerMat, roofMat, waterMat;
+        private Texture2D miaPortrait, maxPortrait;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Install()
@@ -52,6 +53,8 @@ namespace MiaMax.Gameplay
             instance = this;
             DontDestroyOnLoad(gameObject);
             LoadProgress();
+            miaPortrait = Resources.Load<Texture2D>("MiaMax/Art/MiaPortrait");
+            maxPortrait = Resources.Load<Texture2D>("MiaMax/Art/MaxPortrait");
             BuildWorld();
         }
 
@@ -452,7 +455,7 @@ namespace MiaMax.Gameplay
             float headerH = 82f * scale;
             headerRect = new Rect(x, top, w, headerH);
             GUI.Box(headerRect, GUIContent.none, cardStyle);
-            float titleWidth = inSecretGarden ? w - 136f * scale : w - 26f * scale;
+            float titleWidth = inSecretGarden ? w - 136f * scale : w - 101f * scale;
             GUI.Label(new Rect(x + 13f * scale, top + 5f * scale, titleWidth, 35f * scale),
                 inSecretGarden ? "SECRET GARDEN" : "MIA & MAX ADVENTURES", titleStyle);
             if (inSecretGarden && GUI.Button(new Rect(x + w - 119f * scale, top + 9f * scale,
@@ -462,6 +465,15 @@ namespace MiaMax.Gameplay
                 selectedId = "";
                 FocusCameraOnArea(false);
                 toast = "Back in the cozy backyard.";
+            }
+            if (!inSecretGarden)
+            {
+                if (miaPortrait != null)
+                    GUI.DrawTexture(new Rect(x + w - 91f * scale, top + 8f * scale,
+                        38f * scale, 38f * scale), miaPortrait, ScaleMode.ScaleAndCrop, true);
+                if (maxPortrait != null)
+                    GUI.DrawTexture(new Rect(x + w - 48f * scale, top + 8f * scale,
+                        38f * scale, 38f * scale), maxPortrait, ScaleMode.ScaleAndCrop, true);
             }
             GUI.Label(new Rect(x + 13f * scale, top + 43f * scale, w - 26f * scale, 28f * scale),
                 "Stars " + stars + "   Twigs " + twigs + "   Feathers " + feathers + "   Flowers " + flowers, bodyStyle);
@@ -473,12 +485,12 @@ namespace MiaMax.Gameplay
                 "TODAY'S ADVENTURE", mutedStyle);
             string quest = inSecretGarden
                 ? (gardenstoneDiscovered ? "Chapter complete! Return to the yard or explore more." : "Find and tap the glowing golden stone.")
+                : forestUnlocked ? "Tap the Secret Garden gate to visit the new chapter."
                 : !birdhouseBuilt ? "Find 3 twigs and a blue feather. Build a birdhouse."
                 : !flowersWatered && flowers == 0 ? "Water the flowers. They bloom after one minute."
                 : flowersWatered && DateTime.UtcNow < flowersReadyUtc ? "The flowers are growing. Explore while you wait."
                 : flowersWatered ? "The blooms are ready! Collect the flowers."
-                : !forestUnlocked ? "Make a keepsake at the workbench, then open the gate."
-                : "Tap the Secret Garden gate to visit the new chapter.";
+                : "Make a keepsake at the workbench, then open the gate.";
             GUI.Label(new Rect(x + 13f * scale, questTop + 29f * scale, w - 26f * scale, 46f * scale), quest, bodyStyle);
 
             float bottom = Screen.height - safe.yMin;
