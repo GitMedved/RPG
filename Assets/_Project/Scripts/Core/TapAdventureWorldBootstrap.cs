@@ -713,16 +713,23 @@ namespace MiaMax.Gameplay
 
         private void DrawMiniGame(float scale)
         {
-            Rect r = new Rect(20f, Screen.height * 0.27f, Screen.width - 40f, Screen.height * 0.42f);
+            Rect safe = Screen.safeArea;
+            float height = Mathf.Min(405f * scale, safe.height - 12f * scale);
+            float y = Screen.height - safe.yMax + (safe.height - height) * 0.5f;
+            Rect r = new Rect(safe.xMin + 12f * scale, y,
+                safe.width - 24f * scale, height);
             GUI.Box(r, GUIContent.none, cardStyle);
-            GUI.Label(new Rect(r.x + 18f, r.y + 16f, r.width - 36f, 44f), "MAX'S TREASURE SORT", titleStyle);
-            GUI.Label(new Rect(r.x + 18f, r.y + 65f, r.width - 36f, 62f), miniGameMessage, bodyStyle);
+            GUI.Label(new Rect(r.x + 16f * scale, r.y + 10f * scale,
+                r.width - 32f * scale, 41f * scale), "MAX'S TREASURE SORT", titleStyle);
+            GUI.Label(new Rect(r.x + 16f * scale, r.y + 53f * scale,
+                r.width - 32f * scale, 51f * scale), miniGameMessage, bodyStyle);
             string[] labels = { "Shell", "Leaf", "Feather" };
             int[] order = { 1, 2, 0 }; // Tap Feather, Shell, then Leaf.
             for (int i = 0; i < 3; i++)
             {
                 int index = i;
-                if (GUI.Button(new Rect(r.x + 18f, r.y + 140f + i * 58f * scale, r.width - 36f, 50f * scale), labels[index], buttonStyle))
+                if (GUI.Button(new Rect(r.x + 16f * scale, r.y + 113f * scale + i * 56f * scale,
+                    r.width - 32f * scale, 47f * scale), labels[index], buttonStyle))
                 {
                     int expected = miniGameStep;
                     if (order[index] == expected)
@@ -746,7 +753,7 @@ namespace MiaMax.Gameplay
                     }
                 }
             }
-            if (GUI.Button(new Rect(r.x + 18f, r.yMax - 48f, r.width - 36f, 38f), "Leave mini-game", buttonStyle)) miniGameOpen = false;
+            if (GUI.Button(new Rect(r.x + 16f * scale, r.yMax - 50f * scale, r.width - 32f * scale, 38f * scale), "Leave mini-game", buttonStyle)) miniGameOpen = false;
         }
     }
 
