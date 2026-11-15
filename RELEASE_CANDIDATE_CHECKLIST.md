@@ -10,6 +10,10 @@
 - [ ] Run **Mia & Max → MVP → 1. Preflight Assets & Scene** with no failed items.
 - [ ] Press Play and run **Mia & Max → MVP → 2. Inspect Running World** with no failed items.
 - [ ] Verify portraits, textures, HUD, scene camera and all tap targets on a portrait-sized Game view.
+- [ ] Verify illustrated models replace greybox renderers; inspect cottage roof, fence, garden, character lighting and gate from the fixed camera.
+- [ ] Verify animated Mia and Max are visible: blinking, body sway, Max tail and contextual gestures.
+- [ ] Confirm HUD chapter changes, touch hit areas, safe-area margins, portrait cropping and voice mute control on several screen aspect ratios.
+- [ ] Optional voice import: run **Mia & Max → MVP → 4. Install Generated English Voice Takes**, then replay birdhouse, keepsake and stone scenes for speech and talking-mouth checks.
 
 ## Gameplay acceptance
 
