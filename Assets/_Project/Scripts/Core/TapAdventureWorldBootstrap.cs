@@ -23,6 +23,9 @@ namespace MiaMax.Gameplay
         private bool twigsGathered, featherGathered, miniGameClaimed, gardenstoneDiscovered;
         private DateTime flowersReadyUtc;
         private bool miniGameOpen;
+        private bool inSecretGarden;
+        private bool lastBloomReady;
+        private Rect headerRect, questRect, actionRect;
         private int miniGameStep;
         private int miniGameScore;
         private string miniGameMessage = "Help Max sort the found treasures!";
@@ -59,10 +62,10 @@ namespace MiaMax.Gameplay
 
         private void LoadProgress()
         {
-            twigs = PlayerPrefs.GetInt(SavePrefix + "twigs", 0);
-            feathers = PlayerPrefs.GetInt(SavePrefix + "feathers", 0);
-            flowers = PlayerPrefs.GetInt(SavePrefix + "flowers", 0);
-            stars = PlayerPrefs.GetInt(SavePrefix + "stars", 0);
+            twigs = Mathf.Max(0, PlayerPrefs.GetInt(SavePrefix + "twigs", 0));
+            feathers = Mathf.Max(0, PlayerPrefs.GetInt(SavePrefix + "feathers", 0));
+            flowers = Mathf.Max(0, PlayerPrefs.GetInt(SavePrefix + "flowers", 0));
+            stars = Mathf.Max(0, PlayerPrefs.GetInt(SavePrefix + "stars", 0));
             birdhouseBuilt = PlayerPrefs.GetInt(SavePrefix + "birdhouse", 0) == 1;
             flowersWatered = PlayerPrefs.GetInt(SavePrefix + "watered", 0) == 1;
             forestUnlocked = PlayerPrefs.GetInt(SavePrefix + "forest", 0) == 1;
@@ -111,6 +114,7 @@ namespace MiaMax.Gameplay
 
             BuildCamera();
             BuildLighting();
+            lastBloomReady = flowersWatered && DateTime.UtcNow >= flowersReadyUtc;
 
             RenderSettings.ambientMode = AmbientMode.Trilight;
             RenderSettings.ambientSkyColor = new Color(0.70f, 0.82f, 0.96f);
@@ -248,9 +252,11 @@ namespace MiaMax.Gameplay
                 new Vector3(0.15f, 0.5f, 0.15f), woodMat, false);
             twigsTarget.transform.rotation = Quaternion.Euler(0f, 35f, 72f);
             AddTarget(twigsTarget, "twigs", "Fallen Twigs");
+            if (twigsGathered) twigsTarget.SetActive(false);
             GameObject featherTarget = Create("Blue Feather", PrimitiveType.Sphere, new Vector3(-1.8f, 0.22f, -6.8f),
                 new Vector3(0.22f, 0.42f, 0.08f), MakeMaterial("Feather Blue", null, Vector2.zero, new Color(0.22f,0.55f,0.95f)), false);
             AddTarget(featherTarget, "feather", "Blue Feather");
+            if (featherGathered) featherTarget.SetActive(false);
             GameObject mini = Create("Max Treasure Basket", PrimitiveType.Cylinder, new Vector3(7.0f, 0.35f, -5.3f),
                 new Vector3(1.0f, 0.45f, 1.0f), woodMat, false);
             AddTarget(mini, "minigame", "Max's Treasure Basket");
@@ -310,12 +316,20 @@ namespace MiaMax.Gameplay
             // appear edge-on and effectively invisible.
             worldCamera.orthographic = true;
             worldCamera.orthographicSize = 13.5f;
-            worldCamera.transform.position = new Vector3(1.0f, 13.5f, -18f);
-            worldCamera.transform.LookAt(new Vector3(1.0f, 1.0f, 0.5f));
+            FocusCameraOnArea(false);
             worldCamera.nearClipPlane = 0.1f;
             worldCamera.farClipPlane = 100f;
             worldCamera.allowHDR = true;
             worldCamera.allowMSAA = true;
+        }
+
+        private void FocusCameraOnArea(bool secretGarden)
+        {
+            if (worldCamera == null) return;
+            // Two composed fixed views; no free movement or follow camera.
+            float x = secretGarden ? 12.1f : 1.0f;
+            worldCamera.transform.position = new Vector3(x, 13.5f, -18f);
+            worldCamera.transform.LookAt(new Vector3(x, 1.0f, 0.5f));
         }
 
         private void BuildLighting()
@@ -375,9 +389,9 @@ namespace MiaMax.Gameplay
 
             if (!pressed || Screen.width <= 0 || Screen.height <= 0) return;
 
-            // Ignore the HUD and action card; world selection is based on real colliders.
-            float normalizedY = screen.y / Screen.height;
-            if (normalizedY < 0.22f || normalizedY > 0.80f) return;
+            // GUI coordinates are top-left, while touch input is bottom-left.
+            Vector2 guiPoint = new Vector2(screen.x, Screen.height - screen.y);
+            if (headerRect.Contains(guiPoint) || questRect.Contains(guiPoint) || actionRect.Contains(guiPoint)) return;
 
             Ray ray = worldCamera.ScreenPointToRay(screen);
             if (!Physics.Raycast(ray, out RaycastHit hit, 150f, Physics.DefaultRaycastLayers,
@@ -541,11 +555,12 @@ namespace MiaMax.Gameplay
                     if (!twigsGathered)
                     {
                         twigs += 3; stars += 1; twigsGathered = true; toast = "You found a bundle of 3 useful twigs!";
+                        HideCollectedTarget("twigs");
                     }
                     else toast = "You already gathered these fallen twigs.";
                     break;
                 case "feather":
-                    if (!featherGathered) { feathers++; stars++; featherGathered = true; toast = "A beautiful feather for your collection!"; }
+                    if (!featherGathered) { feathers++; stars++; featherGathered = true; toast = "A beautiful feather for your collection!"; HideCollectedTarget("feather"); }
                     else toast = "You already collected this feather.";
                     break;
                 case "birdhouse":
@@ -554,7 +569,12 @@ namespace MiaMax.Gameplay
                     {
                         twigs -= 3; feathers -= 1; birdhouseBuilt = true; stars += 5;
                         Transform bird = transform.Find("Birdhouse");
-                        if (bird != null) bird.gameObject.SetActive(true);
+                        if (bird != null)
+                        {
+                            bird.gameObject.SetActive(true);
+                            Renderer builtRenderer = bird.GetComponent<Renderer>();
+                            if (builtRenderer != null) builtRenderer.sharedMaterial = woodMat;
+                        }
                         Transform roof = transform.Find("Birdhouse Roof");
                         if (roof != null) roof.gameObject.SetActive(true);
                         toast = "Wonderful! The birdhouse is ready. A new story begins.";
@@ -564,13 +584,13 @@ namespace MiaMax.Gameplay
                 case "flowers":
                     if (!flowersWatered)
                     {
-                        flowersWatered = true; flowersReadyUtc = DateTime.UtcNow.AddMinutes(1);
+                        flowersWatered = true; flowersReadyUtc = DateTime.UtcNow.AddMinutes(1); lastBloomReady = false;
                         UpdateFlowerVisuals();
                         toast = "Watered! The flowers will bloom in a little while.";
                     }
                     else if (DateTime.UtcNow >= flowersReadyUtc)
                     {
-                        flowers += 3; stars += 4; flowersWatered = false; flowersReadyUtc = DateTime.MinValue;
+                        flowers += 3; stars += 4; flowersWatered = false; flowersReadyUtc = DateTime.MinValue; lastBloomReady = false;
                         toast = "Beautiful blooms! You collected 3 flowers.";
                         if (birdhouseBuilt) toast += " Visit the workbench to craft a keepsake.";
                         UpdateFlowerVisuals();
@@ -593,8 +613,14 @@ namespace MiaMax.Gameplay
                     else { miniGameOpen = true; miniGameStep = 0; miniGameScore = 0; miniGameMessage = "Tap the treasures in this order: feather, shell, leaf."; }
                     break;
                 case "gate":
-                    toast = forestUnlocked ? "Welcome to the Secret Garden! Explore the new discoveries." : "Craft a garden keepsake at the workbench to unlock this gate.";
-                    if (forestUnlocked) toast += " The Secret Garden chapter is unlocked.";
+                    if (forestUnlocked)
+                    {
+                        inSecretGarden = true;
+                        selectedId = "";
+                        FocusCameraOnArea(true);
+                        toast = "Welcome to the Secret Garden! Tap the glowing golden stone.";
+                    }
+                    else toast = "Craft a garden keepsake at the workbench to unlock this gate.";
                     break;
                 case "gardenstone":
                     toast = gardenstoneDiscovered ? "The golden stone glows softly." : "The Secret Garden's story has only just begun!";
@@ -609,6 +635,14 @@ namespace MiaMax.Gameplay
             SaveProgress();
         }
 
+        private void HideCollectedTarget(string id)
+        {
+            foreach (TapAdventureTarget target in GetComponentsInChildren<TapAdventureTarget>(true))
+                if (target.Id == id)
+                    target.gameObject.SetActive(false);
+            if (selectedId == id) selectedId = "";
+        }
+
         private void UpdateFlowerVisuals()
         {
             bool readyToBloom = flowersWatered && DateTime.UtcNow >= flowersReadyUtc;
@@ -620,8 +654,11 @@ namespace MiaMax.Gameplay
 
         private void Update()
         {
-            if (flowersWatered && DateTime.UtcNow >= flowersReadyUtc)
+            if (flowersWatered && DateTime.UtcNow >= flowersReadyUtc && !lastBloomReady)
+            {
+                lastBloomReady = true;
                 UpdateFlowerVisuals();
+            }
 
             HandleWorldSelection();
         }
@@ -632,14 +669,15 @@ namespace MiaMax.Gameplay
             GUI.Box(r, GUIContent.none, cardStyle);
             GUI.Label(new Rect(r.x + 18f, r.y + 16f, r.width - 36f, 44f), "MAX'S TREASURE SORT", titleStyle);
             GUI.Label(new Rect(r.x + 18f, r.y + 65f, r.width - 36f, 62f), miniGameMessage, bodyStyle);
-            string[] labels = { "🪶 Feather", "🐚 Shell", "🍃 Leaf" };
+            string[] labels = { "Shell", "Leaf", "Feather" };
+            int[] order = { 1, 2, 0 }; // Tap Feather, Shell, then Leaf.
             for (int i = 0; i < 3; i++)
             {
                 int index = i;
                 if (GUI.Button(new Rect(r.x + 18f, r.y + 140f + i * 58f * scale, r.width - 36f, 50f * scale), labels[index], buttonStyle))
                 {
                     int expected = miniGameStep;
-                    if (index == expected)
+                    if (order[index] == expected)
                     {
                         miniGameStep++; miniGameScore++;
                         if (miniGameStep >= 3)
