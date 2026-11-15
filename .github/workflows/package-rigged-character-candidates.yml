@@ -1,0 +1,60 @@
+name: Fetch CC0 rigged character candidates
+on:
+  push:
+    branches: [codex/mia-max-foundation]
+    paths: ['.github/workflows/package-rigged-character-candidates.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  download-candidates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/mia-max-foundation
+          persist-credentials: true
+      - name: Download and validate original CC0 skinned models
+        shell: bash
+        run: |
+          set -euo pipefail
+          DIR="Assets/Resources/MiaMax/External/Candidates"
+          mkdir -p "$DIR"
+          curl --fail --location --retry 3 --connect-timeout 15 --max-time 110 \
+            "https://gobkit.com/freebies/human001/Schoolkid.glb" \
+            -o "$DIR/MiaSchoolkidCandidate.glb"
+          curl --fail --location --retry 3 --connect-timeout 15 --max-time 110 \
+            "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/main/addons/kaykit_character_pack_adventures/Characters/gltf/Rogue.glb" \
+            -o "$DIR/MiaRogueCandidate.glb"
+          python3 - <<'PY'
+          import json, struct
+          from pathlib import Path
+          for file in Path("Assets/Resources/MiaMax/External/Candidates").glob("*.glb"):
+              binary = file.read_bytes()
+              assert len(binary) > 4096, f"{file}: file too small"
+              magic, version, size = struct.unpack_from("<4sII", binary, 0)
+              assert magic == b'glTF' and version == 2 and size == len(binary), f"{file}: invalid GLB"
+              json_length, json_type = struct.unpack_from("<II", binary, 12)
+              assert json_type == 0x4e4f534a, f"{file}: missing GLB JSON chunk"
+              metadata = json.loads(binary[20:20+json_length])
+              assert metadata.get("skins"), f"{file}: model has no skinning/rig"
+              assert metadata.get("animations"), f"{file}: model has no animation clips"
+              print(file, "bytes", len(binary),
+                    "skins", len(metadata["skins"]),
+                    "animations", len(metadata["animations"]))
+          PY
+      - name: Commit CC0 candidate GLBs to the feature branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Mia & Max Asset Pipeline"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Assets/Resources/MiaMax/External/Candidates
+          if ! git diff --cached --quiet; then
+            git commit -m "assets: vendor two CC0 animated skinned human candidates"
+            git pull --rebase origin codex/mia-max-foundation
+            git push origin HEAD:codex/mia-max-foundation
+          fi
