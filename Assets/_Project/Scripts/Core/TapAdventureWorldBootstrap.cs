@@ -105,7 +105,14 @@ namespace MiaMax.Gameplay
                 SaveProgress();
                 PlayFeedback(MiaMax.Infrastructure.Audio.GameAudioCue.MiniGameWin);
                 artWorld?.React("minigame_win", true);
-                MiaMax.Infrastructure.Audio.GameAudioService.Instance?.PlayMaxMeow();
+                const string winVoice = "max_treasure_win_01";
+                if (Resources.Load<AudioClip>("MiaMax/Audio/Voice/" + winVoice) != null)
+                {
+                    MiaMax.Infrastructure.Audio.GameAudioService.Instance?.PlayVoiceLine(winVoice);
+                    artWorld?.Max?.Speak(3.35f);
+                }
+                else
+                    MiaMax.Infrastructure.Audio.GameAudioService.Instance?.PlayMaxMeow();
             }
             else miniGameMessage = "Lovely! Now find the next treasure.";
         }
@@ -139,6 +146,22 @@ namespace MiaMax.Gameplay
         private void Start()
         {
             Screen.orientation = ScreenOrientation.Portrait;
+            StartCoroutine(WelcomeOnceWhenVoiceIsReady());
+        }
+
+        private System.Collections.IEnumerator WelcomeOnceWhenVoiceIsReady()
+        {
+            if (PlayerPrefs.GetInt(SavePrefix + "welcomeHeard", 0) == 1)
+                yield break;
+            yield return new WaitForSecondsRealtime(.75f);
+            const string line = "mia_greeting_01";
+            if (Resources.Load<AudioClip>("MiaMax/Audio/Voice/" + line) == null)
+                yield break;
+            var audio = MiaMax.Infrastructure.Audio.GameAudioService.Instance;
+            if (audio == null || !audio.PlayVoiceLine(line)) yield break;
+            artWorld?.Mia?.Speak(4.75f);
+            PlayerPrefs.SetInt(SavePrefix + "welcomeHeard", 1);
+            PlayerPrefs.Save();
         }
 
         private void LoadProgress()
