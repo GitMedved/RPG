@@ -286,8 +286,10 @@ namespace MiaMax.EditorTools
         }
 
         [MenuItem("Mia & Max/Art Pipeline/1. Download CC0 Rigged Human Candidates",true)]
+        private static bool CanImportHumans()=> !EditorApplication.isPlaying && !busy;
+
         [MenuItem("Mia & Max/Art Pipeline/2. Import Free Animated Cat Archive",true)]
-        private static bool CanImport()=> !EditorApplication.isPlaying && !busy;
+        private static bool CanImportCat()=> !EditorApplication.isPlaying && !busy;
     }
 }
 #endif
