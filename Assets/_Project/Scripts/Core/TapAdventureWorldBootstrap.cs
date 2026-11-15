@@ -260,18 +260,18 @@ namespace MiaMax.Gameplay
                 new Vector3(0.22f, 0.42f, 0.08f), MakeMaterial("Feather Blue", null, Vector2.zero, new Color(0.22f,0.55f,0.95f)), false);
             AddTarget(featherTarget, "feather", "Blue Feather");
             if (featherGathered) featherTarget.SetActive(false);
-            GameObject mini = Create("Max Treasure Basket", PrimitiveType.Cylinder, new Vector3(7.0f, 0.35f, -5.3f),
+            GameObject mini = Create("Max Treasure Basket", PrimitiveType.Cylinder, new Vector3(5.6f, 0.35f, -5.3f),
                 new Vector3(1.0f, 0.45f, 1.0f), woodMat, false);
             AddTarget(mini, "minigame", "Max's Treasure Basket");
         }
 
         private void BuildAdventureGate()
         {
-            GameObject gate = Create("Adventure Gate", PrimitiveType.Cube, new Vector3(8.0f, 1.15f, 0.2f),
+            GameObject gate = Create("Adventure Gate", PrimitiveType.Cube, new Vector3(6.8f, 1.15f, 0.2f),
                 new Vector3(0.32f, 2.3f, 2.6f), forestUnlocked ? leafMat : woodMat, false);
             AddTarget(gate, "gate", "Secret Garden Gate");
-            Create("Gate Post Left", PrimitiveType.Cylinder, new Vector3(7.0f, 1.2f, 0.2f), new Vector3(0.22f, 1.2f, 0.22f), woodMat, false);
-            Create("Gate Post Right", PrimitiveType.Cylinder, new Vector3(9.0f, 1.2f, 0.2f), new Vector3(0.22f, 1.2f, 0.22f), woodMat, false);
+            Create("Gate Post Left", PrimitiveType.Cylinder, new Vector3(5.8f, 1.2f, 0.2f), new Vector3(0.22f, 1.2f, 0.22f), woodMat, false);
+            Create("Gate Post Right", PrimitiveType.Cylinder, new Vector3(7.8f, 1.2f, 0.2f), new Vector3(0.22f, 1.2f, 0.22f), woodMat, false);
         }
 
 
@@ -571,7 +571,7 @@ namespace MiaMax.Gameplay
                 case "feather": return "Collect feather";
                 case "birdhouse": return birdhouseBuilt ? "Admire bird visitors" : "Build birdhouse (3 twigs + 1 feather)";
                 case "flowers": return flowersWatered ? (DateTime.UtcNow >= flowersReadyUtc ? "Collect flowers" : "Check flowers") : "Water flowers";
-                case "workshop": return "Make a little keepsake";
+                case "workshop": return "Craft garden keepsake";
                 case "minigame": return "Play treasure sorting";
                 case "gate": return forestUnlocked ? "Enter Secret Garden" : "Check the gate";
                 case "gardenstone": return "Touch the glowing stone";
@@ -640,7 +640,7 @@ namespace MiaMax.Gameplay
                     else toast = "The flowers are still growing. Come back soon.";
                     break;
                 case "workshop":
-                    if (!forestUnlocked && twigs >= 1 && flowers >= 1)
+                    if (birdhouseBuilt && !forestUnlocked && twigs >= 1 && flowers >= 1)
                     {
                         twigs--; flowers--; forestUnlocked = true; stars += 8;
                         BuildSecretGarden();
@@ -648,7 +648,9 @@ namespace MiaMax.Gameplay
                         toast += " A new garden clearing has appeared beyond the gate.";
                     }
                     else if (forestUnlocked) toast = "Your garden keepsake opened a new adventure!";
-                    else toast = "Recipe: 1 twig + 1 flower. Gather twigs beneath the tree and grow flowers.";
+                    else toast = birdhouseBuilt
+                        ? "Recipe: 1 twig + 1 flower. Collect both to craft the keepsake."
+                        : "Build the birdhouse first. Then craft a keepsake from twigs and flowers.";
                     break;
                 case "minigame":
                     if (miniGameClaimed) toast = "Max has already sorted this basket. Come back for another adventure!";
