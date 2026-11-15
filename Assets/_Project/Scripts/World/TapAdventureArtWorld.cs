@@ -291,7 +291,7 @@ namespace MiaMax.Gameplay
                 new Vector3(.22f,.22f,.055f),Mat("Birdhouse opening",new Color(.18f,.14f,.12f)));
             Column("Bird landing perch",birdhouseArt,new Vector3(-4.5f,3.13f,.01f),
                 new Vector3(.08f,.30f,.08f),cream);
-            AddHit("birdhouse",mount,new Vector3(-4.5f,3.38f,.45f),.78f);
+            AddHit("birdhouse",tree,new Vector3(-4.5f,3.38f,.45f),.78f);
         }
 
         private void BuildGarden()
