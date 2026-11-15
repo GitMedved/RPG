@@ -9,7 +9,7 @@ using UnityEngine.Networking;
 namespace MiaMax.EditorTools
 {
     /// <summary>
-    /// Copies the four original HeyGen character takes generated for this game
+    /// Copies the six original HeyGen character takes generated for this game
     /// into the exact Unity Resources paths consumed by the runtime.
     /// Explicit menu action only; no network request during a player's offline game.
     /// The source links may eventually expire and should be replaced by committed WAVs.
@@ -27,7 +27,11 @@ namespace MiaMax.EditorTools
             ("mia_secret_garden_01",
                 "https://resource2.heygen.ai/text_to_speech/6a44461d68cc4a39ba6f4d5245aed20a/95d52e056b7b495dab8f090b44fa2ec4/id=c6e53b2ba3744687aaadee2f2c090c75.wav"),
             ("max_garden_discovery_01",
-                "https://resource2.heygen.ai/text_to_speech/6a44461d68cc4a39ba6f4d5245aed20a/e5f0084d0ddd4164a12a38a83457446c/id=56823dc5d1fe4dd793c6017319dd29d2.wav")
+                "https://resource2.heygen.ai/text_to_speech/6a44461d68cc4a39ba6f4d5245aed20a/e5f0084d0ddd4164a12a38a83457446c/id=56823dc5d1fe4dd793c6017319dd29d2.wav"),
+            ("mia_greeting_01",
+                "https://resource2.heygen.ai/text_to_speech/6a44461d68cc4a39ba6f4d5245aed20a/95d52e056b7b495dab8f090b44fa2ec4/id=90d14b30a3244a8780f8923a7ece2d8f.wav"),
+            ("max_treasure_win_01",
+                "https://resource2.heygen.ai/text_to_speech/6a44461d68cc4a39ba6f4d5245aed20a/e5f0084d0ddd4164a12a38a83457446c/id=efdb25b8d002485f90c7e60cf97ad1f8.wav")
         };
 
         [MenuItem("Mia & Max/MVP/4. Install Generated English Voice Takes")]
@@ -35,7 +39,7 @@ namespace MiaMax.EditorTools
         {
             if (downloading) return;
             bool confirmed = EditorUtility.DisplayDialog("Install Mia & Max Voice Takes",
-                "Download four HeyGen English character WAVs into the project now? The game remains offline afterward. These generated files must be committed if you want them in Git.",
+                "Download six HeyGen English character WAVs into the project now? The game remains offline afterward. These generated files must be committed if you want them in Git.",
                 "Download Voice Takes", "Cancel");
             if (!confirmed) return;
             downloading = true;
@@ -79,7 +83,7 @@ namespace MiaMax.EditorTools
                 }
                 AssetDatabase.Refresh();
                 EditorUtility.DisplayDialog("Mia & Max Voice Import",
-                    "Ready: " + ok + "/4, failed: " + failed +
+                    "Ready: " + ok + "/6, failed: " + failed +
                     ". Voice clips are stored in the Unity project. Check Console and audio playback in Play Mode.",
                     "OK");
             }
