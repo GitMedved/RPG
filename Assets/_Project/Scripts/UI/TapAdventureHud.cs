@@ -15,7 +15,7 @@ namespace MiaMax.Gameplay
         private TapAdventureWorldBootstrap game;
         private Canvas canvas;
         private RectTransform safeRoot, header, quest, card, hint, miniGame, dialog;
-        private Text resourceText, questText, cardTitle, cardBody, actionLabel;
+        private Text resourceText, questText, chapterText, cardTitle, cardBody, actionLabel;
         private Text toastText, hintText, miniGameMessage, soundLabel, locationTitle, dialogTitle;
         private Button actionButton, backButton, soundButton;
         private Rect lastSafe;
@@ -200,7 +200,7 @@ namespace MiaMax.Gameplay
             quest = Panel("Story instruction - warm paper", safeRoot,
                 new Vector2(0, 1), new Vector2(1, 1),
                 new Vector2(-34, 146), new Vector2(0, -278), Paper);
-            Label("Story section", quest, "THE LITTLE BIRDHOUSE", 23, Forest, FontStyle.Bold,
+            chapterText = Label("Story section", quest, "THE LITTLE BIRDHOUSE", 23, Forest, FontStyle.Bold,
                 TextAnchor.MiddleLeft, new Vector2(0, 1), new Vector2(1, 1),
                 new Vector2(-58, 38), new Vector2(0, -30));
             questText = Label("Current story objective", quest, "", 35, Ink, FontStyle.Normal,
@@ -326,13 +326,17 @@ namespace MiaMax.Gameplay
             resourceText.text="Stars " + game.Stars + "    Twigs " + game.Twigs
                 + "    Feather " + game.Feathers + "    Flowers " + game.Flowers;
             questText.text=game.ObjectiveText;
+            chapterText.text=game.IsGarden ? "CHAPTER TWO - THE SECRET GARDEN"
+                : !game.BirdhouseBuilt ? "CHAPTER ONE - THE BIRDHOUSE"
+                : !game.GardenUnlocked ? "CHAPTER ONE - A GARDEN KEEPSAKE"
+                : "CHAPTER TWO - A NEW ADVENTURE";
             locationTitle.text=game.IsGarden?"SECRET GARDEN":"MIA & MAX";
             backButton.gameObject.SetActive(game.IsGarden);
             soundLabel.text=muted?"Sound off":"Sound on";
             toastText.text=game.ToastText;
             toastText.rectTransform.anchoredPosition=new Vector2(0,
                 game.SelectedId.Length>0?439f:209f);
-            bool hasSelection=!string.IsNullOrEmpty(game.SelectedId);
+            bool hasSelection=!string.IsNullOrEmpty(game.SelectedId) && !game.IsMiniGameOpen;
             hint.gameObject.SetActive(!hasSelection);
             card.gameObject.SetActive(hasSelection);
             hintText.text=game.IsGarden?
