@@ -1,13 +1,14 @@
-# Backyard Prototype Scene
+# Backyard — Active MVP Scene
 
-The initial prototype generates a deterministic greybox backyard at runtime from `BackyardPrototypeBootstrap`. This avoids committing a hand-authored Unity YAML scene before the exact Editor patch and rendering pipeline have been verified.
+`Backyard.unity` is intentionally a minimal serialized scene. The active game world is built at runtime by `MiaMax.Gameplay.TapAdventureWorldBootstrap` via `RuntimeInitializeOnLoadMethod`.
 
-To run:
-1. Open the repository root with Unity 6.3 (6000.3.x) or update `ProjectSettings/ProjectVersion.txt` to your installed compatible Unity 6 LTS patch.
-2. Allow Unity to resolve the empty package manifest and generate its local project metadata.
-3. Create a new empty scene and save it as `Assets/_Project/Scenes/Backyard.unity`.
-4. Press Play. The runtime bootstrap creates the backyard, Mia/Max primitive stand-ins and follow camera.
+The gameplay contract is fixed-camera, tap-only; there is no joystick or movement controller in this scene.
 
-Controls: WASD/arrow keys in the Editor. On a touch device, drag from the initial touch position to move. Touch UX will be replaced by a proper virtual joystick in the next iteration.
+To test:
 
-All generated primitives are placeholders, not final character or environment art.
+1. Open `Backyard.unity` in Unity Editor 6000.3.0f1.
+2. Run **Mia & Max → MVP → 1. Preflight Assets & Scene**.
+3. Press Play, then run **Mia & Max → MVP → 2. Inspect Running World**.
+4. Complete the tree → feather → birdhouse → flower bed → workbench → gate → golden stone path.
+
+`BackyardPrototypeBootstrap` is a no-op compatibility component for old local Unity scenes; it does not initialize automatically. Do not reactivate its old free-roam blockout.
