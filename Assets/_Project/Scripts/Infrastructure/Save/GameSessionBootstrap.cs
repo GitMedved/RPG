@@ -10,13 +10,9 @@ namespace MiaMax.Infrastructure.Save
         private static GameSessionBootstrap instance;
         private LocalSaveService saveService;
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        private static void Create()
-        {
-            if (FindFirstObjectByType<GameSessionBootstrap>() != null) return;
-            new GameObject("Game Session").AddComponent<GameSessionBootstrap>();
-        }
-
+        // Legacy domain service, retained for future migration.
+        // MVP saves exclusively through TapAdventureWorldBootstrap.
+        // Do not auto-create a second independent player inventory/save.
         private void Awake()
         {
             if (instance != null && instance != this)
