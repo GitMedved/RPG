@@ -130,6 +130,10 @@ namespace MiaMax.Gameplay
             BuildAdventureGate();
             BuildSecretGarden();
             BuildCharacters();
+            // Native CC0 GLBs are real mesh assets, not additional primitives.
+            // On any import issue the authored procedural scene remains visible.
+            MiaMaxExternalArtPass.AddNature(transform);
+            MiaMaxExternalArtPass.ApplyRiggedCharacterOverrides(Mia, Max);
             Sync(true);
         }
 
